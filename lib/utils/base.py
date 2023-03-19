@@ -1,5 +1,5 @@
 import os
-
+import pathlib
 
 class Base:
 
@@ -24,7 +24,11 @@ class Base:
         :rtype: str
         """
 
-        return os.path.abspath(os.path.join("..", ".."))
+        this_file_path = os.path.abspath(__file__)
+        path = pathlib.Path(this_file_path)
+        project_path = path.parent.parent.parent.absolute()
+
+        return str(project_path)
 
     @property
     def settings_path(self) -> str:
@@ -45,5 +49,5 @@ class Base:
         """
 
         return {
-
+            "db_name": "nome del db"
         }

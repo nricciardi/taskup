@@ -1,15 +1,43 @@
 from lib.utils.base import Base
 import json
+import sys
+from lib.file.file_manager import FileManger
 
 
 class SettingsManager(Base):
+    create_settings_file_if_not_exist = True
+
     def __init__(self):
         super().__init__()
 
-        self.settings: dict = self.base_settings
+        self.settings: dict = self.base_settings  # set base settings
 
-        with open(self.settings_path) as file:
-            self.settings.update(json.load(file))
+        try:
+            self.override_settings()
+
+        except IOError as io_error:
+            print(f"Configuration file {self.settings_file_name} not found")
+
+            if SettingsManager.create_settings_file_if_not_exist:
+                self.create_settings_file()
+                self.override_settings()
+
+        except json.JSONDecodeError as json_decode_error:
+            print(f"Configuration file {self.settings_file_name} JSON syntax error")
+
+    def override_settings(self) -> None:
+        """
+        Override project settings with settings configuration file
+        """
+
+        self.settings.update(FileManger.read_json(self.settings_path))
+
+    def create_settings_file(self) -> None:
+        """
+        Create settings file if it does not exist with base settings
+        """
+
+        FileManger.write_json(self.settings_path, self.base_settings)
 
     def set(self, key: str, value: str) -> None:
         """
@@ -33,5 +61,3 @@ class SettingsManager(Base):
         """
 
         return self.settings[key]
-
-
