@@ -1,6 +1,7 @@
 import os
 import pathlib
 
+
 class Base:
 
     def __init__(self):
@@ -41,6 +42,16 @@ class Base:
         return os.path.join(self.base_directory, self.settings_file_name)
 
     @property
+    def base_db_name(self) -> str:
+        """
+        Return the base db name
+
+        :rtype: str
+        """
+
+        return "db"
+
+    @property
     def base_settings(self) -> dict:
         """
         Return base settings
@@ -49,5 +60,5 @@ class Base:
         """
 
         return {
-            "db_name": "nome del db"
+            "db_name": self.base_db_name
         }
