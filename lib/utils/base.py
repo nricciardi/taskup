@@ -13,8 +13,8 @@ class Base:
         print("Exit...")
         sys.exit()
 
-    @property
-    def settings_file_name(self) -> str:
+    @staticmethod
+    def settings_file_name() -> str:
         """
         Return the settings file name
 
@@ -23,8 +23,8 @@ class Base:
 
         return "settings.json"
 
-    @property
-    def base_directory(self) -> str:
+    @staticmethod
+    def base_directory() -> str:
         """
         Return the base directory path
 
@@ -37,18 +37,18 @@ class Base:
 
         return str(project_path)
 
-    @property
-    def settings_path(self) -> str:
+    @staticmethod
+    def settings_path() -> str:
         """
         Return the settings path of the project
 
         :rtype: str
         """
 
-        return os.path.join(self.base_directory, self.settings_file_name)
+        return os.path.join(Base.base_directory(), Base.settings_file_name())
 
-    @property
-    def setting_db_name(self):
+    @staticmethod
+    def setting_db_name():
         """
         Return the db name property name
 
@@ -57,8 +57,8 @@ class Base:
 
         return "db_name"
 
-    @property
-    def base_db_name(self) -> str:
+    @staticmethod
+    def base_db_name() -> str:
         """
         Return the base db name
 
@@ -67,8 +67,8 @@ class Base:
 
         return "database.db"
 
-    @property
-    def setting_project_path(self) -> str:
+    @staticmethod
+    def setting_project_path() -> str:
         """
         Return project path (to manage) property name
 
@@ -77,8 +77,8 @@ class Base:
 
         return "path"
 
-    @property
-    def base_settings(self) -> dict:
+    @staticmethod
+    def base_settings() -> dict:
         """
         Return base settings
 
@@ -86,5 +86,5 @@ class Base:
         """
 
         return {
-            self.setting_db_name: self.base_db_name
+            Base.setting_db_name(): Base.base_db_name()
         }
