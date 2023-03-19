@@ -3,10 +3,12 @@ import json
 
 
 class SettingsManager(Base):
-    def __int__(self):
-        self.settings: dict = self.BASE_SETTINGS
+    def __init__(self):
+        super().__init__()
 
-        with open(self.SETTINGS_PATH) as file:
+        self.settings: dict = self.base_settings
+
+        with open(self.settings_path) as file:
             self.settings.update(json.load(file))
 
     def set(self, key: str, value: str) -> None:
@@ -15,11 +17,21 @@ class SettingsManager(Base):
 
         :param key: settings' key
         :param value: key's value
+
         :rtype: None
         """
         self.settings[key] = value
 
-    def get(self) -> dict:
-        return self.settings
+    def get(self, key: str) -> str:
+        """
+        Return the value of key passed
+
+        :param key: A key of settings
+        :type key: str
+
+        :rtype: str
+        """
+
+        return self.settings[key]
 
 

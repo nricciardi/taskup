@@ -3,30 +3,41 @@ import os
 
 class Base:
 
-    SETTINGS_FILE_NAME = "settings"
+    def __init__(self):
+        pass
 
     @property
-    def BASE_DIRECTORY(self) -> str:
+    def settings_file_name(self) -> str:
+        """
+        Return the settings file name
+
+        :rtype: str
+        """
+
+        return "settings.json"
+
+    @property
+    def base_directory(self) -> str:
         """
         Return the base directory path
 
         :rtype: str
         """
 
-        return os.path.abspath(os.path.join(".."))
+        return os.path.abspath(os.path.join("..", ".."))
 
     @property
-    def SETTINGS_PATH(self) -> str:
+    def settings_path(self) -> str:
         """
         Return the settings path of the project
 
         :rtype: str
         """
 
-        return os.path.join(self.BASE_DIRECTORY, Base.SETTINGS_FILE_NAME)
+        return os.path.join(self.base_directory, self.settings_file_name)
 
     @property
-    def BASE_SETTINGS(self) -> dict:
+    def base_settings(self) -> dict:
         """
         Return base settings
 
