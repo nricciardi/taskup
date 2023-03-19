@@ -7,4 +7,7 @@ This is a university project.
 **TODO**
 
 ## Documentaion
-**TODO**
+### Keyword
+- **Base Directory:** _this_ project directory path
+- **Project Directory:** the managed project path
+- **Work Directory:** the work directory inside _project directory_ 
