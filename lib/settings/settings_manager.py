@@ -1,6 +1,5 @@
 from lib.utils.base import Base
 import json
-import sys
 from lib.file.file_manager import FileManger
 
 
@@ -24,6 +23,8 @@ class SettingsManager(Base):
 
         except json.JSONDecodeError as json_decode_error:
             print(f"Configuration file {self.settings_file_name} JSON syntax error")
+            Base.exit()
+
 
     def override_settings(self) -> None:
         """

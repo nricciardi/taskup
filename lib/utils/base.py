@@ -1,11 +1,16 @@
 import os
 import pathlib
-
+import sys
 
 class Base:
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def exit():
+        print("Exit...")
+        sys.exit()
 
     @property
     def settings_file_name(self) -> str:
