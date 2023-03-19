@@ -1,27 +1,29 @@
 from lib.utils.base import Base
 import json
 from lib.file.file_manager import FileManger
+from lib.settings.settings_base import SettingsBase
+import os
 
 
-class SettingsManager:
+class SettingsManager(SettingsBase):
     create_settings_file_if_not_exist = True
 
     def __init__(self):
 
-        self.settings: dict = Base.base_settings()  # set base settings
+        self.settings: dict = self.BASE_SETTINGS  # set base settings
 
         try:
             self.override_settings()
 
         except IOError as io_error:
-            print(f"Configuration file {Base.settings_file_name()} not found")
+            print(f"Configuration file {self.SETTINGS_FILE_NAME} not found")
 
             if SettingsManager.create_settings_file_if_not_exist:
                 self.create_settings_file()
                 self.override_settings()
 
         except json.JSONDecodeError as json_decode_error:
-            print(f"Configuration file {Base.settings_file_name()} JSON syntax error")
+            print(f"Configuration file {self.SETTINGS_FILE_NAME} JSON syntax error")
             Base.exit()
 
         finally:
@@ -33,10 +35,10 @@ class SettingsManager:
         """
 
         try:
-            self.get(Base.setting_project_path())
+            self.get(self.PROJECT_PATH_KEY)
 
         except KeyError as key_error:
-            print(f"'{Base.setting_project_path()}' is mandatory setting")
+            print(f"'{self.PROJECT_PATH_KEY}' is mandatory setting")
             Base.exit()
 
     def override_settings(self) -> None:
@@ -44,14 +46,14 @@ class SettingsManager:
         Override project settings with settings configuration file
         """
 
-        self.settings.update(FileManger.read_json(Base.settings_path()))
+        self.settings.update(FileManger.read_json(self.settings_path()))
 
     def create_settings_file(self) -> None:
         """
         Create settings file if it does not exist with base settings
         """
 
-        FileManger.write_json(Base.settings_path(), Base.base_settings())
+        FileManger.write_json(self.settings_path(), self.settings_path())
 
     def set(self, key: str, value: str) -> None:
         """
@@ -75,3 +77,30 @@ class SettingsManager:
         """
 
         return self.settings[key]
+
+    def project_directory(self) -> str:
+        """
+        Return the project directory
+
+        :rtype: str
+        """
+
+        return os.path.abspath(self.get(self.PROJECT_PATH_KEY))
+
+    def work_directory(self) -> str:
+        """
+        Return the work directory inside the project
+
+        :return:
+        """
+
+        return os.path.join(self.project_directory(), Base.WORK_DIRECTORY_NAME)
+
+    def db_path(self) -> str:
+        """
+        Return the database path of the project
+
+        :rtype: str
+        """
+
+        return os.path.join(self.work_directory(), self.get(self.DB_NAME_KEY))
