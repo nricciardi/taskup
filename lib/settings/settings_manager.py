@@ -7,7 +7,6 @@ class SettingsManager:
     create_settings_file_if_not_exist = True
 
     def __init__(self):
-        super().__init__()
 
         self.settings: dict = Base.base_settings()  # set base settings
 

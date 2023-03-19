@@ -4,7 +4,6 @@ from lib.settings.settings_manager import SettingsManager
 
 class DBManager:
     def __init__(self):
-        super().__init__()
 
         settings_manager = SettingsManager()
 
