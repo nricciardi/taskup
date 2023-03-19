@@ -2,6 +2,7 @@ import os
 import pathlib
 import sys
 
+
 class Base:
 
     def __init__(self):
@@ -47,6 +48,16 @@ class Base:
         return os.path.join(self.base_directory, self.settings_file_name)
 
     @property
+    def setting_db_name(self):
+        """
+        Return the db name property name
+
+        :rtype: str
+        """
+
+        return "db_name"
+
+    @property
     def base_db_name(self) -> str:
         """
         Return the base db name
@@ -54,7 +65,17 @@ class Base:
         :rtype: str
         """
 
-        return "db"
+        return "database.db"
+
+    @property
+    def setting_project_path(self) -> str:
+        """
+        Return project path (to manage) property name
+
+        :rtype: str
+        """
+
+        return "path"
 
     @property
     def base_settings(self) -> dict:
@@ -65,5 +86,5 @@ class Base:
         """
 
         return {
-            "db_name": self.base_db_name
+            self.setting_db_name: self.base_db_name
         }

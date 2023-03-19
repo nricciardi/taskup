@@ -9,7 +9,7 @@ class SettingsManagerTest(unittest.TestCase):
         cls.settingsManager = SettingsManager()
 
     def test_get(self):
-        self.settingsManager.get("db_name")
+        print(self.settingsManager.get("db_name"))
 
 
 if __name__ == '__main__':

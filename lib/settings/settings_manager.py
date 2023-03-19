@@ -9,7 +9,7 @@ class SettingsManager(Base):
     def __init__(self):
         super().__init__()
 
-        self.settings: dict = self.base_settings  # set base settings
+        self.settings: dict = Base.base_settings  # set base settings
 
         try:
             self.override_settings()
@@ -25,6 +25,20 @@ class SettingsManager(Base):
             print(f"Configuration file {self.settings_file_name} JSON syntax error")
             Base.exit()
 
+        finally:
+            self.verify_mandatory_settings()
+
+    def verify_mandatory_settings(self) -> None:
+        """
+        Verify mandatory settings and throw exceptions
+        """
+
+        try:
+            self.get(self.setting_project_path)
+
+        except KeyError as key_error:
+            print(f"'{self.setting_project_path}' is mandatory setting")
+            Base.exit()
 
     def override_settings(self) -> None:
         """
