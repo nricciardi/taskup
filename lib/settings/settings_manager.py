@@ -3,6 +3,7 @@ import json
 from lib.file.file_manager import FileManger
 from lib.settings.settings_base import SettingsBase
 import os
+from typing import Any
 
 
 class SettingsManager(SettingsBase):
@@ -66,7 +67,7 @@ class SettingsManager(SettingsBase):
         """
         self.settings[key] = value
 
-    def get(self, key: str) -> str:
+    def get(self, key: str) -> Any:
         """
         Return the value of key passed
 
@@ -78,7 +79,7 @@ class SettingsManager(SettingsBase):
 
         return self.settings[key]
 
-    def project_directory(self) -> str:
+    def project_directory_path(self) -> str:
         """
         Return the project directory
 
@@ -87,14 +88,14 @@ class SettingsManager(SettingsBase):
 
         return os.path.abspath(self.get(self.PROJECT_PATH_KEY))
 
-    def work_directory(self) -> str:
+    def work_directory_path(self) -> str:
         """
-        Return the work directory inside the project
+        Return the work directory path inside the project
 
         :return:
         """
 
-        return os.path.join(self.project_directory(), Base.WORK_DIRECTORY_NAME)
+        return os.path.join(self.project_directory_path(), self.WORK_DIRECTORY_NAME)
 
     def db_path(self) -> str:
         """
@@ -103,4 +104,4 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory(), self.get(self.DB_NAME_KEY))
+        return os.path.join(self.work_directory_path(), self.get(self.DB_NAME_KEY))
