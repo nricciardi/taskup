@@ -1,37 +1,18 @@
 from lib.db.db_manager import DBManager
-from lib.settings.settings_manager import SettingsManager
+from abc import ABC, abstractmethod
 
 
-class EntityManager(DBManager):
-    __table_name: str = None
-    __db_name: str = None
+class EntityManager(DBManager, ABC):
+    """
+    Abstract class to manage DB's entities
+    """
 
-    def __init__(self):
+    def __init__(self, table_name: str, db_name: str, work_directory_path: str, verbose: bool = False):
 
-        self.__settings_manager = SettingsManager()
-        self.__db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        self.__table_name = table_name
+        self.__db_name = db_name
 
-        super().__init__(db_name=self.__db_name, work_directory=self.__settings_manager.work_directory_path(),
-                         verbose=self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY))
-
-    @classmethod
-    def using(cls, table_name: str, db_name: str) -> object:
-        """
-        Factory of EntityManger using passed table name and db name
-
-        :param table_name:
-        :type table_name: str
-        :param db_name:
-        :type db_name: str
-        :return: EntityManger
-        :rtype EntityManger:
-        """
-
-        cls.__table_name = table_name
-
-        cls.__db_name = db_name
-
-        return EntityManager()
+        super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose)
 
     @property
     def table_name(self) -> str:
@@ -77,3 +58,6 @@ class EntityManager(DBManager):
         res = self.__db_cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id}")
 
         return res.fetchone()
+
+    def insert(self,):
+        pass

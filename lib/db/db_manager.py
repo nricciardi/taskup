@@ -3,11 +3,11 @@ from lib.utils.base import Base
 
 
 class DBManager:
-    def __init__(self, db_name: str, work_directory: str = ".", verbose: bool = False):
+    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False):
 
         self.verbose = verbose
         self.__db_name: str = db_name
-        self.__work_directory: str = work_directory
+        self.__work_directory: str = work_directory_path
 
         try:
             print(self.__db_name)
