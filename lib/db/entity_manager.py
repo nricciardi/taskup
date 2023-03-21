@@ -59,5 +59,14 @@ class EntityManager(DBManager, ABC):
 
         return res.fetchone()
 
-    def insert(self,):
+    def create(self, **kwargs) -> bool:
+        """
+        Create a new record
+
+        :param kwargs: keyword argument as fields of table
+        :type kwargs: dict
+
+        :return: Creation result
+        :rtype bool:
+        """
         pass
