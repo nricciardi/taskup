@@ -23,5 +23,8 @@ class UserManager(EntityManager):
 
         super().__init__(db_name=db_name, table_name=self.__table_name, verbose=verbose, work_directory_path=work_directory_path)
 
+    @property
+    def _type(self):
 
+        return UserModel
 

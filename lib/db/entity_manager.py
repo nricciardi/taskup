@@ -15,6 +15,17 @@ class EntityManager(DBManager, ABC):
         super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose)
 
     @property
+    @abstractmethod
+    def _type(self) -> type:
+        """
+        Should be a dataclass type used in type checks
+
+        :return: the type to use in checks
+        :rtype type:
+        """
+        raise NotImplementedError()
+
+    @property
     def table_name(self) -> str:
         """
         Return table name
@@ -59,14 +70,16 @@ class EntityManager(DBManager, ABC):
 
         return res.fetchone()
 
-    def create(self, **kwargs) -> bool:
+    def create(self, data) -> bool:
         """
         Create a new record
 
-        :param kwargs: keyword argument as fields of table
-        :type kwargs: dict
+        :param data: entity data
+        :type data: Entity dataclass
 
         :return: Creation result
         :rtype bool:
         """
-        pass
+
+        if isinstance(data, self._type):
+            raise TypeError(f"Param must be {self._type} type")
