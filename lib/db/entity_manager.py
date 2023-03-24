@@ -81,5 +81,5 @@ class EntityManager(DBManager, ABC):
         :rtype bool:
         """
 
-        if isinstance(data, self._type):
+        if not isinstance(data, self._type):
             raise TypeError(f"Param must be {self._type} type")
