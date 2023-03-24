@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Dict, Any, Type, TypeVar
 
@@ -8,8 +8,11 @@ T = TypeVar('T', bound='BaseEntityModel')
 class BaseEntityModel(ABC):
     """
     Provide a base model method for entity dataclass
-
     """
+
+    id: int
+
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
