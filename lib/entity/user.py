@@ -1,7 +1,7 @@
 from lib.db.entity_manager import EntityManager
 from dataclasses import dataclass
 from lib.settings.settings_manager import SettingsManager
-from lib.entity.base_entity_model import BaseEntityModel
+from lib.entity.bem import BaseEntityModel
 
 
 @dataclass

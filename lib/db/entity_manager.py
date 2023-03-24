@@ -2,7 +2,7 @@ import sqlite3
 from lib.db.db_manager import DBManager
 from abc import ABC, abstractmethod
 from lib.utils.base import Base
-from lib.entity.base_entity_model import BaseEntityModel
+from lib.entity.bem import BaseEntityModel
 from typing import Any
 
 
