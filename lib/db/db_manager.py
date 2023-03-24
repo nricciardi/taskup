@@ -22,6 +22,9 @@ class DBManager:
 
             Base.exit()
 
+    def __del__(self):
+        self.__db_connection.close()
+
     @property
     def db_name(self) -> str:
         return self.__db_name
@@ -33,3 +36,11 @@ class DBManager:
     @db_name.deleter
     def db_name(self):
         raise Exception("db_name cannot be deleted")
+
+    @property
+    def connection(self):
+        return self.__db_connection
+
+    @property
+    def cursor(self):
+        return self.__db_cursor

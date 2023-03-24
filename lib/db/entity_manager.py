@@ -1,5 +1,9 @@
+import sqlite3
 from lib.db.db_manager import DBManager
 from abc import ABC, abstractmethod
+from lib.utils.base import Base
+from lib.entity.base_entity_model import BaseEntityModel
+from typing import Any
 
 
 class EntityManager(DBManager, ABC):
@@ -11,19 +15,9 @@ class EntityManager(DBManager, ABC):
 
         self.__table_name = table_name
         self.__db_name = db_name
+        self.__verbose = verbose
 
         super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose)
-
-    @property
-    @abstractmethod
-    def _type(self) -> type:
-        """
-        Should be a dataclass type used in type checks
-
-        :return: the type to use in checks
-        :rtype type:
-        """
-        raise NotImplementedError()
 
     @property
     def table_name(self) -> str:
@@ -44,6 +38,38 @@ class EntityManager(DBManager, ABC):
         """
 
         self.__table_name = value
+
+    def __is_valid_model_data_type(self, data: Any) -> bool:
+        """
+        Return True if data is a subclass of BaseEntityModel, otherwise False
+
+        :param data: data to check
+        :type data: Any
+
+        :return: result of check
+        :rtype bool:
+        """
+
+        return issubclass(data.__class__, BaseEntityModel)
+
+    def __validate_model_data_type(self, data: Any):
+        """
+        Raise exception if param data is not a subclass of BaseEntityModel
+
+        :param data: data to check
+        :type data: Any
+
+        :return:
+        """
+
+        if not self.__is_valid_model_data_type(data):
+
+            error = f"{data} must be an implementation of BaseEntityModel"
+
+            if self.__verbose:
+                Base.log_error(error)
+
+            raise TypeError(error)
 
     def all(self) -> list:
         """
@@ -70,16 +96,51 @@ class EntityManager(DBManager, ABC):
 
         return res.fetchone()
 
-    def create(self, data) -> bool:
+    def create(self, data: dict) -> BaseEntityModel:
         """
         Create a new record
 
-        :param data: entity data
+        :param data: dict represent entity data
         :type data: Entity dataclass
 
         :return: Creation result
         :rtype bool:
         """
 
-        if not isinstance(data, self._type):
-            raise TypeError(f"Param must be {self._type} type")
+        query = self.__generate_create_query(data)
+
+        try:
+
+            self.cursor.execute(query, data)
+
+            self.connection.commit()
+
+        except sqlite3.Error as exception:
+
+            if self.__verbose:
+                Base.log_error(f"{exception} during execute: {query} \n\twith {data}")
+
+            raise exception
+
+        return True
+
+    def __generate_create_query(self, data: dict) -> str:
+        """
+        Generate the query for create method
+
+        :param data: key-value data of entity
+        :type data: dict
+
+        :return: SQL query
+        :rtype str:
+        """
+
+        keys = ', '.join(data.keys())
+        placeholders = ', '.join(['?' for _ in range(len(data))])
+
+        query = f"""
+                                INSERT INTO {self.table_name} VALUES ({keys})
+                                ({placeholders})
+                            """
+
+        return query
