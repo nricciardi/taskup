@@ -10,6 +10,6 @@ if __name__ == '__main__':
 
     # um = UserModel(1, "nicola")
     # um2 = UserModel(1, "asdf")
-    # um3 = UserModel.from_dict({"id": 1, "username": "franco"})
+    # um3 = UserModel.from_dict()
     #
-    # user_manager.create(um3)
+    # user_manager.create({"id": 1, "username": "franco"})

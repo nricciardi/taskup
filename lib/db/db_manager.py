@@ -9,32 +9,40 @@ class DBManager:
         self.verbose = verbose
         self.__db_name: str = db_name
         self.__work_directory_path: str = work_directory_path
+        self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
+
+        db_exists = os.path.exists(self.__db_path)      # if False => database structure must be created
+
+        Base.log_info(message=f"database {self.db_path} found", is_verbose=self.verbose)
 
         try:
-            self.__db_connection = sqlite3.connect(os.path.join(self.__work_directory_path, self.__db_name))
+            self.__db_connection = sqlite3.connect(self.__db_path)
             self.__db_cursor = self.__db_connection.cursor()
 
         except Exception as exception:
             print("Connection with database failed...")
 
-            if self.verbose:
-                Base.log_error(exception)
+            Base.log_error(exception, is_verbose=self.verbose)
 
             Base.exit()
 
         # generate db
-        try:
+        if not db_exists:
+            try:
 
-            self.generate_base_db()
+                self.generate_base_db_structure()
 
-        except Exception as exception:
-            if self.verbose:
-                Base.log_error(exception)
+            except Exception as exception:
+                Base.log_error(message=exception, is_verbose=self.verbose)
 
-            Base.exit()
+                Base.exit()
 
     def __del__(self):
         self.__db_connection.close()
+
+    @property
+    def db_path(self):
+        return self.__db_path
 
     @property
     def db_name(self) -> str:
@@ -131,7 +139,7 @@ class DBManager:
 
         self.__insert_base_roles()
 
-    def generate_base_db(self) -> None:
+    def generate_base_db_structure(self) -> None:
         """
         Generate the base db of project
 
@@ -152,8 +160,7 @@ class DBManager:
 
         except Exception as exception:
 
-            if self.verbose:
-                Base.log_error("error occurs during generate db", full=True)
+            Base.log_error(message="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             raise exception
 
@@ -165,14 +172,10 @@ class DBManager:
 
             self.fill_db()
 
-            if self.verbose:
-                Base.log_success("base db filled")
+            Base.log_success(message="base db filled", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            if self.verbose:
-                Base.log_error("error occurs during fill db", full=True)
-
-            raise exception
+            Base.log_error(message="error occurs during fill db", full=True, is_verbose=self.verbose)
 
         self.connection.commit()

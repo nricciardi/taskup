@@ -64,12 +64,11 @@ class EntityManager(DBManager, ABC):
 
         if not self.__is_valid_model_data_type(data):
 
-            error = f"{data} must be an implementation of BaseEntityModel"
+            msg = f"{data} must be an implementation of BaseEntityModel"
 
-            if self.__verbose:
-                Base.log_error(error)
+            Base.log_error(message=msg, is_verbose=self.__verbose)
 
-            raise TypeError(error)
+            raise TypeError(msg)
 
     def all(self) -> list:
         """
@@ -119,8 +118,7 @@ class EntityManager(DBManager, ABC):
 
         except sqlite3.Error as exception:
 
-            if self.__verbose:
-                Base.log_error(f"{exception} during execute: {query} \n\twith {data}")
+            Base.log_error(message="{exception} during execute: {query} \n\twith {data}", is_verbose=self.__verbose)
 
             raise exception
 
