@@ -43,6 +43,8 @@ class BaseEntityModel(ABC):
 
         return cls(**data)
 
+    # Uncomment this method to have a from_dict method with field check
+    #
     # @classmethod
     # def from_dict_safe(cls, data: Dict[str, Any]) -> BEM:
     #     obj = cls.__new__(cls)
