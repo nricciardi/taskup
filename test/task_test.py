@@ -1,12 +1,12 @@
 import unittest
-from lib.entity.task import TaskManager
+from lib.entity.task import TasksManager
 
 
 class TaskModelTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):  # run once before all test cases
-        cls.task_manager = TaskManager()
+        cls.task_manager = TasksManager()
 
     def all(self):
         pass
