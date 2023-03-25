@@ -7,7 +7,7 @@ class Task:
     name: str
 
 
-class TaskManager(EntityManager):
+class TasksManager(EntityManager):
     table_name: str = "task"
 
     def __init__(self):
