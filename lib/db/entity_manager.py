@@ -79,7 +79,7 @@ class EntityManager(DBManager, ABC):
         :rtype: list
         """
 
-        res = self.__db_cursor.execute(f"Select * From {self.table_name}")
+        res = self.__db_cursor.execute(f"Select * From {self.table_name};")
 
         return res.fetchall()
 
@@ -92,11 +92,13 @@ class EntityManager(DBManager, ABC):
         :return:
         """
 
-        res = self.__db_cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id}")
+        res = self.__db_cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id};")
 
-        return res.fetchone()
+        data = res.fetchone()
 
-    def create(self, data: dict) -> BaseEntityModel:
+        return data
+
+    def create(self, data: dict) -> dict:
         """
         Create a new record
 
@@ -122,7 +124,7 @@ class EntityManager(DBManager, ABC):
 
             raise exception
 
-        return True
+        return self.find(data["id"])
 
     def __generate_create_query(self, data: dict) -> str:
         """
@@ -139,8 +141,8 @@ class EntityManager(DBManager, ABC):
         placeholders = ', '.join(['?' for _ in range(len(data))])
 
         query = f"""
-                                INSERT INTO {self.table_name} VALUES ({keys})
-                                ({placeholders})
-                            """
+                    Insert Into {self.table_name} Values ({keys})
+                    ({placeholders})
+                """
 
         return query
