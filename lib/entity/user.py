@@ -2,12 +2,16 @@ from lib.db.entity_manager import EntityManager
 from dataclasses import dataclass
 from lib.settings.settings_manager import SettingsManager
 from lib.entity.bem import BaseEntityModel
+from lib.utils.base import Base
 
 
 @dataclass
 class UserModel(BaseEntityModel):
     id: int
     username: str
+    email: str
+    password: str
+    role_id: int
 
 
 class UsersManager(EntityManager):
@@ -35,7 +39,7 @@ class UsersManager(EntityManager):
 
         data = super().find(user_id)
 
-        return UserModel.from_dict(data)
+        return UserModel.from_tuple(data)
 
     def create(self, data: dict) -> UserModel:
         """

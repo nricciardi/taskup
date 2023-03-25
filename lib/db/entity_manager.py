@@ -82,16 +82,18 @@ class EntityManager(DBManager, ABC):
 
         return res.fetchall()
 
-    def find(self, entity_id: int) -> dict:
+    def find(self, entity_id: int) -> tuple:
         """
         Return the record requested
 
         :param entity_id: the record's id
         :type entity_id: int
-        :return:
+
+        :return: entity record
+        :rtype tuple:
         """
 
-        res = self.__db_cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id};")
+        res = self.cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id};")
 
         data = res.fetchone()
 
@@ -108,21 +110,22 @@ class EntityManager(DBManager, ABC):
         :rtype bool:
         """
 
-        query = self.__generate_create_query(data)
+        query = self.__generate_create_query(data)      # it is here to use its in except
 
         try:
 
-            self.cursor.execute(query, data)
+            values = list(data.values())
+            self.cursor.execute(query, values)
 
             self.connection.commit()
 
-        except sqlite3.Error as exception:
+            return self.find(self.cursor.lastrowid)
 
-            Base.log_error(message="{exception} during execute: {query} \n\twith {data}", is_verbose=self.__verbose)
+        except Exception as exception:
+
+            Base.log_error(message=f"{exception} during execute: {query}\nwith {data}", is_verbose=self.__verbose)
 
             raise exception
-
-        return self.find(data["id"])
 
     def __generate_create_query(self, data: dict) -> str:
         """
@@ -135,12 +138,14 @@ class EntityManager(DBManager, ABC):
         :rtype str:
         """
 
-        keys = ', '.join(data.keys())
-        placeholders = ', '.join(['?' for _ in range(len(data))])
+        # Extract the keys and values from the dictionary
+        keys = list(data.keys())
+        values = list(data.values())
 
-        query = f"""
-                    Insert Into {self.table_name} Values ({keys})
-                    ({placeholders})
-                """
+        # Construct the query string with placeholders for the values
+        fields = ','.join(keys)
+        placeholders = ','.join(['?'] * len(values))
 
-        return query
+        query_string = f"Insert Into {self.table_name} ({fields}) Values ({placeholders})"
+
+        return query_string

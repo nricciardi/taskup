@@ -12,4 +12,11 @@ if __name__ == '__main__':
     # um2 = UserModel(1, "asdf")
     # um3 = UserModel.from_dict()
     #
-    # user_manager.create({"id": 1, "username": "franco"})
+
+    print(user_manager.find(1))
+
+    # n = 9
+    # user_manager.create({"username": f"franco{n}",
+    #                      "email": f"n{n}@r.com",
+    #                      "password": "asdf",
+    #                      "role_id": 1})
