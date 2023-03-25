@@ -1,9 +1,7 @@
 from lib.entity.user import UsersManager, UserModel
 from lib.project.project_manager import ProjectManager
 
-
 if __name__ == '__main__':
-
     pm = ProjectManager()
 
     user_manager = UsersManager()
@@ -15,8 +13,8 @@ if __name__ == '__main__':
 
     # print(user_manager.find(1))
 
-    n = 9
-    user_manager.create({"username": f"franco{n}",
-                         "email": f"n{n}@r.com",
-                         "password": "asdf",
-                         "role_id": 1})
+    n = 18
+    print(user_manager.create({"username": f"franco{n}",
+                               "email": f"n{n}@r.com",
+                               "password": "asdf",
+                               "role_id": 1}))

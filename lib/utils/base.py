@@ -4,10 +4,13 @@ import sys
 import colorama
 from colorama import Fore, Back, Style
 import traceback
-from typing import Any
+from typing import Any, TypeVar
 
 # Initialising Colorama (Important)
 colorama.init(autoreset=True)
+
+# Types
+BEM = TypeVar('BEM', bound='BaseEntityModel')
 
 
 class Base:

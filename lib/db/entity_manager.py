@@ -1,7 +1,7 @@
 import sqlite3
 from lib.db.db_manager import DBManager
 from abc import ABC, abstractmethod
-from lib.utils.base import Base
+from lib.utils.base import Base, BEM
 from lib.entity.bem import BaseEntityModel
 from typing import Any
 
@@ -99,15 +99,15 @@ class EntityManager(DBManager, ABC):
 
         return data
 
-    def create(self, data: dict) -> dict:
+    def create(self, data: dict) -> BEM:
         """
         Create a new record
 
         :param data: dict represent entity data
         :type data: Entity dataclass
 
-        :return: Creation result
-        :rtype bool:
+        :return: entity created
+        :rtype BEM:
         """
 
         query = self.__generate_create_query(data)      # it is here to use its in except
@@ -119,7 +119,9 @@ class EntityManager(DBManager, ABC):
 
             self.connection.commit()
 
-            return self.find(self.cursor.lastrowid)
+            entity = self.find(self.cursor.lastrowid)
+
+            return entity
 
         except Exception as exception:
 
