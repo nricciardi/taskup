@@ -1,7 +1,7 @@
 from lib.db.entity_manager import EntityManager
 from dataclasses import dataclass
 from lib.settings.settings_manager import SettingsManager
-from lib.entity.bem import BaseEntityModel
+from lib.entity.bem import BaseEntityModel, BEM
 from lib.utils.base import Base
 from typing import List, Dict, Any
 
@@ -61,10 +61,20 @@ class UsersManager(EntityManager):
 
     def all_as_dict(self) -> List[Dict[str, Any]]:
         """
-        Return all users as dict
+        Return all users as list of dict
 
         :return: all users as dict
         :rtype List[Dict[str, Any]]:
+        """
+
+        raise NotImplementedError
+
+    def all_as_model(self) -> List[UserModel]:
+        """
+        Return all users as list of model
+
+        :return: all roles
+        :rtype List[UserModel]:
         """
 
         raise NotImplementedError
@@ -127,10 +137,20 @@ class RolesManager(EntityManager):
 
     def all_as_dict(self) -> List[Dict[str, Any]]:
         """
-        Return all users as dict
+        Return all roles as list of dict
 
         :return: all users as dict
         :rtype List[Dict[str, Any]]:
+        """
+
+        raise NotImplementedError
+
+    def all_as_model(self) -> List[RoleModel]:
+        """
+        Return all roles as list of model
+
+        :return: all roles
+        :rtype List[RoleModel]:
         """
 
         raise NotImplementedError
