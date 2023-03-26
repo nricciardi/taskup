@@ -54,4 +54,4 @@ class UsersManager(EntityManager):
 
         data = super().create(data)
 
-        return data
+        return UserModel.from_tuple(data)

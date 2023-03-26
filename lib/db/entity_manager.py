@@ -119,7 +119,8 @@ class EntityManager(DBManager, ABC):
 
             self.connection.commit()
 
-            entity = self.find(self.cursor.lastrowid)
+            # call explicitly find to prevent use of override
+            entity = EntityManager.find(self, self.cursor.lastrowid)
 
             return entity
 

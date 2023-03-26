@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     # print(user_manager.find(1))
 
-    n = 18
+    n = 26
     print(user_manager.create({"username": f"franco{n}",
                                "email": f"n{n}@r.com",
                                "password": "asdf",
