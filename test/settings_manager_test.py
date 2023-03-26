@@ -1,6 +1,6 @@
 import unittest
 from lib.utils.base import Base
-from lib.settings.settings_manager import SettingsManager
+from lib.settings.settings import SettingsManager
 
 
 class SettingsManagerTest(unittest.TestCase):

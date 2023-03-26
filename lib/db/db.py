@@ -6,6 +6,14 @@ import os
 class DBManager:
     def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False,
                  use_localtime: bool = False):
+        """
+        Create a DBManager
+
+        :param db_name: db name
+        :param work_directory_path: work directory path
+        :param verbose: verbose
+        :param use_localtime: if db must use local in date
+        """
 
         self.verbose = verbose
         self.use_localtime = use_localtime
@@ -16,11 +24,19 @@ class DBManager:
 
         db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
-        Base.log_info(message=f"database {self.db_path} found", is_verbose=self.verbose)
+        if db_exists:
+            Base.log_info(message=f"database {self.__db_path} found", is_verbose=self.verbose)
+        else:
+            Base.log_warning(message=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)
             self.__db_cursor = self.__db_connection.cursor()
+
+            Base.log_success(message=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
+
+            if not db_exists:
+                self.generate_base_db_structure(strict=True)
 
         except Exception as exception:
             print("Connection with database failed...")
@@ -28,10 +44,6 @@ class DBManager:
             Base.log_error(exception, is_verbose=self.verbose)
 
             Base.exit()
-
-        # generate db
-        if not db_exists:
-            self.generate_base_db_structure(strict=True)
 
     def __del__(self):
         self.__db_connection.close()
@@ -280,7 +292,7 @@ class DBManager:
                  name VARCHAR(150) NOT NULL,
                  description VARCHAR(1000) NOT NULL,
                  deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
-                                                                                                        strict_string=True)}),
+                                                                                                                     strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
 
@@ -340,7 +352,7 @@ class DBManager:
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  description VARCHAR(1000) NOT NULL,
                  deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
-                                                                                                        strict_string=True)}),
+                                                                                                                     strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
                  done INTEGER NOT NULL DEFAULT 0,
@@ -446,7 +458,7 @@ class DBManager:
 
             self.connection.commit()
 
-            Base.log_success("base db generated", is_verbose=self.verbose)
+            Base.log_success("base db structure generated", is_verbose=self.verbose)
 
         except Exception as exception:
 

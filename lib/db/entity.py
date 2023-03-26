@@ -1,5 +1,5 @@
 import sqlite3
-from lib.db.db_manager import DBManager
+from lib.db.db import DBManager
 from abc import ABC, abstractmethod
 from lib.utils.base import Base, BEM
 from lib.entity.bem import BaseEntityModel

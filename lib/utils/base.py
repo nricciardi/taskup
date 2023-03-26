@@ -102,3 +102,20 @@ class Base:
             return
 
         print(f"{Fore.CYAN}INFO: {str(message)}")
+
+    @staticmethod
+    def log_warning(message: Any, is_verbose: bool = True):
+        """
+        Log pre-formatted warning
+
+        :param message: info to print
+        :type message: Any
+        :param is_verbose: it used to check if it is verbose
+        :type is_verbose: bool
+
+        :return: None
+        """
+        if not is_verbose:
+            return
+
+        print(f"{Fore.YELLOW}WARNING: {str(message)}")
