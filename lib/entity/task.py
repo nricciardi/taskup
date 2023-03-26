@@ -218,3 +218,13 @@ class TaskLabelsManager(EntityManager):
         data = super().create(data)
 
         return TaskLabelModel.from_tuple(data)
+
+
+# =========== PIVOT =================
+
+@dataclass
+class TaskTaskLabelPivotModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    rgb_color: str

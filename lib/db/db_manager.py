@@ -326,7 +326,6 @@ class DBManager:
 
         Base.log_info(f"created if not exists {self.todo_item_table_name}", is_verbose=self.verbose)
 
-
     @property
     def task_label_table_name(self) -> str:
         return "task_label"
@@ -351,6 +350,33 @@ class DBManager:
         self.cursor.execute(query)
 
         Base.log_info(f"created if not exists {self.task_label_table_name}", is_verbose=self.verbose)
+
+    @property
+    def task_task_label_pivot_table_name(self) -> str:
+        return "task_task_label_pivot"
+
+    def __create_task_task_label_pivot_table(self) -> None:
+        """
+        Create task_task_label pivot table if not exists
+
+        :return: None
+        :rtype None:
+        """
+
+        query = f"""
+                 Create Table if not exists {self.task_task_label_pivot_table_name} (
+                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                     task_id INTEGER NOT NULL,
+                     task_label_id INTEGER NOT NULL,
+                     
+                     Foreign Key(task_id) References {self.task_table_name}(id)
+                     Foreign Key(task_label_id) References {self.task_label_table_name}(id)
+                 );
+             """
+
+        self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.task_task_label_pivot_table_name}", is_verbose=self.verbose)
 
     def generate_base_db_structure(self, strict: bool = False) -> None:
         """
@@ -382,6 +408,8 @@ class DBManager:
             self.__create_todo_item_table()
 
             self.__create_task_label_table()
+
+            self.__create_task_task_label_pivot_table()
 
             self.connection.commit()
 
