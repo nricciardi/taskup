@@ -30,14 +30,7 @@ class DBManager:
 
         # generate db
         if not db_exists:
-            try:
-
-                self.generate_base_db_structure()
-
-            except Exception as exception:
-                Base.log_error(message=exception, is_verbose=self.verbose)
-
-                Base.exit()
+            self.generate_base_db_structure(strict=True)
 
     def __del__(self):
         self.__db_connection.close()
@@ -49,17 +42,15 @@ class DBManager:
 
         return append_localtime
 
-    def __datetime(self, datetime: str) -> str:
-        return f"(strftime('%Y-%m-%d %H:%M:%S', {datetime}{self.__append_localtime()}))"
+    def __datetime(self, datetime: str, strict_string: bool = False) -> str:
+        return f"""strftime('%Y-%m-%d %H:%M:%S', {"'" if strict_string else ""}{datetime}{self.__append_localtime()}{"'" if strict_string else ""})"""
 
-    def __date(self, date: str) -> str:
-        return f"(strftime('%Y-%m-%d', {date}{self.__append_localtime()}))"
+    def __date(self, date: str, strict_string: bool = False) -> str:
+        return f"""strftime('%Y-%m-%d', {"'" if strict_string else ""}{date}{self.__append_localtime()}{"'" if strict_string else ""})"""
 
     def __timestamp(self) -> str:
-        return f"""
-        created_at DATETIME DEFAULT (strftime('%Y-%m-%d %H:%M:%S', {self.__datetime('now')})),
-        updated_at DATETIME DEFAULT (strftime('%Y-%m-%d %H:%M:%S', {self.__datetime('now')})),
-        """
+        return f"""created_at DATETIME DEFAULT ({self.__datetime('now', strict_string=True)}),
+                   updated_at DATETIME DEFAULT ({self.__datetime('now', strict_string=True)}),"""
 
     @property
     def db_path(self):
@@ -101,7 +92,7 @@ class DBManager:
         :rtype None:
         """
 
-        self.cursor.execute(f"""
+        query = f"""
             Create Table if not exists {self.role_table_name} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(100) NOT NULL UNIQUE,
@@ -111,7 +102,9 @@ class DBManager:
                 permission_move_forward INTEGER NOT NULL,
                 permission_edit INTEGER NOT NULL
             );
-        """)
+        """
+
+        self.cursor.execute(query)
 
     def __insert_base_roles(self) -> None:
         """
@@ -125,14 +118,16 @@ class DBManager:
 
             Base.log_info(f"start to fill {self.role_table_name}", is_verbose=self.verbose)
 
-            self.cursor.execute(f"""
+            query = f"""
                         Insert Into {self.role_table_name} (name, permission_create, permission_read_all,
                          permission_move_backward, permission_move_forward, permission_edit)
                         Values
                         ("Project Manager", 1, 1, 1, 1, 1),
                         ("Development", 1, 0, 1, 1, 0),
                         ("Base", 0, 0, 0, 0, 0);
-                    """)
+                    """
+
+            self.cursor.execute(query)
 
             Base.log_info(message=f"{self.role_table_name} filled", is_verbose=self.verbose)
 
@@ -149,7 +144,7 @@ class DBManager:
         :rtype None:
         """
 
-        self.cursor.execute(f"""
+        query = f"""
             Create Table if not exists {self.user_table_name} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username VARCHAR(100) NOT NULL UNIQUE,
@@ -160,7 +155,9 @@ class DBManager:
                 
                 Foreign Key (role_id) References {self.role_table_name}(id)
             );
-        """)
+        """
+
+        self.cursor.execute(query)
 
     @property
     def task_status_table_name(self) -> str:
@@ -174,7 +171,7 @@ class DBManager:
         :rtype None:
         """
 
-        self.cursor.execute(f"""
+        query = f"""
              Create Table if not exists {self.task_status_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name VARCHAR(150) NOT NULL UNIQUE,
@@ -184,7 +181,9 @@ class DBManager:
                  
                  Foreign Key (default_next_task_status_id) References {self.task_status_table_name}(id)
              );
-         """)
+         """
+
+        self.cursor.execute(query)
 
     @property
     def ideas_task_status_id(self) -> int:
@@ -231,7 +230,7 @@ class DBManager:
             Base.log_info(f"start to fill {self.task_status_table_name}", is_verbose=self.verbose)
 
             # insert default task status
-            self.cursor.execute(f"""
+            query = f"""
                         Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id)
                         Values
                         ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL),
@@ -241,7 +240,9 @@ class DBManager:
                         ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}),
                         ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}),
                         ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id});
-                    """)
+                    """
+
+            self.cursor.execute(query)
 
             Base.log_info(message=f"{self.task_status_table_name} filled", is_verbose=self.verbose)
 
@@ -262,27 +263,62 @@ class DBManager:
         :rtype None:
         """
 
-
-        self.cursor.execute(f"""
+        query = f"""
              Create Table if not exists {self.task_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name VARCHAR(150) NOT NULL,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR date(deadline) > date('now'{self.__append_localtime()})),
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
 
                  author_id INTEGER NOT NULL,
-                 task_status_id INTEGER NOT NULL DEFAULT {self.todo_task_status_id},
+                 task_status_id INTEGER NOT NULL,
 
                  Foreign Key(author_id) References {self.user_table_name}(id),
                  Foreign Key(task_status_id) References {self.task_status_table_name}(id)
              );
-         """)
+         """
 
-    def generate_base_db_structure(self) -> None:
+        self.cursor.execute(query)
+
+    @property
+    def todo_list_table_name(self) -> str:
+        return "todo_list"
+
+    def __create_todo_list_table(self) -> None:
+        """
+        Create task table if not exists
+
+        :return: None
+        :rtype None:
+        """
+
+        query = f"""
+             Create Table if not exists {self.todo_list_table_name} (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 description VARCHAR(1000) NOT NULL,
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
+                 priority INTEGER NOT NULL DEFAULT 0,
+                 {self.__timestamp()}
+                 done INTEGER NOT NULL DEFAULT 0,
+
+                 author_id INTEGER NOT NULL,
+                 task_id INTEGER NOT NULL,
+
+                 Foreign Key(author_id) References {self.user_table_name}(id),
+                 Foreign Key(task_id) References {self.task_table_name}(id)
+             );
+         """
+
+        self.cursor.execute(query)
+
+    def generate_base_db_structure(self, strict: bool = False) -> None:
         """
         Generate the base db of project
+
+        :param strict: flag to interrupt application if there is an exception
+        :type strict: bool
 
         :return: None
         :rtype None:
@@ -307,8 +343,11 @@ class DBManager:
             self.__insert_base_task_status()
             Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
-            # self.__create_task_table()
+            self.__create_task_table()
             Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
+
+            self.__create_todo_list_table()
+            Base.log_info(f"created if not exists {self.todo_list_table_name}", is_verbose=self.verbose)
 
             self.connection.commit()
 
@@ -317,5 +356,8 @@ class DBManager:
         except Exception as exception:
 
             Base.log_error(message="error occurs during generate db", full=True, is_verbose=self.verbose)
+
+            if strict:
+                Base.exit()
 
             raise exception
