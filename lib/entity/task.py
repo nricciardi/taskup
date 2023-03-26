@@ -47,7 +47,7 @@ class TasksManager(EntityManager):
 
     def create(self, data: dict) -> TaskModel:
         """
-        Create the task from data
+        Create a task from data
 
         :param data: task data
         :type data: dict
@@ -58,7 +58,7 @@ class TasksManager(EntityManager):
 
         data = super().create(data)
 
-        return data
+        return TaskModel.from_tuple(data)
 
 
 @dataclass
@@ -98,7 +98,7 @@ class TaskStatusManager(EntityManager):
 
     def create(self, data: dict) -> TaskStatusModel:
         """
-        Create the task status from data
+        Create a task status from data
 
         :param data: task status data
         :type data: dict
@@ -109,4 +109,60 @@ class TaskStatusManager(EntityManager):
 
         data = super().create(data)
 
-        return data
+        return TaskStatusModel.from_tuple(data)
+
+@dataclass
+class TodoItemModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    deadline: date
+    priority: int
+    created_at: datetime
+    updated_at: datetime
+    done: bool
+    author_id: int
+    task_id: int
+
+
+class TodoListManager(EntityManager):
+    __table_name = "todo_list"
+    __settings_manager = SettingsManager()
+
+    def __init__(self):
+        verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
+        db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        work_directory_path = self.__settings_manager.work_directory_path()
+
+        super().__init__(db_name=db_name, table_name=self.__table_name, verbose=verbose,
+                         work_directory_path=work_directory_path)
+
+    def find(self, todo_item_id: int) -> TodoItemModel:
+        """
+        Find the todoitem with specified id
+
+        :param todo_item_id: todoitem id
+        :type todo_item_id: int
+
+        :return: TodoItemModel
+        :rtype TodoItemModel:
+        """
+
+        data = super().find(todo_item_id)
+
+        return TodoItemModel.from_tuple(data)
+
+    def create(self, data: dict) -> TodoItemModel:
+        """
+        Create a todoitem from data
+
+        :param data: task status data
+        :type data: dict
+
+        :return: TodoItemModel
+        :rtype TodoItemModel:
+        """
+
+        data = super().create(data)
+
+        return TodoItemModel.from_tuple(data)
