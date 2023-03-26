@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from lib.settings.settings_manager import SettingsManager
 from lib.entity.bem import BaseEntityModel
 from lib.utils.base import Base
+from typing import List, Dict, Any
 
 
 @dataclass
@@ -57,6 +58,16 @@ class UsersManager(EntityManager):
         data = super().create(data)
 
         return UserModel.from_tuple(data)
+
+    def all_as_dict(self) -> List[Dict[str, Any]]:
+        """
+        Return all users as dict
+
+        :return: all users as dict
+        :rtype List[Dict[str, Any]]:
+        """
+
+        raise NotImplementedError
 
 
 @dataclass
@@ -113,3 +124,13 @@ class RolesManager(EntityManager):
         data = super().create(data)
 
         return RoleModel.from_tuple(data)
+
+    def all_as_dict(self) -> List[Dict[str, Any]]:
+        """
+        Return all users as dict
+
+        :return: all users as dict
+        :rtype List[Dict[str, Any]]:
+        """
+
+        raise NotImplementedError

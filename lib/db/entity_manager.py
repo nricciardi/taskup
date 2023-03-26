@@ -3,7 +3,7 @@ from lib.db.db_manager import DBManager
 from abc import ABC, abstractmethod
 from lib.utils.base import Base, BEM
 from lib.entity.bem import BaseEntityModel
-from typing import Any
+from typing import Any, List, Tuple, Dict
 
 
 class EntityManager(DBManager, ABC):
@@ -73,7 +73,7 @@ class EntityManager(DBManager, ABC):
 
             raise TypeError(msg)
 
-    def all(self) -> list:
+    def all(self) -> List[Tuple[Any, ...]]:
         """
         Return all records from db table
 
@@ -81,9 +81,33 @@ class EntityManager(DBManager, ABC):
         :rtype: list
         """
 
-        res = self.__db_cursor.execute(f"Select * From {self.table_name};")
+        res = self.cursor.execute(f"Select * From {self.table_name};")
 
         return res.fetchall()
+
+    @abstractmethod
+    def all_as_dict(self) -> List[Dict[str, Any]]:
+        """
+        Abstract method.
+        Return all entities as dict.
+
+        :return: all entities as dict
+        :rtype List[Dict[str, Any]]:
+        """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def all_as_model(self) -> List[BEM]:
+        """
+        Abstract method.
+        Return all entities as BEM model.
+
+        :return: all entities as BEM model
+        :rtype List[BEM]:
+        """
+
+        raise NotImplementedError
 
     def find(self, entity_id: int) -> tuple:
         """

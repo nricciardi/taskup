@@ -279,7 +279,7 @@ class DBManager:
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name VARCHAR(150) NOT NULL,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
+                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
                                                                                                         strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
@@ -339,7 +339,7 @@ class DBManager:
              Create Table if not exists {self.todo_item_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
+                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
                                                                                                         strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}

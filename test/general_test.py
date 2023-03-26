@@ -1,21 +1,25 @@
 from lib.entity.user import UsersManager, UserModel
 from lib.project.project_manager import ProjectManager
-from lib.entity.task import TaskTaskLabelPivotModel
+from lib.entity.task import TaskTaskLabelPivotModel, TasksManager
 
 if __name__ == '__main__':
     pm = ProjectManager()
 
     user_manager = UsersManager()
+    task_manager = TasksManager()
 
-    # um = UserModel(1, "nicola")
-    # um2 = UserModel(1, "asdf")
-    # um3 = UserModel.from_dict()
+    # n = 3
+    # user = user_manager.create({"username": f"franco{n}",
+    #                             "email": f"n{n}@r.com",
+    #                             "password": "asdf",
+    #                             "role_id": 1})
+    # print(user)
     #
+    # task = task_manager.create({
+    #     "name": f"prova task{n}",
+    #     "description": f"descrizione di prova{n}",
+    #     "author_id": user.id,
+    #     "task_status_id": 3
+    # })
 
-    # print(user_manager.find(1))
-
-    n = 26
-    print(user_manager.create({"username": f"franco{n}",
-                               "email": f"n{n}@r.com",
-                               "password": "asdf",
-                               "role_id": 1}))
+    print(user_manager.all())
