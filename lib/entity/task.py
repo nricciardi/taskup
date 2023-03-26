@@ -220,7 +220,57 @@ class TaskLabelsManager(EntityManager):
         return TaskLabelModel.from_tuple(data)
 
 
-# =========== PIVOT =================
+@dataclass
+class TaskAssignmentModel(BaseEntityModel):
+    id: int
+    user_id: int
+    task_id: int
+
+
+class TaskAssignmentsManager(EntityManager):
+    __table_name = "task_assignment"
+    __settings_manager = SettingsManager()
+
+    def __init__(self):
+        verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
+        db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        work_directory_path = self.__settings_manager.work_directory_path()
+
+        super().__init__(db_name=db_name, table_name=self.__table_name, verbose=verbose,
+                         work_directory_path=work_directory_path)
+
+    def find(self, task_assignment_id: int) -> TaskAssignmentModel:
+        """
+        Find the task assignment with specified id
+
+        :param task_assignment_id: task assignment id
+        :type task_assignment_id: int
+
+        :return: TaskAssignmentModel
+        :rtype TaskAssignmentModel:
+        """
+
+        data = super().find(task_assignment_id)
+
+        return TaskAssignmentModel.from_tuple(data)
+
+    def create(self, data: dict) -> TaskAssignmentModel:
+        """
+        Create a task assignment from data
+
+        :param data: task assignment data
+        :type data: dict
+
+        :return: TaskAssignmentModel
+        :rtype TaskAssignmentModel:
+        """
+
+        data = super().create(data)
+
+        return TaskAssignmentModel.from_tuple(data)
+
+
+# ==================== PIVOT =====================
 
 @dataclass
 class TaskTaskLabelPivotModel(BaseEntityModel):

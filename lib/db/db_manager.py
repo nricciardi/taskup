@@ -101,7 +101,9 @@ class DBManager:
                 permission_read_all INTEGER NOT NULL,
                 permission_move_backward INTEGER NOT NULL,
                 permission_move_forward INTEGER NOT NULL,
-                permission_edit INTEGER NOT NULL
+                permission_edit INTEGER NOT NULL,
+                permission_change_role INTEGER NOT NULL,
+                permission_change_assignment INTEGER NOT NULL
             );
         """
 
@@ -123,11 +125,13 @@ class DBManager:
 
             query = f"""
                         Insert Into {self.role_table_name} (name, permission_create, permission_read_all,
-                         permission_move_backward, permission_move_forward, permission_edit)
+                         permission_move_backward, permission_move_forward, permission_edit, permission_change_role,
+                         permission_change_assignment)
                         Values
-                        ("Project Manager", 1, 1, 1, 1, 1),
-                        ("Development", 1, 0, 1, 1, 0),
-                        ("Base", 0, 0, 0, 0, 0);
+                        ("Project Manager", 1, 1, 1, 1, 1, 1, 1),
+                        ("Supervisor", 1, 1, 1, 1, 1, 0, 1),
+                        ("Teammate", 1, 0, 1, 1, 0, 0, 0),
+                        ("Base", 0, 0, 0, 0, 0, 0, 0);
                     """
 
             self.cursor.execute(query)
@@ -293,6 +297,33 @@ class DBManager:
         Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
 
     @property
+    def task_assignment_table_name(self) -> str:
+        return "task_assignment"
+
+    def __create_task_assignment_table(self) -> None:
+        """
+        Create task assignment table if not exists
+
+        :return: None
+        :rtype None:
+        """
+
+        query = f"""
+                 Create Table if not exists {self.task_assignment_table_name} (
+                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                     user_id INTEGER NOT NULL,
+                     task_id INTEGER NOT NULL,
+
+                     Foreign Key(user_id) References {self.user_table_name}(id)
+                     Foreign Key(task_id) References {self.task_table_name}(id)
+                 );
+             """
+
+        self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.task_assignment_table_name}", is_verbose=self.verbose)
+
+    @property
     def todo_item_table_name(self) -> str:
         return "todo_item"
 
@@ -404,6 +435,8 @@ class DBManager:
             self.__insert_base_task_status()
 
             self.__create_task_table()
+
+            self.__create_task_assignment_table()
 
             self.__create_todo_item_table()
 
