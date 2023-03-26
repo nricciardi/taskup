@@ -45,7 +45,7 @@ class UsersManager(EntityManager):
 
     def create(self, data: dict) -> UserModel:
         """
-        Create the user from data
+        Create a user from data
 
         :param data: user data
         :type data: dict

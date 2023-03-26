@@ -268,7 +268,8 @@ class DBManager:
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name VARCHAR(150) NOT NULL,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', 
+                                                                                                        strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
 
@@ -283,22 +284,23 @@ class DBManager:
         self.cursor.execute(query)
 
     @property
-    def todo_list_table_name(self) -> str:
-        return "todo_list"
+    def todo_item_table_name(self) -> str:
+        return "todo_item"
 
-    def __create_todo_list_table(self) -> None:
+    def __create_todo_item_table(self) -> None:
         """
-        Create task table if not exists
+        Create todoitem table if not exists
 
         :return: None
         :rtype None:
         """
 
         query = f"""
-             Create Table if not exists {self.todo_list_table_name} (
+             Create Table if not exists {self.todo_item_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', 
+                                                                                                        strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
                  done INTEGER NOT NULL DEFAULT 0,
@@ -346,8 +348,8 @@ class DBManager:
             self.__create_task_table()
             Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
 
-            self.__create_todo_list_table()
-            Base.log_info(f"created if not exists {self.todo_list_table_name}", is_verbose=self.verbose)
+            self.__create_todo_item_table()
+            Base.log_info(f"created if not exists {self.todo_item_table_name}", is_verbose=self.verbose)
 
             self.connection.commit()
 

@@ -45,7 +45,7 @@ class RolesManager(EntityManager):
 
     def create(self, data: dict) -> RoleModel:
         """
-        Create the role from data
+        Create a role from data
 
         :param data: role data
         :type data: dict
