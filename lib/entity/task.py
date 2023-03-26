@@ -111,6 +111,7 @@ class TaskStatusManager(EntityManager):
 
         return TaskStatusModel.from_tuple(data)
 
+
 @dataclass
 class TodoItemModel(BaseEntityModel):
     id: int
@@ -125,7 +126,7 @@ class TodoItemModel(BaseEntityModel):
     task_id: int
 
 
-class TodoListManager(EntityManager):
+class TodoItemsManager(EntityManager):
     __table_name = "todo_list"
     __settings_manager = SettingsManager()
 
@@ -166,3 +167,54 @@ class TodoListManager(EntityManager):
         data = super().create(data)
 
         return TodoItemModel.from_tuple(data)
+
+
+@dataclass
+class TaskLabelModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    rgb_color: str
+
+
+class TaskLabelsManager(EntityManager):
+    __table_name = "task_label"
+    __settings_manager = SettingsManager()
+
+    def __init__(self):
+        verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
+        db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        work_directory_path = self.__settings_manager.work_directory_path()
+
+        super().__init__(db_name=db_name, table_name=self.__table_name, verbose=verbose,
+                         work_directory_path=work_directory_path)
+
+    def find(self, task_label_id: int) -> TaskLabelModel:
+        """
+        Find the task label with specified id
+
+        :param task_label_id: task label id
+        :type task_label_id: int
+
+        :return: TaskLabelModel
+        :rtype TaskLabelModel:
+        """
+
+        data = super().find(task_label_id)
+
+        return TaskLabelModel.from_tuple(data)
+
+    def create(self, data: dict) -> TaskLabelModel:
+        """
+        Create a task label from data
+
+        :param data: task status data
+        :type data: dict
+
+        :return: TaskLabelModel
+        :rtype TaskLabelModel:
+        """
+
+        data = super().create(data)
+
+        return TaskLabelModel.from_tuple(data)

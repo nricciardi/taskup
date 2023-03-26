@@ -4,7 +4,8 @@ import os
 
 
 class DBManager:
-    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False, use_localtime: bool = False):
+    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False,
+                 use_localtime: bool = False):
 
         self.verbose = verbose
         self.use_localtime = use_localtime
@@ -13,7 +14,7 @@ class DBManager:
         self.__work_directory_path: str = work_directory_path
         self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
 
-        db_exists = os.path.exists(self.__db_path)      # if False => database structure must be created
+        db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
         Base.log_info(message=f"database {self.db_path} found", is_verbose=self.verbose)
 
@@ -106,6 +107,8 @@ class DBManager:
 
         self.cursor.execute(query)
 
+        Base.log_info(f"created if not exists {self.role_table_name}", is_verbose=self.verbose)
+
     def __insert_base_roles(self) -> None:
         """
         Insert into db base roles
@@ -129,7 +132,7 @@ class DBManager:
 
             self.cursor.execute(query)
 
-            Base.log_info(message=f"{self.role_table_name} filled", is_verbose=self.verbose)
+            Base.log_info(f"inserted base data in {self.role_table_name}", is_verbose=self.verbose)
 
         except Exception as exception:
 
@@ -159,6 +162,8 @@ class DBManager:
 
         self.cursor.execute(query)
 
+        Base.log_info(f"created if not exists {self.user_table_name}", is_verbose=self.verbose)
+
     @property
     def task_status_table_name(self) -> str:
         return "task_status"
@@ -184,6 +189,8 @@ class DBManager:
          """
 
         self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.task_status_table_name}", is_verbose=self.verbose)
 
     @property
     def ideas_task_status_id(self) -> int:
@@ -244,7 +251,7 @@ class DBManager:
 
             self.cursor.execute(query)
 
-            Base.log_info(message=f"{self.task_status_table_name} filled", is_verbose=self.verbose)
+            Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
         except Exception as exception:
 
@@ -268,7 +275,7 @@ class DBManager:
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  name VARCHAR(150) NOT NULL,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', 
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
                                                                                                         strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
@@ -282,6 +289,8 @@ class DBManager:
          """
 
         self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
 
     @property
     def todo_item_table_name(self) -> str:
@@ -299,7 +308,7 @@ class DBManager:
              Create Table if not exists {self.todo_item_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', 
+                 deadline DATE NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
                                                                                                         strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
@@ -314,6 +323,34 @@ class DBManager:
          """
 
         self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.todo_item_table_name}", is_verbose=self.verbose)
+
+
+    @property
+    def task_label_table_name(self) -> str:
+        return "task_label"
+
+    def __create_task_label_table(self) -> None:
+        """
+        Create task label table if not exists
+
+        :return: None
+        :rtype None:
+        """
+
+        query = f"""
+             Create Table if not exists {self.task_label_table_name} (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 name VARCHAR(500) NOT NULL,
+                 description VARCHAR(1000) NULL,
+                 rgb_color TEXT(6) NOT NULL
+             );
+         """
+
+        self.cursor.execute(query)
+
+        Base.log_info(f"created if not exists {self.task_label_table_name}", is_verbose=self.verbose)
 
     def generate_base_db_structure(self, strict: bool = False) -> None:
         """
@@ -331,25 +368,20 @@ class DBManager:
             Base.log_info("start to generate base db", is_verbose=self.verbose)
 
             self.__create_role_table()
-            Base.log_info(f"created if not exists {self.role_table_name}", is_verbose=self.verbose)
 
             self.__insert_base_roles()
-            Base.log_info(f"inserted base data in {self.role_table_name}", is_verbose=self.verbose)
 
             self.__create_user_table()
-            Base.log_info(f"created if not exists {self.user_table_name}", is_verbose=self.verbose)
 
             self.__create_task_status_table()
-            Base.log_info(f"created if not exists {self.task_status_table_name}", is_verbose=self.verbose)
 
             self.__insert_base_task_status()
-            Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
             self.__create_task_table()
-            Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
 
             self.__create_todo_item_table()
-            Base.log_info(f"created if not exists {self.todo_item_table_name}", is_verbose=self.verbose)
+
+            self.__create_task_label_table()
 
             self.connection.commit()
 
