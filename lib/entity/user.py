@@ -18,6 +18,8 @@ class UsersManager(EntityManager):
     __table_name = "user"
     __settings_manager = SettingsManager()
 
+    db_use_localtime = False
+
     def __init__(self):
         verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
         db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)

@@ -11,13 +11,16 @@ class EntityManager(DBManager, ABC):
     Abstract class to manage DB's entities
     """
 
+    db_use_localtime: bool = False
+
     def __init__(self, table_name: str, db_name: str, work_directory_path: str, verbose: bool = False):
 
         self.__table_name = table_name
         self.__db_name = db_name
         self.__verbose = verbose
 
-        super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose)
+        super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose,
+                         use_localtime=self.db_use_localtime)
 
     @property
     def table_name(self) -> str:

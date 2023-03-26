@@ -22,30 +22,30 @@ class TasksManager(EntityManager):
         super().__init__(db_name=db_name, table_name=self.__table_name, verbose=verbose,
                          work_directory_path=work_directory_path)
 
-    def find(self, user_id: int) -> TaskModel:
+    def find(self, task_id: int) -> TaskModel:
         """
-        Find the user with specified id
+        Find the task with specified id
 
-        :param user_id: user id
-        :type user_id: int
+        :param task_id: task id
+        :type task_id: int
 
-        :return: UserModel
-        :rtype UserModel:
+        :return: TaskModel
+        :rtype TaskModel:
         """
 
-        data = super().find(user_id)
+        data = super().find(task_id)
 
         return TaskModel.from_tuple(data)
 
     def create(self, data: dict) -> TaskModel:
         """
-        Create the user from data
+        Create the task from data
 
-        :param data: user data
+        :param data: task data
         :type data: dict
 
-        :return: UserModel
-        :rtype UserModel:
+        :return: TaskModel
+        :rtype TaskModel:
         """
 
         data = super().create(data)
