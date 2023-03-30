@@ -19,3 +19,5 @@ To run Sphinx doc:
 - **Project Directory:** the managed project path
 - **Work Directory:** the work directory inside _project directory_
 
+## TO-DO
+- [ ] Why some js file aren't tracked?
