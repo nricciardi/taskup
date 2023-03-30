@@ -21,3 +21,4 @@ To run Sphinx doc:
 
 ## TO-DO
 - [ ] Why some js file aren't tracked?
+- [ ] Remove .vs and .idea
