@@ -8,7 +8,7 @@ class UtilsTest(unittest.TestCase):
         cls.base = Base()
 
     def test_base_directory(self):
-        self.assertEqual("/home/ncla/Desktop/project/project-pi/code/pi-project", self.base.base_directory)
+        self.assertEqual("/home/ncla/Desktop/app/app-pi/code/pi-app", self.base.base_directory)
 
 
 if __name__ == '__main__':

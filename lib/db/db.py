@@ -423,7 +423,7 @@ class DBManager:
 
     def generate_base_db_structure(self, strict: bool = False) -> None:
         """
-        Generate the base db of project
+        Generate the base db of app
 
         :param strict: flag to interrupt application if there is an exception
         :type strict: bool
@@ -468,3 +468,4 @@ class DBManager:
                 Base.exit()
 
             raise exception
+

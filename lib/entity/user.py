@@ -22,8 +22,8 @@ class UsersManager(EntityManager):
     db_use_localtime = False
 
     def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
+        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
         work_directory_path = self.__settings_manager.work_directory_path()
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
@@ -98,8 +98,8 @@ class RolesManager(EntityManager):
     __settings_manager = SettingsManager()
 
     def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
+        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
+        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
         work_directory_path = self.__settings_manager.work_directory_path()
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
