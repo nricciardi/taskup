@@ -1,5 +1,7 @@
-
+from lib.app.app import App
 
 
 if __name__ == '__main__':
-    pass
+    app = App()
+
+    app.start()
