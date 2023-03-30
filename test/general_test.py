@@ -1,5 +1,5 @@
 from lib.entity.user import UsersManager, UserModel
-from lib.project.project_manager import ProjectManager
+from lib.app.project import ProjectManager
 from lib.entity.task import TaskTaskLabelPivotModel, TasksManager
 
 if __name__ == '__main__':

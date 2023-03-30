@@ -7,12 +7,12 @@ class ProjectManager:
     def __init__(self):
         self.__settings_manager: SettingsManager = SettingsManager()
 
-        self.verbose = self.__settings_manager.get(self.__settings_manager.VERBOSE_KEY)
-        db_name = self.__settings_manager.get(self.__settings_manager.DB_NAME_KEY)
-        use_localtime = self.__settings_manager.get(self.__settings_manager.DB_LOCALTIME_KEY)
+        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
+        db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
+        use_localtime = self.__settings_manager.get(self.__settings_manager.KEY_DB_LOCALTIME)
         work_directory_path = self.__settings_manager.work_directory_path()
 
-        # create work directory inside project if it does NOT exist
+        # create work directory inside app if it does NOT exist
         if not self.exist_work_directory():
             self.create_work_directory()
 
@@ -34,7 +34,7 @@ class ProjectManager:
 
     def create_work_directory(self) -> None:
         """
-        Create work directory in the project
+        Create work directory in the app
 
         :rtype None:
         """
