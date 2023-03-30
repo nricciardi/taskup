@@ -11,7 +11,8 @@ Welcome to Pi Project's documentation!
    :caption: Contents:
 
    modules
-   dbmanager
+   lib
+
 
 
 Indices and tables

@@ -14,7 +14,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="dbmanager package" href="dbmanager.html" />
+    <link rel="next" title="lib package" href="lib.html" />
     <link rel="prev" title="Welcome to Pi Project’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -36,10 +36,304 @@
 <h1>pi-project<a class="headerlink" href="#pi-project" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="dbmanager.html">dbmanager package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dbmanager.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dbmanager.html#dbmanager-db-manager-module">dbmanager.db_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dbmanager.html#module-contents">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">lib package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.html">app package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#module-app.app">app.app module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="app.html#app.app.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="app.html#app.app.App.start"><code class="docutils literal notranslate"><span class="pre">App.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#module-app.project">app.project module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="app.html#app.project.ProjectManager"><code class="docutils literal notranslate"><span class="pre">ProjectManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="app.html#app.project.ProjectManager.create_work_directory"><code class="docutils literal notranslate"><span class="pre">ProjectManager.create_work_directory()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="app.html#app.project.ProjectManager.exist_work_directory"><code class="docutils literal notranslate"><span class="pre">ProjectManager.exist_work_directory()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="app.html#app.project.ProjectManager.project_path"><code class="docutils literal notranslate"><span class="pre">ProjectManager.project_path</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#module-app">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="db.html">db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="db.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#module-db.db">db.db module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="db.html#db.db.DBManager"><code class="docutils literal notranslate"><span class="pre">DBManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.backlog_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.backlog_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.bug_fixing_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.bug_fixing_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.connection"><code class="docutils literal notranslate"><span class="pre">DBManager.connection</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.cursor"><code class="docutils literal notranslate"><span class="pre">DBManager.cursor</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.db_name"><code class="docutils literal notranslate"><span class="pre">DBManager.db_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.db_path"><code class="docutils literal notranslate"><span class="pre">DBManager.db_path</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.doing_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.doing_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.done_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.done_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.generate_base_db_structure"><code class="docutils literal notranslate"><span class="pre">DBManager.generate_base_db_structure()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.ideas_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.ideas_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.release_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.release_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.role_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.role_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.task_assignment_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.task_assignment_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.task_label_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.task_label_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.task_status_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.task_status_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.task_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.task_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.task_task_label_pivot_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.task_task_label_pivot_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.testing_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.testing_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.todo_item_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.todo_item_table_name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.todo_task_status_id"><code class="docutils literal notranslate"><span class="pre">DBManager.todo_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.db.DBManager.user_table_name"><code class="docutils literal notranslate"><span class="pre">DBManager.user_table_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#module-db.entity">db.entity module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="db.html#db.entity.EntityManager"><code class="docutils literal notranslate"><span class="pre">EntityManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.all"><code class="docutils literal notranslate"><span class="pre">EntityManager.all()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">EntityManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">EntityManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.create"><code class="docutils literal notranslate"><span class="pre">EntityManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.db_use_localtime"><code class="docutils literal notranslate"><span class="pre">EntityManager.db_use_localtime</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.find"><code class="docutils literal notranslate"><span class="pre">EntityManager.find()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="db.html#db.entity.EntityManager.table_name"><code class="docutils literal notranslate"><span class="pre">EntityManager.table_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#module-db">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="entity.html">entity package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="entity.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="entity.html#module-entity.bem">entity.bem module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel.from_dict"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel.from_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel.from_tuple"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel.from_tuple()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel.id"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel.to_dict"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel.to_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.bem.BaseEntityModel.update"><code class="docutils literal notranslate"><span class="pre">BaseEntityModel.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="entity.html#module-entity.task">entity.task module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentModel"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentModel.id"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentModel.task_id"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentModel.task_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentModel.user_id"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentModel.user_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentsManager"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentsManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentsManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentsManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentsManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentsManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentsManager.create"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentsManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskAssignmentsManager.find"><code class="docutils literal notranslate"><span class="pre">TaskAssignmentsManager.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskLabelModel"><code class="docutils literal notranslate"><span class="pre">TaskLabelModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelModel.description"><code class="docutils literal notranslate"><span class="pre">TaskLabelModel.description</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelModel.id"><code class="docutils literal notranslate"><span class="pre">TaskLabelModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelModel.name"><code class="docutils literal notranslate"><span class="pre">TaskLabelModel.name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelModel.rgb_color"><code class="docutils literal notranslate"><span class="pre">TaskLabelModel.rgb_color</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskLabelsManager"><code class="docutils literal notranslate"><span class="pre">TaskLabelsManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelsManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">TaskLabelsManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelsManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">TaskLabelsManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelsManager.create"><code class="docutils literal notranslate"><span class="pre">TaskLabelsManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskLabelsManager.find"><code class="docutils literal notranslate"><span class="pre">TaskLabelsManager.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskModel"><code class="docutils literal notranslate"><span class="pre">TaskModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.author_id"><code class="docutils literal notranslate"><span class="pre">TaskModel.author_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.created_at"><code class="docutils literal notranslate"><span class="pre">TaskModel.created_at</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.deadline"><code class="docutils literal notranslate"><span class="pre">TaskModel.deadline</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.description"><code class="docutils literal notranslate"><span class="pre">TaskModel.description</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.id"><code class="docutils literal notranslate"><span class="pre">TaskModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.name"><code class="docutils literal notranslate"><span class="pre">TaskModel.name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.priority"><code class="docutils literal notranslate"><span class="pre">TaskModel.priority</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.task_status_id"><code class="docutils literal notranslate"><span class="pre">TaskModel.task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskModel.updated_at"><code class="docutils literal notranslate"><span class="pre">TaskModel.updated_at</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskStatusManager"><code class="docutils literal notranslate"><span class="pre">TaskStatusManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">TaskStatusManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">TaskStatusManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusManager.create"><code class="docutils literal notranslate"><span class="pre">TaskStatusManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusManager.find"><code class="docutils literal notranslate"><span class="pre">TaskStatusManager.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskStatusModel"><code class="docutils literal notranslate"><span class="pre">TaskStatusModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusModel.default_next_task_status_id"><code class="docutils literal notranslate"><span class="pre">TaskStatusModel.default_next_task_status_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusModel.description"><code class="docutils literal notranslate"><span class="pre">TaskStatusModel.description</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusModel.id"><code class="docutils literal notranslate"><span class="pre">TaskStatusModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskStatusModel.name"><code class="docutils literal notranslate"><span class="pre">TaskStatusModel.name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TaskTaskLabelPivotModel"><code class="docutils literal notranslate"><span class="pre">TaskTaskLabelPivotModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskTaskLabelPivotModel.description"><code class="docutils literal notranslate"><span class="pre">TaskTaskLabelPivotModel.description</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskTaskLabelPivotModel.id"><code class="docutils literal notranslate"><span class="pre">TaskTaskLabelPivotModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskTaskLabelPivotModel.name"><code class="docutils literal notranslate"><span class="pre">TaskTaskLabelPivotModel.name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TaskTaskLabelPivotModel.rgb_color"><code class="docutils literal notranslate"><span class="pre">TaskTaskLabelPivotModel.rgb_color</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TasksManager"><code class="docutils literal notranslate"><span class="pre">TasksManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TasksManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">TasksManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TasksManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">TasksManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TasksManager.create"><code class="docutils literal notranslate"><span class="pre">TasksManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TasksManager.find"><code class="docutils literal notranslate"><span class="pre">TasksManager.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TodoItemModel"><code class="docutils literal notranslate"><span class="pre">TodoItemModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.author_id"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.author_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.created_at"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.created_at</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.deadline"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.deadline</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.description"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.description</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.done"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.done</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.id"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.name"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.priority"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.priority</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.task_id"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.task_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemModel.updated_at"><code class="docutils literal notranslate"><span class="pre">TodoItemModel.updated_at</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.task.TodoItemsManager"><code class="docutils literal notranslate"><span class="pre">TodoItemsManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemsManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">TodoItemsManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemsManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">TodoItemsManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemsManager.create"><code class="docutils literal notranslate"><span class="pre">TodoItemsManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.task.TodoItemsManager.find"><code class="docutils literal notranslate"><span class="pre">TodoItemsManager.find()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="entity.html#module-entity.user">entity.user module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.user.RoleModel"><code class="docutils literal notranslate"><span class="pre">RoleModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.id"><code class="docutils literal notranslate"><span class="pre">RoleModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.name"><code class="docutils literal notranslate"><span class="pre">RoleModel.name</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_change_assignment"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_change_assignment</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_change_role"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_change_role</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_create"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_create</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_edit"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_edit</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_move_backward"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_move_backward</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_move_forward"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_move_forward</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RoleModel.permission_read_all"><code class="docutils literal notranslate"><span class="pre">RoleModel.permission_read_all</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.user.RolesManager"><code class="docutils literal notranslate"><span class="pre">RolesManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RolesManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">RolesManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RolesManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">RolesManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RolesManager.create"><code class="docutils literal notranslate"><span class="pre">RolesManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.RolesManager.find"><code class="docutils literal notranslate"><span class="pre">RolesManager.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.user.UserModel"><code class="docutils literal notranslate"><span class="pre">UserModel</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UserModel.email"><code class="docutils literal notranslate"><span class="pre">UserModel.email</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UserModel.id"><code class="docutils literal notranslate"><span class="pre">UserModel.id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UserModel.password"><code class="docutils literal notranslate"><span class="pre">UserModel.password</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UserModel.role_id"><code class="docutils literal notranslate"><span class="pre">UserModel.role_id</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UserModel.username"><code class="docutils literal notranslate"><span class="pre">UserModel.username</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="entity.html#entity.user.UsersManager"><code class="docutils literal notranslate"><span class="pre">UsersManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UsersManager.all_as_dict"><code class="docutils literal notranslate"><span class="pre">UsersManager.all_as_dict()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UsersManager.all_as_model"><code class="docutils literal notranslate"><span class="pre">UsersManager.all_as_model()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UsersManager.create"><code class="docutils literal notranslate"><span class="pre">UsersManager.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UsersManager.db_use_localtime"><code class="docutils literal notranslate"><span class="pre">UsersManager.db_use_localtime</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="entity.html#entity.user.UsersManager.find"><code class="docutils literal notranslate"><span class="pre">UsersManager.find()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="entity.html#module-entity">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exceptions.html">exceptions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html#module-exceptions.exceptions">exceptions.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html#module-exceptions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="file.html">file package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="file.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="file.html#module-file.file_manager">file.file_manager module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="file.html#file.file_manager.FileManger"><code class="docutils literal notranslate"><span class="pre">FileManger</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="file.html#file.file_manager.FileManger.read_json"><code class="docutils literal notranslate"><span class="pre">FileManger.read_json()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="file.html#file.file_manager.FileManger.write_json"><code class="docutils literal notranslate"><span class="pre">FileManger.write_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="file.html#module-file">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="settings.html">settings package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="settings.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="settings.html#module-settings.settings">settings.settings module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="settings.html#settings.settings.SettingsBase"><code class="docutils literal notranslate"><span class="pre">SettingsBase</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.BASE_SETTINGS"><code class="docutils literal notranslate"><span class="pre">SettingsBase.BASE_SETTINGS</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_APP_PORT"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_APP_PORT</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_DB_LOCALTIME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_DB_LOCALTIME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_DB_NAME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_DB_NAME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_DEBUG_MODE"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_DEBUG_MODE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_FRONTEND_DIRECTORY"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_FRONTEND_DIRECTORY</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_FRONTEND_START"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_FRONTEND_START</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_PROJECT_PATH"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_PROJECT_PATH</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.KEY_VERBOSE"><code class="docutils literal notranslate"><span class="pre">SettingsBase.KEY_VERBOSE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.SETTINGS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.SETTINGS_FILE_NAME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_APP_PORT"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_APP_PORT</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_DB_LOCALTIME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_DB_LOCALTIME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_DB_NAME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_DB_NAME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_DEBUG_MODE"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_DEBUG_MODE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_FRONTEND_DIRECTORY"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_FRONTEND_DIRECTORY</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_FRONTEND_START"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_FRONTEND_START</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_PROJECT_PATH"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_PROJECT_PATH</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.VALUE_BASE_VERBOSE"><code class="docutils literal notranslate"><span class="pre">SettingsBase.VALUE_BASE_VERBOSE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.WORK_DIRECTORY_NAME"><code class="docutils literal notranslate"><span class="pre">SettingsBase.WORK_DIRECTORY_NAME</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsBase.settings_path"><code class="docutils literal notranslate"><span class="pre">SettingsBase.settings_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="settings.html#settings.settings.SettingsManager"><code class="docutils literal notranslate"><span class="pre">SettingsManager</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.create_settings_file"><code class="docutils literal notranslate"><span class="pre">SettingsManager.create_settings_file()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.create_settings_file_if_not_exist"><code class="docutils literal notranslate"><span class="pre">SettingsManager.create_settings_file_if_not_exist</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.db_path"><code class="docutils literal notranslate"><span class="pre">SettingsManager.db_path()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.debug_mode"><code class="docutils literal notranslate"><span class="pre">SettingsManager.debug_mode()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.frontend_directory"><code class="docutils literal notranslate"><span class="pre">SettingsManager.frontend_directory()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.frontend_start"><code class="docutils literal notranslate"><span class="pre">SettingsManager.frontend_start()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.get"><code class="docutils literal notranslate"><span class="pre">SettingsManager.get()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.override_settings"><code class="docutils literal notranslate"><span class="pre">SettingsManager.override_settings()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.port"><code class="docutils literal notranslate"><span class="pre">SettingsManager.port()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.project_directory_path"><code class="docutils literal notranslate"><span class="pre">SettingsManager.project_directory_path()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.set"><code class="docutils literal notranslate"><span class="pre">SettingsManager.set()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.verify_mandatory_settings"><code class="docutils literal notranslate"><span class="pre">SettingsManager.verify_mandatory_settings()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="settings.html#settings.settings.SettingsManager.work_directory_path"><code class="docutils literal notranslate"><span class="pre">SettingsManager.work_directory_path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="settings.html#module-settings">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#module-utils.base">utils.base module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="utils.html#utils.base.Base"><code class="docutils literal notranslate"><span class="pre">Base</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.base_directory"><code class="docutils literal notranslate"><span class="pre">Base.base_directory()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.exit"><code class="docutils literal notranslate"><span class="pre">Base.exit()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.log_error"><code class="docutils literal notranslate"><span class="pre">Base.log_error()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.log_info"><code class="docutils literal notranslate"><span class="pre">Base.log_info()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.log_success"><code class="docutils literal notranslate"><span class="pre">Base.log_success()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="utils.html#utils.base.Base.log_warning"><code class="docutils literal notranslate"><span class="pre">Base.log_warning()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="utils.html#module-utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
@@ -67,10 +361,11 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pi-project</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dbmanager.html">dbmanager package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">lib package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">lib package</a></li>
 </ul>
 
 <div class="relations">
@@ -78,7 +373,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to Pi Project’s documentation!</a></li>
-      <li>Next: <a href="dbmanager.html" title="next chapter">dbmanager package</a></li>
+      <li>Next: <a href="lib.html" title="next chapter">lib package</a></li>
   </ul></li>
 </ul>
 </div>

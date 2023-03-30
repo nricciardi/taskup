@@ -1,13 +1,13 @@
-dbmanager package
-=================
+exceptions package
+==================
 
 Submodules
 ----------
 
-dbmanager.db\_manager module
+exceptions.exceptions module
 ----------------------------
 
-.. automodule:: dbmanager.db_manager
+.. automodule:: exceptions.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ dbmanager.db\_manager module
 Module contents
 ---------------
 
-.. automodule:: dbmanager
+.. automodule:: exceptions
    :members:
    :undoc-members:
    :show-inheritance:
