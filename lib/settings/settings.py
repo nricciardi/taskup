@@ -9,29 +9,45 @@ class SettingsBase:
     WORK_DIRECTORY_NAME = "work"
     SETTINGS_FILE_NAME = "settings.json"
 
-    DB_NAME_KEY = "db_name"
-    BASE_DB_NAME_VALUE = "database.db"
+    KEY_DB_NAME = "db_name"
+    VALUE_BASE_DB_NAME = "database.db"
 
-    VERBOSE_KEY = "verbose"
-    BASE_VERBOSE_VALUE = True
+    KEY_VERBOSE = "verbose"
+    VALUE_BASE_VERBOSE = True
 
-    PROJECT_PATH_KEY = "project_path"
-    BASE_PROJECT_PATH_VALUE = os.path.join(os.path.curdir, "..")
+    KEY_PROJECT_PATH = "project_path"
+    VALUE_BASE_PROJECT_PATH = os.path.join(os.path.curdir, "..")
 
-    DB_LOCALTIME_KEY = "localtime"
-    BASE_DB_LOCALTIME_VALUE = False
+    KEY_DB_LOCALTIME = "localtime"
+    VALUE_BASE_DB_LOCALTIME = False
+
+    KEY_DEBUG_MODE = "debug"
+    VALUE_BASE_DEBUG_MODE = True
+
+    KEY_FRONTEND_DIRECTORY = "frontend"
+    VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(os.path.curdir, "../frontend/dist/frontend")
+
+    KEY_FRONTEND_START = "start"
+    VALUE_BASE_FRONTEND_START = "index.html"
+
+    KEY_APP_PORT = "port"
+    VALUE_BASE_APP_PORT = 8000
 
     BASE_SETTINGS = {
-        DB_NAME_KEY: BASE_DB_NAME_VALUE,
-        VERBOSE_KEY: BASE_VERBOSE_VALUE,
-        PROJECT_PATH_KEY: BASE_PROJECT_PATH_VALUE,
-        DB_LOCALTIME_KEY: BASE_DB_LOCALTIME_VALUE
+        KEY_DB_NAME: VALUE_BASE_DB_NAME,
+        KEY_VERBOSE: VALUE_BASE_VERBOSE,
+        KEY_PROJECT_PATH: VALUE_BASE_PROJECT_PATH,
+        KEY_DB_LOCALTIME: VALUE_BASE_DB_LOCALTIME,
+        KEY_DEBUG_MODE: VALUE_BASE_DEBUG_MODE,
+        KEY_FRONTEND_DIRECTORY: VALUE_BASE_FRONTEND_DIRECTORY,
+        KEY_FRONTEND_START: VALUE_BASE_FRONTEND_START,
+        KEY_APP_PORT: VALUE_BASE_APP_PORT
     }
 
     @staticmethod
     def settings_path() -> str:
         """
-        Return the settings path of the project
+        Return the settings path of the app
 
         :rtype: str
         """
@@ -69,15 +85,15 @@ class SettingsManager(SettingsBase):
         """
 
         try:
-            self.get(self.PROJECT_PATH_KEY)
+            self.get(self.KEY_PROJECT_PATH)
 
         except KeyError as key_error:
-            print(f"'{self.PROJECT_PATH_KEY}' is mandatory setting")
+            print(f"'{self.KEY_PROJECT_PATH}' is mandatory setting")
             Base.exit()
 
     def override_settings(self) -> None:
         """
-        Override project settings with settings configuration file
+        Override app settings with settings configuration file
         """
 
         self.settings.update(FileManger.read_json(self.settings_path()))
@@ -114,16 +130,16 @@ class SettingsManager(SettingsBase):
 
     def project_directory_path(self) -> str:
         """
-        Return the project directory
+        Return the app directory
 
         :rtype: str
         """
 
-        return os.path.abspath(self.get(self.PROJECT_PATH_KEY))
+        return os.path.abspath(self.get(self.KEY_PROJECT_PATH))
 
     def work_directory_path(self) -> str:
         """
-        Return the work directory path inside the project
+        Return the work directory path inside the app
 
         :return:
         """
@@ -132,9 +148,52 @@ class SettingsManager(SettingsBase):
 
     def db_path(self) -> str:
         """
-        Return the database path of the project
+        Return the database path of the app
 
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path(), self.get(self.DB_NAME_KEY))
+        return os.path.join(self.work_directory_path(), self.get(self.KEY_DB_NAME))
+
+    def debug_mode(self) -> bool:
+        """
+        Return True if app is in debug mode
+
+        :return: Mode
+        :rtype bool:
+        """
+
+        return self.get(SettingsBase.KEY_DEBUG_MODE)
+
+    def frontend_directory(self) -> str:
+        """
+        Return frontend directory of app
+
+        :return: directory
+        :rtype str:
+        """
+
+        return self.get(SettingsBase.KEY_FRONTEND_DIRECTORY)
+
+    def frontend_start(self) -> str:
+        """
+        Return the start file of frontend.
+        If app is in debug mode return { 'port': 4200 } to use Angular in dev mode
+
+        :rtype str:
+        """
+
+        if self.debug_mode():
+            return { 'port': 4200 }
+
+        return self.get(SettingsBase.KEY_FRONTEND_START)
+
+    def port(self) -> int:
+        """
+        Return the port to use (in Eel)
+
+        :rtype int:
+        """
+
+        return self.get(SettingsBase.KEY_APP_PORT)
+
