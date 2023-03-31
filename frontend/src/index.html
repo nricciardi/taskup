@@ -34,5 +34,14 @@
   <script src="assets/js/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
   <script src="assets/js/app.js"></script>
+
+  <script type="text/javascript" src="http://127.0.0.1:8000/eel.js"></script>
+
+  <script>
+    // fix CORS eel
+    eel.set_host('http://127.0.0.1:8000');
+    eel._init();    // re-initialized eel settings
+
+  </script>
 </body>
 </html>
