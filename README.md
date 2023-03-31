@@ -21,7 +21,11 @@ To run Sphinx doc:
 
 ## TO-DO
 - [ ] Why some js file aren't tracked?
-- [ ] Remove .vs and .idea
+- [ ] Remove .vs and .idea directory from Git
+- [ ] Move settings_manager from entity
+  - [ ] Task, TaskStatus, ...
+  - [ ] User
+  - [ ] Role
 
 
 ## Help the Open Source Community
