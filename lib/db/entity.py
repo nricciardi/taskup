@@ -85,7 +85,6 @@ class EntityManager(DBManager, ABC):
 
         return res.fetchall()
 
-    @abstractmethod
     def all_as_dict(self) -> List[Dict[str, Any]]:
         """
         Abstract method.
@@ -95,7 +94,14 @@ class EntityManager(DBManager, ABC):
         :rtype List[Dict[str, Any]]:
         """
 
-        raise NotImplementedError
+        models: BEM = self.all_as_model()
+
+        dicts = []
+
+        for model in models:
+            dicts.append(model.to_dict())
+
+        return dicts
 
     @abstractmethod
     def all_as_model(self) -> List[BEM]:
