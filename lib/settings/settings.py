@@ -128,6 +128,16 @@ class SettingsManager(SettingsBase):
 
         return self.settings[key]
 
+    def verbose(self) -> bool:
+        """
+        Return verbose mode
+
+        :return: verbose
+        :rtype bool:
+        """
+
+        return self.get(SettingsBase.KEY_VERBOSE)
+
     def project_directory_path(self) -> str:
         """
         Return the app directory

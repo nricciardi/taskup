@@ -69,7 +69,7 @@ class EntityManager(DBManager, ABC):
 
             msg = f"{data} must be an implementation of BaseEntityModel"
 
-            Base.log_error(message=msg, is_verbose=self.__verbose)
+            Base.log_error(msg=msg, is_verbose=self.__verbose)
 
             raise TypeError(msg)
 
@@ -153,7 +153,7 @@ class EntityManager(DBManager, ABC):
 
         except Exception as exception:
 
-            Base.log_error(message=f"{exception} during execute: {query}\nwith {data}", is_verbose=self.__verbose)
+            Base.log_error(msg=f"{exception} during execute: {query}\nwith {data}", is_verbose=self.__verbose)
 
             raise exception
 

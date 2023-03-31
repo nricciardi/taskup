@@ -22,7 +22,7 @@ class UsersManager(EntityManager):
     db_use_localtime = False
 
     def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
+        self.verbose = self.__settings_manager.verbose()
         self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
         work_directory_path = self.__settings_manager.work_directory_path()
 

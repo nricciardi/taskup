@@ -25,15 +25,15 @@ class DBManager:
         db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
         if db_exists:
-            Base.log_info(message=f"database {self.__db_path} found", is_verbose=self.verbose)
+            Base.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
         else:
-            Base.log_warning(message=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
+            Base.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)
             self.__db_cursor = self.__db_connection.cursor()
 
-            Base.log_success(message=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
+            Base.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
 
             if not db_exists:
                 self.generate_base_db_structure(strict=True)
@@ -152,7 +152,7 @@ class DBManager:
 
         except Exception as exception:
 
-            Base.log_error(message=f"error occurs during fill {self.role_table_name}", full=True,
+            Base.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
                            is_verbose=self.verbose)
 
     def __create_user_table(self) -> None:
@@ -271,7 +271,7 @@ class DBManager:
 
         except Exception as exception:
 
-            Base.log_error(message=f"error occurs during fill {self.task_status_table_name}", full=True,
+            Base.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
                            is_verbose=self.verbose)
 
     @property
@@ -462,7 +462,7 @@ class DBManager:
 
         except Exception as exception:
 
-            Base.log_error(message="error occurs during generate db", full=True, is_verbose=self.verbose)
+            Base.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             if strict:
                 Base.exit()

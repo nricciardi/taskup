@@ -7,7 +7,7 @@ class ProjectManager:
     def __init__(self):
         self.__settings_manager: SettingsManager = SettingsManager()
 
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
+        self.verbose = self.__settings_manager.verbose()
         db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
         use_localtime = self.__settings_manager.get(self.__settings_manager.KEY_DB_LOCALTIME)
         work_directory_path = self.__settings_manager.work_directory_path()
