@@ -5,8 +5,8 @@ from lib.entity.task import TaskTaskLabelPivotModel, TasksManager
 if __name__ == '__main__':
     pm = ProjectManager()
 
-    # user_manager = UsersManager()
-    # task_manager = TasksManager()
+    user_manager = UsersManager()
+    task_manager = TasksManager()
 
     # n = 3
     # user = user_manager.create({"username": f"franco{n}",
@@ -22,4 +22,4 @@ if __name__ == '__main__':
     #     "task_status_id": 3
     # })
 
-    # print(user_manager.all())
+    print(task_manager.all_as_dict())
