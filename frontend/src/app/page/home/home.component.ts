@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TaskService } from 'src/app/service/api/task/task.service';
 
 @Component({
   selector: 'app-home',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+
+  constructor(private taskService: TaskService) {
+  }
+
+  async ngOnInit() {
+
+    console.log(await this.taskService.all());
+  }
 
 }

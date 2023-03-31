@@ -9,6 +9,7 @@ import { HeaderComponent } from './widget/header/header.component';
 import { HomeComponent } from './page/home/home.component';
 import { PageNotFoundComponent } from './page/page-not-found/page-not-found.component';
 import { TaskPreviewComponent } from './widget/task/task-preview/task-preview.component';
+import { TaskPreviewListComponent } from './widget/task/task-preview-list/task-preview-list.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { TaskPreviewComponent } from './widget/task/task-preview/task-preview.co
     HeaderComponent,
     HomeComponent,
     PageNotFoundComponent,
-    TaskPreviewComponent
+    TaskPreviewComponent,
+    TaskPreviewListComponent
   ],
   imports: [
     BrowserModule,
