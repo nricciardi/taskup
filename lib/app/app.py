@@ -2,6 +2,7 @@ import eel
 from lib.settings.settings import SettingsManager
 from abc import ABC
 from lib.utils.base import Base
+from lib.app.project import ProjectManager
 
 
 class Exposer(ABC):
@@ -55,6 +56,8 @@ class App(Exposer):
         super().__init__(self.__verbose)
 
         self.expose()
+
+        self.__project_manager = ProjectManager()
 
     def start(self):
 
