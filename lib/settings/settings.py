@@ -156,6 +156,15 @@ class SettingsManager(SettingsBase):
 
         return os.path.join(self.project_directory_path(), self.WORK_DIRECTORY_NAME)
 
+    def db_name(self) -> str:
+        """
+        Return the database name
+
+        :rtype: str
+        """
+
+        return self.get(self.KEY_DB_NAME)
+
     def db_path(self) -> str:
         """
         Return the database path of the app
