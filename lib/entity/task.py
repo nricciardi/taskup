@@ -1,3 +1,5 @@
+import eel
+
 from lib.db.entity import EntityManager
 from dataclasses import dataclass
 from lib.entity.bem import BaseEntityModel, BEM
@@ -21,12 +23,11 @@ class TaskModel(BaseEntityModel):
 
 class TasksManager(EntityManager):
     __table_name = "task"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.verbose()
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -61,16 +62,6 @@ class TasksManager(EntityManager):
 
         return TaskModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all tasks as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[TaskModel]:
         """
         Return all tasks as list of model
@@ -79,7 +70,13 @@ class TasksManager(EntityManager):
         :rtype List[TaskModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(TaskModel(*record))
+
+        return models
 
 
 @dataclass
