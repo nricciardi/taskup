@@ -58,16 +58,6 @@ class UsersManager(EntityManager):
 
         return UserModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all users as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[UserModel]:
         """
         Return all users as list of model
@@ -76,7 +66,13 @@ class UsersManager(EntityManager):
         :rtype List[UserModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(UserModel(*record))
+
+        return models
 
 
 @dataclass
@@ -94,12 +90,11 @@ class RoleModel(BaseEntityModel):
 
 class RolesManager(EntityManager):
     __table_name = "role"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -134,16 +129,6 @@ class RolesManager(EntityManager):
 
         return RoleModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all roles as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[RoleModel]:
         """
         Return all roles as list of model
@@ -152,4 +137,10 @@ class RolesManager(EntityManager):
         :rtype List[RoleModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(RoleModel(*record))
+
+        return models

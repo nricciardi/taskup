@@ -89,12 +89,11 @@ class TaskStatusModel(BaseEntityModel):
 
 class TaskStatusManager(EntityManager):
     __table_name = "task_status"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -129,16 +128,6 @@ class TaskStatusManager(EntityManager):
 
         return TaskStatusModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all task status as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[TaskStatusModel]:
         """
         Return all task status as list of model
@@ -147,7 +136,13 @@ class TaskStatusManager(EntityManager):
         :rtype List[TaskStatusModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(TaskStatusModel(*record))
+
+        return models
 
 
 @dataclass
@@ -166,12 +161,11 @@ class TodoItemModel(BaseEntityModel):
 
 class TodoItemsManager(EntityManager):
     __table_name = "todo_list"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -206,16 +200,6 @@ class TodoItemsManager(EntityManager):
 
         return TodoItemModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all todoitems as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[TodoItemModel]:
         """
         Return all todoitems as list of model
@@ -224,7 +208,13 @@ class TodoItemsManager(EntityManager):
         :rtype List[TodoItemModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(TodoItemModel(*record))
+
+        return models
 
 
 @dataclass
@@ -237,12 +227,11 @@ class TaskLabelModel(BaseEntityModel):
 
 class TaskLabelsManager(EntityManager):
     __table_name = "task_label"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -277,16 +266,6 @@ class TaskLabelsManager(EntityManager):
 
         return TaskLabelModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all task labels as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[TaskLabelModel]:
         """
         Return all task labels as list of model
@@ -295,7 +274,13 @@ class TaskLabelsManager(EntityManager):
         :rtype List[TaskLabelModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(TaskLabelModel(*record))
+
+        return models
 
 
 @dataclass
@@ -307,12 +292,11 @@ class TaskAssignmentModel(BaseEntityModel):
 
 class TaskAssignmentsManager(EntityManager):
     __table_name = "task_assignment"
-    __settings_manager = SettingsManager()
 
-    def __init__(self):
-        self.verbose = self.__settings_manager.get(self.__settings_manager.KEY_VERBOSE)
-        self.db_name = self.__settings_manager.get(self.__settings_manager.KEY_DB_NAME)
-        work_directory_path = self.__settings_manager.work_directory_path()
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
@@ -347,16 +331,6 @@ class TaskAssignmentsManager(EntityManager):
 
         return TaskAssignmentModel.from_tuple(data)
 
-    def all_as_dict(self) -> List[Dict[str, Any]]:
-        """
-        Return all task assignments as list of dict
-
-        :return: all users as dict
-        :rtype List[Dict[str, Any]]:
-        """
-
-        raise NotImplementedError
-
     def all_as_model(self) -> List[TaskAssignmentModel]:
         """
         Return all task assignment as list of model
@@ -365,7 +339,13 @@ class TaskAssignmentsManager(EntityManager):
         :rtype List[TaskAssignmentModel]:
         """
 
-        raise NotImplementedError
+        tuples = self.all()
+        models = []
+
+        for record in tuples:
+            models.append(TaskAssignmentModel(*record))
+
+        return models
 
 
 # ==================== PIVOT =====================
