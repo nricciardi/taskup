@@ -28,6 +28,7 @@ To run Sphinx doc:
   - [x] Role
 - [ ] Prevent Eel closing on error
 - [ ] Internalization
+- [ ] Unique on user's username? Add name and surname?
 - [ ] Improve common methods of entity (py) as in typescript
   -  [ ] all_as_model
 
