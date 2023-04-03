@@ -22,10 +22,14 @@ To run Sphinx doc:
 ## TO-DO
 - [ ] Why some js file aren't tracked?
 - [ ] Remove .vs and .idea directory from Git
-- [ ] Move settings_manager from entity
-  - [ ] Task, TaskStatus, ...
-  - [ ] User
-  - [ ] Role
+- [x] Move settings_manager from entity
+  - [x] Task, TaskStatus, ...
+  - [x] User
+  - [x] Role
+- [ ] Prevent Eel closing on error
+- [ ] Internalization
+- [ ] Improve common methods of entity (py) as in typescript
+  -  [ ] all_as_model
 
 
 ## Help the Open Source Community
