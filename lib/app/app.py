@@ -142,8 +142,6 @@ class App:
         exposer = Exposer(self.__verbose)
         exposer.expose_entity_methods(db_name, work_directory_path, verbose=True)
 
-
-
     def start(self):
 
         start_file = self.__settings_manager.frontend_start()
