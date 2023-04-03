@@ -11,9 +11,16 @@ export class HomeComponent {
   constructor(private taskService: TaskService) {
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.taskService.all().then((subscriber) => {
 
-    console.log(await this.taskService.all());
+      subscriber.subscribe({
+        next: (value) => {
+          console.log(value);
+
+        }
+      })
+    })
   }
 
 }
