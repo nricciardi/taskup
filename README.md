@@ -29,6 +29,7 @@ To run Sphinx doc:
 - [ ] Prevent Eel closing on error
 - [ ] Internalization
 - [ ] Unique on user's username? Add name and surname?
+- [ ] DB schema
 - [ ] Improve common methods of entity (py) as in typescript
   -  [ ] all_as_model
 
