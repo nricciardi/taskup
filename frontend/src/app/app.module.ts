@@ -7,10 +7,10 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './widget/footer/footer.component';
 import { SidebarComponent } from './widget/sidebar/sidebar.component';
 import { HeaderComponent } from './widget/header/header.component';
-import { HomeComponent } from './page/home/home.component';
 import { PageNotFoundComponent } from './page/page-not-found/page-not-found.component';
 import { TaskPreviewComponent } from './widget/task/task-preview/task-preview.component';
 import { TaskPreviewListComponent } from './widget/task/task-preview-list/task-preview-list.component';
+import { DashboardComponent } from './page/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -18,10 +18,10 @@ import { TaskPreviewListComponent } from './widget/task/task-preview-list/task-p
     FooterComponent,
     SidebarComponent,
     HeaderComponent,
-    HomeComponent,
     PageNotFoundComponent,
     TaskPreviewComponent,
-    TaskPreviewListComponent
+    TaskPreviewListComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
