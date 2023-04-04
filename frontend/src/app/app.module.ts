@@ -11,6 +11,9 @@ import { PageNotFoundComponent } from './page/page-not-found/page-not-found.comp
 import { TaskPreviewComponent } from './widget/task/task-preview/task-preview.component';
 import { TaskPreviewListComponent } from './widget/task/task-preview-list/task-preview-list.component';
 import { DashboardComponent } from './page/dashboard/dashboard.component';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 
 @NgModule({
   declarations: [
@@ -25,9 +28,22 @@ import { DashboardComponent } from './page/dashboard/dashboard.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      useDefaultLang: true,
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => {
+          return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+        },
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

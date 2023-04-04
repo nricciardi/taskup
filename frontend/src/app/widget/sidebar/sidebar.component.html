@@ -77,12 +77,16 @@
     </div>
     <div class="sidebar-menu">
       <ul class="menu">
-        <li class="sidebar-title">Menu</li>
+        <li class="sidebar-title">
+          {{ "menu" | translate }}
+        </li>
 
         <li class="sidebar-item active">
           <a href="index.html" class="sidebar-link">
             <i class="bi bi-grid-fill"></i>
-            <span>Dashboard</span>
+            <span>
+              {{ 'dashboard' | translate }}
+            </span>
           </a>
         </li>
 
@@ -202,7 +206,9 @@
             class="sidebar-link"
           >
             <i class="bi bi-life-preserver"></i>
-            <span>Documentation</span>
+            <span>
+              {{ 'documentation' | translate }}
+            </span>
           </a>
         </li>
 
@@ -212,7 +218,9 @@
             class="sidebar-link"
           >
             <i class="bi bi-puzzle"></i>
-            <span>Contribute</span>
+            <span>
+              {{ 'contribute' | translate }}
+            </span>
           </a>
         </li>
       </ul>
