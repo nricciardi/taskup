@@ -9,12 +9,20 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent {
   title = 'frontend';
 
-  /*constructor(public translate: TranslateService) {
+  constructor(public translate: TranslateService) {
     translate.addLangs(['en', 'it']);
-    // translate.setDefaultLang('en');
+
+    this.setBrowserDefaultLanguage();
   }
 
-  public switchLanguage(lang: string) {
+  public switchLanguage(lang: string): void {
     this.translate.use(lang);
-  }*/
+  }
+
+  public setBrowserDefaultLanguage(): void {
+    const browserLang = this.translate.getBrowserLang();
+
+    if(browserLang)
+      this.translate.setDefaultLang(browserLang);
+  }
 }
