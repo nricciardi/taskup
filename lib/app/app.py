@@ -71,12 +71,11 @@ class Exposer:
             tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path, verbose=verbose)
 
             Exposer.expose_all_from_list(to_expose=[
-                tasks_manager.all,
+                tasks_manager.all_as_tuple,
                 tasks_manager.all_as_dict,
                 tasks_manager.create,
                 tasks_manager.find,
             ], prefix="task_")
-
 
         except Exception as excepetion:
             Base.log_error(msg="Task exposure error", is_verbose=self.__verbose, full=True)
@@ -92,7 +91,7 @@ class Exposer:
             users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path, verbose=verbose)
 
             Exposer.expose_all_from_list(to_expose=[
-                users_manager.all,
+                users_manager.all_as_tuple,
                 users_manager.all_as_dict,
                 users_manager.create,
                 users_manager.find,

@@ -1,7 +1,6 @@
 from lib.db.entity import EntityManager
 from dataclasses import dataclass
-from lib.entity.bem import BaseEntityModel, EM
-from lib.utils.base import Base
+from lib.entity.bem import BaseEntityModel
 from typing import List, Dict, Any, Type
 
 
