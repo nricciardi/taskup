@@ -22,7 +22,7 @@ To run Sphinx doc:
 ## TO-DO
 ### Frontend
 - [ ] Why some js file aren't tracked?
-- [ ] Internalization
+- [x] Internalization
 - [ ] Set link in Documentation and Contribute in menu
 
 ### Python
