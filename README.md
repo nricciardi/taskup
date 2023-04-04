@@ -30,6 +30,7 @@ To run Sphinx doc:
 - [ ] Internalization
 - [ ] Unique on user's username? Add name and surname?
 - [ ] DB schema
+- [ ] deadline from date to datetime?
 - [ ] Improve common methods of entity (py) as in typescript
   -  [ ] all_as_model
 
