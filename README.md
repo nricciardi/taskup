@@ -20,19 +20,23 @@ To run Sphinx doc:
 - **Work Directory:** the work directory inside _project directory_
 
 ## TO-DO
+### Frontend
 - [ ] Why some js file aren't tracked?
-- [ ] Remove .vs and .idea directory from Git
-- [x] Move settings_manager from entity
-  - [x] Task, TaskStatus, ...
-  - [x] User
-  - [x] Role
-- [ ] Prevent Eel closing on error
 - [ ] Internalization
-- [ ] Unique on user's username? Add name and surname?
-- [ ] DB schema
-- [ ] deadline from date to datetime?
+- [ ] Set link in Documentation and Contribute in menu
+
+### Python
+- [ ] Prevent Eel closing on error
 - [ ] Improve common methods of entity (py) as in typescript
-  -  [ ] all_as_model
+  -  [x] all_as_model
+
+### DB
+- [ ] Unique on user's username? Add name and surname?
+- [x] DB schema
+- [ ] deadline from date to datetime?
+
+### Generals
+- [ ] Remove .vs and .idea directory from Git
 
 
 ## Help the Open Source Community
