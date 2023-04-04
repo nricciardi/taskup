@@ -13,6 +13,7 @@ import { TaskPreviewListComponent } from './widget/task/task-preview-list/task-p
 import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { PageHeadingComponent } from './widget/page-heading/page-heading.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     PageNotFoundComponent,
     TaskPreviewComponent,
     TaskPreviewListComponent,
-    DashboardComponent
+    DashboardComponent,
+    PageHeadingComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,10 @@
 {
   "menu": "Menu",
   "dashboard": "Dashboard",
+  "raise-support": "Supporto",
   "documentation": "Documentazione",
-  "contribute": "Contribuire"
+  "contribute": "Contribuire",
+  "page-not-found": "Pagina NON TROVATA",
+  "page-not-found-description": "La pagina che stai cercando non esiste.",
+  "go-home": "Go Home"
 }

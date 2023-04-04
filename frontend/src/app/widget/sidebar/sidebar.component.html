@@ -82,7 +82,7 @@
         </li>
 
         <li class="sidebar-item active">
-          <a href="index.html" class="sidebar-link">
+          <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active"  class="sidebar-link">
             <i class="bi bi-grid-fill"></i>
             <span>
               {{ 'dashboard' | translate }}
@@ -198,7 +198,9 @@
         </li> -->
 
 
-        <li class="sidebar-title">Raise Support</li>
+        <li class="sidebar-title">
+          {{ "raise-support" | translate }}
+        </li>
 
         <li class="sidebar-item">
           <a

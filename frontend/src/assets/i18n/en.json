@@ -1,6 +1,10 @@
 {
   "menu": "Menu",
   "dashboard": "Dashboard",
+  "raise-support": "Raise Support",
   "documentation": "Documentation",
-  "contribute": "Contribute"
+  "contribute": "Contribute",
+  "page-not-found": "Page NOT FOUND",
+  "page-not-found-description": "The page you are looking not found.",
+  "go-home": "Go Home"
 }
