@@ -9,9 +9,6 @@ from typing import Any, TypeVar
 # Initialising Colorama (Important)
 colorama.init(autoreset=True)
 
-# Types
-BEM = TypeVar('BEM', bound='BaseEntityModel')
-
 
 class Base:
     """

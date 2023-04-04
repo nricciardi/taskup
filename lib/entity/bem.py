@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Dict, Any, Type, TypeVar
 
-BEM = TypeVar('BEM', bound='BaseEntityModel')
+EM = TypeVar('EM', bound='BaseEntityModel')         # Entity Model
+
 
 @dataclass
 class BaseEntityModel(ABC):
@@ -30,7 +31,7 @@ class BaseEntityModel(ABC):
                 setattr(self, key, value)
 
     @classmethod
-    def from_dict(cls, data: dict) -> BEM:
+    def from_dict(cls, data: dict) -> EM:
         """
         Factory of BEM from dict data
 
@@ -59,7 +60,7 @@ class BaseEntityModel(ABC):
     #     return obj
 
     @classmethod
-    def from_tuple(cls, data: tuple) -> BEM:
+    def from_tuple(cls, data: tuple) -> EM:
         """
         Factory of BEM from tuple data
 
@@ -71,6 +72,3 @@ class BaseEntityModel(ABC):
         """
 
         return cls(*data)
-
-
-

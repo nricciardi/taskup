@@ -1,8 +1,8 @@
 import sqlite3
 from lib.db.db import DBManager
 from abc import ABC, abstractmethod
-from lib.utils.base import Base, BEM
-from lib.entity.bem import BaseEntityModel
+from lib.utils.base import Base
+from lib.entity.bem import BaseEntityModel, EM
 from typing import Any, List, Tuple, Dict
 
 
@@ -12,6 +12,7 @@ class EntityManager(DBManager, ABC):
     """
 
     db_use_localtime: bool = False
+    EM: EM = BaseEntityModel        # generic type to instance an EM class
 
     def __init__(self, table_name: str, db_name: str, work_directory_path: str, verbose: bool = False):
 
@@ -73,7 +74,7 @@ class EntityManager(DBManager, ABC):
 
             raise TypeError(msg)
 
-    def all(self) -> List[Tuple[Any, ...]]:
+    def all_as_tuple(self) -> List[Tuple[Any, ...]]:
         """
         Return all records from db table
 
@@ -94,7 +95,7 @@ class EntityManager(DBManager, ABC):
         :rtype List[Dict[str, Any]]:
         """
 
-        models: BEM = self.all_as_model()
+        models: list[EM] = self.all_as_model()
 
         dicts = []
 
@@ -103,19 +104,24 @@ class EntityManager(DBManager, ABC):
 
         return dicts
 
-    @abstractmethod
-    def all_as_model(self) -> List[BEM]:
+    def all_as_model(self) -> List[EM]:
         """
         Abstract method.
-        Return all entities as BEM model.
+        Return all entities as EM model.
 
-        :return: all entities as BEM model
-        :rtype List[BEM]:
+        :return: all entities as EM model
+        :rtype List[EM]:
         """
 
-        raise NotImplementedError
+        tuples = self.all_as_tuple()
+        models = []
 
-    def find(self, entity_id: int) -> tuple:
+        for record in tuples:
+            models.append(self.EM(*record))
+
+        return models
+
+    def find(self, entity_id: int) -> EM:
         """
         Return the record requested
 
@@ -123,16 +129,16 @@ class EntityManager(DBManager, ABC):
         :type entity_id: int
 
         :return: entity record
-        :rtype tuple:
+        :rtype EM:
         """
 
         res = self.cursor.execute(f"Select * From {self.table_name} Where {self.table_name}.id = {entity_id};")
 
-        data = res.fetchone()
+        data: tuple = tuple(res.fetchone())
 
-        return data
+        return self.EM.from_tuple(data)
 
-    def create(self, data: dict) -> BEM:
+    def create(self, data: dict) -> EM:
         """
         Create a new record
 
@@ -140,7 +146,7 @@ class EntityManager(DBManager, ABC):
         :type data: Entity dataclass
 
         :return: entity created
-        :rtype BEM:
+        :rtype EM:
         """
 
         query = self.__generate_create_query(data)      # it is here to use its in except
@@ -153,7 +159,7 @@ class EntityManager(DBManager, ABC):
             self.connection.commit()
 
             # call explicitly find to prevent use of override
-            entity = EntityManager.find(self, self.cursor.lastrowid)
+            entity = self.find(self.cursor.lastrowid)
 
             return entity
 
