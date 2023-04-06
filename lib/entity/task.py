@@ -2,7 +2,34 @@ from lib.db.entity import EntityManager
 from dataclasses import dataclass
 from lib.entity.bem import BaseEntityModel, EM
 from datetime import date, datetime
-from typing import List, Dict, Any, Type
+from typing import List, Dict, Any, Type, Optional
+
+from lib.entity.user import UserModel
+
+
+@dataclass
+class TaskStatusModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    default_next_task_status_id: int
+    default_next_task_status: Optional['TaskStatusModel'] = None
+
+
+@dataclass
+class TaskTaskLabelPivotModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    rgb_color: str
+
+
+@dataclass
+class TaskLabelModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    rgb_color: str
 
 
 @dataclass
@@ -16,6 +43,33 @@ class TaskModel(BaseEntityModel):
     updated_at: datetime
     author_id: int
     task_status_id: int
+    author: Optional[UserModel] = None
+    task_status: Optional[TaskStatusModel] = None
+
+
+@dataclass
+class TaskAssignmentModel(BaseEntityModel):
+    id: int
+    user_id: int
+    task_id: int
+    user: Optional[UserModel] = None
+    task: Optional[TaskModel] = None
+
+
+@dataclass
+class TodoItemModel(BaseEntityModel):
+    id: int
+    name: str
+    description: str
+    deadline: date
+    priority: int
+    created_at: datetime
+    updated_at: datetime
+    done: bool
+    author_id: int
+    task_id: int
+    author: Optional[UserModel] = None
+    task: Optional[TaskModel] = None
 
 
 class TasksManager(EntityManager):
@@ -36,14 +90,6 @@ class TasksManager(EntityManager):
         return "task"
 
 
-@dataclass
-class TaskStatusModel(BaseEntityModel):
-    id: int
-    name: str
-    description: str
-    default_next_task_status_id: int
-
-
 class TaskStatusManager(EntityManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
@@ -62,20 +108,6 @@ class TaskStatusManager(EntityManager):
         return "task_status"
 
 
-@dataclass
-class TodoItemModel(BaseEntityModel):
-    id: int
-    name: str
-    description: str
-    deadline: date
-    priority: int
-    created_at: datetime
-    updated_at: datetime
-    done: bool
-    author_id: int
-    task_id: int
-
-
 class TodoItemsManager(EntityManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
@@ -92,14 +124,6 @@ class TodoItemsManager(EntityManager):
     @property
     def EM(self) -> Type[TodoItemModel]:
         return TodoItemModel
-
-
-@dataclass
-class TaskLabelModel(BaseEntityModel):
-    id: int
-    name: str
-    description: str
-    rgb_color: str
 
 
 class TaskLabelsManager(EntityManager):
@@ -121,13 +145,6 @@ class TaskLabelsManager(EntityManager):
         return TaskLabelModel
 
 
-@dataclass
-class TaskAssignmentModel(BaseEntityModel):
-    id: int
-    user_id: int
-    task_id: int
-
-
 class TaskAssignmentsManager(EntityManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
@@ -145,13 +162,3 @@ class TaskAssignmentsManager(EntityManager):
     @property
     def EM(self) -> Type[TaskAssignmentModel]:
         return TaskAssignmentModel
-
-
-# ==================== PIVOT =====================
-
-@dataclass
-class TaskTaskLabelPivotModel(BaseEntityModel):
-    id: int
-    name: str
-    description: str
-    rgb_color: str

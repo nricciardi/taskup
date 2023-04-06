@@ -1,7 +1,20 @@
 from lib.db.entity import EntityManager
 from dataclasses import dataclass
 from lib.entity.bem import BaseEntityModel
-from typing import List, Dict, Any, Type
+from typing import List, Dict, Any, Type, Optional
+
+
+@dataclass
+class RoleModel(BaseEntityModel):
+    id: int
+    name: str
+    permission_create: bool
+    permission_read_all: bool
+    permission_move_backward: bool
+    permission_move_forward: bool
+    permission_edit: bool
+    permission_change_role: bool
+    permission_change_assignment: bool
 
 
 @dataclass
@@ -11,6 +24,7 @@ class UserModel(BaseEntityModel):
     email: str
     password: str
     role_id: int
+    role: Optional[RoleModel] = None
 
 
 class UsersManager(EntityManager):
@@ -30,19 +44,6 @@ class UsersManager(EntityManager):
     @property
     def EM(self) -> Type[UserModel]:
         return UserModel
-
-
-@dataclass
-class RoleModel(BaseEntityModel):
-    id: int
-    name: str
-    permission_create: bool
-    permission_read_all: bool
-    permission_move_backward: bool
-    permission_move_forward: bool
-    permission_edit: bool
-    permission_change_role: bool
-    permission_change_assignment: bool
 
 
 class RolesManager(EntityManager):
