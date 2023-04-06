@@ -1,14 +1,17 @@
-from lib.entity.user import UsersManager, UserModel
+from lib.entity.user import UsersManager
 from lib.app.project import ProjectManager
 from lib.entity.task import TaskTaskLabelPivotModel, TasksManager
 
 if __name__ == '__main__':
+    pass
     pm = ProjectManager()
 
     user_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
     task_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
 
-    n = 6
+    print(type(task_manager.EM))
+
+    n = 62
     user = user_manager.create({"username": f"franco{n}",
                                 "email": f"n{n}@r.com",
                                 "password": "asdf",

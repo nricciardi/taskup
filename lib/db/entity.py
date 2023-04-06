@@ -1,9 +1,8 @@
-import sqlite3
 from lib.db.db import DBManager
 from abc import ABC, abstractmethod
 from lib.utils.base import Base
 from lib.entity.bem import BaseEntityModel, EM
-from typing import Any, List, Tuple, Dict
+from typing import Any, List, Tuple, Dict, Type
 
 
 class EntityManager(DBManager, ABC):
@@ -12,11 +11,9 @@ class EntityManager(DBManager, ABC):
     """
 
     db_use_localtime: bool = False
-    EM: EM = BaseEntityModel        # generic type to instance an EM class
 
-    def __init__(self, table_name: str, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
 
-        self.__table_name = table_name
         self.__db_name = db_name
         self.__verbose = verbose
 
@@ -24,24 +21,25 @@ class EntityManager(DBManager, ABC):
                          use_localtime=self.db_use_localtime)
 
     @property
+    @abstractmethod
     def table_name(self) -> str:
         """
         Return table name
 
         :rtype: str
         """
+        raise NotImplementedError
 
-        return self.__table_name
-
-    @table_name.setter
-    def table_name(self, value) -> None:
+    @property
+    @abstractmethod
+    def EM(self) -> Type[EM]:
         """
-        Change entity
+        Return reference of an EM
 
-        :param value: table name of entity
+        :return:
         """
 
-        self.__table_name = value
+        raise NotImplementedError
 
     def __is_valid_model_data_type(self, data: Any) -> bool:
         """
@@ -104,7 +102,7 @@ class EntityManager(DBManager, ABC):
 
         return dicts
 
-    def all_as_model(self) -> List[EM]:
+    def all_as_model(self) -> list[EM]:
         """
         Abstract method.
         Return all entities as EM model.

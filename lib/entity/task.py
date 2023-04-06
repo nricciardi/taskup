@@ -19,14 +19,12 @@ class TaskModel(BaseEntityModel):
 
 
 class TasksManager(EntityManager):
-    __table_name = "task"
-
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
 
     @property
@@ -35,7 +33,7 @@ class TasksManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "task"
 
 
 @dataclass
@@ -47,15 +45,13 @@ class TaskStatusModel(BaseEntityModel):
 
 
 class TaskStatusManager(EntityManager):
-    __table_name = "task_status"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_name=self.db_name, verbose=self.verbose, work_directory_path=work_directory_path)
 
     @property
     def EM(self) -> Type[TaskStatusModel]:
@@ -63,7 +59,7 @@ class TaskStatusManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "task_status"
 
 
 @dataclass
@@ -81,19 +77,17 @@ class TodoItemModel(BaseEntityModel):
 
 
 class TodoItemsManager(EntityManager):
-    __table_name = "todo_list"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_name=self.db_name, verbose=self.verbose, work_directory_path=work_directory_path)
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "todo_list"
 
     @property
     def EM(self) -> Type[TodoItemModel]:
@@ -109,19 +103,18 @@ class TaskLabelModel(BaseEntityModel):
 
 
 class TaskLabelsManager(EntityManager):
-    __table_name = "task_label"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "task_label"
 
     @property
     def EM(self) -> Type[TaskLabelModel]:
@@ -136,19 +129,18 @@ class TaskAssignmentModel(BaseEntityModel):
 
 
 class TaskAssignmentsManager(EntityManager):
-    __table_name = "task_assignment"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "task_assignment"
 
     @property
     def EM(self) -> Type[TaskAssignmentModel]:

@@ -14,19 +14,18 @@ class UserModel(BaseEntityModel):
 
 
 class UsersManager(EntityManager):
-    __table_name = "user"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "user"
 
     @property
     def EM(self) -> Type[UserModel]:
@@ -47,14 +46,13 @@ class RoleModel(BaseEntityModel):
 
 
 class RolesManager(EntityManager):
-    __table_name = "role"
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
         work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, table_name=self.__table_name, verbose=self.verbose,
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
                          work_directory_path=work_directory_path)
 
     @property
@@ -63,4 +61,4 @@ class RolesManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return self.__table_name
+        return "role"
