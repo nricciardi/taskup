@@ -11,6 +11,11 @@ const routes: Routes = [
     pathMatch: "full"
   },
   {
+    path: "home",
+    redirectTo: "/dashboard",
+    pathMatch: "full"
+  },
+  {
     path: "dashboard",
     component: DashboardComponent
   },
