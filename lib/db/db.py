@@ -2,18 +2,55 @@ import sqlite3
 from lib.utils.base import Base
 import os
 from typing import List, Tuple, Dict, Any
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class Field:
     name: str
     type: str
-    default: Any | None = None
-    pk: bool = False
-    autoincrement: bool = False
-    unique: bool = False
-    nullable: bool = False
+    default: str | None = field(default=None)
+    pk: bool = field(default=False)
+    autoincrement: bool = field(default=False)
+    unique: bool = field(default=False)
+    nullable: bool = field(default=False)
+    check: str | None = field(default=None)
+
+    @classmethod
+    def id_field(cls) -> 'Field':
+        return cls(name="id", type="INTEGER", pk=True, autoincrement=True)
+
+    @classmethod
+    def fk_field(cls, name: str, nullable: bool = False, unique: bool = False) -> 'Field':
+        return cls(name=name, type="INTEGER", nullable=nullable, unique=unique)
+
+    @classmethod
+    def name_field(cls, unique: bool = True) -> 'Field':
+        return cls(name="name", type="VARCHAR(150)", nullable=False, unique=unique)
+
+    @classmethod
+    def description_field(cls, nullable: bool = False) -> 'Field':
+        return cls(name="description", type="VARCHAR(1000)", nullable=nullable, unique=False)
+
+    @classmethod
+    def created_at_field(cls) -> 'Field':
+        return cls(name="created_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+
+    @classmethod
+    def updated_at_field(cls) -> 'Field':
+        return cls(name="updated_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+
+    @classmethod
+    def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
+        return cls(name=name, type="DATE", default=default, check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
+
+    @staticmethod
+    def get_datetime_sql(datetime: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+        return f"""strftime('%Y-%m-%d %H:%M:%S', {"'" if strict_string else ""}{datetime}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
+
+    @staticmethod
+    def get_date_sql(date: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+        return f"""strftime('%Y-%m-%d', {"'" if strict_string else ""}{date}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
 
     def to_sql(self) -> str:
         """
@@ -23,15 +60,57 @@ class Field:
         :rtype str:
         """
 
-        return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''}" + \
-            f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''}" + \
-            f"{'NULL' if self.nullable else 'NOT NULL'}"
+        return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''} " + \
+            f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''} " + \
+            f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'}"
 
+
+@dataclass
+class FKConstraint:
+    fk_field: str
+    on_table: str
+    reference_field: str
+
+    @classmethod
+    def on_id(cls, fk_field: str, on_table: str) -> 'FKConstraint':
+        return cls(fk_field=fk_field, on_table=on_table, reference_field='id')
+
+    def to_sql(self) -> str:
+        """
+        Get sql strin for FK constraint
+
+        :return: SQL
+        :rtype str:
+        """
+
+        return f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
 
 @dataclass
 class Table:
     name: str
     fields: List[Field]
+    fk_constraints: List[FKConstraint] = field(default=None)
+
+    def has_fk_constraint(self) -> bool:
+
+        return self.fk_constraints is not None and len(self.fk_constraints) > 0
+
+    @classmethod
+    def pivot(cls, name: str, tables: List[str]) -> 'Table':
+
+        fields = [
+            Field.id_field()
+        ]
+
+        fk_constraints = []
+
+        for t in tables:
+            name = f"{t}_id"
+
+            fields.append(Field.fk_field(name=name))
+            fk_constraints.append(FKConstraint.on_id(name, t))
+
+        return cls(name, fields, fk_constraints)
 
     def to_sql(self, if_not_exist: bool = True) -> str:
         """
@@ -41,13 +120,30 @@ class Table:
         :rtype str:
         """
 
+        fields = ',\n'.join(f.to_sql() for f in self.fields)
+
         return f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
-            {','.join(field.to_sql() for field in self.fields)}
+            {fields}
+            
+            {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraint() else "" if self.has_fk_constraint() else ""}
         );
         """
 
+@dataclass
+class Seeder:
+    table: str
+    values: List[Tuple | Dict]
+    fields: List | None = None
+
+@dataclass
+class DBStructure:
+    name: str
+    tables: List[Table]
+    use_localtime: bool = False
+
 
 class DBManager:
+
     def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False,
                  use_localtime: bool = False):
         """
@@ -92,22 +188,106 @@ class DBManager:
     def __del__(self):
         self.__db_connection.close()
 
-    def __append_localtime(self) -> str:
-        append_localtime = ""
-        if self.use_localtime:
-            append_localtime = ", 'localtime'"
+    @property
+    def tables(self) -> Dict[str, Table]:
+        """
+        Return dict of tables
 
-        return append_localtime
+        :return: tables
+        :rtype dict:
+        """
 
-    def __datetime(self, datetime: str, strict_string: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d %H:%M:%S', {"'" if strict_string else ""}{datetime}{self.__append_localtime()}{"'" if strict_string else ""})"""
+        return {
+            self.user_table_name: Table(self.user_table_name, [
+                Field.id_field(),
+                Field(name="username", type="VARCHAR(256)", unique=True),
+                Field(name="email", type="VARCHAR(256)", unique=True),
+                Field(name="password", type="VARCHAR(256)", unique=True),
+                Field.fk_field(name="role_id"),
+            ], fk_constraints=[
+                FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name)
+            ]),
 
-    def __date(self, date: str, strict_string: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d', {"'" if strict_string else ""}{date}{self.__append_localtime()}{"'" if strict_string else ""})"""
+            self.role_table_name: Table(self.role_table_name, [
+                Field.id_field(),
+                Field.name_field(),
+                Field(name="permission_create", type="INTEGER"),
+                Field(name="permission_read_all", type="INTEGER"),
+                Field(name="permission_move_backward", type="INTEGER"),
+                Field(name="permission_move_forward", type="INTEGER"),
+                Field(name="permission_edit", type="INTEGER"),
+                Field(name="permission_change_role", type="INTEGER"),
+                Field(name="permission_change_assignment", type="INTEGER"),
+            ]),
 
-    def __timestamp(self) -> str:
-        return f"""created_at DATETIME DEFAULT ({self.__datetime('now', strict_string=True)}),
-                   updated_at DATETIME DEFAULT ({self.__datetime('now', strict_string=True)}),"""
+            self.task_status_table_name: Table(self.task_status_table_name, [
+                Field.id_field(),
+                Field.name_field(),
+                Field.description_field(),
+                Field.fk_field(name="default_next_task_status_id", nullable=True)
+            ], fk_constraints=[
+                FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name)
+            ]),
+
+            self.task_table_name: Table(self.task_table_name, [
+                Field.id_field(),
+                Field.name_field(),
+                Field.description_field(),
+                Field.nullable_date_with_now_check_field(name="deadline"),
+                Field(name="priority", type="INTEGER", default="0"),
+                Field.created_at_field(),
+                Field.updated_at_field(),
+                Field.fk_field(name="author_id"),
+                Field.fk_field(name="task_status_id"),
+            ], fk_constraints=[
+                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
+                FKConstraint.on_id(fk_field="task_status_id", on_table=self.task_status_table_name),
+            ]),
+
+            self.task_label_table_name: Table(self.task_label_table_name, [
+                Field.id_field(),
+                Field.name_field(),
+                Field.description_field(),
+                Field(name="rgb_color", type="TEXT(6)")
+            ]),
+
+            self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[
+                self.user_table_name,
+                self.task_table_name
+            ]),
+
+            self.todo_item_table_name: Table(self.todo_item_table_name, [
+                Field.id_field(),
+                Field.description_field(nullable=False),
+                Field.nullable_date_with_now_check_field(name="deadline"),
+                Field.created_at_field(),
+                Field.updated_at_field(),
+                Field(name="done", type="INTEGER", default="0"),
+                Field.fk_field(name="author_id"),
+                Field.fk_field(name="task_id"),
+            ], fk_constraints=[
+                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
+                FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name),
+            ]),
+
+            self.task_task_label_pivot_table_name: Table.pivot(self.task_task_label_pivot_table_name, [
+                self.task_table_name,
+                self.task_label_table_name
+            ])
+
+
+        }
+
+    @property
+    def seeders(self) -> Dict[str, Seeder]:
+        """
+        Return the dict of seeders
+
+        :return: seeders
+        :rtype dict:
+        """
+
+        return {}
 
     @property
     def db_path(self):
@@ -141,31 +321,25 @@ class DBManager:
     def role_table_name(self) -> str:
         return "role"
 
-    def __create_role_table(self) -> None:
+    def create_table(self, table_name: str, if_not_exists: bool = True) -> None:
         """
-        Create role table if not exists
+        Create table
 
-        :return: None
-        :rtype None:
+        :param if_not_exists:
+        :type if_not_exists: bool
+        :type table_name: str
+        :param table_name:
+        :return:
         """
 
-        query = f"""
-            Create Table if not exists {self.role_table_name} (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(100) NOT NULL UNIQUE,
-                permission_create INTEGER NOT NULL,
-                permission_read_all INTEGER NOT NULL,
-                permission_move_backward INTEGER NOT NULL,
-                permission_move_forward INTEGER NOT NULL,
-                permission_edit INTEGER NOT NULL,
-                permission_change_role INTEGER NOT NULL,
-                permission_change_assignment INTEGER NOT NULL
-            );
-        """
+        query: str = self.tables[table_name].to_sql()
 
         self.cursor.execute(query)
 
-        Base.log_info(f"created if not exists {self.role_table_name}", is_verbose=self.verbose)
+        Base.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
+
+        self.connection.commit()
+
 
     def __insert_base_roles(self) -> None:
         """
@@ -199,58 +373,9 @@ class DBManager:
             Base.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
                            is_verbose=self.verbose)
 
-    def __create_user_table(self) -> None:
-        """
-        Create user table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-            Create Table if not exists {self.user_table_name} (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username VARCHAR(100) NOT NULL UNIQUE,
-                email VARCHAR(256) NOT NULL UNIQUE,
-                password VARCHAR(256),
-                
-                role_id INTEGER NOT NULL,
-                
-                Foreign Key (role_id) References {self.role_table_name}(id)
-            );
-        """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.user_table_name}", is_verbose=self.verbose)
-
     @property
     def task_status_table_name(self) -> str:
         return "task_status"
-
-    def __create_task_status_table(self) -> None:
-        """
-        Create task table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-             Create Table if not exists {self.task_status_table_name} (
-                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                 name VARCHAR(150) NOT NULL UNIQUE,
-                 description VARCHAR(1000) NULL,
-                 
-                 default_next_task_status_id INTEGER NULL,
-                 
-                 Foreign Key (default_next_task_status_id) References {self.task_status_table_name}(id)
-             );
-         """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.task_status_table_name}", is_verbose=self.verbose)
 
     @property
     def ideas_task_status_id(self) -> int:
@@ -322,120 +447,19 @@ class DBManager:
     def task_table_name(self) -> str:
         return "task"
 
-    def __create_task_table(self) -> None:
-        """
-        Create task table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-             Create Table if not exists {self.task_table_name} (
-                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                 name VARCHAR(150) NOT NULL,
-                 description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
-                                                                                                                     strict_string=True)}),
-                 priority INTEGER NOT NULL DEFAULT 0,
-                 {self.__timestamp()}
-
-                 author_id INTEGER NOT NULL,
-                 task_status_id INTEGER NOT NULL,
-
-                 Foreign Key(author_id) References {self.user_table_name}(id),
-                 Foreign Key(task_status_id) References {self.task_status_table_name}(id)
-             );
-         """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.task_table_name}", is_verbose=self.verbose)
 
     @property
     def task_assignment_table_name(self) -> str:
         return "task_assignment"
 
-    def __create_task_assignment_table(self) -> None:
-        """
-        Create task assignment table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-                 Create Table if not exists {self.task_assignment_table_name} (
-                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                     user_id INTEGER NOT NULL,
-                     task_id INTEGER NOT NULL,
-
-                     Foreign Key(user_id) References {self.user_table_name}(id)
-                     Foreign Key(task_id) References {self.task_table_name}(id)
-                 );
-             """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.task_assignment_table_name}", is_verbose=self.verbose)
-
     @property
     def todo_item_table_name(self) -> str:
         return "todo_item"
 
-    def __create_todo_item_table(self) -> None:
-        """
-        Create todoitem table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-             Create Table if not exists {self.todo_item_table_name} (
-                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                 description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
-                 priority INTEGER NOT NULL DEFAULT 0,
-                 {self.__timestamp()}
-                 done INTEGER NOT NULL DEFAULT 0,
-
-                 author_id INTEGER NOT NULL,
-                 task_id INTEGER NOT NULL,
-
-                 Foreign Key(author_id) References {self.user_table_name}(id),
-                 Foreign Key(task_id) References {self.task_table_name}(id)
-             );
-         """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.todo_item_table_name}", is_verbose=self.verbose)
 
     @property
     def task_label_table_name(self) -> str:
         return "task_label"
-
-    def __create_task_label_table(self) -> None:
-        """
-        Create task label table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-             Create Table if not exists {self.task_label_table_name} (
-                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                 name VARCHAR(500) NOT NULL,
-                 description VARCHAR(1000) NULL,
-                 rgb_color TEXT(6) NOT NULL
-             );
-         """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.task_label_table_name}", is_verbose=self.verbose)
 
     def __insert_base_task_labels(self) -> None:
         """
@@ -471,29 +495,6 @@ class DBManager:
     def task_task_label_pivot_table_name(self) -> str:
         return "task_task_label_pivot"
 
-    def __create_task_task_label_pivot_table(self) -> None:
-        """
-        Create task_task_label pivot table if not exists
-
-        :return: None
-        :rtype None:
-        """
-
-        query = f"""
-                 Create Table if not exists {self.task_task_label_pivot_table_name} (
-                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                     task_id INTEGER NOT NULL,
-                     task_label_id INTEGER NOT NULL,
-                     
-                     Foreign Key(task_id) References {self.task_table_name}(id)
-                     Foreign Key(task_label_id) References {self.task_label_table_name}(id)
-                 );
-             """
-
-        self.cursor.execute(query)
-
-        Base.log_info(f"created if not exists {self.task_task_label_pivot_table_name}", is_verbose=self.verbose)
-
     def generate_base_db_structure(self, strict: bool = False) -> None:
         """
         Generate the base db of app
@@ -509,27 +510,27 @@ class DBManager:
 
             Base.log_info("start to generate base db", is_verbose=self.verbose)
 
-            self.__create_role_table()
+            self.create_table(self.role_table_name)
 
             self.__insert_base_roles()
 
-            self.__create_user_table()
+            self.create_table(self.user_table_name)
 
-            self.__create_task_status_table()
+            self.create_table(self.task_status_table_name)
 
             self.__insert_base_task_status()
 
-            self.__create_task_table()
+            self.create_table(self.task_status_table_name)
 
-            self.__create_task_assignment_table()
+            self.create_table(self.task_assignment_table_name)
 
-            self.__create_todo_item_table()
+            self.create_table(self.todo_item_table_name)
 
-            self.__create_task_label_table()
+            self.create_table(self.task_label_table_name)
 
             self.__insert_base_task_labels()
 
-            self.__create_task_task_label_pivot_table()
+            self.create_table(self.task_task_label_pivot_table_name)
 
             self.connection.commit()
 
@@ -624,6 +625,3 @@ class DBManager:
             row_count += self.cursor.rowcount
 
         return row_count
-
-    def create_table(self, if_not_exist: bool = True):
-        raise NotImplementedError

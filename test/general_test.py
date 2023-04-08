@@ -1,9 +1,12 @@
+import os
+
 from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
 from lib.db.entity.task import TasksManager
 
 if __name__ == '__main__':
 
+    os.remove("/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db")
     pm = ProjectManager()
 
     users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
