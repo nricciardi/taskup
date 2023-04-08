@@ -2,21 +2,23 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Dict, Any, Type, TypeVar
 
-EM = TypeVar('EM', bound='BaseEntityModel')         # Entity Model
+EntityModel = TypeVar('EntityModel', bound='BaseEntityModel')  # Entity Model
 
 
 @dataclass
 class BaseEntityModel(ABC):
     """
-    Provide a base model method for entity dataclass
+    Provide a base model for entity dataclass
     """
 
     id: int
 
     def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
+        entity_as_dict = asdict(self)
 
-    def update(self, new: dict) -> None:
+        return entity_as_dict
+
+    def modify(self, new: dict) -> None:
         """
         Update fields from dict
 
@@ -31,7 +33,7 @@ class BaseEntityModel(ABC):
                 setattr(self, key, value)
 
     @classmethod
-    def from_dict(cls, data: dict) -> EM:
+    def from_dict(cls, data: dict) -> EntityModel:
         """
         Factory of BEM from dict data
 
@@ -60,7 +62,7 @@ class BaseEntityModel(ABC):
     #     return obj
 
     @classmethod
-    def from_tuple(cls, data: tuple) -> EM:
+    def from_tuple(cls, data: tuple) -> EntityModel:
         """
         Factory of BEM from tuple data
 

@@ -1,15 +1,19 @@
-from lib.entity.user import UsersManager
+from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
-from lib.entity.task import TaskTaskLabelPivotModel, TasksManager
+from lib.db.entity.task import TasksManager
 
 if __name__ == '__main__':
     pass
     pm = ProjectManager()
 
-    user_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
-    task_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
+    users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
+    tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work")
 
-    print(user_manager.find(3))
+    # users = users_manager.all_as_model(with_relations=True)
+    # print(users)
+
+    tasks = tasks_manager.find(1, with_relations=True)
+    print(tasks)
 
     # n = 62
     # user = user_manager.create({"username": f"franco{n}",

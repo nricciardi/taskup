@@ -1,10 +1,11 @@
-from lib.db.entity import EntityManager
+from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
-from lib.entity.bem import BaseEntityModel, EM
+from lib.db.entity.bem import BaseEntityModel
 from datetime import date, datetime
-from typing import List, Dict, Any, Type, Optional
+from typing import Type, Optional
 
-from lib.entity.user import UserModel
+from lib.db.entity.relation import Relation, RelationCardinality
+from lib.db.entity.user import UserModel
 
 
 @dataclass
@@ -15,6 +16,10 @@ class TaskStatusModel(BaseEntityModel):
     default_next_task_status_id: int
     default_next_task_status: Optional['TaskStatusModel'] = None
 
+    # @property
+    # def table_name(self) -> str:
+    #     return "task_status"
+
 
 @dataclass
 class TaskTaskLabelPivotModel(BaseEntityModel):
@@ -23,6 +28,10 @@ class TaskTaskLabelPivotModel(BaseEntityModel):
     description: str
     rgb_color: str
 
+    # @property
+    # def table_name(self) -> str:
+    #     return "task_task_label_pivot"
+
 
 @dataclass
 class TaskLabelModel(BaseEntityModel):
@@ -30,6 +39,10 @@ class TaskLabelModel(BaseEntityModel):
     name: str
     description: str
     rgb_color: str
+
+    # @property
+    # def table_name(self) -> str:
+    #     return "task_label"
 
 
 @dataclass
@@ -46,6 +59,10 @@ class TaskModel(BaseEntityModel):
     author: Optional[UserModel] = None
     task_status: Optional[TaskStatusModel] = None
 
+    # @property
+    # def table_name(self) -> str:
+    #     return "task"
+
 
 @dataclass
 class TaskAssignmentModel(BaseEntityModel):
@@ -54,6 +71,10 @@ class TaskAssignmentModel(BaseEntityModel):
     task_id: int
     user: Optional[UserModel] = None
     task: Optional[TaskModel] = None
+
+    # @property
+    # def table_name(self) -> str:
+    #     return "task_assignment"
 
 
 @dataclass
@@ -71,8 +92,12 @@ class TodoItemModel(BaseEntityModel):
     author: Optional[UserModel] = None
     task: Optional[TaskModel] = None
 
+    # @property
+    # def table_name(self) -> str:
+    #     return "todo_item"
 
-class TasksManager(EntityManager):
+
+class TasksManager(EntitiesManager):
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
@@ -87,10 +112,17 @@ class TasksManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return "task"
+        return self.task_table_name
+
+    @property
+    def relations(self) -> list[Relation]:
+        return [
+            Relation(has=RelationCardinality.ONE, fk_EM=UserModel, in_table=self.user_table_name, fk_field="author_id", to_attr="author"),
+            Relation(has=RelationCardinality.ONE, fk_EM=TaskStatusModel, in_table=self.task_status_table_name, fk_field="task_status_id", to_attr="task_status"),
+        ]
 
 
-class TaskStatusManager(EntityManager):
+class TaskStatusManager(EntitiesManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -105,10 +137,10 @@ class TaskStatusManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return "task_status"
+        return self.task_status_table_name
 
 
-class TodoItemsManager(EntityManager):
+class TodoItemsManager(EntitiesManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -119,14 +151,14 @@ class TodoItemsManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return "todo_list"
+        return self.todo_item_table_name
 
     @property
     def EM(self) -> Type[TodoItemModel]:
         return TodoItemModel
 
 
-class TaskLabelsManager(EntityManager):
+class TaskLabelsManager(EntitiesManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -138,14 +170,14 @@ class TaskLabelsManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return "task_label"
+        return self.task_label_table_name
 
     @property
     def EM(self) -> Type[TaskLabelModel]:
         return TaskLabelModel
 
 
-class TaskAssignmentsManager(EntityManager):
+class TaskAssignmentsManager(EntitiesManager):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -157,7 +189,7 @@ class TaskAssignmentsManager(EntityManager):
 
     @property
     def table_name(self) -> str:
-        return "task_assignment"
+        return self.task_assignment_table_name
 
     @property
     def EM(self) -> Type[TaskAssignmentModel]:

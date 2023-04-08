@@ -18,7 +18,7 @@ class Base:
 
     @staticmethod
     def exit():
-        print("Exit...")
+        print("Forced Exit...")
         sys.exit()
 
     @staticmethod
@@ -153,7 +153,7 @@ class Base:
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
         :type is_verbose: bool
-        :param prefix: if must be the prefix
+        :param prefix: if there has to be the prefix
         :type prefix: bool
         :param color: color
 

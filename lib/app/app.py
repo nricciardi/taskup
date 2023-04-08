@@ -2,8 +2,8 @@ import eel
 from lib.settings.settings import SettingsManager
 from lib.utils.base import Base
 from lib.app.project import ProjectManager
-from lib.entity.task import TasksManager
-from lib.entity.user import UsersManager
+from lib.db.entity import TasksManager
+from lib.db.entity import UsersManager
 
 
 class Exposer:
@@ -73,7 +73,7 @@ class Exposer:
             Exposer.expose_all_from_list(to_expose=[
                 tasks_manager.all_as_tuple,
                 tasks_manager.all_as_dict,
-                tasks_manager.create,
+                tasks_manager.create_from_dict,
                 tasks_manager.find,
             ], prefix="task_")
 
@@ -93,7 +93,7 @@ class Exposer:
             Exposer.expose_all_from_list(to_expose=[
                 users_manager.all_as_tuple,
                 users_manager.all_as_dict,
-                users_manager.create,
+                users_manager.create_from_dict,
                 users_manager.find,
             ], prefix="user_")
 

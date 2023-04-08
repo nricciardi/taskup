@@ -1,6 +1,5 @@
 import unittest
-from lib.entity.user import UsersManager
-import logging
+from lib.db.entity import UsersManager
 
 
 class UserModelTest(unittest.TestCase):
@@ -13,7 +12,7 @@ class UserModelTest(unittest.TestCase):
         print(self.user_manager.all())
 
     def create(self):
-        self.user_manager.create(name="nome")
+        self.user_manager.create_from_dict(name="nome")
 
 
 if __name__ == '__main__':
