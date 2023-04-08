@@ -1,6 +1,50 @@
 import sqlite3
 from lib.utils.base import Base
 import os
+from typing import List, Tuple, Dict, Any
+from dataclasses import dataclass
+
+
+@dataclass
+class Field:
+    name: str
+    type: str
+    default: Any | None = None
+    pk: bool = False
+    autoincrement: bool = False
+    unique: bool = False
+    nullable: bool = False
+
+    def to_sql(self) -> str:
+        """
+        Get sql string for table
+
+        :return: SQL
+        :rtype str:
+        """
+
+        return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''}" + \
+            f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''}" + \
+            f"{'NULL' if self.nullable else 'NOT NULL'}"
+
+
+@dataclass
+class Table:
+    name: str
+    fields: List[Field]
+
+    def to_sql(self, if_not_exist: bool = True) -> str:
+        """
+        Get sql string to create table
+
+        :return: SQL
+        :rtype str:
+        """
+
+        return f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
+            {','.join(field.to_sql() for field in self.fields)}
+        );
+        """
 
 
 class DBManager:
@@ -351,8 +395,7 @@ class DBManager:
              Create Table if not exists {self.todo_item_table_name} (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  description VARCHAR(1000) NOT NULL,
-                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now',
-                                                                                                                     strict_string=True)}),
+                 deadline DATE NULL DEFAULT NULL CHECK (deadline IS NULL OR {self.__date('deadline')} > {self.__date('now', strict_string=True)}),
                  priority INTEGER NOT NULL DEFAULT 0,
                  {self.__timestamp()}
                  done INTEGER NOT NULL DEFAULT 0,
@@ -393,6 +436,36 @@ class DBManager:
         self.cursor.execute(query)
 
         Base.log_info(f"created if not exists {self.task_label_table_name}", is_verbose=self.verbose)
+
+    def __insert_base_task_labels(self) -> None:
+        """
+        Insert base task labels in DB
+
+        :return:
+        :rtype None:
+        """
+
+        try:
+
+            Base.log_info(f"start to fill {self.task_label_table_name}", is_verbose=self.verbose)
+
+            # insert default task status
+            query = f"""
+                        Insert Into {self.task_label_table_name} (name, description, rgb_color)
+                        Values
+                        ("Front-end", "Front-end tasks", "b6f542"),
+                        ("Back-end", "Front-end tasks", "f56342"),
+                        ("Documentation", "Documentation tasks", "f242f5");
+                    """
+
+            self.cursor.execute(query)
+
+            Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
+
+        except Exception as exception:
+
+            Base.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
+                           is_verbose=self.verbose)
 
     @property
     def task_task_label_pivot_table_name(self) -> str:
@@ -454,6 +527,8 @@ class DBManager:
 
             self.__create_task_label_table()
 
+            self.__insert_base_task_labels()
+
             self.__create_task_task_label_pivot_table()
 
             self.connection.commit()
@@ -469,3 +544,86 @@ class DBManager:
 
             raise exception
 
+    def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple], fields: List[str] | Tuple[str] | None = None) -> int:
+        """
+        Insert all tuple values passed in a table
+
+        :param table_name:
+        :type table_name: str
+        :param values: values to insert
+        :type values: Tuple | List[Tuple]
+        :param fields: fields to use
+        :type fields: List[str] | Tuple[str] | None
+
+        :return: row inserted
+        :rtype int:
+        """
+
+        if type(values) is not tuple:  # convert single tuple in a list
+            t = values.copy()
+            values = list()
+            values.append(t)
+
+        fields: str = "" if fields is None else "(" + ", ".join(fields) + ")"  # => "" or  "(field1, field2, ...)"
+        placeholders: str = ','.join(['?'] * len(values))
+
+        query: str = f"""Insert into {table_name}{fields}
+                    Values ({placeholders})"""
+
+        self.cursor.executemany(query, values)
+
+        self.connection.commit()
+
+        return self.cursor.rowcount
+
+    def insert_from_dict(self, table_name: str, values: Dict | List[Dict], fields: List[str] | Tuple[str] | None = None) -> int:
+        """
+        Insert all dict values passed in a table
+
+        :param table_name:
+        :type table_name: str
+        :param values: values to insert
+        :type values: Dict | List[Dict]
+        :param fields: fields to use
+        :type fields: List[str] | Tuple[str] | None
+
+        :return: row inserted
+        :rtype int:
+        """
+
+        if not type(values) is dict:  # convert single dict in a list
+            d = values.copy()
+            values = list()
+            values.append(d)
+
+        row_count: int = 0
+        for value in values:
+            if fields is not None:  # get set of fields intersection between fields params and fields in dict
+                fields_set: set = set(fields).intersection(set(value.keys()))
+                fields_list = list(fields_set)
+
+            else:
+                fields_list = list(value.keys())
+
+            fields: str = ", ".join(fields_list)
+
+            placeholders: str = ','.join(['?'] * len(value.values()))
+
+            query = f"""Insert into {table_name}{fields}
+                        Values ({placeholders})"""
+
+            actual_values: list = []
+
+            for field in fields_list:
+                actual_values.append(value[field])
+
+            self.cursor.execute(query, tuple(actual_values))
+
+            self.connection.commit()
+
+            row_count += self.cursor.rowcount
+
+        return row_count
+
+    def create_table(self, if_not_exist: bool = True):
+        raise NotImplementedError
