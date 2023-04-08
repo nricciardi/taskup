@@ -6,18 +6,32 @@ This is a university project.
 ## Get Started
 **TODO**
 
-## Documentaion
-### How to generate Sphinx documentation?
+# Documentation
+This is a base and simple documentation to illustrate this project.
+To watch a full
+
+## How to generate Sphinx documentation?
 To run Sphinx doc:
 1. Go in /doc directory
 2. Run `sphinx-apidoc -o source/ ..` or `sphinx-apidoc -o source/ ../lib` to refresh only lib packages
 3. Run `make html`
 4. Go in `doc/build/html`
 
-### Keyword
+## Keyword
 - **Base Directory:** _this_ project directory path
 - **Project Directory:** the managed project path
 - **Work Directory:** the work directory inside _project directory_
+
+## Database and Entities
+### DBManager
+**DBManager** is the class used to provide connect with the database.
+Moreover, it allows to create the base structure of the database: tables and relations between them.
+
+### BEM
+**BEM** is the base class for the _entities models_, it implements some common and useful methods.
+
+### EntitiesManager
+**EntitiesManager** is the base class for the _entities managers_, that are classes that manage entities (find, create, delete, ...).
 
 ## TO-DO
 ### Frontend
@@ -26,6 +40,7 @@ To run Sphinx doc:
 - [ ] Set link in Documentation and Contribute in menu
 
 ### Python
+- [ ] (!) Implement try-except in exposed methods
 - [ ] Prevent Eel closing on error
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
