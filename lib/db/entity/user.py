@@ -2,7 +2,7 @@ from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
 from lib.db.entity.bem import BaseEntityModel
 from typing import Type, Optional
-from lib.db.entity.relation import Relation, RelationCardinality
+from lib.db.entity.relation import Relation, OneRelation
 
 
 @dataclass
@@ -56,7 +56,7 @@ class UsersManager(EntitiesManager):
     @property
     def relations(self) -> list[Relation]:
         return [
-            Relation(has=RelationCardinality.ONE, fk_EM=RoleModel, in_table=self.role_table_name, fk_field="role_id", to_attr="role")
+            OneRelation(fk_model=RoleModel, of_table=self.role_table_name, fk_field="role_id", to_attr="role")
         ]
 
 

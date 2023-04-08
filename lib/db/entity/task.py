@@ -2,12 +2,12 @@ from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
 from lib.db.entity.bem import BaseEntityModel
 from datetime import date, datetime
-from typing import Type, Optional
-
-from lib.db.entity.relation import Relation, RelationCardinality
+from typing import Type, Optional, List
+from lib.db.entity.relation import Relation, OneRelation, ManyRelation
 from lib.db.entity.user import UserModel
 
 
+# ================== DATACLASS ==========================
 @dataclass
 class TaskStatusModel(BaseEntityModel):
     id: int
@@ -58,6 +58,7 @@ class TaskModel(BaseEntityModel):
     task_status_id: int
     author: Optional[UserModel] = None
     task_status: Optional[TaskStatusModel] = None
+    labels: Optional[List[TaskLabelModel]] = None
 
     # @property
     # def table_name(self) -> str:
@@ -97,6 +98,7 @@ class TodoItemModel(BaseEntityModel):
     #     return "todo_item"
 
 
+# ================================== MANAGER ========================
 class TasksManager(EntitiesManager):
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -117,8 +119,11 @@ class TasksManager(EntitiesManager):
     @property
     def relations(self) -> list[Relation]:
         return [
-            Relation(has=RelationCardinality.ONE, fk_EM=UserModel, in_table=self.user_table_name, fk_field="author_id", to_attr="author"),
-            Relation(has=RelationCardinality.ONE, fk_EM=TaskStatusModel, in_table=self.task_status_table_name, fk_field="task_status_id", to_attr="task_status"),
+            OneRelation(fk_model=UserModel, of_table=self.user_table_name, fk_field="author_id", to_attr="author"),
+            OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name, fk_field="task_status_id",
+                        to_attr="task_status"),
+            ManyRelation(fk_model=TaskLabelModel, of_table=self.task_label_table_name, pivot_model=TaskTaskLabelPivotModel,
+                         pivot_table=self.task_task_label_pivot_table_name, to_attr="labels")
         ]
 
 

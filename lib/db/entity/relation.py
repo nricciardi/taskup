@@ -1,38 +1,55 @@
-from enum import Enum
-from dataclasses import dataclass
-from typing import Type
-from lib.db.entity.bem import EntityModel
+from dataclasses import dataclass, field
+from typing import Type, TypeVar, Generic
+from lib.db.entity.bem import EntityModel, BaseEntityModel
+from abc import ABC
 
-
-class RelationCardinality(Enum):
-    MANY = "many"
-    ONE = "one"
-
+Pivot = TypeVar('Pivot', bound=BaseEntityModel)     # pivot
 
 @dataclass
-class Relation:
+class Relation(ABC, Generic[EntityModel]):
     """
-
 
     :ivar has: relation type
     :type has: RelationType
     
-    :ivar fk_EM: fk dataclass
-    :type fk_EM: str
+    :ivar fk_model: fk dataclass
+    :type fk_model: str
 
-    :ivar in_table: relation table
-    :type in_table: str
+    :ivar of_table: relation table
+    :type of_table: str
 
-    :ivar fk_field: fk field in entity
-    :type fk_field: str
+
 
     :ivar to_attr: dataclass type
     :type to_attr: [EntityModel]
     """
 
-    has: RelationCardinality
-    fk_EM: Type[EntityModel]
-    in_table: str
-    fk_field: str
+    fk_model: Type[EntityModel]
+    of_table: str
     to_attr: str
 
+
+@dataclass
+class OneRelation(Relation):
+    """
+
+    :ivar fk_field: fk field in entity
+    :type fk_field: str
+
+    """
+
+    fk_field: str
+
+
+@dataclass
+class ManyRelation(Relation):
+    """
+
+    """
+
+    pivot_table: str
+    pivot_model: Type[Pivot]
+
+    def __post_init__(self) -> None:
+        if self.pivot_model == self.fk_model:
+            raise ValueError("a and b must be different types")

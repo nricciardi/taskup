@@ -1,12 +1,12 @@
 from lib.db.db import DBManager
 from abc import ABC, abstractmethod
-from lib.db.entity.relation import Relation, RelationCardinality
+from lib.db.entity.relation import Relation, OneRelation, ManyRelation
 from lib.utils.base import Base
 from lib.db.entity.bem import BaseEntityModel, EntityModel
-from typing import Any, List, Tuple, Dict, Type
+from typing import Any, List, Tuple, Dict, Type, Generic
 
 
-class EntitiesManager(DBManager, ABC):
+class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
     """
     Abstract class to manage DB's entities
     """
@@ -156,11 +156,18 @@ class EntitiesManager(DBManager, ABC):
         :rtype List[EntityModel]:
         """
 
-        tuples = self.all_as_tuple()
+        models = self.__all_as_model(table_name=self.table_name, with_relations=with_relations, model=self.EM)
+
+        return models
+
+    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel) -> List[EntityModel]:
+
+        tuples = self.__all_as_tuple(table_name)
+
         models = []
 
         for record in tuples:
-            em = self.EM.from_tuple(record)
+            em = model.from_tuple(record)
 
             if with_relations:
                 self.append_relations_data(em)
@@ -320,19 +327,26 @@ class EntitiesManager(DBManager, ABC):
 
         try:
 
-            if relation.has == RelationCardinality.ONE:
+            if isinstance(relation, OneRelation):
 
                 fk_id = getattr(em, relation.fk_field)      # get fk_id from em based on fk_field of relation
 
-                data = self.__find(fk_id, relation.in_table)        # find fk entity
+                data = self.__find(fk_id, relation.of_table)        # find fk entity
 
-                return relation.fk_EM.from_tuple(data)      # return a fk EM from tuple resulted
+                return relation.fk_model.from_tuple(data)      # return a fk EM from tuple resulted
 
-            elif relation.has == RelationCardinality.MANY:
-                print("has many with ", relation.in_table)
+            elif isinstance(relation, ManyRelation):
+                print("has many with ", relation.of_table)
+
+                pivot_data = self.__all_as_model(table_name=relation.pivot_table, model=relation.pivot_model,
+                                                 with_relations=False)      # False prevent call loop
+
+                print(pivot_data)
+
+                Base.exit()
 
             else:
-                Base.log_warning(msg=f"{relation.has} does not exist as relationship cardinality", is_verbose=self.verbose)
+                Base.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
 
         except Exception as exception:
 
