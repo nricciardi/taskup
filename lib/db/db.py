@@ -250,7 +250,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
     def cursor(self):
         return self.__db_cursor
 
-
     def create_table(self, table_name: str, if_not_exists: bool = True) -> None:
         """
         Create table
@@ -262,7 +261,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :return:
         """
 
-        query: str = self.tables[table_name].to_sql()
+        query: str = self.tables[table_name].to_sql(if_not_exist=if_not_exists)
 
         self.cursor.execute(query)
 
@@ -395,7 +394,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.__insert_base_task_status()
 
-            self.create_table(self.task_status_table_name)
+            self.create_table(self.task_table_name)
 
             self.create_table(self.task_assignment_table_name)
 

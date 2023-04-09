@@ -39,7 +39,7 @@ class Field:
 
     @classmethod
     def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
-        return cls(name=name, type="DATE", default=default,
+        return cls(name=name, type="DATE", default=default, nullable=True,
                    check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
 
     @staticmethod
@@ -94,7 +94,7 @@ class Table:
         return self.fk_constraints is not None and len(self.fk_constraints) > 0
 
     @classmethod
-    def pivot(cls, name: str, tables: List[str]) -> 'Table':
+    def pivot(cls, table_name: str, tables: List[str]) -> 'Table':
         fields = [
             Field.id_field()
         ]
@@ -107,7 +107,7 @@ class Table:
             fields.append(Field.fk_field(name=name))
             fk_constraints.append(FKConstraint.on_id(name, t))
 
-        return cls(name, fields, fk_constraints)
+        return cls(table_name, fields, fk_constraints)
 
     def to_sql(self, if_not_exist: bool = True) -> str:
         """
