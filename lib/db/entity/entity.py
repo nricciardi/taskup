@@ -325,7 +325,6 @@ class EntitiesManager(ABC, Generic[EntityModel]):
                 return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
 
             elif isinstance(relation, ManyRelation):
-                print("has many with ", relation.of_table, relation.pivot_table, relation.pivot_model)
 
                 pivot_data: List[relation.pivot_model] = self.__all_as_model(table_name=relation.pivot_table,
                                                                              model=relation.pivot_model,
