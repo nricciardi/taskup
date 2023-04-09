@@ -6,20 +6,29 @@ from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
 
 
-class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
+class EntitiesManager(ABC, Generic[EntityModel]):
     """
     Abstract class to manage DB's entities
     """
 
     db_use_localtime: bool = False
+    __db_manager: DBManager
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
 
         self.__db_name = db_name
         self.__verbose = verbose
 
-        super().__init__(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose,
-                         use_localtime=self.db_use_localtime)
+        self.__db_manager = DBManager(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose,
+                                      use_localtime=self.db_use_localtime)
+
+    @property
+    def verbose(self) -> bool:
+        return self.__verbose
+
+    @verbose.setter
+    def verbose(self, value: bool) -> None:
+        self.__verbose = value
 
     @property
     def relations(self) -> list[Relation]:
@@ -106,7 +115,7 @@ class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
         """
 
         query = self.__get_all_query(table_name)
-        res = self.cursor.execute(query)
+        res = self.__db_manager.cursor.execute(query)
 
         return res.fetchall()
 
@@ -212,7 +221,7 @@ class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
         """
 
         query = self.__get_find_query(entity_id, table_name)
-        res = self.cursor.execute(query)
+        res = self.__db_manager.cursor.execute(query)
 
         return tuple(res.fetchone())
 
@@ -248,12 +257,12 @@ class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
         try:
 
             values = list(data.values())
-            self.cursor.execute(query, values)
+            self.__db_manager.cursor.execute(query, values)
 
-            self.connection.commit()
+            self.__db_manager.connection.commit()
 
             # call explicitly find to prevent use of override
-            entity = self.find(self.cursor.lastrowid)
+            entity = self.find(self.__db_manager.cursor.lastrowid)
 
             return entity
 
@@ -329,17 +338,17 @@ class EntitiesManager(DBManager, ABC, Generic[EntityModel]):
 
             if isinstance(relation, OneRelation):
 
-                fk_id = getattr(em, relation.fk_field)      # get fk_id from em based on fk_field of relation
+                fk_id = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
 
-                data = self.__find(fk_id, relation.of_table)        # find fk entity
+                data = self.__find(fk_id, relation.of_table)  # find fk entity
 
-                return relation.fk_model.from_tuple(data)      # return a fk EM from tuple resulted
+                return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
 
             elif isinstance(relation, ManyRelation):
                 print("has many with ", relation.of_table)
 
                 pivot_data = self.__all_as_model(table_name=relation.pivot_table, model=relation.pivot_model,
-                                                 with_relations=False)      # False prevent call loop
+                                                 with_relations=False)  # False prevent call loop
 
                 print(pivot_data)
 

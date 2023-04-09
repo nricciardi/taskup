@@ -1,3 +1,4 @@
+from lib.db.db import TableNamesMixin
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
 from lib.db.entity.bem import BaseEntityModel
@@ -99,7 +100,7 @@ class TodoItemModel(BaseEntityModel):
 
 
 # ================================== MANAGER ========================
-class TasksManager(EntitiesManager):
+class TasksManager(EntitiesManager, TableNamesMixin):
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
@@ -127,7 +128,7 @@ class TasksManager(EntitiesManager):
         ]
 
 
-class TaskStatusManager(EntitiesManager):
+class TaskStatusManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -145,7 +146,7 @@ class TaskStatusManager(EntitiesManager):
         return self.task_status_table_name
 
 
-class TodoItemsManager(EntitiesManager):
+class TodoItemsManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -163,7 +164,7 @@ class TodoItemsManager(EntitiesManager):
         return TodoItemModel
 
 
-class TaskLabelsManager(EntitiesManager):
+class TaskLabelsManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -182,7 +183,7 @@ class TaskLabelsManager(EntitiesManager):
         return TaskLabelModel
 
 
-class TaskAssignmentsManager(EntitiesManager):
+class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose

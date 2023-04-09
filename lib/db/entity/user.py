@@ -1,3 +1,4 @@
+from lib.db.db import TableNamesMixin
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
 from lib.db.entity.bem import BaseEntityModel
@@ -36,7 +37,7 @@ class UserModel(BaseEntityModel):
     #     return "user"
 
 
-class UsersManager(EntitiesManager):
+class UsersManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
@@ -60,7 +61,7 @@ class UsersManager(EntitiesManager):
         ]
 
 
-class RolesManager(EntitiesManager):
+class RolesManager(EntitiesManager, TableNamesMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose

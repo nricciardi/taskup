@@ -2,147 +2,83 @@ import sqlite3
 from lib.utils.base import Base
 import os
 from typing import List, Tuple, Dict, Any
-from dataclasses import dataclass, field
+from lib.db.component import Table, Field, FKConstraint, Seeder
 
 
-@dataclass
-class Field:
-    name: str
-    type: str
-    default: str | None = field(default=None)
-    pk: bool = field(default=False)
-    autoincrement: bool = field(default=False)
-    unique: bool = field(default=False)
-    nullable: bool = field(default=False)
-    check: str | None = field(default=None)
+class TableNamesMixin:
+    """
+    Provide the table names
 
-    @classmethod
-    def id_field(cls) -> 'Field':
-        return cls(name="id", type="INTEGER", pk=True, autoincrement=True)
+    """
 
-    @classmethod
-    def fk_field(cls, name: str, nullable: bool = False, unique: bool = False) -> 'Field':
-        return cls(name=name, type="INTEGER", nullable=nullable, unique=unique)
+    @property
+    def user_table_name(self) -> str:
+        return "user"
 
-    @classmethod
-    def name_field(cls, unique: bool = True) -> 'Field':
-        return cls(name="name", type="VARCHAR(150)", nullable=False, unique=unique)
+    @property
+    def role_table_name(self) -> str:
+        return "role"
 
-    @classmethod
-    def description_field(cls, nullable: bool = False) -> 'Field':
-        return cls(name="description", type="VARCHAR(1000)", nullable=nullable, unique=False)
+    @property
+    def task_table_name(self) -> str:
+        return "task"
 
-    @classmethod
-    def created_at_field(cls) -> 'Field':
-        return cls(name="created_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+    @property
+    def task_assignment_table_name(self) -> str:
+        return "task_assignment"
 
-    @classmethod
-    def updated_at_field(cls) -> 'Field':
-        return cls(name="updated_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+    @property
+    def todo_item_table_name(self) -> str:
+        return "todo_item"
 
-    @classmethod
-    def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
-        return cls(name=name, type="DATE", default=default, check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
+    @property
+    def task_label_table_name(self) -> str:
+        return "task_label"
 
-    @staticmethod
-    def get_datetime_sql(datetime: str, strict_string: bool = False, use_localtime: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d %H:%M:%S', {"'" if strict_string else ""}{datetime}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
+    @property
+    def task_task_label_pivot_table_name(self) -> str:
+        return "task_task_label_pivot"
 
-    @staticmethod
-    def get_date_sql(date: str, strict_string: bool = False, use_localtime: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d', {"'" if strict_string else ""}{date}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
-
-    def to_sql(self) -> str:
-        """
-        Get sql string for table
-
-        :return: SQL
-        :rtype str:
-        """
-
-        return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''} " + \
-            f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''} " + \
-            f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'}"
+    @property
+    def task_status_table_name(self) -> str:
+        return "task_status"
 
 
-@dataclass
-class FKConstraint:
-    fk_field: str
-    on_table: str
-    reference_field: str
+class BaseTaskStatusIdMixin:
+    @property
+    def ideas_task_status_id(self) -> int:
+        return 1
 
-    @classmethod
-    def on_id(cls, fk_field: str, on_table: str) -> 'FKConstraint':
-        return cls(fk_field=fk_field, on_table=on_table, reference_field='id')
+    @property
+    def backlog_task_status_id(self) -> int:
+        return 2
 
-    def to_sql(self) -> str:
-        """
-        Get sql strin for FK constraint
+    @property
+    def todo_task_status_id(self) -> int:
+        return 3
 
-        :return: SQL
-        :rtype str:
-        """
+    @property
+    def doing_task_status_id(self) -> int:
+        return 4
 
-        return f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
+    @property
+    def done_task_status_id(self) -> int:
+        return 5
 
-@dataclass
-class Table:
-    name: str
-    fields: List[Field]
-    fk_constraints: List[FKConstraint] = field(default=None)
+    @property
+    def testing_task_status_id(self) -> int:
+        return 6
 
-    def has_fk_constraint(self) -> bool:
+    @property
+    def bug_fixing_task_status_id(self) -> int:
+        return 7
 
-        return self.fk_constraints is not None and len(self.fk_constraints) > 0
-
-    @classmethod
-    def pivot(cls, name: str, tables: List[str]) -> 'Table':
-
-        fields = [
-            Field.id_field()
-        ]
-
-        fk_constraints = []
-
-        for t in tables:
-            name = f"{t}_id"
-
-            fields.append(Field.fk_field(name=name))
-            fk_constraints.append(FKConstraint.on_id(name, t))
-
-        return cls(name, fields, fk_constraints)
-
-    def to_sql(self, if_not_exist: bool = True) -> str:
-        """
-        Get sql string to create table
-
-        :return: SQL
-        :rtype str:
-        """
-
-        fields = ',\n'.join(f.to_sql() for f in self.fields)
-
-        return f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
-            {fields}
-            
-            {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraint() else "" if self.has_fk_constraint() else ""}
-        );
-        """
-
-@dataclass
-class Seeder:
-    table: str
-    values: List[Tuple | Dict]
-    fields: List | None = None
-
-@dataclass
-class DBStructure:
-    name: str
-    tables: List[Table]
-    use_localtime: bool = False
+    @property
+    def release_task_status_id(self) -> int:
+        return 8
 
 
-class DBManager:
+class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
     def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False,
                  use_localtime: bool = False):
@@ -275,7 +211,6 @@ class DBManager:
                 self.task_label_table_name
             ])
 
-
         }
 
     @property
@@ -287,7 +222,9 @@ class DBManager:
         :rtype dict:
         """
 
-        return {}
+        return {
+
+        }
 
     @property
     def db_path(self):
@@ -313,13 +250,6 @@ class DBManager:
     def cursor(self):
         return self.__db_cursor
 
-    @property
-    def user_table_name(self) -> str:
-        return "user"
-
-    @property
-    def role_table_name(self) -> str:
-        return "role"
 
     def create_table(self, table_name: str, if_not_exists: bool = True) -> None:
         """
@@ -339,7 +269,6 @@ class DBManager:
         Base.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
         self.connection.commit()
-
 
     def __insert_base_roles(self) -> None:
         """
@@ -372,42 +301,6 @@ class DBManager:
 
             Base.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
                            is_verbose=self.verbose)
-
-    @property
-    def task_status_table_name(self) -> str:
-        return "task_status"
-
-    @property
-    def ideas_task_status_id(self) -> int:
-        return 1
-
-    @property
-    def backlog_task_status_id(self) -> int:
-        return 2
-
-    @property
-    def todo_task_status_id(self) -> int:
-        return 3
-
-    @property
-    def doing_task_status_id(self) -> int:
-        return 4
-
-    @property
-    def done_task_status_id(self) -> int:
-        return 5
-
-    @property
-    def testing_task_status_id(self) -> int:
-        return 6
-
-    @property
-    def bug_fixing_task_status_id(self) -> int:
-        return 7
-
-    @property
-    def release_task_status_id(self) -> int:
-        return 8
 
     def __insert_base_task_status(self) -> None:
         """
@@ -442,24 +335,6 @@ class DBManager:
 
             Base.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
                            is_verbose=self.verbose)
-
-    @property
-    def task_table_name(self) -> str:
-        return "task"
-
-
-    @property
-    def task_assignment_table_name(self) -> str:
-        return "task_assignment"
-
-    @property
-    def todo_item_table_name(self) -> str:
-        return "todo_item"
-
-
-    @property
-    def task_label_table_name(self) -> str:
-        return "task_label"
 
     def __insert_base_task_labels(self) -> None:
         """
@@ -545,7 +420,8 @@ class DBManager:
 
             raise exception
 
-    def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple], fields: List[str] | Tuple[str] | None = None) -> int:
+    def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple],
+                          fields: List[str] | Tuple[str] | None = None) -> int:
         """
         Insert all tuple values passed in a table
 
@@ -577,7 +453,8 @@ class DBManager:
 
         return self.cursor.rowcount
 
-    def insert_from_dict(self, table_name: str, values: Dict | List[Dict], fields: List[str] | Tuple[str] | None = None) -> int:
+    def insert_from_dict(self, table_name: str, values: Dict | List[Dict],
+                         fields: List[str] | Tuple[str] | None = None) -> int:
         """
         Insert all dict values passed in a table
 

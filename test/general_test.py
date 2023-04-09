@@ -19,18 +19,18 @@ if __name__ == '__main__':
     # tasks = tasks_manager.find(1, with_relations=True)
     # print(tasks)
 
-    # n = 2
-    # user = users_manager.create_from_dict({"username": f"franco{n}",
-    #                             "email": f"n{n}@r.com",
-    #                             "password": "asdf",
-    #                             "role_id": 1})
-    #
-    # task = tasks_manager.create_from_dict({
-    #     "name": f"prova task{n}",
-    #     "description": f"descrizione di prova{n}",
-    #     "author_id": user.id,
-    #     "task_status_id": 3
-    # })
+    n = 1
+    user = users_manager.create_from_dict({"username": f"franco{n}",
+                                "email": f"n{n}@r.com",
+                                "password": "asdf",
+                                "role_id": 1})
+
+    task = tasks_manager.create_from_dict({
+        "name": f"prova task{n}",
+        "description": f"descrizione di prova{n}",
+        "author_id": user.id,
+        "task_status_id": 3
+    })
 
 
 
