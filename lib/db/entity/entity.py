@@ -241,25 +241,22 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return f"Select * From {table_name} Where {table_name}.id = {entity_id};"
 
-    def create_from_dict(self, data: dict) -> EntityModel:
+    def create_from_dict(self, data: dict, safe: bool = True) -> EntityModel | None:
         """
         Create a new record
 
         :param data: dict represent entity data
         :type data: Entity dataclass
 
+        :param safe: if True prevent fault
+        :type safe: bool
+
         :return: entity created
         :rtype EntityModel:
         """
 
-        query = self.__generate_create_query(data, self.table_name)  # it is here to use its in except
-
         try:
-
-            values = list(data.values())
-            self.__db_manager.cursor.execute(query, values)
-
-            self.__db_manager.connection.commit()
+            self.__db_manager.insert_from_dict(self.table_name, data)
 
             # call explicitly find to prevent use of override
             entity = self.find(self.__db_manager.cursor.lastrowid)
@@ -268,35 +265,12 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         except Exception as exception:
 
-            Base.log_error(msg=f"{exception} during execute: {query}\nwith {data}", is_verbose=self.__verbose)
+            Base.log_error(msg=f"{exception} during inserting with data: {data}", is_verbose=self.__verbose)
 
-            raise exception
-
-    def __generate_create_query(self, data: dict, table_name: str) -> str:
-        """
-        Generate the query for create method
-
-        :param data: key-value data of entity
-        :type data: dict
-
-        :param table_name: table name
-        :type table_name: str
-
-        :return: SQL query
-        :rtype str:
-        """
-
-        # Extract the keys and values from the dictionary
-        keys = list(data.keys())
-        values = list(data.values())
-
-        # Construct the query string with placeholders for the values
-        fields = ','.join(keys)
-        placeholders = ','.join(['?'] * len(values))
-
-        query_string = f"Insert Into {table_name} ({fields}) Values ({placeholders})"
-
-        return query_string
+            if not safe:
+                raise exception
+            else:
+                return None
 
     def append_relations_data(self, em: EntityModel, safe: bool = True) -> None:
         """

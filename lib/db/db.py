@@ -90,6 +90,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :param verbose: verbose
         :param use_localtime: if db must use local in date
         """
+        super().__init__()
 
         self.verbose = verbose
         self.use_localtime = use_localtime
@@ -468,7 +469,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :rtype int:
         """
 
-        if not type(values) is dict:  # convert single dict in a list
+        if type(values) is dict:  # convert single dict in a list
             d = values.copy()
             values = list()
             values.append(d)
@@ -486,7 +487,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             placeholders: str = ','.join(['?'] * len(value.values()))
 
-            query = f"""Insert into {table_name}{fields}
+            query = f"""Insert into {table_name}({fields})
                         Values ({placeholders})"""
 
             actual_values: list = []
@@ -501,3 +502,20 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             row_count += self.cursor.rowcount
 
         return row_count
+
+    def select(self, table: str, columns: List[str] = None) -> List[Tuple]:
+        """
+        Select data from db
+
+        :return: records
+        :rtype List[Tuple]:
+        """
+
+        if columns is None:
+            columns = ['*']
+
+        query = f"""
+        Select {", ".join(columns)}
+        
+        """
+

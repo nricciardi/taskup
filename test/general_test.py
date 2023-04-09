@@ -25,6 +25,8 @@ if __name__ == '__main__':
                                 "password": "asdf",
                                 "role_id": 1})
 
+    print(user)
+
     task = tasks_manager.create_from_dict({
         "name": f"prova task{n}",
         "description": f"descrizione di prova{n}",
