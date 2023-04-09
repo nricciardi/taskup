@@ -1,5 +1,5 @@
 import unittest
-from lib.db.entity import UsersManager
+from lib.db.entity.user import UsersManager
 
 
 class UserModelTest(unittest.TestCase):

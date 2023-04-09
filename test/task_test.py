@@ -1,5 +1,5 @@
 import unittest
-from lib.db.entity import TasksManager
+from lib.db.entity.task import TasksManager
 
 
 class TaskModelTest(unittest.TestCase):

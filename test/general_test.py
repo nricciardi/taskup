@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # print(users)
 
     tasks = tasks_manager.find(1, with_relations=True, safe=False)
-    print(tasks)
+    print(tasks.to_dict())
 
     # n = 3
     # user = users_manager.create_from_dict({"username": f"franco{n}",

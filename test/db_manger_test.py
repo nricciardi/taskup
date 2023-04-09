@@ -1,9 +1,9 @@
 import unittest
-from lib.db import db
+from lib.db.db import DBManager
 
 
 class DBManagerTest(unittest.TestCase):
-    db_manager = db_manager.DBManager()
+    db_manager = DBManager()
 
     @classmethod
     def setUpClass(cls):  # run once before all test cases
