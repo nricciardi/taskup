@@ -4,6 +4,7 @@ from lib.db.entity.relation import Relation, OneRelation, ManyRelation
 from lib.utils.base import Base
 from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
+from lib.db.query import SelectQueryBuilder
 
 
 class EntitiesManager(ABC, Generic[EntityModel]):
@@ -130,7 +131,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype str:
         """
 
-        return f"Select * From {table_name};"
+        return SelectQueryBuilder.from_table(table_name).select().to_sql()
 
     def all_as_dict(self, with_relations: bool = True) -> List[Dict[str, Any]]:
         """
@@ -172,8 +173,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
-    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[
-        EntityModel]:
+    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[EntityModel]:
 
         tuples = self.__all_as_tuple(table_name)
 
@@ -245,7 +245,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype: str
         """
 
-        return f"Select * From {table_name} Where {table_name}.id = {entity_id};"
+        return SelectQueryBuilder.from_table(table_name).select().where("id", "=", entity_id).to_sql()
 
     def create_from_dict(self, data: dict, safe: bool = True) -> EntityModel | None:
         """
@@ -275,8 +275,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             if not safe:
                 raise exception
-            else:
-                return None
+
+            return None
 
     def append_relations_data(self, em: EntityModel, safe: bool) -> None:
         """

@@ -45,6 +45,19 @@ class SelectQueryBuilder(QueryBuilder):
         return cls(table_name, alias)
 
     def where(self, field: str, operator: str, value: Any, of_table: str | None = None) -> 'SelectQueryBuilder':
+        """
+        Add (and) where clause on query.
+
+        :param field:
+        :type field: str
+        :param operator:
+        :type operator: str
+        :param value:
+        :type value: Any
+        :param of_table: table of 'field', default self.table_name
+        :type of_table: str
+        :return:
+        """
 
         if not self.__has_where:
             self.__has_where = True
