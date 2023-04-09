@@ -14,6 +14,7 @@ import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PageHeadingComponent } from './widget/page-heading/page-heading.component';
+import { LoaderComponent } from './widget/loader/loader.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { PageHeadingComponent } from './widget/page-heading/page-heading.compone
     TaskPreviewComponent,
     TaskPreviewListComponent,
     DashboardComponent,
-    PageHeadingComponent
+    PageHeadingComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
