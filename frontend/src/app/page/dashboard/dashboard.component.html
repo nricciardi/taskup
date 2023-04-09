@@ -1,3 +1,15 @@
 <app-page-heading [title]="'dashboard'"></app-page-heading>
 
-<app-task-preview-list [tasks]="tasks"></app-task-preview-list>
+<div class="row justify-content-between">
+  <div class="col-1">
+    <app-side-banner></app-side-banner>
+  </div>
+
+  <div class="col-8">
+    <app-task-preview-list [tasks]="tasks"></app-task-preview-list>
+  </div>
+
+  <div class="col-1">
+    <app-side-banner></app-side-banner>
+  </div>
+</div>

@@ -15,6 +15,7 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PageHeadingComponent } from './widget/page-heading/page-heading.component';
 import { LoaderComponent } from './widget/loader/loader.component';
+import { SideBannerComponent } from './widget/side-banner/side-banner.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { LoaderComponent } from './widget/loader/loader.component';
     TaskPreviewListComponent,
     DashboardComponent,
     PageHeadingComponent,
-    LoaderComponent
+    LoaderComponent,
+    SideBannerComponent
   ],
   imports: [
     BrowserModule,
