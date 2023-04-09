@@ -25,9 +25,8 @@ class TaskStatusModel(BaseEntityModel):
 @dataclass
 class TaskTaskLabelPivotModel(BaseEntityModel):
     id: int
-    name: str
-    description: str
-    rgb_color: str
+    task_id: int
+    task_label_id: int
 
     # @property
     # def table_name(self) -> str:

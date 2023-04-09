@@ -503,19 +503,3 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         return row_count
 
-    def select(self, table: str, columns: List[str] = None) -> List[Tuple]:
-        """
-        Select data from db
-
-        :return: records
-        :rtype List[Tuple]:
-        """
-
-        if columns is None:
-            columns = ['*']
-
-        query = f"""
-        Select {", ".join(columns)}
-        
-        """
-

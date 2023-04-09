@@ -153,11 +153,13 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return dicts
 
-    def all_as_model(self, with_relations: bool = False) -> List[EntityModel]:
+    def all_as_model(self, with_relations: bool = False, safe: bool = True) -> List[EntityModel]:
         """
         Abstract method.
         Return all entities as EntityModel.
 
+        :param safe: safe execute flag
+        :type safe: bool
         :param with_relations: add entity data of relations
         :type with_relations: bool
 
@@ -165,11 +167,13 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel]:
         """
 
-        models = self.__all_as_model(table_name=self.table_name, with_relations=with_relations, model=self.EM)
+        models = self.__all_as_model(table_name=self.table_name, with_relations=with_relations, model=self.EM,
+                                     safe=safe)
 
         return models
 
-    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel) -> List[EntityModel]:
+    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[
+        EntityModel]:
 
         tuples = self.__all_as_tuple(table_name)
 
@@ -179,16 +183,18 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             em = model.from_tuple(record)
 
             if with_relations:
-                self.append_relations_data(em)
+                self.append_relations_data(em, safe)
 
             models.append(em)
 
         return models
 
-    def find(self, entity_id: int, with_relations: bool = False) -> EntityModel:
+    def find(self, entity_id: int, with_relations: bool = False, safe: bool = True) -> EntityModel:
         """
         Return the record requested
 
+        :param safe: safe execution flag
+        :type safe: bool
         :param with_relations: add entity data of relations
         :type with_relations: bool
         :param entity_id: the record's id
@@ -202,7 +208,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         em = self.EM.from_tuple(data)
 
         if with_relations:
-            self.append_relations_data(em)
+            self.append_relations_data(em, safe=safe)
 
         return em
 
@@ -272,7 +278,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             else:
                 return None
 
-    def append_relations_data(self, em: EntityModel, safe: bool = True) -> None:
+    def append_relations_data(self, em: EntityModel, safe: bool) -> None:
         """
         Append relations data on entity passed
 
@@ -312,28 +318,36 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             if isinstance(relation, OneRelation):
 
-                fk_id = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
+                fk_id: int = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
 
-                data = self.__find(fk_id, relation.of_table)  # find fk entity
+                data: Tuple = self.__find(fk_id, relation.of_table)  # find fk entity
 
                 return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
 
             elif isinstance(relation, ManyRelation):
-                print("has many with ", relation.of_table)
+                print("has many with ", relation.of_table, relation.pivot_table, relation.pivot_model)
 
-                pivot_data = self.__all_as_model(table_name=relation.pivot_table, model=relation.pivot_model,
-                                                 with_relations=False)  # False prevent call loop
+                pivot_data: List[relation.pivot_model] = self.__all_as_model(table_name=relation.pivot_table,
+                                                                             model=relation.pivot_model,
+                                                                             with_relations=False,
+                                                                             safe=True)  # False prevent call loop
 
-                print(pivot_data)
+                data: List[relation.fk_model] = []
+                for pivot_record in pivot_data:
+                    pivot_fk = getattr(pivot_record, relation.of_table + "_id")     # use standard: <fk_table>_id, i.e. user_id
 
-                Base.exit()
+                    row: Tuple = self.__find(pivot_fk, relation.of_table)
+
+                    data.append(relation.fk_model.from_tuple(row))
+
+                return data
 
             else:
                 Base.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_warning(msg=f"{relation} is wrong ({em})")
+            Base.log_warning(msg=f"{relation} is wrong!\nUsing {em}")
 
             if not safe:
                 raise exception
