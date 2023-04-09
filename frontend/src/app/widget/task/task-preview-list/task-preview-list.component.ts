@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TaskModel } from 'src/app/model/entity/task.model';
 
 @Component({
   selector: 'app-task-preview-list',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./task-preview-list.component.scss']
 })
 export class TaskPreviewListComponent {
+
+  @Input("tasks") tasks?: TaskModel[];
 
 }

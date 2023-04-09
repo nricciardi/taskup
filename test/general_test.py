@@ -21,20 +21,22 @@ if __name__ == '__main__':
     # tasks = tasks_manager.find(1, with_relations=True, safe=False)
     # print(tasks.to_dict())
 
-    n = 2
-    user = users_manager.create_from_dict({"username": f"franco{n}",
-                                "email": f"n{n}@r.com",
-                                "password": "asdf",
-                                "role_id": 1})
+    n = 3
 
-    print(user)
-    #
-    # task = tasks_manager.create_from_dict({
-    #     "name": f"prova task{n}",
-    #     "description": f"descrizione di prova{n}",
-    #     "author_id": user.id,
-    #     "task_status_id": 3
-    # })
+    for n in range(10):
+        user = users_manager.create_from_dict({"username": f"franco{n}",
+                                    "email": f"n{n}@r.com",
+                                    "password": "asdf123",
+                                    "role_id": 1})
+
+        print(user)
+
+        task = tasks_manager.create_from_dict({
+            "name": f"prova task{n}",
+            "description": f"descrizione di prova{n}",
+            "author_id": user.id,
+            "task_status_id": 3
+        })
 
 
 

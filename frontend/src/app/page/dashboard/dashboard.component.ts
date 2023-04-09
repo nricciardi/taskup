@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TaskModel } from 'src/app/model/entity/task.model';
 import { TaskService } from 'src/app/service/api/task/task.service';
 
 @Component({
@@ -8,6 +9,8 @@ import { TaskService } from 'src/app/service/api/task/task.service';
 })
 export class DashboardComponent {
 
+  public tasks?: TaskModel[];
+
   constructor(private taskService: TaskService) {
   }
 
@@ -16,7 +19,7 @@ export class DashboardComponent {
     this.taskService.all().then((response) => {
       response.subscribe({
         next: (value) => {
-          console.log(value);
+          this.tasks = value;
 
         }
       })
