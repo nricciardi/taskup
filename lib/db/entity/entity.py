@@ -132,7 +132,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return f"Select * From {table_name};"
 
-    def all_as_dict(self, with_relations: bool = False) -> List[Dict[str, Any]]:
+    def all_as_dict(self, with_relations: bool = True) -> List[Dict[str, Any]]:
         """
         Abstract method.
         Return all entities as dict.
@@ -153,7 +153,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return dicts
 
-    def all_as_model(self, with_relations: bool = False, safe: bool = True) -> List[EntityModel]:
+    def all_as_model(self, with_relations: bool = True, safe: bool = True) -> List[EntityModel]:
         """
         Abstract method.
         Return all entities as EntityModel.
@@ -189,7 +189,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
-    def find(self, entity_id: int, with_relations: bool = False, safe: bool = True) -> EntityModel:
+    def find(self, entity_id: int, with_relations: bool = True, safe: bool = True) -> EntityModel:
         """
         Return the record requested
 

@@ -2,8 +2,8 @@ import eel
 from lib.settings.settings import SettingsManager
 from lib.utils.base import Base
 from lib.app.project import ProjectManager
-from lib.db.entity import TasksManager
-from lib.db.entity import UsersManager
+from lib.db.entity.task import TasksManager
+from lib.db.entity.user import UsersManager
 
 
 class Exposer:
