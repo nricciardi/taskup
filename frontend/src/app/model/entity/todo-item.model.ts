@@ -1,3 +1,6 @@
+import { TaskModel } from "./task.model";
+import { UserModel } from "./user.model";
+
 export interface TodoItemModel {
   id: number;
   name: string;
@@ -9,4 +12,6 @@ export interface TodoItemModel {
 
   author_id: number;
   task_id: number;
+  author: UserModel;
+  task: TaskModel;
 }

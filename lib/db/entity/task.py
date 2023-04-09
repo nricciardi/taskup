@@ -70,8 +70,6 @@ class TaskAssignmentModel(BaseEntityModel):
     id: int
     user_id: int
     task_id: int
-    user: Optional[UserModel] = None
-    task: Optional[TaskModel] = None
 
     # @property
     # def table_name(self) -> str:
