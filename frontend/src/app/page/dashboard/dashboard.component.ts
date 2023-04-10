@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
-import { TaskService } from 'src/app/service/api/task/task.service';
+import { TaskService } from 'src/app/service/api/entity/task/task.service';
 
 @Component({
   selector: 'app-dashboard',
