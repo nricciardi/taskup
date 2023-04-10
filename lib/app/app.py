@@ -23,9 +23,10 @@ class App:
 
         db_name = self.__settings_manager.db_name()
         work_directory_path = self.__settings_manager.work_directory_path()
+        vault_path = self.__settings_manager.vault_path()
 
         # expose methods
-        exposer = ExposerService(db_name, work_directory_path, verbose=self.__verbose)
+        exposer = ExposerService(db_name, work_directory_path, vault_path, verbose=self.__verbose)
         exposer.expose_methods()
 
     def start(self):

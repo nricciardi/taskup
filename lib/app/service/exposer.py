@@ -2,6 +2,7 @@ import eel
 from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
+from lib.app.service.auth import AuthManager
 
 
 class ExposerService:
@@ -10,11 +11,13 @@ class ExposerService:
 
     """
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
-        self.__verbose = verbose
+    def __init__(self, db_name: str, work_directory_path: str, vault_path: str, verbose: bool = False):
+        self.verbose = verbose
 
-        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path, verbose=verbose)
-        self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path, verbose=verbose)
+        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
+        self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
+        self.__auth_manager = AuthManager(users_manager=self.__users_manager, vault_path=vault_path, verbose=self.verbose)
+
 
     def test(self, *args, **kwargs):
         """
@@ -24,7 +27,7 @@ class ExposerService:
         :return:
         """
 
-        Logger.log_eel(msg="Called by JS", is_verbose=self.__verbose)
+        Logger.log_eel(msg="Called by JS", is_verbose=self.verbose)
 
         return args, kwargs
 
@@ -78,7 +81,25 @@ class ExposerService:
             ], prefix="task_")
 
         except Exception as excepetion:
-            Logger.log_error(msg="Task exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="Task exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_auth_methods(self) -> None:
+        """
+        Expose auth methods
+
+        :return: None
+        """
+
+        try:
+
+            self.expose_all_from_list(to_expose=[
+                self.__auth_manager.login,
+                self.__auth_manager.me,
+                self.__auth_manager.is_logged,
+            ], prefix="auth_")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="Task exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_user_methods(self) -> None:
         """
@@ -98,7 +119,7 @@ class ExposerService:
 
 
         except Exception as excepetion:
-            Logger.log_error(msg="User exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="User exposure error", is_verbose=self.verbose, full=True)
 
     def expose_methods(self) -> None:
         """
@@ -108,12 +129,13 @@ class ExposerService:
         """
 
         try:
-            Logger.log_info(msg="Expose py methods...", is_verbose=self.__verbose, end=" ")
+            Logger.log_info(msg="Expose py methods...", is_verbose=self.verbose, end=" ")
 
             eel.expose(self.test)
 
             self.__expose_task_methods()
             self.__expose_user_methods()
+            self.__expose_auth_methods()
 
         except Exception as excepetion:
-            Logger.log_error(msg="Eel exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="Eel exposure error", is_verbose=self.verbose, full=True)

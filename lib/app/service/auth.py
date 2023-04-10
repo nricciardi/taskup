@@ -5,7 +5,7 @@ from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
 
 
-class Auth:
+class AuthManager:
 
     __users_manager: UsersManager
     __me: UserModel | None = None
