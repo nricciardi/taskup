@@ -47,6 +47,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Improve QueryBuilder
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
+  -  [ ] append relation on bem and not in another foreach
 
 ### DB
 - [ ] Unique on user's username? Add name and surname?
