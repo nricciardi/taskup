@@ -16,6 +16,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PageHeadingComponent } from './widget/page-heading/page-heading.component';
 import { LoaderComponent } from './widget/loader/loader.component';
 import { SideBannerComponent } from './widget/side-banner/side-banner.component';
+import { LoginComponent } from './page/login/login.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { SideBannerComponent } from './widget/side-banner/side-banner.component'
     DashboardComponent,
     PageHeadingComponent,
     LoaderComponent,
-    SideBannerComponent
+    SideBannerComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
