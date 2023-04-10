@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any, List
+from lib.db.etc import ToSqlMixin
 
 
-class QueryBuilder(ABC):
+class QueryBuilder(ToSqlMixin, ABC):
     table_name: str
     query: str
 

@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Any
+from lib.db.etc import ToSqlMixin
 
 
 @dataclass
-class Field:
+class Field(ToSqlMixin):
     name: str
     type: str
     default: str | None = field(default=None)
@@ -64,7 +65,7 @@ class Field:
 
 
 @dataclass
-class FKConstraint:
+class FKConstraint(ToSqlMixin):
     fk_field: str
     on_table: str
     reference_field: str
@@ -85,7 +86,7 @@ class FKConstraint:
 
 
 @dataclass
-class Table:
+class Table(ToSqlMixin):
     name: str
     fields: List[Field]
     fk_constraints: List[FKConstraint] = field(default=None)

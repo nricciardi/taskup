@@ -21,9 +21,9 @@ if __name__ == '__main__':
     # tasks = tasks_manager.find(1, with_relations=True, safe=False)
     # print(tasks.to_dict())
 
-    n = 3
+    offset = 2
 
-    for n in range(10):
+    for n in range(10 * offset, 10 * offset + 1):
         user = users_manager.create_from_dict({"username": f"franco{n}",
                                     "email": f"n{n}@r.com",
                                     "password": "asdf123",
