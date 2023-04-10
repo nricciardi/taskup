@@ -1,8 +1,10 @@
 import sqlite3
+
+from lib.db.query import SelectQueryBuilder
 from lib.utils.base import Base
 import os
 from typing import List, Tuple, Dict, Any
-from lib.db.component import Table, Field, FKConstraint, Seeder
+from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition
 
 
 class TableNamesMixin:
@@ -503,3 +505,33 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         return row_count
 
+    def where(self, table_name: str, *conditions: WhereCondition, columns: List[str] | None = None) -> List[Tuple]:
+        """
+        Filter entities based on conditions
+
+        :param table_name:
+        :type table_name: str
+        :param columns: columns to get
+        :type columns: List[str] | None
+        :param conditions: list of conditions
+        :type conditions: WhereCondition
+        :return: list of records
+        :rtype List[Tuple]:
+        """
+
+        if isinstance(conditions, WhereCondition):
+            conditions = [conditions]
+
+        if columns is None:
+            columns = []
+
+        query_built = SelectQueryBuilder.from_table(table_name).enable_binding().select(*columns)\
+            .apply_conditions(*conditions)
+
+        query: str = query_built.to_sql()
+        data: list = query_built.data_bound
+
+        print(query)
+        res = self.cursor.execute(query, data)
+
+        return res.fetchall()

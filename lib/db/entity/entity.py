@@ -5,6 +5,7 @@ from lib.utils.base import Base
 from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
 from lib.db.query import SelectQueryBuilder
+from lib.db.component import WhereCondition
 
 
 class EntitiesManager(ABC, Generic[EntityModel]):
@@ -277,6 +278,24 @@ class EntitiesManager(ABC, Generic[EntityModel]):
                 raise exception
 
             return None
+
+    def where(self, *conditions: WhereCondition, columns: List[str] | None = None) -> List[EntityModel]:
+        """
+        Filter entities based on conditions
+
+        :param columns: columns to get
+        :type columns: List[str] | None
+        :param conditions: list of conditions
+        :type conditions: WhereCondition
+        :return: list of entities
+        :rtype List[EntityModel]:
+        """
+
+        result = self.__db_manager.where(self.table_name, *conditions, columns=columns)
+
+        print(result)
+
+
 
     def append_relations_data(self, em: EntityModel, safe: bool) -> None:
         """

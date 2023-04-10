@@ -1,8 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
-class ToSqlMixin(ABC):
+class ToSqlInterface(ABC):
 
+    @abstractmethod
     def to_sql(self) -> str:
         """
         Return string sql query

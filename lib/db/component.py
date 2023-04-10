@@ -1,10 +1,19 @@
 from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Any
-from lib.db.etc import ToSqlMixin
+from lib.mixin.sql import ToSqlInterface
+from lib.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 
 
 @dataclass
-class Field(ToSqlMixin):
+class WhereCondition(DCToDictMixin, DCToTupleMixin):
+    col: str
+    operator: str
+    value: str
+    of_table: str | None = field(default=None)
+
+
+@dataclass
+class Field(ToSqlInterface):
     name: str
     type: str
     default: str | None = field(default=None)
@@ -65,7 +74,7 @@ class Field(ToSqlMixin):
 
 
 @dataclass
-class FKConstraint(ToSqlMixin):
+class FKConstraint(ToSqlInterface):
     fk_field: str
     on_table: str
     reference_field: str
@@ -86,7 +95,7 @@ class FKConstraint(ToSqlMixin):
 
 
 @dataclass
-class Table(ToSqlMixin):
+class Table(ToSqlInterface):
     name: str
     fields: List[Field]
     fk_constraints: List[FKConstraint] = field(default=None)

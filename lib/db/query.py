@@ -1,14 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import Any, List
-from lib.db.etc import ToSqlMixin
+from lib.db.component import WhereCondition
+from lib.mixin.sql import ToSqlInterface
 
 
-class QueryBuilder(ToSqlMixin, ABC):
+class QueryBuilder(ToSqlInterface, ABC):
     table_name: str
     query: str
+    binding: bool
+    data_bound: List[Any] = []
 
-    def __init__(self, table_name: str):
+    def __init__(self, table_name: str, binding_mode: bool = False):
         self.table_name = table_name
+        self.binding = binding_mode
 
     def to_sql(self):
         """
@@ -45,12 +49,38 @@ class SelectQueryBuilder(QueryBuilder):
 
         return cls(table_name, alias)
 
-    def where(self, field: str, operator: str, value: Any, of_table: str | None = None) -> 'SelectQueryBuilder':
+    def enable_binding(self) -> 'SelectQueryBuilder':
+
+        self.binding = True
+
+        return self
+
+    def disable_binding(self) -> 'SelectQueryBuilder':
+
+        self.binding = False
+
+        return self
+
+    def apply_conditions(self, *conditions: WhereCondition) -> 'SelectQueryBuilder':
+        """
+        Apply the list of where conditions
+
+        :param conditions:
+        :type conditions: WhereCondition
+        :return:
+        """
+
+        for condition in conditions:
+            self.where(*condition.to_tuple())
+
+        return self
+
+    def where(self, col: str, operator: str, value: Any, of_table: str | None = None) -> 'SelectQueryBuilder':
         """
         Add (and) where clause on query.
 
-        :param field:
-        :type field: str
+        :param col:
+        :type col: str
         :param operator:
         :type operator: str
         :param value:
@@ -70,25 +100,30 @@ class SelectQueryBuilder(QueryBuilder):
 
         table = of_table if of_table is not None else self.table_name
 
-        if isinstance(value, str):
-            value = f"'{value}'"
+        if self.binding:
+            self.data_bound.append(value)
+            value = "?"
 
-        self.query += f"{table}.{field} {operator} {value}"
+        else:       # if in binding, sqlite3 also implements append of ''
+            if isinstance(value, str):
+                value = f"'{value}'"
+
+        self.query += f"{table}.{col} {operator} {value}"
 
         return self
 
-    def select(self, columns: List[str] | None = None) -> 'SelectQueryBuilder':
+    def select(self, *columns: str) -> 'SelectQueryBuilder':
         """
         Select the columns to get.
         None => *
 
         :param columns: fields of table
-        :type columns: List[str] | None
+        :type columns: str
         :return:
         """
 
-        if columns is None:
-            columns = ['*']
+        if len(columns) == 0:
+            columns = '*'
 
         self.query = f"""
         Select {", ".join(columns)}

@@ -1,36 +1,19 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Dict, Any, Type, TypeVar
+from lib.mixin.dcparser import DCToDictMixin, DCModifyMixin
+
 
 EntityModel = TypeVar('EntityModel', bound='BaseEntityModel')  # Entity Model
 
 
 @dataclass
-class BaseEntityModel(ABC):
+class BaseEntityModel(DCToDictMixin, DCModifyMixin, ABC):
     """
     Provide a base model for entity dataclass
     """
 
     id: int
-
-    def to_dict(self) -> Dict[str, Any]:
-        entity_as_dict = asdict(self)
-
-        return entity_as_dict
-
-    def modify(self, new: dict) -> None:
-        """
-        Update fields from dict
-
-        :param new: new data
-        :type new: dict
-
-        :return: None
-        """
-
-        for key, value in new.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
 
     @classmethod
     def from_dict(cls, data: dict) -> EntityModel:
