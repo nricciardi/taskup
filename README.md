@@ -44,7 +44,8 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Prevent Eel closing on error
 - [x] Create common method to add a table and insert base values
 - [ ] Migrate from __insert_base to seeder
-- [ ] Improve QueryBuilder
+- [ ] Improve QueryBuilder (join, subquery, group by, order by)
+- [ ] Crypt password of users
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
   -  [ ] append relation on bem and not in another foreach
