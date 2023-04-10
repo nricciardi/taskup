@@ -8,16 +8,23 @@ from lib.file.file_manager import FileManger
 class Auth:
 
     __users_manager: UsersManager
+    __me: UserModel | None = None
 
     def __init__(self, users_manager: UsersManager, vault_path: str,  verbose: bool = False):
         self.__users_manager = users_manager
         self.__vault_path = vault_path
         self.verbose = verbose
 
-
     @property
     def vault_path(self) -> str:
         return self.__vault_path
+
+    @property
+    def me(self) -> UserModel | None:
+        return self.__me
+
+    def is_logged(self) -> bool:
+        return self.__me is not None
 
     def login(self, email: str, password: str) -> UserModel:
         """
@@ -34,6 +41,7 @@ class Auth:
         users_matched = self.__users_manager.where_as_model(
             WhereCondition("email", "=", email),
             WhereCondition("password", "=", password),
+            with_relations=True
         )
 
         user = CollectionsUtils.first(users_matched)
