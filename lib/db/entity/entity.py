@@ -1,7 +1,7 @@
 from lib.db.db import DBManager
 from abc import ABC, abstractmethod
 from lib.db.entity.relation import Relation, OneRelation, ManyRelation
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
 from lib.db.query import SelectQueryBuilder
@@ -92,7 +92,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         if not self.__is_valid_model_data_type(data):
             msg = f"{data} must be an implementation of BaseEntityModel"
 
-            Base.log_error(msg=msg, is_verbose=self.__verbose)
+            Logger.log_error(msg=msg, is_verbose=self.__verbose)
 
             raise TypeError(msg)
 
@@ -271,7 +271,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         except Exception as exception:
 
-            Base.log_error(msg=f"{exception} during inserting with data: {data}", is_verbose=self.__verbose)
+            Logger.log_error(msg=f"{exception} during inserting with data: {data}", is_verbose=self.__verbose)
 
             if not safe:
                 raise exception
@@ -363,11 +363,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
                 return self.get_many_relation_data_based_on(relation)
 
             else:
-                Base.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
+                Logger.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_warning(msg=f"{relation} is wrong!\nUsing {em}")
+            Logger.log_warning(msg=f"{relation} is wrong!\nUsing {em}")
 
             if not safe:
                 raise exception

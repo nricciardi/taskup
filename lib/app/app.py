@@ -1,6 +1,6 @@
 import eel
 from lib.settings.settings import SettingsManager
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 from lib.app.project import ProjectManager
 from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
@@ -15,7 +15,7 @@ class App:
     def __init__(self):
         self.__verbose = self.__settings_manager.verbose()      # get verbose
 
-        Base.log_info(msg="App init...", is_verbose=self.__verbose)
+        Logger.log_info(msg="App init...", is_verbose=self.__verbose)
 
         frontend_directory = self.__settings_manager.frontend_directory()
         eel.init(frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])           # init eel

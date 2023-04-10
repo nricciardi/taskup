@@ -1,5 +1,5 @@
 import eel
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
 
@@ -21,7 +21,7 @@ class ExposerService:
         :return:
         """
 
-        Base.log_eel(msg="Called by JS", is_verbose=self.__verbose)
+        Logger.log_eel(msg="Called by JS", is_verbose=self.__verbose)
 
         return args, kwargs
 
@@ -76,7 +76,7 @@ class ExposerService:
             ], prefix="task_")
 
         except Exception as excepetion:
-            Base.log_error(msg="Task exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="Task exposure error", is_verbose=self.__verbose, full=True)
 
     def __expose_user_methods(self, db_name: str, work_directory_path: str, verbose: bool) -> None:
         """
@@ -97,7 +97,7 @@ class ExposerService:
 
 
         except Exception as excepetion:
-            Base.log_error(msg="User exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="User exposure error", is_verbose=self.__verbose, full=True)
 
     def expose_methods(self, db_name: str, work_directory_path: str, verbose: bool) -> None:
         """
@@ -107,7 +107,7 @@ class ExposerService:
         """
 
         try:
-            Base.log_info(msg="Expose py methods...", is_verbose=self.__verbose, end=" ")
+            Logger.log_info(msg="Expose py methods...", is_verbose=self.__verbose, end=" ")
 
             eel.expose(self.test)
 
@@ -115,4 +115,4 @@ class ExposerService:
             self.__expose_user_methods(db_name, work_directory_path, verbose)
 
         except Exception as excepetion:
-            Base.log_error(msg="Eel exposure error", is_verbose=self.__verbose, full=True)
+            Logger.log_error(msg="Eel exposure error", is_verbose=self.__verbose, full=True)

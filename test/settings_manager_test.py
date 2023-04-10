@@ -1,5 +1,5 @@
 import unittest
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 from lib.settings.settings import SettingsManager
 
 

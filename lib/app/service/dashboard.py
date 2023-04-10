@@ -1,4 +1,4 @@
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager
 
 

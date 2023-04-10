@@ -1,10 +1,11 @@
 import sqlite3
 
 from lib.db.query import SelectQueryBuilder
-from lib.utils.base import Base
+from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
 from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition
+from lib.utils.util import Util
 
 
 class TableNamesMixin:
@@ -104,15 +105,15 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
         if db_exists:
-            Base.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
+            Logger.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
         else:
-            Base.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
+            Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)
             self.__db_cursor = self.__db_connection.cursor()
 
-            Base.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
+            Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
 
             if not db_exists:
                 self.generate_base_db_structure(strict=True)
@@ -120,9 +121,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         except Exception as exception:
             print("Connection with database failed...")
 
-            Base.log_error(exception, is_verbose=self.verbose)
+            Logger.log_error(exception, is_verbose=self.verbose)
 
-            Base.exit()
+            Util.exit()
 
     def __del__(self):
         self.__db_connection.close()
@@ -268,7 +269,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         self.cursor.execute(query)
 
-        Base.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
+        Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
         self.connection.commit()
 
@@ -282,7 +283,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
 
-            Base.log_info(f"start to fill {self.role_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"start to fill {self.role_table_name}", is_verbose=self.verbose)
 
             query = f"""
                         Insert Into {self.role_table_name} (name, permission_create, permission_read_all,
@@ -297,12 +298,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.cursor.execute(query)
 
-            Base.log_info(f"inserted base data in {self.role_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"inserted base data in {self.role_table_name}", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
-                           is_verbose=self.verbose)
+            Logger.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
+                             is_verbose=self.verbose)
 
     def __insert_base_task_status(self) -> None:
         """
@@ -314,7 +315,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
 
-            Base.log_info(f"start to fill {self.task_status_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"start to fill {self.task_status_table_name}", is_verbose=self.verbose)
 
             # insert default task status
             query = f"""
@@ -331,12 +332,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.cursor.execute(query)
 
-            Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
-                           is_verbose=self.verbose)
+            Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
+                             is_verbose=self.verbose)
 
     def __insert_base_task_labels(self) -> None:
         """
@@ -348,7 +349,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
 
-            Base.log_info(f"start to fill {self.task_label_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"start to fill {self.task_label_table_name}", is_verbose=self.verbose)
 
             # insert default task status
             query = f"""
@@ -361,12 +362,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.cursor.execute(query)
 
-            Base.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
+            Logger.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
-                           is_verbose=self.verbose)
+            Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
+                             is_verbose=self.verbose)
 
     @property
     def task_task_label_pivot_table_name(self) -> str:
@@ -385,7 +386,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
 
-            Base.log_info("start to generate base db", is_verbose=self.verbose)
+            Logger.log_info("start to generate base db", is_verbose=self.verbose)
 
             self.create_table(self.role_table_name)
 
@@ -411,14 +412,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.connection.commit()
 
-            Base.log_success("base db structure generated", is_verbose=self.verbose)
+            Logger.log_success("base db structure generated", is_verbose=self.verbose)
 
         except Exception as exception:
 
-            Base.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
+            Logger.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             if strict:
-                Base.exit()
+                Util.exit()
 
             raise exception
 
