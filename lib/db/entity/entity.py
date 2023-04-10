@@ -6,6 +6,7 @@ from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
 from lib.db.query import SelectQueryBuilder
 from lib.db.component import WhereCondition
+from lib.utils.pair import PairAttrValue
 
 
 class EntitiesManager(ABC, Generic[EntityModel]):
@@ -178,15 +179,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         tuples = self.__all_as_tuple(table_name)
 
-        models = []
+        models = model.all_from_tuples(tuples)
 
-        for record in tuples:
-            em = model.from_tuple(record)
-
-            if with_relations:
-                self.append_relations_data(em, safe)
-
-            models.append(em)
+        if with_relations:
+            for em in models:
+                self.append_relations_data_on(em, safe)
 
         return models
 
@@ -209,13 +206,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         em = self.EM.from_tuple(data)
 
         if with_relations:
-            self.append_relations_data(em, safe=safe)
+            self.append_relations_data_on(em, safe=safe)
 
         return em
 
     def __find(self, entity_id: int, table_name: str) -> tuple:
         """
-        Actual find method implementation
+        Actual find method implementation.
+        This method return a tuple because it can be used with different table, therefore it doesn't know any
+        entity model.
 
         :param table_name:
         :type table_name: str
@@ -279,7 +278,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             return None
 
-    def where(self, *conditions: WhereCondition, columns: List[str] | None = None) -> List[EntityModel]:
+    def where_as_model(self, *conditions: WhereCondition, columns: List[str] | None = None) -> List[EntityModel]:
         """
         Filter entities based on conditions
 
@@ -291,13 +290,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel]:
         """
 
-        result = self.__db_manager.where(self.table_name, *conditions, columns=columns)
+        result: List[Tuple] = self.__db_manager.where(self.table_name, *conditions, columns=columns)
 
-        print(result)
+        models = self.EM.all_from_tuples(result)
 
 
 
-    def append_relations_data(self, em: EntityModel, safe: bool) -> None:
+
+
+    def append_relations_data_on(self, em: EntityModel, safe: bool) -> None:
         """
         Append relations data on entity passed
 
@@ -311,12 +312,30 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype None:
         """
 
+        em.append_attr_from_list_of_pair(self.get_all_relations_data_of(em, safe))
+
+    def get_all_relations_data_of(self, em: EntityModel, safe: bool) -> List[PairAttrValue]:
+        """
+        Get all relations data of entity passed
+
+        :param em:
+        :type em: EntityModel
+
+        :param safe: flag to prevent crash if a relation is wrong
+        :type safe: bool
+
+        :return: None
+        :rtype None:
+        """
+
+        all_relations = []
         for relation in self.relations:
-            data = self.get_relation_data(relation, em, safe)
+            data = self.get_relation_data_of(em, relation, safe)
+            all_relations.append(PairAttrValue(attr=relation.to_attr, value=data))
 
-            setattr(em, relation.to_attr, data)
+        return all_relations
 
-    def get_relation_data(self, relation: Relation, em: EntityModel, safe: bool) -> EntityModel | List[EntityModel] | None:
+    def get_relation_data_of(self, em: EntityModel, relation: Relation, safe: bool) -> EntityModel | List[EntityModel] | None:
         """
         Return the entities in relation(s) with an entity
 
@@ -335,30 +354,13 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         try:
 
+            # ==== OneRelation ====
             if isinstance(relation, OneRelation):
+                return self.get_one_relation_data_of(em, relation)
 
-                fk_id: int = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
-
-                data: Tuple = self.__find(fk_id, relation.of_table)  # find fk entity
-
-                return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
-
+            # ==== ManyRelation ====
             elif isinstance(relation, ManyRelation):
-
-                pivot_data: List[relation.pivot_model] = self.__all_as_model(table_name=relation.pivot_table,
-                                                                             model=relation.pivot_model,
-                                                                             with_relations=False,
-                                                                             safe=True)  # False prevent call loop
-
-                data: List[relation.fk_model] = []
-                for pivot_record in pivot_data:
-                    pivot_fk = getattr(pivot_record, relation.of_table + "_id")     # use standard: <fk_table>_id, i.e. user_id
-
-                    row: Tuple = self.__find(pivot_fk, relation.of_table)
-
-                    data.append(relation.fk_model.from_tuple(row))
-
-                return data
+                return self.get_many_relation_data_based_on(relation)
 
             else:
                 Base.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
@@ -369,3 +371,49 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             if not safe:
                 raise exception
+
+    def get_one_relation_data_of(self, em: EntityModel, relation: OneRelation, ) -> EntityModel | None:
+        """
+        Return data for a one relation
+
+        :param relation:
+        :type relation: Relation
+
+        :param em: entity from get data
+        :type em: EntityModel
+
+        :return: entity
+        :rtype EntityModel | None:
+        """
+
+        fk_id: int = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
+
+        data: Tuple = self.__find(fk_id, relation.of_table)  # find fk entity
+
+        return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
+
+    def get_many_relation_data_based_on(self, relation: ManyRelation) -> List[EntityModel] | None:
+        """
+        Return data for a many relation
+
+        :param relation:
+        :type relation: Relation
+
+        :return: entities
+        :rtype List[EntityModel] | None:
+        """
+
+        pivot_data: List[relation.pivot_model] = self.__all_as_model(table_name=relation.pivot_table,
+                                                                     model=relation.pivot_model,
+                                                                     with_relations=False,
+                                                                     safe=True)  # False prevent call loop
+
+        data: List[relation.fk_model] = []
+        for pivot_record in pivot_data:
+            pivot_fk = getattr(pivot_record, relation.of_table + "_id")  # use standard: <fk_table>_id, i.e. user_id
+
+            row: Tuple = self.__find(pivot_fk, relation.of_table)
+
+            data.append(relation.fk_model.from_tuple(row))
+
+        return data

@@ -46,7 +46,7 @@ class Base:
         :type full: bool
         :param is_verbose: it used to check if it is verbose
         :type is_verbose: bool
-        :param prefix: if must be the prefix
+        :param prefix: if be must be the prefix
         :type prefix: bool
 
         :return: None

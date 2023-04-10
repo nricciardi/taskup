@@ -16,13 +16,13 @@ if __name__ == '__main__':
     # query = SelectQueryBuilder.from_table("user").select().where("username", "=", "franco1").to_sql()
     # # print(query)
     #
-    # users = users_manager.all_as_dict(with_relations=True)
-    # print(users)
+    users = users_manager.all_as_dict(with_relations=True)
+    print(users)
     #
     # tasks = tasks_manager.find(1, with_relations=True, safe=False)
     # print(tasks.to_dict())
 
-    users_manager.where(WhereCondition("username", "=", "franco2"))
+    # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
 
     # offset = 3
     #

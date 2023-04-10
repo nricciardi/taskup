@@ -1,7 +1,13 @@
-from lib.db.entity.user import UserModel
+from lib.db.entity.user import UserModel, UsersManager
+from lib.db.component import WhereCondition
 
 
 class Auth:
+
+    __users_manager: UsersManager
+
+    def __init__(self, users_manager: UsersManager):
+        self.__users_manager = users_manager
 
     def login(self, email: str, password: str) -> UserModel:
         """
@@ -14,4 +20,10 @@ class Auth:
         :return: logged user
         :rtype: UserModel
         """
+
+        self.__users_manager.where(
+            WhereCondition("email", "=", email),
+            WhereCondition("password", "=", password),
+        )
+
 

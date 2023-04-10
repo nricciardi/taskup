@@ -21,18 +21,3 @@ class DCToTupleMixin(ABC):
         return entity_as_tuple
 
 
-class DCModifyMixin(ABC):
-
-    def modify(self, new: dict) -> None:
-        """
-        Update fields from dict
-
-        :param new: new data
-        :type new: dict
-
-        :return: None
-        """
-
-        for key, value in new.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
