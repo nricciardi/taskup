@@ -7,3 +7,4 @@ class Util:
     def exit():
         print("Forced Exit...")
         sys.exit()
+

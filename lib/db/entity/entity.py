@@ -278,14 +278,20 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             return None
 
-    def where_as_model(self, *conditions: WhereCondition, columns: List[str] | None = None) -> List[EntityModel]:
+    def where_as_model(self, *conditions: WhereCondition, columns: List[str] | None = None, with_relations: bool = True,
+                       safe: bool = True) -> List[EntityModel]:
         """
         Filter entities based on conditions
 
+        :param safe: flag for safe operation
+        :type safe: bool
+        :param with_relations:
+        :type with_relations: bool
         :param columns: columns to get
         :type columns: List[str] | None
         :param conditions: list of conditions
         :type conditions: WhereCondition
+
         :return: list of entities
         :rtype List[EntityModel]:
         """
@@ -294,9 +300,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         models = self.EM.all_from_tuples(result)
 
+        if with_relations:
+            for em in models:
+                self.append_relations_data_on(em, safe)
 
-
-
+        return models
 
     def append_relations_data_on(self, em: EntityModel, safe: bool) -> None:
         """

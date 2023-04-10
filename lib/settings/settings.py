@@ -10,6 +10,7 @@ from lib.utils.util import Util
 class SettingsBase:
     WORK_DIRECTORY_NAME = "work"
     SETTINGS_FILE_NAME = "settings.json"
+    VAULT_FILE_NAME = "vault.json"
 
     KEY_DB_NAME = "db_name"
     VALUE_BASE_DB_NAME = "database.db"
@@ -175,6 +176,16 @@ class SettingsManager(SettingsBase):
         """
 
         return os.path.join(self.work_directory_path(), self.get(self.KEY_DB_NAME))
+
+    def vault_path(self) -> str:
+        """
+        Return the vault path of the app.
+        Vault is the file where are stored login information
+
+        :rtype: str
+        """
+
+        return os.path.join(self.work_directory_path(), SettingsBase.VAULT_FILE_NAME)
 
     def debug_mode(self) -> bool:
         """

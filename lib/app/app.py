@@ -7,7 +7,6 @@ from lib.db.entity.user import UsersManager
 from lib.app.service.exposer import ExposerService
 
 
-
 class App:
 
     __settings_manager = SettingsManager()
@@ -26,8 +25,8 @@ class App:
         work_directory_path = self.__settings_manager.work_directory_path()
 
         # expose methods
-        exposer = ExposerService(self.__verbose)
-        exposer.expose_methods(db_name, work_directory_path, verbose=True)
+        exposer = ExposerService(db_name, work_directory_path, verbose=self.__verbose)
+        exposer.expose_methods()
 
     def start(self):
 
