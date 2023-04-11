@@ -12,9 +12,9 @@ export class AuthService {
 
   constructor(private eelService: EelService) { }
 
-  public login(email: string, password: string): Promise<Observable<UserModel | null>> {
+  public login(email: string, password: string, keep: boolean = false): Promise<Observable<UserModel | null>> {
 
-    return this.eelService.call(this.LOGIN, email, password);
+    return this.eelService.call(this.LOGIN, email, password, keep);
 
   }
 

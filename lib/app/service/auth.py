@@ -3,17 +3,25 @@ from lib.db.component import WhereCondition
 from lib.utils.collections import CollectionsUtils
 from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
+from typing import List
 
 
-class AuthManager:
-
+class AuthService:
     __users_manager: UsersManager
     __me: UserModel | None = None
 
-    def __init__(self, users_manager: UsersManager, vault_path: str,  verbose: bool = False):
+    EMAIL = "email"
+    PASSWORD = "password"
+
+    def __init__(self, users_manager: UsersManager, vault_path: str, verbose: bool = False):
         self.__users_manager = users_manager
         self.__vault_path = vault_path
         self.verbose = verbose
+
+        self.try_autologin()
+
+    def __del__(self):
+        self.__me = None
 
     @property
     def vault_path(self) -> str:
@@ -23,13 +31,36 @@ class AuthManager:
     def me(self) -> UserModel | None:
         return self.__me
 
+    def try_autologin(self) -> None:
+        """
+        Try the autologin using vault data
+
+        :return:
+        """
+
+        try:
+            Logger.log_info(msg="Try autologin...", is_verbose=self.verbose)
+
+            vault_data = self.get_vault_data()
+
+            if self.EMAIL in vault_data and self.PASSWORD in vault_data:
+                self.login(vault_data[self.EMAIL], vault_data[self.PASSWORD])
+
+        except Exception:
+
+            Logger.log_warning(msg="Autologin failed", is_verbose=self.verbose)
+
+            return None
+
     def is_logged(self) -> bool:
         return self.__me is not None
 
-    def login(self, email: str, password: str) -> UserModel:
+    def login(self, email: str, password: str, keep: bool = False) -> UserModel:
         """
         Login user by email and password
 
+        :param keep: keep data on login
+        :type keep: bool
         :param email:
         :type email: str
         :param password:
@@ -38,22 +69,27 @@ class AuthManager:
         :rtype: UserModel
         """
 
-        users_matched = self.__users_manager.where_as_model(
+        users_matched: List = self.__users_manager.where_as_model(
             WhereCondition("email", "=", email),
             WhereCondition("password", "=", password),
             with_relations=True
         )
 
-        user = CollectionsUtils.first(users_matched)
+        self.__me = CollectionsUtils.first(users_matched)
 
-        if user is None:
+        if self.__me is None:
             msg: str = f"no match with {email} + {password}"
 
             Logger.log_error(msg=msg, is_verbose=self.verbose)
 
             raise ValueError(msg)
 
-        return user
+        Logger.log_success(msg="logged in correctly", is_verbose=self.verbose)
+
+        if keep:
+            self.store_in_vault(email, password)
+
+        return self.__me
 
     def store_in_vault(self, email: str, password: str) -> None:
         """
@@ -69,6 +105,19 @@ class AuthManager:
         """
 
         FileManger.write_json(self.vault_path, {
-            "email": email,
-            "password": password
+            self.EMAIL: email,
+            self.PASSWORD: password
         })
+
+        Logger.log_success(msg=f"email: ({email}) and password ({'*' * len(password)}) are stored successful in vault",
+                           is_verbose=self.verbose)
+
+    def get_vault_data(self) -> dict | None:
+        """
+        Get data in vault
+
+        :return: data
+        :rtype dict:
+        """
+
+        return FileManger.read_json(self.vault_path)

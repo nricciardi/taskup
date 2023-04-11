@@ -17,6 +17,7 @@ import { PageHeadingComponent } from './widget/page-heading/page-heading.compone
 import { LoaderComponent } from './widget/loader/loader.component';
 import { SideBannerComponent } from './widget/side-banner/side-banner.component';
 import { LoginComponent } from './page/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { LoginComponent } from './page/login/login.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       useDefaultLang: true,
