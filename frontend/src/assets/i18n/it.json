@@ -6,5 +6,8 @@
   "contribute": "Contribuire",
   "page-not-found": "Pagina NON TROVATA",
   "page-not-found-description": "La pagina che stai cercando non esiste.",
-  "go-home": "Go Home"
+  "go-home": "Go Home",
+  "login": "Login",
+  "login-description": "Entra usando i tuoi dati",
+  "keep-me": "Ricordami"
 }

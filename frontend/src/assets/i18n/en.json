@@ -6,5 +6,8 @@
   "contribute": "Contribute",
   "page-not-found": "Page NOT FOUND",
   "page-not-found-description": "The page you are looking not found.",
-  "go-home": "Go Home"
+  "go-home": "Go Home",
+  "login": "Login",
+  "login-description": "Log in with your data",
+  "keep-me": "Keep me logged in"
 }
