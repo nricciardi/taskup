@@ -8,16 +8,15 @@ from lib.app.service.exposer import ExposerService
 
 
 class App:
-
     __settings_manager = SettingsManager()
 
     def __init__(self):
-        self.__verbose = self.__settings_manager.verbose()      # get verbose
+        self.__verbose = self.__settings_manager.verbose()  # get verbose
 
         Logger.log_info(msg="App init...", is_verbose=self.__verbose)
 
         frontend_directory = self.__settings_manager.frontend_directory()
-        eel.init(frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])           # init eel
+        eel.init(frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
         self.__project_manager = ProjectManager()
 
@@ -30,8 +29,9 @@ class App:
         exposer.expose_methods()
 
     def start(self):
-
         start_file = self.__settings_manager.frontend_start()
         port = self.__settings_manager.port()
 
-        eel.start(start_file, port=port)        # start eel: this generates a loop
+        eel.start(start_file, port=port,
+                  #close_callback=lambda: Logger.log_info(msg="Close app...", is_verbose=True),
+                  shutdown_delay=20)  # start eel: this generates a loop

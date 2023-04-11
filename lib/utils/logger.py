@@ -1,5 +1,3 @@
-import os
-import pathlib
 import sys
 import colorama
 from colorama import Fore, Back, Style
@@ -15,10 +13,6 @@ class Logger:
     Logger
 
     """
-
-
-
-
 
     @staticmethod
     def log_error(msg: Any, full: bool = False, is_verbose: bool = True, prefix: bool = True) -> None:
@@ -40,17 +34,22 @@ class Logger:
         if not is_verbose:
             return
 
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        line_num = exc_traceback.tb_lineno
-        file_name = traceback.extract_tb(exc_traceback)[-1][0]
-
-        msg = f"{Fore.RED}{'ERROR: ' if prefix else ''}{str(msg)} -> line {line_num} in {file_name}"
-
-        if full:
-            tb_str = traceback.format_exc()
-            msg += f"\nFull traceback: {tb_str}"
-
+        msg = f"{Fore.RED}{'ERROR: ' if prefix else ''}{str(msg)}"
         print(msg)
+
+        try:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            line_num = exc_traceback.tb_lineno
+            file_name = traceback.extract_tb(exc_traceback)[-1][0]
+
+            print(f"{Fore.RED}-> line {line_num} in {file_name}")
+
+            if full:
+                tb_str = traceback.format_exc()
+                print(f"{Fore.RED}\nFull traceback: {tb_str}")
+
+        except Exception as exception:
+            pass
 
     @staticmethod
     def log_success(msg: Any, is_verbose: bool = True, prefix: bool = True) -> None:
@@ -70,7 +69,7 @@ class Logger:
         if not is_verbose:
             return
 
-        print(f"{Fore.GREEN}{'SUCCESS: ' if prefix else ''}{str(msg)}")
+        print(f"{Fore.GREEN}{'SUCCESS: ' + Fore.RESET if prefix else ''}{str(msg)}")
 
     @staticmethod
     def log_info(msg: Any, is_verbose: bool = True, end: str = "\n", prefix: bool = True) -> None:
@@ -91,7 +90,7 @@ class Logger:
         if not is_verbose:
             return
 
-        print(f"{Fore.CYAN}{'INFO: ' if prefix else ''}{str(msg)}", end=end)
+        print(f"{Fore.CYAN}{'INFO: ' + Fore.RESET if prefix else ''}{str(msg)}", end=end)
 
     @staticmethod
     def log_warning(msg: Any, is_verbose: bool = True, prefix: bool = True) -> None:
@@ -110,7 +109,7 @@ class Logger:
         if not is_verbose:
             return
 
-        print(f"{Fore.YELLOW}{'WARNING: ' if prefix else ''}{str(msg)}")
+        print(f"{Fore.YELLOW}{'WARNING: ' + Fore.RESET if prefix else ''}{str(msg)}")
 
     @staticmethod
     def log(msg: Any, is_verbose: bool = True) -> None:
@@ -148,7 +147,7 @@ class Logger:
         if not is_verbose:
             return
 
-        print(f"{color}{prefix + ': ' if not prefix is None else ''}{str(msg)}")
+        print(f"{color}{prefix + ': ' + Fore.RESET if not prefix is None else ''}{str(msg)}")
 
     @staticmethod
     def log_eel(msg: Any, is_verbose: bool = True) -> None:

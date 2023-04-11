@@ -529,10 +529,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         query_built = SelectQueryBuilder.from_table(table_name).enable_binding().select(*columns)\
             .apply_conditions(*conditions)
 
-        query: str = query_built.to_sql()
+        query: str = query_built.to_sql(verbose=self.verbose)
         data: list = query_built.data_bound
 
-        print(query)
         res = self.cursor.execute(query, data)
 
         return res.fetchall()

@@ -4,6 +4,7 @@ from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
 from lib.db.entity.task import TasksManager
 from lib.db.component import WhereCondition
+from lib.app.service.auth import AuthService
 
 if __name__ == '__main__':
 
@@ -13,11 +14,16 @@ if __name__ == '__main__':
     users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
     tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
 
-    # query = SelectQueryBuilder.from_table("user").select().where("username", "=", "franco1").to_sql()
-    # # print(query)
+    # auth = AuthService(users_manager, "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/fakevault.json", True)
+    # auth.login("n1@r.com", "asdf123", False)
+
+    query = SelectQueryBuilder.from_table("user").enable_binding().select().where("username", "=", "franco1")
+    print(query.to_sql())
+    print(query.data_bound)
+
     #
-    users = users_manager.all_as_dict(with_relations=True)
-    print(users)
+    # users = users_manager.all_as_dict(with_relations=True)
+    # print(users)
     #
     # tasks = tasks_manager.find(1, with_relations=True, safe=False)
     # print(tasks.to_dict())

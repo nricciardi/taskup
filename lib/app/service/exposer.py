@@ -2,7 +2,9 @@ import eel
 from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
-from lib.app.service.auth import AuthManager
+from lib.app.service.auth import AuthService
+from typing import Callable
+from lib.mixin.dcparser import to_dict
 
 
 class ExposerService:
@@ -16,8 +18,7 @@ class ExposerService:
 
         self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
         self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
-        self.__auth_manager = AuthManager(users_manager=self.__users_manager, vault_path=vault_path, verbose=self.verbose)
-
+        self.__auth_manager = AuthService(users_manager=self.__users_manager, vault_path=vault_path, verbose=self.verbose)
 
     def test(self, *args, **kwargs):
         """
@@ -27,7 +28,9 @@ class ExposerService:
         :return:
         """
 
-        Logger.log_eel(msg="Called by JS", is_verbose=self.verbose)
+        Logger.log_eel(msg="Test called by JS", is_verbose=self.verbose)
+
+        print(args, kwargs)
 
         return args, kwargs
 
@@ -45,7 +48,7 @@ class ExposerService:
         """
 
         for k in to_expose.keys():
-            eel._expose(prefix + k, to_expose[k])
+            ExposerService.expose(to_expose[k], alias=prefix + k)
 
     @staticmethod
     def expose_all_from_list(to_expose: list, prefix: str = "") -> None:
@@ -62,7 +65,16 @@ class ExposerService:
 
         for method in to_expose:
             if callable(method):
-                eel._expose(prefix + method.__name__, method)
+                ExposerService.expose(method, alias=prefix + method.__name__)
+
+    @staticmethod
+    def expose(method: Callable, alias: str | None = None):
+
+        if alias is None:
+            eel.expose(method)
+
+        elif alias is not None:
+            eel._expose(alias, method)
 
     def __expose_task_methods(self) -> None:
         """
@@ -93,10 +105,11 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__auth_manager.login,
                 self.__auth_manager.me,
                 self.__auth_manager.is_logged,
             ], prefix="auth_")
+
+            self.expose(to_dict(self.__auth_manager.login), "auth_login")
 
         except Exception as excepetion:
             Logger.log_error(msg="Task exposure error", is_verbose=self.verbose, full=True)
@@ -131,11 +144,13 @@ class ExposerService:
         try:
             Logger.log_info(msg="Expose py methods...", is_verbose=self.verbose, end=" ")
 
-            eel.expose(self.test)
+            self.expose(self.test)
 
             self.__expose_task_methods()
             self.__expose_user_methods()
             self.__expose_auth_methods()
+
+            Logger.log_success(msg="OK", is_verbose=self.verbose, prefix=False)
 
         except Exception as excepetion:
             Logger.log_error(msg="Eel exposure error", is_verbose=self.verbose, full=True)

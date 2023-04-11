@@ -7,8 +7,9 @@ class CollectionsUtils:
 
     @staticmethod
     def first(collection: List | Tuple) -> Any | None:
-        if not isinstance(collection, list) or not isinstance(collection, tuple):
-            raise TypeError(f"{collection} must be a list or tuple")
+        if not isinstance(collection, list) and not isinstance(collection, tuple):
+            msg = f"{collection} must be a list or tuple, but {type(collection)} given"
+            raise TypeError(msg)
 
         if len(collection) > 0:
             return collection[0]

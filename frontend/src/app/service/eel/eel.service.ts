@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { BaseService } from '../base/base.service';
+import { LoggerService } from '../logger/logger.service';
 
 declare var eel: any;
 
@@ -15,8 +15,6 @@ export class EelService {
 
   public async call(name: string, ...args: any): Promise<any> {
 
-    //const c = eel[name]();
-
     let observer = new Observable((observer) => {   // create observer to subscribe it in component
 
       // Periodic check of connection status
@@ -27,19 +25,19 @@ export class EelService {
         take(1),    // stop interval on WebSocket OPEN (otherwise loop of request)
       ).subscribe({
         next: async () => {
-          BaseService.logSuccess('WebSocket Connection OPEN!');
+          LoggerService.logSuccess('WebSocket Connection OPEN!');
 
           let result = await eel[name](...args)();   // call the eel exposed method and await response (double parentesis)
 
 
-          BaseService.logInfo("Eel result:", result);
+          LoggerService.logInfo("Eel result:", result);
 
           observer.next(result);    // send result on response observer
 
         },
 
         error: (e) => {
-          BaseService.logError(e);
+          LoggerService.logError(e);
 
           observer.error(e);
         }

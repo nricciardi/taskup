@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, List
 from lib.db.component import WhereCondition
 from lib.mixin.sql import ToSqlInterface
@@ -8,21 +8,30 @@ class QueryBuilder(ToSqlInterface, ABC):
     table_name: str
     query: str
     binding: bool
-    data_bound: List[Any] = []
+    data_bound: List[Any]
 
     def __init__(self, table_name: str, binding_mode: bool = False):
         self.table_name = table_name
         self.binding = binding_mode
+        self.data_bound = []
 
-    def to_sql(self):
+    def to_sql(self, verbose: bool = False):
         """
         Return sql query
+
+        :param verbose: if True also print sql
+        :type verbose: bool
 
         :return: query
         :rtype str:
         """
 
-        return self.query.rstrip() + ";"
+        query = self.query.rstrip() + ";"
+
+        if verbose:
+            print(query)
+
+        return query
 
 
 class SelectQueryBuilder(QueryBuilder):
@@ -93,10 +102,10 @@ class SelectQueryBuilder(QueryBuilder):
         if not self.__has_where:
             self.__has_where = True
 
-            self.query += "Where "
+            self.query += "\nWhere "
 
         else:
-            self.query += "And "
+            self.query += "\nAnd "
 
         table = of_table if of_table is not None else self.table_name
 
@@ -127,7 +136,6 @@ class SelectQueryBuilder(QueryBuilder):
 
         self.query = f"""
         Select {", ".join(columns)}
-        From {self.table_name}
-        """
+        From {self.table_name}"""
 
         return self
