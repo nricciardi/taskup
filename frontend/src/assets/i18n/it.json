@@ -9,5 +9,6 @@
   "go-home": "Go Home",
   "login": "Login",
   "login-description": "Entra usando i tuoi dati",
-  "keep-me": "Ricordami"
+  "keep-me": "Ricordami",
+  "loading+dots": "Caricamento..."
 }

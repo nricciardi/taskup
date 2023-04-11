@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
 
@@ -16,23 +17,27 @@ export class LoginComponent {
     keep: new FormControl(false)
   });
 
-  constructor(private authService: AuthService) {}
+  loading: boolean = false;
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
 
     LoggerService.logInfo("try to login...");
 
-    console.log(this.loginForm.value);
-
-
-
     if(this.loginForm.valid) {
+
+      this.loading = true;
 
       const { email, password, keep } = this.loginForm.value;
       this.authService.login(email!, password!, keep!).then((response) => {
         response.subscribe({
           next: (value) => {
-            console.log("response: ", value);
+
+            // on success go to /home
+            this.router.navigate(["/home"]);
+
+            this.loading = false;
 
           }
         })
