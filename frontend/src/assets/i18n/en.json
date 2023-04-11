@@ -10,5 +10,6 @@
   "login": "Login",
   "login-description": "Log in with your data",
   "keep-me": "Keep me logged in",
-  "loading+dots": "Loading..."
+  "loading+dots": "Loading...",
+  "login-error": "Error occurs during login"
 }

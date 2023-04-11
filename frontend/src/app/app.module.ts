@@ -52,7 +52,7 @@ import { ErrorAlertComponent } from './widget/alert/error-alert/error-alert.comp
         },
         deps: [HttpClient]
       }
-    })
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

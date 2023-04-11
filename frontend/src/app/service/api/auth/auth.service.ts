@@ -23,6 +23,7 @@ export class AuthService {
             resolve(true);
 
           },
+          error: () => reject()
 
         })
       }).catch((err) => {

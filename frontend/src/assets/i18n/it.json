@@ -10,5 +10,6 @@
   "login": "Login",
   "login-description": "Entra usando i tuoi dati",
   "keep-me": "Ricordami",
-  "loading+dots": "Caricamento..."
+  "loading+dots": "Caricamento...",
+  "login-error": "Errore durante la fase di login"
 }
