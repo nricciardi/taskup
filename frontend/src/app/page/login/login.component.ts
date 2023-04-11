@@ -18,6 +18,7 @@ export class LoginComponent {
   });
 
   loading: boolean = false;
+  loginError: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -28,6 +29,7 @@ export class LoginComponent {
     if(this.loginForm.valid) {
 
       this.loading = true;
+      this.loginError = false;
 
       const { email, password, keep } = this.loginForm.value;
       this.authService.login(email!, password!, keep!).then((response) => {
@@ -39,7 +41,7 @@ export class LoginComponent {
           this.loading = false;
         }
       }).catch((err) => {
-        
+        this.loginError = true;
       });
     }
 

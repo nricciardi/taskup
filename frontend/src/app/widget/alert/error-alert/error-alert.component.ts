@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ErrorAlertComponent {
   @Input("title") title?: string;
-  @Input("description") description?: string;
-  @Input("removable") removable: boolean = true;
+  // @Input("description") description?: string;
+  @Input("dismissable") dismissable: boolean = true;
 
 }

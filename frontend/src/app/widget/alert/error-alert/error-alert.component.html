@@ -1,1 +1,10 @@
-<p>error-alert works!</p>
+<div class="alert alert-danger alert-dismissible show fade" *ngIf="title">
+  {{ title | translate }}
+  <button
+  *ngIf="dismissable"
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>

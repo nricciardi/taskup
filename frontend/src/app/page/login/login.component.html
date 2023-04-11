@@ -46,7 +46,7 @@
             {{ "keep-me" | translate }}
           </label>
         </div>
-        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit" [disabled]="!loginForm.valid" *ngIf="!loading; else loadingBtn">
+        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit" [disabled]="!loginForm.valid" *ngIf="!loading || loginError; else loadingBtn">
           {{ "login" | translate }}
         </button>
 
@@ -60,6 +60,8 @@
             {{ "loading+dots" | translate }}
           </button>
         </ng-template>
+
+        <app-error-alert [title]="'login-error'" class="mt-1"></app-error-alert>
       </form>
       <!-- <div class="text-center mt-5 text-lg fs-4">
         <p class="text-gray-600">
