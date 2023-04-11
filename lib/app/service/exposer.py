@@ -89,8 +89,9 @@ class ExposerService:
                 self.__tasks_manager.all_as_tuple,
                 self.__tasks_manager.all_as_dict,
                 self.__tasks_manager.create_from_dict,
-                self.__tasks_manager.find,
             ], prefix="task_")
+
+            self.expose(to_dict(self.__tasks_manager.find), "task_find")
 
         except Exception as excepetion:
             Logger.log_error(msg="Task exposure error", is_verbose=self.verbose, full=True)
@@ -127,8 +128,9 @@ class ExposerService:
                 self.__users_manager.all_as_tuple,
                 self.__users_manager.all_as_dict,
                 self.__users_manager.create_from_dict,
-                self.__users_manager.find,
             ], prefix="user_")
+
+            self.expose(self.__users_manager.find, "user_find")
 
 
         except Exception as excepetion:
