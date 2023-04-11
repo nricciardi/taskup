@@ -12,9 +12,25 @@ export class AuthService {
 
   constructor(private eelService: EelService) { }
 
-  public login(email: string, password: string, keep: boolean = false): Promise<Observable<UserModel | null>> {
+  public login(email: string, password: string, keep: boolean = false): Promise<boolean> {
 
-    return this.eelService.call(this.LOGIN, email, password, keep);
+    // return a boolean promise: true if login successful, else false
+    let promise = new Promise<boolean>((resolve, reject) => {
+      this.eelService.call(this.LOGIN, email, password, keep).then((response) => {
+        response.subscribe({
+          next: () => {
+
+            resolve(true);
+
+          },
+
+        })
+      }).catch((err) => {
+        reject();
+      });
+    });
+
+    return promise;
 
   }
 

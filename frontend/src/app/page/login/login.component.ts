@@ -31,16 +31,15 @@ export class LoginComponent {
 
       const { email, password, keep } = this.loginForm.value;
       this.authService.login(email!, password!, keep!).then((response) => {
-        response.subscribe({
-          next: (value) => {
 
-            // on success go to /home
-            this.router.navigate(["/home"]);
+        if(response) {
+          // on success go to /home
+          this.router.navigate(["/home"]);
 
-            this.loading = false;
-
-          }
-        })
+          this.loading = false;
+        }
+      }).catch((err) => {
+        
       });
     }
 

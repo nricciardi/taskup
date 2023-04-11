@@ -18,6 +18,7 @@ import { LoaderComponent } from './widget/loader/loader.component';
 import { SideBannerComponent } from './widget/side-banner/side-banner.component';
 import { LoginComponent } from './page/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ErrorAlertComponent } from './widget/alert/error-alert/error-alert.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PageHeadingComponent,
     LoaderComponent,
     SideBannerComponent,
-    LoginComponent
+    LoginComponent,
+    ErrorAlertComponent
   ],
   imports: [
     BrowserModule,
