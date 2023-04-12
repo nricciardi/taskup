@@ -27,7 +27,6 @@ class AuthService:
     def vault_path(self) -> str:
         return self.__vault_path
 
-    @property
     def me(self) -> UserModel | None:
         return self.__me
 
@@ -39,16 +38,18 @@ class AuthService:
         """
 
         try:
-            Logger.log_info(msg="Try autologin...", is_verbose=self.verbose)
+            Logger.log_info(msg="try autologin...", is_verbose=self.verbose)
 
             vault_data = self.get_vault_data()
 
             if self.EMAIL in vault_data and self.PASSWORD in vault_data:
-                self.login(vault_data[self.EMAIL], vault_data[self.PASSWORD])
+                self.login(vault_data.get(self.EMAIL), vault_data.get(self.PASSWORD))
+            else:
+                raise AttributeError()
 
         except Exception:
 
-            Logger.log_warning(msg="Autologin failed", is_verbose=self.verbose)
+            Logger.log_warning(msg="autologin failed", is_verbose=self.verbose)
 
             return None
 
@@ -91,6 +92,23 @@ class AuthService:
 
         return self.__me
 
+    def logout(self) -> bool:
+        try:
+
+            self.erase_vault_data()
+
+            self.__me = None
+
+            Logger.log_success(msg="logout correctly", is_verbose=self.verbose)
+
+            return True
+
+        except Exception as e:
+
+            Logger.log_error(msg=e, is_verbose=self.verbose)
+
+            return False
+
     def store_in_vault(self, email: str, password: str) -> None:
         """
         Store in vault email and password
@@ -121,3 +139,14 @@ class AuthService:
         """
 
         return FileManger.read_json(self.vault_path)
+
+    def erase_vault_data(self) -> bool:
+
+        try:
+            FileManger.write_json(self.vault_path, "")
+
+            return True
+        except Exception:
+            Logger.log_warning(msg="vault erase error", is_verbose=self.verbose)
+
+            return False

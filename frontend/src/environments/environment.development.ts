@@ -1,3 +1,4 @@
 export const environment = {
-  verbose: true
+  verbose: true,
+  eelCallRefreshInterval: 1000
 };

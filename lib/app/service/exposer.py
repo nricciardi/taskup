@@ -106,11 +106,12 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__auth_manager.me,
                 self.__auth_manager.is_logged,
+                self.__auth_manager.logout,
             ], prefix="auth_")
 
             self.expose(to_dict(self.__auth_manager.login), "auth_login")
+            self.expose(to_dict(self.__auth_manager.me), "auth_me")
 
         except Exception as excepetion:
             Logger.log_error(msg="Task exposure error", is_verbose=self.verbose, full=True)
