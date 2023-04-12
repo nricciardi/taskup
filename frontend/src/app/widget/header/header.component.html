@@ -16,9 +16,9 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="userLogged">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="userLogged; else loginBtn">
         <ul class="navbar-nav ms-auto mb-lg-0">
-          <li class="nav-item dropdown me-1">
+          <li class="nav-item dropdown me-1" *ngIf="false">
             <a
               class="nav-link active dropdown-toggle text-gray-600"
               href="#"
@@ -37,7 +37,7 @@
               <li><a class="dropdown-item" href="#">No new mail</a></li>
             </ul>
           </li>
-          <li class="nav-item dropdown me-3">
+          <li class="nav-item dropdown me-3" *ngIf="false">
             <a
               class="nav-link active dropdown-toggle text-gray-600"
               href="#"
@@ -97,8 +97,12 @@
           <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
             <div class="user-menu d-flex">
               <div class="user-name text-end me-3">
-                <h6 class="mb-0 text-gray-600">John Ducky</h6>
-                <p class="mb-0 text-sm text-gray-600">Administrator</p>
+                <h6 class="mb-0 text-gray-600">
+                  {{ userLogged.username }}
+                </h6>
+                <p class="mb-0 text-sm text-gray-600">
+                  {{ userLogged.role?.name }}
+                </p>
               </div>
               <div class="user-img d-flex align-items-center">
                 <div class="avatar avatar-md">
@@ -135,14 +139,66 @@
               <hr class="dropdown-divider" />
             </li>
             <li>
-              <a class="dropdown-item" href="#"
-                ><i class="icon-mid bi bi-box-arrow-left me-2"></i>
-                Logout</a
-              >
+              <button class="dropdown-item" (click)="logout()">
+                <i class="icon-mid bi bi-box-arrow-left me-2"></i>
+                Logout
+            </button>
             </li>
           </ul>
         </div>
       </div>
+      <ng-template #loginBtn>
+        <a [routerLink]="['/login']" routerLinkActive="router-link-active"  class="btn btn-outline-primary">
+          {{ "login" | translate }}
+        </a>
+      </ng-template>
     </div>
   </nav>
 </header>
+
+
+<!-- Button trigger for danger theme modal -->
+<button
+#throwErrorLogoutModal
+type="button"
+class="btn btn-outline-danger"
+data-bs-toggle="modal"
+data-bs-target="#logoutErrorModal"
+style="display: none;"
+>
+</button>
+
+
+<!--Error logout modal -->
+<div
+class="modal fade text-left"
+id="logoutErrorModal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="myModalLabel120"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-header bg-danger">
+      <h5
+        class="modal-title white"
+        id="myModalLabel120"
+      >
+        {{ "logout-error" | translate }}
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <i data-feather="x"></i>
+      </button>
+    </div>
+  </div>
+</div>
+</div>

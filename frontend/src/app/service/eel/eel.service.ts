@@ -18,6 +18,7 @@ export class EelService {
 
   private max_attempt: number = 3;
   private interval: number = 10;
+  private logger_except: string[] = ['auth_is_logged'];
 
   constructor() {}
 
@@ -80,7 +81,9 @@ export class EelService {
 
     return {
       next: async () => {
-        LoggerService.logSuccess('WebSocket Connection is OPEN!');
+
+        if(!this.logger_except.includes(name))
+          LoggerService.logSuccess('WebSocket Connection is OPEN!');
 
         let attempts: number = 0;
         const _call = async () => {
@@ -88,11 +91,14 @@ export class EelService {
           attempts += 1;
 
           try {
-            LoggerService.logInfo("Eel Call:", name);
+
+            if(!this.logger_except.includes(name))
+              LoggerService.logInfo("Eel Call:", name);
 
             let result = await eel[name](...args)();   // call the eel exposed method and await response (double parentesis)
 
-            LoggerService.logInfo("Eel Result:", result);
+            if(!this.logger_except.includes(name))
+              LoggerService.logInfo("Eel Result:", result);
 
             observer.next(result);    // send result on response observer
 

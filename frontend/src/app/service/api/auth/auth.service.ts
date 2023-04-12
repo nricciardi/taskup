@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment.development';
 export class AuthService {
 
   private readonly LOGIN: string = "auth_login";
+  private readonly LOGOUT: string = "auth_logout";
   private readonly ME: string = "auth_me";
   private readonly IS_LOGGED: string = "auth_is_logged";
 
@@ -20,6 +21,29 @@ export class AuthService {
     // return a boolean promise: true if login successful, else false
     let promise = new Promise<boolean>((resolve, reject) => {
       this.eelService.call(this.LOGIN, email, password, keep).then((response) => {
+        response.subscribe({
+          next: (value: UserModel) => {
+
+            resolve(true);
+
+          },
+          error: () => reject()
+
+        })
+      }).catch((err) => {
+        reject();
+      });
+    });
+
+    return promise;
+
+  }
+
+  public logout(): Promise<boolean> {
+
+    // return a boolean promise: true if login successful, else false
+    let promise = new Promise<boolean>((resolve, reject) => {
+      this.eelService.call(this.LOGOUT).then((response) => {
         response.subscribe({
           next: (value: UserModel) => {
 

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 
@@ -9,21 +10,26 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 })
 export class HeaderComponent {
 
+  @ViewChild("throwErrorLogoutModal") throwErrorLogoutModal?: ElementRef;
+
   userLogged?: UserModel;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
 
-    this.authService.isLogged(true).then((response) => {
+    let lastTime: boolean = false;
+    this.authService.isLogged(false).then((response) => {
       let subscription = response.subscribe({
         next: (value: boolean) => {
-          if(value) {
+
+          if(value != lastTime) {     // update userLogged if only if isLogged return a different value => user logged
+
+            lastTime = value;
+
             this.authService.me().then((response) => {
 
               response.subscribe({
                 next: (value: UserModel) => {
                   this.userLogged = value;
-
-                  subscription.unsubscribe();
 
                 },
                 error: (e) => {
@@ -34,7 +40,9 @@ export class HeaderComponent {
             }).catch((e) => {
               // nothing
             });
-          } else {
+          }
+
+          if(value === false) {
             this.userLogged = undefined;
           }
         },
@@ -45,6 +53,18 @@ export class HeaderComponent {
 
     });
 
+
+  }
+
+  logout() {
+
+    this.authService.logout().then((response) => {
+
+      this.router.navigate(["/login"]);
+
+    }).catch((e) => {
+      this.throwErrorLogoutModal?.nativeElement.click();
+    })
 
   }
 
