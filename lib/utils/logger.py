@@ -14,11 +14,15 @@ class Logger:
 
     """
 
+    capitalize: bool = True
+
     @staticmethod
-    def log_error(msg: Any, full: bool = False, is_verbose: bool = True, prefix: bool = True) -> None:
+    def log_error(msg: Any, full: bool = False, is_verbose: bool = True, prefix: bool = True, msg_row: bool = False) -> None:
         """
         Log pre-formatted error
 
+        :param msg_row: prevent manipulation on msg
+        :type msg_row: bool
         :param msg: message to print
         :type msg: Any
         :param full: include trace bock
@@ -33,6 +37,9 @@ class Logger:
 
         if not is_verbose:
             return
+
+        if msg_row is False and Logger.capitalize:
+            msg = str(msg).capitalize()
 
         msg = f"{Fore.RED}{'ERROR: ' if prefix else ''}{str(msg)}"
         print(msg)
@@ -52,10 +59,12 @@ class Logger:
             pass
 
     @staticmethod
-    def log_success(msg: Any, is_verbose: bool = True, prefix: bool = True) -> None:
+    def log_success(msg: Any, is_verbose: bool = True, prefix: bool = True, msg_row: bool = False) -> None:
         """
         Log pre-formatted success
 
+        :param msg_row: prevent manipulation on msg
+        :type msg_row: bool
         :param msg: message to print
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
@@ -69,13 +78,18 @@ class Logger:
         if not is_verbose:
             return
 
+        if msg_row is False and Logger.capitalize:
+            msg = str(msg).capitalize()
+
         print(f"{Fore.GREEN}{'SUCCESS: ' + Fore.RESET if prefix else ''}{str(msg)}")
 
     @staticmethod
-    def log_info(msg: Any, is_verbose: bool = True, end: str = "\n", prefix: bool = True) -> None:
+    def log_info(msg: Any, is_verbose: bool = True, end: str = "\n", prefix: bool = True, msg_row: bool = False) -> None:
         """
         Log pre-formatted info
 
+        :param msg_row: prevent manipulation on msg
+        :type msg_row: bool
         :param msg: info to print
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
@@ -90,13 +104,18 @@ class Logger:
         if not is_verbose:
             return
 
+        if msg_row is False and Logger.capitalize:
+            msg = str(msg).capitalize()
+
         print(f"{Fore.CYAN}{'INFO: ' + Fore.RESET if prefix else ''}{str(msg)}", end=end)
 
     @staticmethod
-    def log_warning(msg: Any, is_verbose: bool = True, prefix: bool = True) -> None:
+    def log_warning(msg: Any, is_verbose: bool = True, prefix: bool = True, msg_row: bool = False) -> None:
         """
         Log pre-formatted warning
 
+        :param msg_row: prevent manipulation on msg
+        :type msg_row: bool
         :param msg: info to print
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
@@ -109,13 +128,18 @@ class Logger:
         if not is_verbose:
             return
 
+        if msg_row is False and Logger.capitalize:
+            msg = str(msg).capitalize()
+
         print(f"{Fore.YELLOW}{'WARNING: ' + Fore.RESET if prefix else ''}{str(msg)}")
 
     @staticmethod
-    def log(msg: Any, is_verbose: bool = True) -> None:
+    def log(msg: Any, is_verbose: bool = True, msg_row: bool = False) -> None:
         """
         Log pre-formatted text
 
+        :param msg_row: prevent manipulation on msg
+        :type msg_row: bool
         :param msg: message to print
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
@@ -126,13 +150,18 @@ class Logger:
         if not is_verbose:
             return
 
+        if msg_row is False and Logger.capitalize:
+            msg = str(msg).capitalize()
+
         print(f"{str(msg)}")
 
     @staticmethod
-    def log_custom(msg: Any, is_verbose: bool = True, prefix: str = None, color: colorama = Fore.MAGENTA) -> None:
+    def log_custom(msg: Any, is_verbose: bool = True, prefix: str = None, color: colorama = Fore.MAGENTA, capitalize: bool = True) -> None:
         """
         Pre-formatted custom log
 
+        :param capitalize: if true capitalize msg
+        :type capitalize: bool
         :param msg: message to print
         :type msg: Any
         :param is_verbose: it used to check if it is verbose
@@ -146,6 +175,9 @@ class Logger:
 
         if not is_verbose:
             return
+
+        if capitalize:
+            msg = str(msg).capitalize()
 
         print(f"{color}{prefix + ': ' + Fore.RESET if not prefix is None else ''}{str(msg)}")
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { TaskModel } from 'src/app/model/entity/task.model';
-import { TaskService } from 'src/app/service/api/entity/task/task.service';
+import { DashboardModel } from 'src/app/model/entity/dashboard.model';
+import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,17 +9,17 @@ import { TaskService } from 'src/app/service/api/entity/task/task.service';
 })
 export class DashboardComponent {
 
-  public tasks?: TaskModel[];
+  public dashboard?: DashboardModel;
 
-  constructor(private taskService: TaskService) {
+  constructor(private dashboardService: DashboardService) {
   }
 
   ngOnInit() {
 
-    this.taskService.all().then((response) => {
+    this.dashboardService.getData().then((response) => {
       response.subscribe({
-        next: (value) => {
-          this.tasks = value;
+        next: (value: DashboardModel) => {
+          this.dashboard = value;
 
         }
       })

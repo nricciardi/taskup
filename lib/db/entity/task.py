@@ -1,4 +1,4 @@
-from lib.db.db import TableNamesMixin
+from lib.db.db import TableNamesMixin, BaseTaskStatusIdMixin
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass
 from lib.db.entity.bem import BaseEntityModel
@@ -97,7 +97,7 @@ class TodoItemModel(BaseEntityModel):
 
 
 # ================================== MANAGER ========================
-class TasksManager(EntitiesManager, TableNamesMixin):
+class TasksManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
@@ -125,7 +125,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
         ]
 
 
-class TaskStatusManager(EntitiesManager, TableNamesMixin):
+class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose

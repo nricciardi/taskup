@@ -78,6 +78,16 @@ class BaseEntityModel(DCToDictMixin, ModifyMixin, AppendAttrMixin, ABC):
 
     @classmethod
     def all_from_tuples(cls, data: List[Tuple]) -> List[EntityModel]:
+        """
+        Return a list of EntityModel from a list of tuples
+
+        :param data:
+        :type data: dict
+
+        :return:
+        :rtype List[EntityModel]:
+        """
+
         models = []
 
         for element in data:
@@ -87,6 +97,16 @@ class BaseEntityModel(DCToDictMixin, ModifyMixin, AppendAttrMixin, ABC):
 
     @classmethod
     def all_from_dicts(cls, data: List[Dict]) -> List[EntityModel]:
+        """
+        Return a list of EntityModel from a list of dicts
+
+        :param data:
+        :type data: dict
+
+        :return:
+        :rtype List[EntityModel]:
+        """
+
         models = []
 
         for element in data:

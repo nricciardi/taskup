@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Type, TypeVar, Generic
 from lib.db.entity.bem import EntityModel, BaseEntityModel
 from abc import ABC
@@ -8,9 +8,6 @@ Pivot = TypeVar('Pivot', bound=BaseEntityModel)     # pivot
 @dataclass
 class Relation(ABC, Generic[EntityModel]):
     """
-
-    :ivar has: relation type
-    :type has: RelationType
     
     :ivar fk_model: fk dataclass
     :type fk_model: str

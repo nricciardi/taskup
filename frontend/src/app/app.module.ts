@@ -19,6 +19,7 @@ import { SideBannerComponent } from './widget/side-banner/side-banner.component'
 import { LoginComponent } from './page/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorAlertComponent } from './widget/alert/error-alert/error-alert.component';
+import { HomeComponent } from './page/home/home.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ErrorAlertComponent } from './widget/alert/error-alert/error-alert.comp
     LoaderComponent,
     SideBannerComponent,
     LoginComponent,
-    ErrorAlertComponent
+    ErrorAlertComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
