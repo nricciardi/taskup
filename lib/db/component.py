@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple, Dict, Any
-from lib.mixin.sql import ToSqlInterface
-from lib.mixin.dcparser import DCToDictMixin, DCToTupleMixin
+from typing import List, Tuple, Dict
+from lib.utils.mixin.sql import ToSqlInterface
+from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 
 
 @dataclass

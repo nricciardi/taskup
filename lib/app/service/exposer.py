@@ -5,7 +5,7 @@ from lib.db.entity.user import UsersManager
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
 from typing import Callable
-from lib.mixin.dcparser import to_dict
+from lib.utils.mixin.dcparser import to_dict
 
 
 class ExposerService:

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from lib.db.entity.task import TaskStatusModel, TaskModel
 from typing import List
 from lib.utils.logger import Logger
-from lib.mixin.dcparser import DCToDictMixin
+from lib.utils.mixin.dcparser import DCToDictMixin
 
 
 @dataclass
@@ -11,7 +11,6 @@ class DashboardModel(DCToDictMixin):
     task_status: List[TaskStatusModel]
     default_task_status_id: int
     tasks: List[TaskModel]
-
 
 
 class DashboardService:

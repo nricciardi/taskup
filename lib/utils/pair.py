@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from lib.mixin.dcparser import DCToDictMixin, DCToTupleMixin
+from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 from typing import Any
 
 

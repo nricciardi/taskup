@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Any, List
 from lib.db.component import WhereCondition
-from lib.mixin.sql import ToSqlInterface
+from lib.utils.mixin.sql import ToSqlInterface
 
 
 class QueryBuilder(ToSqlInterface, ABC):
