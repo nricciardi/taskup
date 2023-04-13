@@ -1,6 +1,6 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager
+from lib.db.entity.task import TasksManager, TaskStatusManager
 from lib.db.entity.user import UsersManager
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
@@ -17,10 +17,21 @@ class ExposerService:
     def __init__(self, db_name: str, work_directory_path: str, vault_path: str, verbose: bool = False):
         self.verbose = verbose
 
-        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
-        self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path, verbose=self.verbose)
-        self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path, verbose=self.verbose)
-        self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager, verbose=self.verbose)
+        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
+                                            verbose=self.verbose)
+
+        self.__task_status_manager = TaskStatusManager(db_name=db_name, work_directory_path=work_directory_path,
+                                                       verbose=self.verbose)
+
+        self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
+                                            verbose=self.verbose)
+
+        self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path,
+                                          verbose=self.verbose)
+
+        self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager,
+                                                    task_status_manager=self.__task_status_manager,
+                                                    verbose=self.verbose)
 
     def test(self, *args, **kwargs):
         """

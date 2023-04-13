@@ -97,7 +97,7 @@ class TodoItemModel(BaseEntityModel):
 
 
 # ================================== MANAGER ========================
-class TasksManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
+class TasksManager(EntitiesManager, TableNamesMixin):
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
