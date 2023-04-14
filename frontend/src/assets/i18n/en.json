@@ -12,5 +12,6 @@
   "keep-me": "Keep me logged in",
   "loading+dots": "Loading...",
   "login-error": "Error occurs during login",
-  "logout-error": "Error occurs during logout"
+  "logout-error": "Error occurs during logout",
+  "hello": "Hello"
 }

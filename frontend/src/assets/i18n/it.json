@@ -12,5 +12,6 @@
   "keep-me": "Ricordami",
   "loading+dots": "Caricamento...",
   "login-error": "Errore durante la fase di login",
-  "logout-error": "Errore durante la fase di logout"
+  "logout-error": "Errore durante la fase di logout",
+  "hello": "Ciao"
 }
