@@ -38,6 +38,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Why some js file aren't tracked?
 - [x] Internalization
 - [ ] Set link in Documentation and Contribute in menu
+- [ ] 404 and 500 pages
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
