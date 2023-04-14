@@ -41,7 +41,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
-- [ ] Prevent Eel closing on error
+- [x] Prevent Eel closing on error -> caused by shutdown_delay (Eel .start)
 - [x] Create common method to add a table and insert base values
 - [ ] Migrate from __insert_base to seeder
 - [ ] Improve QueryBuilder (join, subquery, group by, order by)
@@ -51,7 +51,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
   -  [ ] append relation on bem and not in another foreach
 
 ### DB
-- [ ] Unique on user's username? Add name and surname?
+- [x] Unique on user's username? Add name and surname?
 - [x] DB schema
 - [ ] deadline from date to datetime?
 
