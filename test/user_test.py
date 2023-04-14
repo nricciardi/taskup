@@ -9,7 +9,7 @@ class UserModelTest(unittest.TestCase):
         cls.user_manager = UsersManager()
 
     def all(self):
-        print(self.user_manager.all())
+        print(self.user_manager.all_as_dict())
 
     def create(self):
         self.user_manager.create_from_dict(name="nome")

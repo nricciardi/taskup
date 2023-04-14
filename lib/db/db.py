@@ -1,11 +1,25 @@
 import sqlite3
-
 from lib.db.query import SelectQueryBuilder
 from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
 from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition
 from lib.utils.util import Util
+
+
+def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
+    """
+    Row factory for sqlite3
+
+    :param cursor: sqlite3 cursor
+    :type cursor: sqlite3.Cursor
+    :param row: row as a tuple
+    :type row: tuple
+
+    :return:
+    """
+    fields = [column[0] for column in cursor.description]
+    return {key: value for key, value in zip(fields, row)}
 
 
 class TableNamesMixin:
@@ -111,6 +125,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)
+            self.__db_connection.row_factory = dict_factory
             self.__db_cursor = self.__db_connection.cursor()
 
             Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)

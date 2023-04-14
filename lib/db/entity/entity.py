@@ -96,48 +96,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             raise TypeError(msg)
 
-    def all_as_tuple(self) -> List[Tuple[Any, ...]]:
-        """
-        Return all records from db table
-
-        :return: All records from db table
-        :rtype: List[Tuple[Any, ...]]
-        """
-
-        return self.__all_as_tuple(self.table_name)
-
-    def __all_as_tuple(self, table_name: str) -> List[Tuple[Any, ...]]:
-        """
-        Actual all_as_tuple method implementation
-
-        :param table_name:
-        :type table_name: str
-
-        :return:
-        :rtype: List[Tuple[Any, ...]]
-        """
-
-        query = self.__get_all_query(table_name)
-        res = self.__db_manager.cursor.execute(query)
-
-        return res.fetchall()
-
-    def __get_all_query(self, table_name: str) -> str:
-        """
-        Return the query to get all
-
-        :param table_name:
-        :type table_name: str
-
-        :return: the query
-        :rtype str:
-        """
-
-        return SelectQueryBuilder.from_table(table_name).select().to_sql()
-
     def all_as_dict(self, with_relations: bool = True) -> List[Dict[str, Any]]:
         """
-        Abstract method.
         Return all entities as dict.
 
         :param with_relations: add entity data of relations
@@ -147,18 +107,35 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[Dict[str, Any]]:
         """
 
-        models: list[EntityModel] = self.all_as_model(with_relations=with_relations)
+        dicts: List = self.__all_as_dict(self.table_name)
 
-        dicts = []
-
-        for model in models:
-            dicts.append(model.to_dict())
+        if with_relations:
+            for i in range(len(dicts)):
+                em: EntityModel = self.EM.from_dict(dicts[i])
+                self.append_relations_data_on(em, True)
+                dicts[i] = em.to_dict()
 
         return dicts
 
+    def __all_as_dict(self, table_name: str) -> List[Dict[str, Any]]:
+        """
+        Actual method to get all entities data from database using a table name as list of dict
+
+        :param table_name:
+        :type table_name: str
+
+        :return: all entities as dict
+        :rtype List[Dict[str, Any]]:
+        """
+
+        query = SelectQueryBuilder.from_table(table_name).select().to_sql()
+
+        records = self.__db_manager.cursor.execute(query).fetchall()
+
+        return records
+
     def all_as_model(self, with_relations: bool = True, safe: bool = True) -> List[EntityModel]:
         """
-        Abstract method.
         Return all entities as EntityModel.
 
         :param safe: safe execute flag
@@ -177,9 +154,9 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
     def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[EntityModel]:
 
-        tuples = self.__all_as_tuple(table_name)
+        tuples = self.__all_as_dict(table_name)
 
-        models = model.all_from_tuples(tuples)
+        models = model.all_from_dicts(tuples)
 
         if with_relations:
             for em in models:
@@ -202,15 +179,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype EntityModel:
         """
 
-        data: tuple = self.__find(entity_id, self.table_name)
-        em = self.EM.from_tuple(data)
+        data: Dict = self.__find(entity_id, self.table_name)
+        em = self.EM.from_dict(data)
 
         if with_relations:
             self.append_relations_data_on(em, safe=safe)
 
         return em
 
-    def __find(self, entity_id: int, table_name: str) -> tuple:
+    def __find(self, entity_id: int, table_name: str) -> Dict:
         """
         Actual find method implementation.
         This method return a tuple because it can be used with different table, therefore it doesn't know any
@@ -223,13 +200,13 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :type entity_id: int
 
         :return:
-        :rtype tuple:
+        :rtype Dict:
         """
 
         query = self.__get_find_query(entity_id, table_name)
         res = self.__db_manager.cursor.execute(query)
 
-        return tuple(res.fetchone())
+        return dict(res.fetchone())
 
     def __get_find_query(self, entity_id: int, table_name: str) -> str:
         """
@@ -396,9 +373,9 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         fk_id: int = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
 
-        data: Tuple = self.__find(fk_id, relation.of_table)  # find fk entity
+        data: Dict = self.__find(fk_id, relation.of_table)  # find fk entity
 
-        return relation.fk_model.from_tuple(data)  # return a fk EM from tuple resulted
+        return relation.fk_model.from_dict(data)  # return a fk EM from tuple resulted
 
     def get_many_relation_data_based_on(self, relation: ManyRelation) -> List[EntityModel] | None:
         """
@@ -420,8 +397,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         for pivot_record in pivot_data:
             pivot_fk = getattr(pivot_record, relation.of_table + "_id")  # use standard: <fk_table>_id, i.e. user_id
 
-            row: Tuple = self.__find(pivot_fk, relation.of_table)
+            row: Dict = self.__find(pivot_fk, relation.of_table)
 
-            data.append(relation.fk_model.from_tuple(row))
+            data.append(relation.fk_model.from_dict(row))
 
         return data
