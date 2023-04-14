@@ -273,9 +273,9 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel]:
         """
 
-        result: List[Tuple] = self.__db_manager.where(self.table_name, *conditions, columns=columns)
+        result: List[Dict] = self.__db_manager.where(self.table_name, *conditions, columns=columns)
 
-        models = self.EM.all_from_tuples(result)
+        models = self.EM.all_from_dicts(result)
 
         if with_relations:
             for em in models:

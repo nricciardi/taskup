@@ -6,6 +6,6 @@ import { UserModel } from 'src/app/model/entity/user.model';
   providedIn: 'root'
 })
 export class UserService extends EntityApiService<UserModel> {
-  override ALL: string = "user_all_as_dict";
+  override ALL: string = "user_all";
   override FIND: string = "user_find";
 }

@@ -99,12 +99,11 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__tasks_manager.all_as_tuple,
-                self.__tasks_manager.all_as_dict,
                 self.__tasks_manager.create_from_dict,
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find), "task_find")
+            self.expose(to_dict(self.__tasks_manager.all_as_dict), "task_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -153,12 +152,11 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__users_manager.all_as_tuple,
-                self.__users_manager.all_as_dict,
                 self.__users_manager.create_from_dict,
             ], prefix="user_")
 
-            self.expose(self.__users_manager.find, "user_find")
+            self.expose(to_dict(self.__users_manager.find), "user_find")
+            self.expose(to_dict(self.__users_manager.all_as_model), "user_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="user exposure error", is_verbose=self.verbose, full=True)

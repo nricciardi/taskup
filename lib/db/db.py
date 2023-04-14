@@ -570,7 +570,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         return row_count
 
-    def where(self, table_name: str, *conditions: WhereCondition, columns: List[str] | None = None) -> List[Tuple]:
+    def where(self, table_name: str, *conditions: WhereCondition, columns: List[str] | None = None) -> List[Dict]:
         """
         Filter entities based on conditions
 
@@ -580,8 +580,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :type columns: List[str] | None
         :param conditions: list of conditions
         :type conditions: WhereCondition
+
         :return: list of records
-        :rtype List[Tuple]:
+        :rtype List[Dict]:
         """
 
         if isinstance(conditions, WhereCondition):

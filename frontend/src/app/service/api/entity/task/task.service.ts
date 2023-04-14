@@ -7,6 +7,6 @@ import { EntityApiService } from '../entity-api.service';
 })
 export class TaskService extends EntityApiService<TaskModel> {
 
-  override ALL: string = "task_all_as_dict";
+  override ALL: string = "task_all";
   override FIND: string = "task_find";
 }
