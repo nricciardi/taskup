@@ -1,15 +1,15 @@
 <app-page-heading [title]="'dashboard'"></app-page-heading>
 
-<div class="row justify-content-between">
+<div class="row justify-content-between" *ngIf="dashboard">
   <div class="col-1">
-    <app-task-status-side-banner [title]="'prova nome task prev'"></app-task-status-side-banner>
+    <app-task-status-side-banner [title]="getPrevTaskStatus()?.name"></app-task-status-side-banner>
   </div>
 
   <div class="col-8">
-    <app-task-preview-list [tasks]="dashboard?.tasks"></app-task-preview-list>
+    <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()!.id)"></app-task-preview-list>
   </div>
 
   <div class="col-1">
-    <app-task-status-side-banner [title]="'prova nome task next'"></app-task-status-side-banner>
+    <app-task-status-side-banner [title]="getNextTaskStatus()?.name"></app-task-status-side-banner>
   </div>
 </div>

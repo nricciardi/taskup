@@ -1,4 +1,6 @@
-export const environment = {
+import { baseEnvironment } from "./base.enviroments"
+
+export const environment = Object.assign({
   verbose: false,
-  eelCallRefreshInterval: 2000
-};
+  production: true
+}, baseEnvironment);

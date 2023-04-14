@@ -204,9 +204,10 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         query = self.__get_find_query(entity_id, table_name)
+
         res = self.__db_manager.cursor.execute(query)
 
-        return dict(res.fetchone())
+        return dict(res.fetchone() if res is not None else {})
 
     def __get_find_query(self, entity_id: int, table_name: str) -> str:
         """
@@ -352,7 +353,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         except Exception as exception:
 
-            Logger.log_warning(msg=f"{relation} is wrong!\nUsing {em}")
+            Logger.log_warning(msg=f"{relation} is wrong!\nUsing {em}\nBecause: {exception}")
 
             if not safe:
                 raise exception
@@ -371,7 +372,10 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype EntityModel | None:
         """
 
-        fk_id: int = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
+        fk_id: int | None = getattr(em, relation.fk_field)  # get fk_id from em based on fk_field of relation
+
+        if fk_id is None:
+            return None
 
         data: Dict = self.__find(fk_id, relation.of_table)  # find fk entity
 

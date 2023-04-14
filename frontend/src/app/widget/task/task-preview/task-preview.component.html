@@ -1,21 +1,26 @@
-<div class="card">
+<div class="card" *ngIf="task">
   <div class="card-content">
     <div class="card-body">
-      <h4 class="card-title">Card With Header And Footer</h4>
-      <p class="card-text">
-        Gummies bonbon apple pie fruitcake icing biscuit apple
-        pie jelly-o sweet roll. Toffee sugar plum sugar plum
-        jelly-o jujubes bonbon dessert carrot cake.
+      <h4 class="card-title">
+        {{ task.name }}
+      </h4>
+
+      <p class="card-text mt-2" *ngIf="task.description">
+        {{ task.description }}
       </p>
     </div>
-    <img
-      class="img-fluid w-100"
-      src="./assets/compiled/jpg/banana.jpg"
-      alt="Card image cap"
-    />
   </div>
   <div class="card-footer d-flex justify-content-between">
-    <span>Card Footer</span>
+    <span>
+      <span class="badge" [class.bg-light-primary]="getDeadlineStatus() === DeadlineStatus.PRIMARY"
+                        [class.bg-light-warning]="getDeadlineStatus() === DeadlineStatus.WARNING"
+                        [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
+                        *ngIf="!!task.deadline">
+
+          {{ task.deadline | date:dateFormat }}
+        </span>
+    </span>
+
     <button class="btn btn-light-primary">Read More</button>
   </div>
 </div>

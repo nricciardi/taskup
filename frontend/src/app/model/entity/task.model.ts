@@ -5,7 +5,7 @@ import { UserModel } from "./user.model";
 export interface TaskModel {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   deadline?: Date;
   priority: number;
   created_at: Date;

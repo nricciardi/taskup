@@ -31,6 +31,7 @@ class ExposerService:
 
         self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager,
                                                     task_status_manager=self.__task_status_manager,
+                                                    auth_service=self.__auth_service,
                                                     verbose=self.verbose)
 
     def test(self, *args, **kwargs):

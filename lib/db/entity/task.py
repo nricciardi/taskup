@@ -60,7 +60,7 @@ class TaskModel(BaseEntityModel):
     task_status: Optional[TaskStatusModel] = field(default=None)
     labels: Optional[List[TaskLabelModel]] = field(default=None)
     description: Optional[str] = field(default=None)
-    deadline: Optional[date] = field(default=None)
+    deadline: Optional[datetime] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -91,7 +91,7 @@ class TodoItemModel(BaseEntityModel):
     task_id: int
     author: Optional[UserModel] = field(default=None)
     task: Optional[TaskModel] = field(default=None)
-    deadline: Optional[date] = field(default=None)
+    deadline: Optional[datetime] = field(default=None)
 
     # @property
     # def table_name(self) -> str:

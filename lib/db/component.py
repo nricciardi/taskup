@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Any
 from lib.utils.mixin.sql import ToSqlInterface
 from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 
@@ -8,7 +8,7 @@ from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 class WhereCondition(DCToDictMixin, DCToTupleMixin):
     col: str
     operator: str
-    value: str
+    value: Any
     of_table: str | None = field(default=None)
 
 
@@ -36,7 +36,7 @@ class Field(ToSqlInterface):
         return cls(name="name", type="VARCHAR(150)", nullable=False, unique=unique)
 
     @classmethod
-    def description_field(cls, nullable: bool = False) -> 'Field':
+    def description_field(cls, nullable: bool = True) -> 'Field':
         return cls(name="description", type="VARCHAR(1000)", nullable=nullable, unique=False)
 
     @classmethod
@@ -50,6 +50,11 @@ class Field(ToSqlInterface):
     @classmethod
     def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
         return cls(name=name, type="DATE", default=default, nullable=True,
+                   check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
+
+    @classmethod
+    def nullable_datetime_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
+        return cls(name=name, type="DATETIME", default=default, nullable=True,
                    check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
 
     @staticmethod

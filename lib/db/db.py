@@ -192,7 +192,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field.nullable_date_with_now_check_field(name="deadline"),
+                Field.nullable_datetime_with_now_check_field(name="deadline"),
                 Field(name="priority", type="INTEGER", default="0"),
                 Field.created_at_field(),
                 Field.updated_at_field(),
@@ -218,7 +218,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             self.todo_item_table_name: Table(self.todo_item_table_name, [
                 Field.id_field(),
                 Field.description_field(nullable=False),
-                Field.nullable_date_with_now_check_field(name="deadline"),
+                Field.nullable_datetime_with_now_check_field(name="deadline"),
                 Field.created_at_field(),
                 Field.updated_at_field(),
                 Field(name="done", type="INTEGER", default="0"),
@@ -559,8 +559,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             for field in fields_list:
                 actual_values.append(value[field])
-
-            print(query, actual_values, tuple(actual_values))
 
             self.cursor.execute(query, tuple(actual_values))
 

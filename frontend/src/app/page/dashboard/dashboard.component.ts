@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
+import { TaskModel } from 'src/app/model/entity/task.model';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 
 @Component({
@@ -77,7 +78,12 @@ export class DashboardComponent {
     if(currentTaskStatus === undefined)
       return undefined;
 
-    return currentTaskStatus.default_next_task_status
+    return currentTaskStatus.default_prev_task_status
 
+  }
+
+  getAllTaskBasedOnStatusId(taskStatusId: number): TaskModel[] | undefined {
+
+    return this.dashboard?.tasks.filter(task => task.task_status_id === taskStatusId);
   }
 }

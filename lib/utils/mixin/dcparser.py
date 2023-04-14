@@ -1,18 +1,24 @@
 from abc import ABC
 from dataclasses import asdict, dataclass, astuple
 from typing import Dict, Tuple, List, Any, Generic, TypeVar, Callable
+from lib.utils.logger import Logger
 
 
-def to_dict(method: Callable):
+def to_dict(method: Callable, verbose: bool = False):
     """
     Decorator to call 'to_dict' on EntityModel
 
-    :param method:
+    :param method: method which return an object with method "to_dict"
+    :type method: Callable
+    :param verbose: if verbose
+    :type verbose: bool
     :return:
     """
 
     def wrapper(*args, **kwargs):
         res = method(*args, **kwargs)
+
+        Logger.log_info(msg=f"data to_dict: {res}", is_verbose=verbose)
 
         if hasattr(res, "to_dict"):
             return res.to_dict()
