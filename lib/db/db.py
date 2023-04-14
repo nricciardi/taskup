@@ -141,6 +141,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             self.user_table_name: Table(self.user_table_name, [
                 Field.id_field(),
                 Field(name="username", type="VARCHAR(256)", unique=True),
+                Field(name="name", type="VARCHAR(256)", nullable=True),
+                Field(name="surname", type="VARCHAR(256)", nullable=True),
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
                 Field.fk_field(name="role_id"),
@@ -164,9 +166,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field.fk_field(name="default_next_task_status_id", nullable=True)
+                Field.fk_field(name="default_next_task_status_id", nullable=True),
+                Field.fk_field(name="default_prev_task_status_id", nullable=True)
             ], fk_constraints=[
-                FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name)
+                FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name),
+                FKConstraint.on_id(fk_field="default_prev_task_status_id", on_table=self.task_status_table_name)
             ]),
 
             self.task_table_name: Table(self.task_table_name, [
@@ -188,7 +192,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field(name="rgb_color", type="TEXT(6)")
+                Field(name="rgb_color", type="TEXT(6)", nullable=True)
             ]),
 
             self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[
@@ -318,19 +322,62 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             Logger.log_info(f"start to fill {self.task_status_table_name}", is_verbose=self.verbose)
 
             # insert default task status
-            query = f"""
-                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id)
+            query = f"""\
+                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id)
                         Values
-                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL),
-                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}),
-                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.release_task_status_id}),
-                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}),
-                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}),
-                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}),
-                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id});
+                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL),
+                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL),
+                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL),
+                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL),
+                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL),
+                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL),
+                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL),
+                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL);
                     """
 
             self.cursor.execute(query)
+
+            query = f"""\
+                    Update {self.task_status_table_name}
+                    Set default_prev_task_status_id = {self.done_task_status_id}
+                    Where id = {self.release_task_status_id}
+                    """
+
+            self.cursor.execute(query)
+
+            query = f"""\
+                    Update {self.task_status_table_name}
+                    Set default_prev_task_status_id = {self.doing_task_status_id}
+                    Where id in ({self.done_task_status_id}, {self.bug_fixing_task_status_id}, {self.testing_task_status_id})
+                    """
+
+            self.cursor.execute(query)
+
+            query = f"""\
+                    Update {self.task_status_table_name}
+                    Set default_prev_task_status_id = {self.doing_task_status_id}
+                    Where id = {self.done_task_status_id}
+                    """
+
+            self.cursor.execute(query)
+
+            query = f"""\
+                    Update {self.task_status_table_name}
+                    Set default_prev_task_status_id = {self.ideas_task_status_id}
+                    Where id = {self.backlog_task_status_id}
+                    """
+
+            self.cursor.execute(query)
+
+            query = f"""\
+                    Update {self.task_status_table_name}
+                    Set default_prev_task_status_id = {self.backlog_task_status_id}
+                    Where id = {self.todo_task_status_id}
+                    """
+
+            self.cursor.execute(query)
+
+            self.connection.commit()
 
             Logger.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
 
@@ -497,6 +544,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             for field in fields_list:
                 actual_values.append(value[field])
+
+            print(query, actual_values, tuple(actual_values))
 
             self.cursor.execute(query, tuple(actual_values))
 

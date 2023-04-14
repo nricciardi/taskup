@@ -1,6 +1,6 @@
 from lib.db.db import TableNamesMixin, BaseTaskStatusIdMixin
 from lib.db.entity.entity import EntitiesManager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
 from datetime import date, datetime
 from typing import Type, Optional, List
@@ -13,9 +13,11 @@ from lib.db.entity.user import UserModel
 class TaskStatusModel(BaseEntityModel):
     id: int
     name: str
-    description: str
     default_next_task_status_id: int
-    default_next_task_status: Optional['TaskStatusModel'] = None
+    default_prev_task_status_id: int
+    default_next_task_status: Optional['TaskStatusModel'] = field(default=None)
+    default_prev_task_status: Optional['TaskStatusModel'] = field(default=None)
+    description: Optional[str] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -37,8 +39,8 @@ class TaskTaskLabelPivotModel(BaseEntityModel):
 class TaskLabelModel(BaseEntityModel):
     id: int
     name: str
-    description: str
-    rgb_color: str
+    rgb_color: Optional[str] = field(default=None)
+    description: Optional[str] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -49,16 +51,16 @@ class TaskLabelModel(BaseEntityModel):
 class TaskModel(BaseEntityModel):
     id: int
     name: str
-    description: str
-    deadline: date
     priority: int
     created_at: datetime
     updated_at: datetime
     author_id: int
     task_status_id: int
-    author: Optional[UserModel] = None
-    task_status: Optional[TaskStatusModel] = None
-    labels: Optional[List[TaskLabelModel]] = None
+    author: Optional[UserModel] = field(default=None)
+    task_status: Optional[TaskStatusModel] = field(default=None)
+    labels: Optional[List[TaskLabelModel]] = field(default=None)
+    description: Optional[str] = field(default=None)
+    deadline: Optional[date] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -81,15 +83,15 @@ class TodoItemModel(BaseEntityModel):
     id: int
     name: str
     description: str
-    deadline: date
     priority: int
     created_at: datetime
     updated_at: datetime
     done: bool
     author_id: int
     task_id: int
-    author: Optional[UserModel] = None
-    task: Optional[TaskModel] = None
+    author: Optional[UserModel] = field(default=None)
+    task: Optional[TaskModel] = field(default=None)
+    deadline: Optional[date] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -141,6 +143,16 @@ class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin)
     @property
     def table_name(self) -> str:
         return self.task_status_table_name
+
+    @property
+    def relations(self) -> list[Relation]:
+        return [
+            OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name,
+                        fk_field="default_next_task_status_id", to_attr="default_next_task_status"),
+
+            OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name,
+                        fk_field="default_prev_task_status_id", to_attr="default_prev_task_status"),
+        ]
 
 
 class TodoItemsManager(EntitiesManager, TableNamesMixin):

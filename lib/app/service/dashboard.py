@@ -27,7 +27,7 @@ class DashboardService:
         :rtype DashboardModel:
         """
 
-        Logger.log_info(msg="dashboard get data...")
+        # Logger.log_info(msg="dashboard get data...")
 
         return DashboardModel(task_status=self.__task_status_manager.all_as_model(),
                               default_task_status_id=self.__task_status_manager.todo_task_status_id,
