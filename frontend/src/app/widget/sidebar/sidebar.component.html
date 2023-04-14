@@ -80,8 +80,17 @@
         {{ "menu" | translate }}
       </li>
 
-      <li class="sidebar-item active">
-        <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active"  class="sidebar-link">
+      <li class="sidebar-item" [class.active]="urlIncludes('home')">
+        <a [routerLink]="['/home']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-house-fill"></i>
+          <span>
+            {{ 'home' | translate }}
+          </span>
+        </a>
+      </li>
+
+      <li class="sidebar-item" [class.active]="urlIncludes('dashboard')">
+        <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active" class="sidebar-link">
           <i class="bi bi-grid-fill"></i>
           <span>
             {{ 'dashboard' | translate }}

@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 
 @Component({
   selector: 'app-task-status-side-banner',
@@ -8,6 +7,6 @@ import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 })
 export class TaskStatusSideBannerComponent {
 
-  @Input("taskStatus") taskStatus?: TaskStatusModel;
+  @Input("title") title?: string;
 
 }
