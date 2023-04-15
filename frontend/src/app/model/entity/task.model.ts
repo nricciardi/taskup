@@ -16,4 +16,5 @@ export interface TaskModel {
   author?: UserModel;
   task_status?: TaskStatusModel;
   labels?: TaskLabelModel[];
+  users?: UserModel[];
 }

@@ -56,11 +56,13 @@ class TaskModel(BaseEntityModel):
     updated_at: datetime
     author_id: int
     task_status_id: int
+    description: Optional[str] = field(default=None)
+    deadline: Optional[datetime] = field(default=None)
+
     author: Optional[UserModel] = field(default=None)
     task_status: Optional[TaskStatusModel] = field(default=None)
     labels: Optional[List[TaskLabelModel]] = field(default=None)
-    description: Optional[str] = field(default=None)
-    deadline: Optional[datetime] = field(default=None)
+    users: Optional[List[UserModel]] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -123,7 +125,9 @@ class TasksManager(EntitiesManager, TableNamesMixin):
             OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name, fk_field="task_status_id",
                         to_attr="task_status"),
             ManyRelation(fk_model=TaskLabelModel, of_table=self.task_label_table_name, pivot_model=TaskTaskLabelPivotModel,
-                         pivot_table=self.task_task_label_pivot_table_name, to_attr="labels")
+                         pivot_table=self.task_task_label_pivot_table_name, to_attr="labels"),
+            ManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
+                         pivot_table=self.task_assignment_table_name, to_attr="users")
         ]
 
 
