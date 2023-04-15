@@ -14,5 +14,9 @@
   "loading+dots": "Caricamento...",
   "login-error": "Errore durante la fase di login",
   "logout-error": "Errore durante la fase di logout",
-  "hello": "Ciao"
+  "hello": "Ciao",
+  "order-by": "Ordina per",
+  "reverse": "Inverti",
+  "priority": "Priorità",
+  "deadline": "Scadenza"
 }

@@ -14,5 +14,9 @@
   "loading+dots": "Loading...",
   "login-error": "Error occurs during login",
   "logout-error": "Error occurs during logout",
-  "hello": "Hello"
+  "hello": "Hello",
+  "order-by": "Order by",
+  "reverse": "Reverse",
+  "priority": "Priority",
+  "deadline": "Deadline"
 }
