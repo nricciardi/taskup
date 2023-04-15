@@ -370,8 +370,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             query = f"""\
                     Update {self.task_status_table_name}
-                    Set default_prev_task_status_id = {self.doing_task_status_id}
-                    Where id = {self.done_task_status_id}
+                    Set default_prev_task_status_id = {self.todo_task_status_id}
+                    Where id = {self.doing_task_status_id}
                     """
 
             self.cursor.execute(query)

@@ -12,7 +12,9 @@ Table role {    // all not null
 
 Table user {
   id integer [pk]
-  username varchar(100) unique
+  username varchar(256) unique
+  name varcharvarchar(256)
+  surname varcharvarchar(256)
   email varchar(256) unique
   password varchar(256)
 
@@ -25,7 +27,7 @@ Table task {
   id integer [pk]
   name varchar(150)
   description varchar(1000)
-  deadline date
+  deadline datetime
   priority integer
   created_at datetime
   updated_at datetime
@@ -77,7 +79,7 @@ Ref: task_status.default_next_task_status_id > task_status.id
 Table todo_item {
   id integer [pk]
   description varchar(1000)
-  deadline date
+  deadline datetime
   priority integer
   created_at datetime
   updated_at datetime
