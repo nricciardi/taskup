@@ -1,5 +1,5 @@
 import sqlite3
-from lib.db.query import SelectQueryBuilder
+from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
@@ -589,7 +589,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         if columns is None:
             columns = []
 
-        query_built = SelectQueryBuilder.from_table(table_name).enable_binding().select(*columns)\
+        query_built = QueryBuilder.from_table(table_name).enable_binding().select(*columns)\
             .apply_conditions(*conditions)
 
         query: str = query_built.to_sql()
@@ -598,3 +598,26 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         res = self.cursor.execute(query, data)
 
         return res.fetchall()
+
+    def delete(self, table_name: str, *conditions: WhereCondition):
+        """
+        Delete data from table
+
+        :param table_name:
+        :param conditions:
+        :return:
+        """
+
+        if isinstance(conditions, WhereCondition):
+            conditions = [conditions]
+
+        query_built = QueryBuilder.from_table(table_name).enable_binding().delete().apply_conditions(*conditions)
+
+        query: str = query_built.to_sql()
+        data: list = query_built.data_bound
+
+        res = self.cursor.execute(query, data)
+
+        self.connection.commit()
+
+        return res

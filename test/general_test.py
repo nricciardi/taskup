@@ -1,5 +1,5 @@
 import os
-from lib.db.query import SelectQueryBuilder
+from lib.db.query import QueryBuilder
 from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
 from lib.db.entity.task import TasksManager

@@ -4,7 +4,7 @@ from lib.db.entity.relation import Relation, OneRelation, ManyRelation
 from lib.utils.logger import Logger
 from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
-from lib.db.query import SelectQueryBuilder
+from lib.db.query import QueryBuilder
 from lib.db.component import WhereCondition
 from lib.utils.pair import PairAttrValue
 
@@ -128,7 +128,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[Dict[str, Any]]:
         """
 
-        query = SelectQueryBuilder.from_table(table_name).select().to_sql()
+        query = QueryBuilder.from_table(table_name).select().to_sql()
 
         records = self.__db_manager.cursor.execute(query).fetchall()
 
@@ -223,7 +223,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype: str
         """
 
-        return SelectQueryBuilder.from_table(table_name).select().where("id", "=", entity_id).to_sql()
+        return QueryBuilder.from_table(table_name).select().where("id", "=", entity_id).to_sql()
 
     def create_from_dict(self, data: dict, safe: bool = True) -> EntityModel | None:
         """
@@ -358,7 +358,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             if not safe:
                 raise exception
 
-    def get_one_relation_data_of(self, em: EntityModel, relation: OneRelation, ) -> EntityModel | None:
+    def get_one_relation_data_of(self, em: EntityModel, relation: OneRelation) -> EntityModel | None:
         """
         Return data for a one relation
 
@@ -406,3 +406,33 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             data.append(relation.fk_model.from_dict(row))
 
         return data
+
+    def delete(self, *conditions: WhereCondition, safe: bool = True):
+        """
+        Delete entities data
+
+        :param conditions:
+        :param safe:
+        :return:
+        """
+
+        try:
+            return self.__delete(self.table_name, *conditions)
+
+        except Exception as exception:
+
+            Logger.log_error(msg=exception, full=True, is_verbose=self.verbose)
+
+            if not safe:
+                raise exception
+
+    def __delete(self, table_name: str, *conditions: WhereCondition):
+        """
+        Delete entities data based on specific table
+
+        :param table_name:
+        :param conditions:
+        :return:
+        """
+
+        return self.__db_manager.delete(table_name, *conditions)

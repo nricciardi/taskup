@@ -17,11 +17,12 @@ class ExposerService:
     def __init__(self, db_name: str, work_directory_path: str, vault_path: str, verbose: bool = False):
         self.verbose = verbose
 
-        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
-                                            verbose=self.verbose)
-
         self.__task_status_manager = TaskStatusManager(db_name=db_name, work_directory_path=work_directory_path,
                                                        verbose=self.verbose)
+
+        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
+                                            task_status_manager=self.__task_status_manager,
+                                            verbose=self.verbose)
 
         self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
                                             verbose=self.verbose)
@@ -101,6 +102,7 @@ class ExposerService:
 
             self.expose_all_from_list(to_expose=[
                 self.__tasks_manager.create_from_dict,
+                self.__tasks_manager.removeAssignment,
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find), "task_find")

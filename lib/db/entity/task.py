@@ -6,6 +6,8 @@ from datetime import date, datetime
 from typing import Type, Optional, List
 from lib.db.entity.relation import Relation, OneRelation, ManyRelation
 from lib.db.entity.user import UserModel
+from lib.db.component import WhereCondition
+from lib.utils.logger import Logger
 
 
 # ================== DATACLASS ==========================
@@ -101,36 +103,6 @@ class TodoItemModel(BaseEntityModel):
 
 
 # ================================== MANAGER ========================
-class TasksManager(EntitiesManager, TableNamesMixin):
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
-        self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
-
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
-
-    @property
-    def EM(self) -> Type[TaskModel]:
-        return TaskModel
-
-    @property
-    def table_name(self) -> str:
-        return self.task_table_name
-
-    @property
-    def relations(self) -> list[Relation]:
-        return [
-            OneRelation(fk_model=UserModel, of_table=self.user_table_name, fk_field="author_id", to_attr="author"),
-            OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name, fk_field="task_status_id",
-                        to_attr="task_status"),
-            ManyRelation(fk_model=TaskLabelModel, of_table=self.task_label_table_name, pivot_model=TaskTaskLabelPivotModel,
-                         pivot_table=self.task_task_label_pivot_table_name, to_attr="labels"),
-            ManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
-                         pivot_table=self.task_assignment_table_name, to_attr="users")
-        ]
-
-
 class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
 
     def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
@@ -157,6 +129,102 @@ class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin)
             OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name,
                         fk_field="default_prev_task_status_id", to_attr="default_prev_task_status"),
         ]
+
+    def removeAssignment(self, task_id: int, user_id: int):
+        """
+        Remove an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param user_id:
+        :type user_id: type
+
+        :return: result
+        :rtype bool:
+        """
+
+        return self.delete(
+            WhereCondition(col="user_id", operator="=", value=user_id),
+            WhereCondition(col="task_id", operator="=", value=task_id),
+        )
+
+    def addAssignment(self, task_id: int, user_id: int):
+        """
+        Add an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param user_id:
+        :type user_id: type
+
+        :return: result
+        :rtype bool:
+        """
+
+        return self.cre
+
+
+class TasksManager(EntitiesManager, TableNamesMixin):
+    def __init__(self, db_name: str, work_directory_path: str, task_status_manager: TaskStatusManager,
+                 verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        self.__task_status_manager = task_status_manager
+        work_directory_path = work_directory_path
+
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
+                         work_directory_path=work_directory_path)
+
+    @property
+    def EM(self) -> Type[TaskModel]:
+        return TaskModel
+
+    @property
+    def table_name(self) -> str:
+        return self.task_table_name
+
+    @property
+    def relations(self) -> list[Relation]:
+        return [
+            OneRelation(fk_model=UserModel, of_table=self.user_table_name, fk_field="author_id", to_attr="author"),
+            OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name, fk_field="task_status_id",
+                        to_attr="task_status"),
+            ManyRelation(fk_model=TaskLabelModel, of_table=self.task_label_table_name,
+                         pivot_model=TaskTaskLabelPivotModel,
+                         pivot_table=self.task_task_label_pivot_table_name, to_attr="labels"),
+            ManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
+                         pivot_table=self.task_assignment_table_name, to_attr="users")
+        ]
+
+    def removeAssignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
+        """
+        Remove an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param user_id:
+        :type user_id: type
+        :param safe: if it is a safe operation
+        :type safe: bool
+
+        :return: result
+        :rtype bool:
+        """
+
+        try:
+
+            self.__task_status_manager.removeAssignment(task_id, user_id)
+
+            return True
+
+        except Exception as exception:
+
+            Logger.log_error(msg=exception, full=True, is_verbose=self.verbose)
+
+            if not safe:
+                raise exception
+
+            return False
 
 
 class TodoItemsManager(EntitiesManager, TableNamesMixin):

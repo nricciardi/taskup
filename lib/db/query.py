@@ -1,54 +1,37 @@
 from abc import ABC
-from typing import Any, List
+from typing import Any, List, Generic, TypeVar, Dict, Tuple
 from lib.db.component import WhereCondition
 from lib.utils.mixin.sql import ToSqlInterface
 
 
 class QueryBuilder(ToSqlInterface, ABC):
-    table_name: str
-    query: str
-    binding: bool
-    data_bound: List[Any]
+    query: str = ""
+    __has_where: bool = False
+    __binding: bool = False
 
-    def __init__(self, table_name: str, binding_mode: bool = False):
+    @property
+    def binding(self) -> bool:
+        return self.__binding
+
+    @binding.setter
+    def binding(self, value: bool):
+        self.__binding = value
+
+    def __init__(self, table_name: str, alias: str | None = None, binding_mode: bool = False):
+        if alias is not None:
+            table_name = f"{table_name} as {alias}"
+
         self.table_name = table_name
         self.binding = binding_mode
         self.data_bound = []
 
-    def to_sql(self, verbose: bool = False):
-        """
-        Return sql query
-
-        :param verbose: if True also print sql
-        :type verbose: bool
-
-        :return: query
-        :rtype str:
-        """
-
-        query = self.query.rstrip() + ";"
-
-        if verbose:
-            print(query)
-
-        return query
-
-
-class SelectQueryBuilder(QueryBuilder):
-
-    __has_where: bool = False
-
-    def __init__(self, table_name: str, alias: str | None = None):
-        if alias is not None:
-            table_name = f"{table_name} as {alias}"
-
-        super().__init__(table_name)
-
     @classmethod
-    def from_table(cls, table_name: str, alias: str | None = None) -> 'SelectQueryBuilder':
+    def from_table(cls, table_name: str, alias: str | None = None, binding_mode: bool = __binding) -> 'QueryBuilder':
         """
         More expressive constructor alias
 
+        :param binding_mode:
+        :type binding_mode: bool
         :param table_name:
         :type table_name: str
         :param alias: table alias
@@ -56,21 +39,72 @@ class SelectQueryBuilder(QueryBuilder):
         :return:
         """
 
-        return cls(table_name, alias)
+        return cls(table_name, alias, binding_mode)
 
-    def enable_binding(self) -> 'SelectQueryBuilder':
+    def select(self, *columns: str) -> 'QueryBuilder':
+        """
+        Select the columns to get.
+        None => *
 
-        self.binding = True
+        :param columns: fields of table
+        :type columns: str
+        :return:
+        """
+
+        if len(columns) == 0:
+            columns = '*'
+
+        self.query = f"""\
+        Select {", ".join(columns)}
+        From {self.table_name}"""
 
         return self
 
-    def disable_binding(self) -> 'SelectQueryBuilder':
+    def delete(self) -> 'QueryBuilder':
+        """
+        Delete data from table
 
-        self.binding = False
+        :return:
+        """
+        self.query = f"Delete from {self.table_name}"
 
         return self
 
-    def apply_conditions(self, *conditions: WhereCondition) -> 'SelectQueryBuilder':
+    def insert(self, columns: List[str] | None = None, values: List[Tuple | Dict]) -> 'QueryBuilder':
+        """
+        Insert data
+
+        :return:
+        """
+
+        cols = ""
+        if columns is not None and isinstance(columns, list):
+            columns = ", ".join(columns)
+
+            cols = f"({columns})"
+
+        values =
+
+        self.query = f"""\
+        Insert into {self.table_name}{cols} \
+        Values 
+        """
+
+        return self
+
+    def enable_binding(self) -> 'QueryBuilder':
+
+        self.__binding = True
+
+        return self
+
+    def disable_binding(self) -> 'QueryBuilder':
+
+        self.__binding = False
+
+        return self
+
+    def apply_conditions(self, *conditions: WhereCondition) -> 'QueryBuilder':
         """
         Apply the list of where conditions
 
@@ -84,7 +118,7 @@ class SelectQueryBuilder(QueryBuilder):
 
         return self
 
-    def where(self, col: str, operator: str, value: Any, of_table: str | None = None) -> 'SelectQueryBuilder':
+    def where(self, col: str, operator: str, value: Any, of_table: str | None = None) -> 'QueryBuilder':
         """
         Add (and) where clause on query.
 
@@ -113,7 +147,7 @@ class SelectQueryBuilder(QueryBuilder):
             self.data_bound.append(value)
             value = "?"
 
-        else:       # if in binding, sqlite3 also implements append of ''
+        else:  # if in binding, sqlite3 also implements append of ''
             if isinstance(value, str):
                 value = f"'{value}'"
 
@@ -121,21 +155,20 @@ class SelectQueryBuilder(QueryBuilder):
 
         return self
 
-    def select(self, *columns: str) -> 'SelectQueryBuilder':
+    def to_sql(self, verbose: bool = False):
         """
-        Select the columns to get.
-        None => *
+        Return sql query
 
-        :param columns: fields of table
-        :type columns: str
-        :return:
+        :param verbose: if True also print sql
+        :type verbose: bool
+
+        :return: query
+        :rtype str:
         """
 
-        if len(columns) == 0:
-            columns = '*'
+        query = self.query.rstrip() + ";"
 
-        self.query = f"""
-        Select {", ".join(columns)}
-        From {self.table_name}"""
+        if verbose:
+            print(query)
 
-        return self
+        return query
