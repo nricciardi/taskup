@@ -44,5 +44,5 @@ class DashboardService:
             # Logger.log_info(msg=f"dashboard get tasks... {tasks}", is_verbose=self.verbose)       too computationally demanding
 
         return DashboardModel(task_status=self.__task_status_manager.all_as_model(),
-                              default_task_status_id=self.__task_status_manager.todo_task_status_id,
+                              default_task_status_id=self.__task_status_manager.doing_task_status_id,
                               tasks=tasks)

@@ -33,18 +33,19 @@ export class TaskPreviewComponent {
     if(!this.task.deadline)
       return undefined;
 
-    let now = new Date(Date.now());
-    let dealine: Date = new Date(this.task.deadline);
+    const now = new Date(Date.now());
+    const dealine: Date = new Date(this.task.deadline);
 
-    now.setDate(now.getDate() - environment.warningDateDayBefore);
-    if(dealine > now) {
-      return this.DeadlineStatus.WARNING;
+    const dangerDate = new Date(dealine);
+    dangerDate.setDate(dangerDate.getDate() - environment.dangerDateDayBefore);
+    if(now > dangerDate) {
+      return this.DeadlineStatus.DANGER;
     }
 
-    now = new Date(Date.now());
-    now.setDate(now.getDate() - environment.dangerDateDayBefore);
-    if(dealine > now) {
-      return this.DeadlineStatus.DANGER;
+    const warningDate = new Date(dealine);
+    warningDate.setDate(warningDate.getDate() - environment.warningDateDayBefore);
+    if(now > warningDate) {
+      return this.DeadlineStatus.WARNING;
     }
 
     return this.DeadlineStatus.PRIMARY;

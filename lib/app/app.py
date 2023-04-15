@@ -33,5 +33,6 @@ class App:
         port = self.__settings_manager.port()
 
         eel.start(start_file, port=port,
-                  #close_callback=lambda: Logger.log_info(msg="Close app...", is_verbose=True),
                   shutdown_delay=20)  # start eel: this generates a loop
+
+        Logger.log_info(msg="Close app...", is_verbose=True)

@@ -43,36 +43,49 @@ if __name__ == '__main__':
 
 
 
-    if True:
-        users_manager.create_from_dict({"username": f"franco{1}",
-                                        "email": f"n{1}@r.com",
-                                        "password": "asdf123",
-                                        "role_id": 1})
+    users_manager.create_from_dict({"username": f"franco{1}",
+                                    "email": f"n{1}@r.com",
+                                    "password": "asdf123",
+                                    "role_id": 1})
 
-        offset = 0
-        count = 100
+    task = tasks_manager.create_from_dict({
+        "name": f"prova task single" * randint(1, 4),
+        "description": f"descrizione di prova single" * randint(10, 60),
+        "author_id": 1,  # user.id,
+        "task_status_id": 4,
+        "priority": randint(1, 20),
+        "deadline": datetime.datetime(2023,
+                                      4,
+                                      17,
+                                      9,
+                                      4
+                                      ).strftime("%Y-%m-%d %H:%M:%S")
+    })
 
-        for n in range(count * offset, count * offset + count):
-            # user = users_manager.create_from_dict({"username": f"franco{n}",
-            #                             "email": f"n{n}@r.com",
-            #                             "password": "asdf123",
-            #                             "role_id": 1})
-            #
-            # print(user)
-
-            task = tasks_manager.create_from_dict({
-                "name": f"prova task{n}" * randint(1, 4),
-                "description": f"descrizione di prova{n}" * randint(10, 30),
-                "author_id": 1,# user.id,
-                "task_status_id": randint(1, 8),
-                "priority": randint(1, 20),
-                "deadline": datetime.datetime(2023,
-                                              randint(4, 5),
-                                              randint(1, 30),
-                                              randint(8, 19),
-                                              randint(1, 59)
-                                              ).strftime("%Y-%m-%d %H:%M:%S")
-            })
+    # offset = 0
+    # count = 100
+    #
+    # for n in range(count * offset, count * offset + count):
+    #     # user = users_manager.create_from_dict({"username": f"franco{n}",
+    #     #                             "email": f"n{n}@r.com",
+    #     #                             "password": "asdf123",
+    #     #                             "role_id": 1})
+    #     #
+    #     # print(user)
+    #
+    #     task = tasks_manager.create_from_dict({
+    #         "name": f"prova task{n}" * randint(1, 4),
+    #         "description": f"descrizione di prova{n}" * randint(10, 60),
+    #         "author_id": 1,# user.id,
+    #         "task_status_id": randint(1, 8),
+    #         "priority": randint(1, 20),
+    #         "deadline": datetime.datetime(2023,
+    #                                       randint(4, 5),
+    #                                       randint(1, 30),
+    #                                       randint(8, 19),
+    #                                       randint(1, 59)
+    #                                       ).strftime("%Y-%m-%d %H:%M:%S")
+    #     })
 
 
     # def dict_factory(cursor, row):
