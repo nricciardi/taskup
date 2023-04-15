@@ -70,24 +70,68 @@ class QueryBuilder(ToSqlInterface, ABC):
 
         return self
 
-    def insert(self, columns: List[str] | None = None, values: List[Tuple | Dict]) -> 'QueryBuilder':
+    def insert_from_dict(self, *values: Dict, columns: List[str] | None = None) -> 'QueryBuilder':
         """
-        Insert data
+        Insert data from dict
 
         :return:
         """
 
-        cols = ""
-        if columns is not None and isinstance(columns, list):
-            columns = ", ".join(columns)
+        q = []
+        for value in values:
 
-            cols = f"({columns})"
+            # make cols
+            if columns is not None and isinstance(columns, list):
+                columns = ", ".join(columns)
 
-        values =
+                cols = f"({columns})"
+
+            else:
+                cols = ", ".join(value.keys())
+                cols = f"({cols})"
+
+            # make data
+            if self.binding:
+                data: str = ','.join(['?'] * len(value.values()))
+
+                for v in value.values():
+                    self.data_bound.append(v)
+
+            else:
+                data: str = ','.join(value.values())
+
+            q.append(f"""\
+            Insert into {self.table_name}{cols} \
+            Values ({data})
+            """)
+
+        self.query = ";\n\n".join(q)
+
+        return self
+
+    def insert_from_tuple(self, columns: List[str], *values: Dict) -> 'QueryBuilder':
+        """
+        Insert data from tuple
+
+        :return:
+        """
+
+        columns: str = ", ".join(columns)
+
+        if self.binding:
+            data: List[str] = []
+            for value in values:
+                data.append(", ".join(['?'] * len(value)))
+                self.data_bound.append(value)
+            data: str = ", ".join(data)
+
+        else:
+            data: List[str] = [str(value) for value in values]
+            data: str = ", ".join(data)
 
         self.query = f"""\
-        Insert into {self.table_name}{cols} \
-        Values 
+        Insert into {self.table_name}{columns}
+        Values ({data})\
         """
 
         return self

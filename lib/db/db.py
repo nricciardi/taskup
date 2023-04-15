@@ -486,7 +486,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             raise exception
 
     def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple],
-                          fields: List[str] | Tuple[str] | None = None) -> int:
+                          columns: List[str] | Tuple[str] | None = None) -> None:
         """
         Insert all tuple values passed in a table
 
@@ -494,11 +494,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :type table_name: str
         :param values: values to insert
         :type values: Tuple | List[Tuple]
-        :param fields: fields to use
-        :type fields: List[str] | Tuple[str] | None
-
-        :return: row inserted
-        :rtype int:
+        :param columns: fields to use
+        :type columns: List[str] | Tuple[str] | None
         """
 
         if type(values) is not tuple:  # convert single tuple in a list
@@ -506,20 +503,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             values = list()
             values.append(t)
 
-        fields: str = "" if fields is None else "(" + ", ".join(fields) + ")"  # => "" or  "(field1, field2, ...)"
-        placeholders: str = ','.join(['?'] * len(values))
+        query = QueryBuilder.from_table(table_name).enable_binding().insert_from_tuple(columns=columns, *values)
 
-        query: str = f"""Insert into {table_name}{fields}
-                    Values ({placeholders})"""
-
-        self.cursor.executemany(query, values)
+        self.cursor.execute(query.to_sql(), query.data_bound)
 
         self.connection.commit()
 
-        return self.cursor.rowcount
-
     def insert_from_dict(self, table_name: str, values: Dict | List[Dict],
-                         fields: List[str] | Tuple[str] | None = None) -> int:
+                         columns: List[str] | Tuple[str] | None = None) -> None:
         """
         Insert all dict values passed in a table
 
@@ -527,11 +518,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :type table_name: str
         :param values: values to insert
         :type values: Dict | List[Dict]
-        :param fields: fields to use
-        :type fields: List[str] | Tuple[str] | None
-
-        :return: row inserted
-        :rtype int:
+        :param columns: fields to use
+        :type columns: List[str] | Tuple[str] | None
         """
 
         if type(values) is dict:  # convert single dict in a list
@@ -539,34 +527,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             values = list()
             values.append(d)
 
-        row_count: int = 0
-        for value in values:
-            if fields is not None:  # get set of fields intersection between fields params and fields in dict
-                fields_set: set = set(fields).intersection(set(value.keys()))
-                fields_list = list(fields_set)
+        query = QueryBuilder.from_table(table_name).enable_binding().insert_from_dict(columns=columns, *values)
 
-            else:
-                fields_list = list(value.keys())
+        self.cursor.execute(query.to_sql(), query.data_bound)
 
-            fields: str = ", ".join(fields_list)
-
-            placeholders: str = ','.join(['?'] * len(value.values()))
-
-            query = f"""Insert into {table_name}({fields})
-                        Values ({placeholders})"""
-
-            actual_values: list = []
-
-            for field in fields_list:
-                actual_values.append(value[field])
-
-            self.cursor.execute(query, tuple(actual_values))
-
-            self.connection.commit()
-
-            row_count += self.cursor.rowcount
-
-        return row_count
+        self.connection.commit()
 
     def where(self, table_name: str, *conditions: WhereCondition, columns: List[str] | None = None) -> List[Dict]:
         """

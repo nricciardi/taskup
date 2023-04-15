@@ -130,6 +130,25 @@ class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin)
                         fk_field="default_prev_task_status_id", to_attr="default_prev_task_status"),
         ]
 
+
+class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
+
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
+
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
+                         work_directory_path=work_directory_path)
+
+    @property
+    def table_name(self) -> str:
+        return self.task_assignment_table_name
+
+    @property
+    def EM(self) -> Type[TaskAssignmentModel]:
+        return TaskAssignmentModel
+
     def removeAssignment(self, task_id: int, user_id: int):
         """
         Remove an assignment from task
@@ -161,15 +180,18 @@ class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin)
         :rtype bool:
         """
 
-        return self.cre
+        self.create_from_dict({
+            "user_id": user_id,
+            "task_id": task_id
+        })
 
 
 class TasksManager(EntitiesManager, TableNamesMixin):
-    def __init__(self, db_name: str, work_directory_path: str, task_status_manager: TaskStatusManager,
+    def __init__(self, db_name: str, work_directory_path: str, task_assignment_manager: TaskAssignmentsManager,
                  verbose: bool = False):
         self.verbose = verbose
         self.db_name = db_name
-        self.__task_status_manager = task_status_manager
+        self.__task_assignment_manager = task_assignment_manager
         work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, verbose=self.verbose,
@@ -213,7 +235,49 @@ class TasksManager(EntitiesManager, TableNamesMixin):
 
         try:
 
-            self.__task_status_manager.removeAssignment(task_id, user_id)
+            self.__task_assignment_manager.removeAssignment(task_id, user_id)
+
+            return True
+
+        except Exception as exception:
+
+            Logger.log_error(msg=exception, full=True, is_verbose=self.verbose)
+
+            if not safe:
+                raise exception
+
+            return False
+
+    def addAssignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
+        """
+        Add an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param user_id:
+        :type user_id: type
+        :param safe: if it is a safe operation
+        :type safe: bool
+
+        :return: result
+        :rtype bool:
+        """
+
+        try:
+
+            past_assignment: List[TaskAssignmentModel] = self.__task_assignment_manager.where_as_model(
+                WhereCondition(col="task_id", operator="=", value=task_id),
+                WhereCondition(col="user_id", operator="=", value=user_id),
+            )
+
+            if len(past_assignment) > 0:
+                msg: str = f"task (id: {task_id}) already assign (user_id: {user_id})"
+
+                Logger.log_warning(msg=msg, is_verbose=self.verbose)
+
+                return True
+
+            self.__task_assignment_manager.addAssignment(task_id, user_id)
 
             return True
 
@@ -262,22 +326,3 @@ class TaskLabelsManager(EntitiesManager, TableNamesMixin):
     @property
     def EM(self) -> Type[TaskLabelModel]:
         return TaskLabelModel
-
-
-class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
-
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
-        self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
-
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
-
-    @property
-    def table_name(self) -> str:
-        return self.task_assignment_table_name
-
-    @property
-    def EM(self) -> Type[TaskAssignmentModel]:
-        return TaskAssignmentModel

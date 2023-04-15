@@ -2,7 +2,7 @@ import os
 from lib.db.query import QueryBuilder
 from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
-from lib.db.entity.task import TasksManager
+from lib.db.entity.task import TasksManager, TaskAssignmentsManager
 from lib.db.component import WhereCondition
 from lib.app.service.auth import AuthService
 from random import randint
@@ -17,7 +17,8 @@ if __name__ == '__main__':
     pm = ProjectManager()
 
     users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-    tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+    task_assignment_manager = TaskAssignmentsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+    tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager, verbose=True)
 
     # auth = AuthService(users_manager, "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/fakevault.json", True)
     # auth.login("n1@r.com", "asdf123", False)
@@ -62,7 +63,8 @@ if __name__ == '__main__':
     #                                   ).strftime("%Y-%m-%d %H:%M:%S")
     # })
 
-    for n in range(1, 8):
+    u = 8
+    for n in range(1, u):
         users_manager.create_from_dict({"username": f"franco{n}",
                                         "email": f"n{n}@r.com",
                                         "password": "asdf123",
@@ -93,6 +95,8 @@ if __name__ == '__main__':
                                           ).strftime("%Y-%m-%d %H:%M:%S") if randint(1, 2) % 2 == 0 else None
         })
 
+        for i in range(randint(1, 8)):
+            tasks_manager.addAssignment(task.id, randint(1, u))
 
 
 

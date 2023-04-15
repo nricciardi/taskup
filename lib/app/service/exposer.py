@@ -1,6 +1,6 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager, TaskStatusManager
+from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager
 from lib.db.entity.user import UsersManager
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
@@ -20,8 +20,11 @@ class ExposerService:
         self.__task_status_manager = TaskStatusManager(db_name=db_name, work_directory_path=work_directory_path,
                                                        verbose=self.verbose)
 
+        self.__task_assignment_manager = TaskAssignmentsManager(db_name=db_name, work_directory_path=work_directory_path,
+                                                                verbose=self.verbose)
+
         self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
-                                            task_status_manager=self.__task_status_manager,
+                                            task_assignment_manager=self.__task_assignment_manager,
                                             verbose=self.verbose)
 
         self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
