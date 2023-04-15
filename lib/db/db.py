@@ -109,6 +109,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         """
         super().__init__()
 
+        # get and set locally variables
         self.verbose = verbose
         self.use_localtime = use_localtime
 
@@ -116,17 +117,19 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.__work_directory_path: str = work_directory_path
         self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
 
+        # check if db already exists
         db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
+        # log if verbose
         if db_exists:
             Logger.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
         else:
             Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
 
         try:
-            self.__db_connection = sqlite3.connect(self.__db_path)
-            self.__db_connection.row_factory = dict_factory
-            self.__db_cursor = self.__db_connection.cursor()
+            self.__db_connection = sqlite3.connect(self.__db_path)      # connect to db
+            self.__db_connection.row_factory = dict_factory             # set row factory to get dict instead of tuple
+            self.__db_cursor = self.__db_connection.cursor()            # set cursor as attr
 
             Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
 

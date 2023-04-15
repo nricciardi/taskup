@@ -12,8 +12,8 @@ import { LoggerService } from 'src/app/service/logger/logger.service';
 export class LoginComponent {
 
   loginForm = new FormGroup({
-    email: new FormControl('n1@r.com', [Validators.required, Validators.email]),
-    password: new FormControl('asdf123', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
     keep: new FormControl(false)
   });
 
