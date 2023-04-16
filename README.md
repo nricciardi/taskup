@@ -41,7 +41,7 @@ In `__init__` it uses the Exposer class to expose all methods for frontend.
 Exposer is the class which provides to expose methods using the "expose" methods of Eel. In particular, 
 Eel provides two methods to expose a function (other than `@expose` decorator):
 - `expose()` which exposes method (and function) as it is
-- `_expose()` which expose method (and function) with an _alias_, it is so important because the entities managers have
+- `_expose()` which is a _protected_ method of Eel library and expose method (and function) with an _alias_, it is so important because the entities managers have
 the same methods name to create, read, update and so on entities, so each manager has the own prefix (e.i. UsersManager has "user_")
 see [here](#how-to-set-alias-in-eel).
 
