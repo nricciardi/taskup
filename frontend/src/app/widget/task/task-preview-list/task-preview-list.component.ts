@@ -8,6 +8,9 @@ import { TaskModel } from 'src/app/model/entity/task.model';
 })
 export class TaskPreviewListComponent {
 
-  @Input("tasks") tasks?: TaskModel[];
+  @Input("tasks") tasks: TaskModel[] | null = null;
+
+  constructor() {
+  }
 
 }

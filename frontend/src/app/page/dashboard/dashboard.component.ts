@@ -20,7 +20,9 @@ export class DashboardComponent {
 
   OrderBy = OrderBy
 
-  dashboard?: DashboardModel;
+  loadingError:boolean = false;
+
+  dashboard: DashboardModel | null = null;
   private _taskStatusIdIndex?: number;   // the index for task_status id
 
 
@@ -49,17 +51,30 @@ export class DashboardComponent {
 
   ngOnInit() {
 
+    this.loadDashboard();
+
+  }
+
+  loadDashboard(): void {
+    this.dashboard = null;
+
     this.dashboardService.getData().then((response) => {
       response.subscribe({
-        next: (value: DashboardModel) => {
-          this.dashboard = value;
+        next: (value: DashboardModel | null) => {
+          if(value) {
+            this.dashboard = value;
 
-          // set default id index
-          this.taskStatusIdIndex = this.dashboard.default_task_status_id;
+            // set default id index
+            this.taskStatusIdIndex = this.dashboard.default_task_status_id;
+
+            this.loadingError = false;
+          } else {
+            this.loadingError = true;
+          }
+
         }
       })
-    })
-
+    });
   }
 
   get taskStatusIdIndex() {
@@ -70,50 +85,54 @@ export class DashboardComponent {
     this._taskStatusIdIndex = newIndex;
   }
 
-  getTaskStatus(taskStatusId: number): TaskStatusModel | undefined {
+  getTaskStatus(taskStatusId: number): TaskStatusModel | null {
 
-    const result = this.dashboard?.task_status.filter(taskStatus => taskStatus.id == taskStatusId);
+    const result = this.dashboard?.task_status?.filter(taskStatus => taskStatus.id == taskStatusId);
 
     if(result)
       return result[0];
 
-    return undefined;
+    return null;
   }
 
-  getCurrentTaskStatus(): TaskStatusModel | undefined {
+  getCurrentTaskStatus(): TaskStatusModel | null {
 
     if(this.taskStatusIdIndex)
       return this.getTaskStatus(this.taskStatusIdIndex);
 
-    return undefined;
+    return null;
   }
 
-  getNextTaskStatus(): TaskStatusModel | undefined {
+  getNextTaskStatus(): TaskStatusModel | null {
 
-    let currentTaskStatus: TaskStatusModel | undefined = this.getCurrentTaskStatus();
+    let currentTaskStatus: TaskStatusModel | null = this.getCurrentTaskStatus();
 
-    if(currentTaskStatus === undefined)
-      return undefined;
-
-
-    return currentTaskStatus.default_next_task_status;
-
-  }
-
-  getPrevTaskStatus(): TaskStatusModel | undefined {
-
-    let currentTaskStatus: TaskStatusModel | undefined = this.getCurrentTaskStatus();
-
-    if(currentTaskStatus === undefined)
-      return undefined;
-
-    return currentTaskStatus.default_prev_task_status
+    if(currentTaskStatus)
+      return currentTaskStatus.default_next_task_status;
+    else
+      return null
 
   }
 
-  getAllTaskBasedOnStatusId(taskStatusId: number): TaskModel[] | undefined {
+  getPrevTaskStatus(): TaskStatusModel | null {
 
-    let tasksBasedOnStatusId = this.dashboard?.tasks.filter(task => task.task_status_id === taskStatusId);
+    let currentTaskStatus: TaskStatusModel | null = this.getCurrentTaskStatus();
+
+    if(currentTaskStatus)
+      return currentTaskStatus.default_next_task_status;
+    else
+      return null
+  }
+
+  getAllTaskBasedOnStatusId(taskStatusId: number | undefined): TaskModel[] | null {
+
+    if(!this.dashboard || !taskStatusId)
+      return null;
+
+    let tasksBasedOnStatusId = this.dashboard!.tasks.filter(task => task !== undefined && task.task_status_id === taskStatusId);
+
+    if(!tasksBasedOnStatusId)
+      return null;
 
     tasksBasedOnStatusId?.sort((a: TaskModel, b: TaskModel): number => {
 

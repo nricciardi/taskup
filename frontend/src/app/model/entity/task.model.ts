@@ -5,16 +5,16 @@ import { UserModel } from "./user.model";
 export interface TaskModel {
   id: number;
   name: string;
-  description?: string;
-  deadline?: Date;
+  description: string | null;
+  deadline: Date | null;
   priority: number;
   created_at: Date;
   updated_at: Date;
 
   author_id: number;
   task_status_id: number;
-  author?: UserModel;
-  task_status?: TaskStatusModel;
-  labels?: TaskLabelModel[];
-  users?: UserModel[];
+  author: UserModel | null;
+  task_status: TaskStatusModel | null;
+  labels: TaskLabelModel[] | null;
+  users: UserModel[] | null;
 }

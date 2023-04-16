@@ -1,9 +1,6 @@
-<ng-container *ngIf="tasks; else loader">
+<ng-container *ngIf="tasks">
 
   <app-task-preview *ngFor="let task of tasks" [task]="task"></app-task-preview>
 
 </ng-container>
 
-<ng-template #loader>
-  <app-loader></app-loader>
-</ng-template>

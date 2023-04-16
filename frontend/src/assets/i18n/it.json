@@ -13,6 +13,7 @@
   "keep-me": "Ricordami",
   "loading+dots": "Caricamento...",
   "login-error": "Errore durante la fase di login",
+  "loading-error": "Errore durante il caricamento",
   "logout-error": "Errore durante la fase di logout",
   "hello": "Ciao",
   "order-by": "Ordina per",

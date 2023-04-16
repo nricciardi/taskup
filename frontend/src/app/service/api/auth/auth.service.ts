@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { EelService, CallOptions } from '../../eel/eel.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { environment } from 'src/environments/environment.development';
+import { LoggerService } from '../../logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +15,20 @@ export class AuthService {
   private readonly ME: string = "auth_me";
   private readonly IS_LOGGED: string = "auth_is_logged";
 
+  private emitMeChangeSource = new Subject<UserModel | null>();
+
   constructor(private eelService: EelService) { }
 
-  public login(email: string, password: string, keep: boolean = false): Promise<boolean> {
+  public login(email: string, password: string, keep: boolean = false, refresh: boolean = true): Promise<boolean> {
 
     // return a boolean promise: true if login successful, else false
     let promise = new Promise<boolean>((resolve, reject) => {
       this.eelService.call(this.LOGIN, email, password, keep).then((response) => {
         response.subscribe({
           next: (value: UserModel) => {
+
+            if(refresh)
+              this.refreshMe();
 
             resolve(true);
 
@@ -39,13 +45,16 @@ export class AuthService {
 
   }
 
-  public logout(): Promise<boolean> {
+  public logout(refresh: boolean = true): Promise<boolean> {
 
     // return a boolean promise: true if login successful, else false
     let promise = new Promise<boolean>((resolve, reject) => {
       this.eelService.call(this.LOGOUT).then((response) => {
         response.subscribe({
-          next: (value: UserModel) => {
+          next: (value: boolean) => {
+
+            if(refresh)
+              this.refreshMe();
 
             resolve(true);
 
@@ -66,7 +75,37 @@ export class AuthService {
     return this.eelService.call(this.ME);
   }
 
-  public isLogged(stopOnTrue: boolean = false): Promise<Observable<boolean>> {
+  public observeMe(): Observable<UserModel | null> {
+
+    return this.emitMeChangeSource.asObservable();
+  }
+
+  public refreshMe(): void {
+
+    this.me().then((response) => {
+
+      response.subscribe({
+        next: (value: UserModel | null) => {
+          this.emitMeChangeSource.next(value);
+
+        },
+        error: (e) => {
+          LoggerService.logError(e);
+        }
+      })
+
+    }).catch((e) => {
+      LoggerService.logError(e);
+    });
+
+
+  }
+
+  public isLogged(): Promise<Observable<boolean>> {
+    return this.eelService.call(this.IS_LOGGED);
+  }
+
+  public observeIsLogged(stopOnTrue: boolean = false): Promise<Observable<boolean>> {
 
     let stop: boolean = false;
 

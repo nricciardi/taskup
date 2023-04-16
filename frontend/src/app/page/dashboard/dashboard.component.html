@@ -1,47 +1,67 @@
 <app-page-heading [title]="'dashboard'"></app-page-heading>
 
-<div class="row">
+<div class="row justify-content-between">
   <div class="col-auto">
     <!-- ORDER BY -->
-    <div class="btn-group dropdown me-1 mb-1">
-      <button type="button" class="btn btn-light" (click)="orderReverse = !orderReverse">
-        {{ "reverse" | translate }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-light dropdown-toggle dropdown-toggle-split"
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        data-reference="parent"
-      >
-        <span class="sr-only">
-          {{ "order-by" | translate }}
-        </span>
-      </button>
-      <div class="dropdown-menu">
-        <button class="dropdown-item" (click)="orderBy = OrderBy.PRIORITY; orderReverse = true">
-          {{ "priority" | translate }}
+    <ng-container *ngIf="dashboard && !loadingError">
+      <div class="btn-group dropdown me-1 mb-1">
+        <button type="button" class="btn btn-light" (click)="orderReverse = !orderReverse">
+          {{ "reverse" | translate }}
         </button>
-        <button class="dropdown-item" (click)="orderBy = OrderBy.DEADLINE; orderReverse = false">
-          {{ "deadline" | translate }}
+        <button
+          type="button"
+          class="btn btn-light dropdown-toggle dropdown-toggle-split"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          data-reference="parent"
+        >
+          <span class="sr-only">
+            {{ "order-by" | translate }}
+          </span>
         </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="orderBy = OrderBy.PRIORITY; orderReverse = true">
+            {{ "priority" | translate }}
+          </button>
+          <button class="dropdown-item" (click)="orderBy = OrderBy.DEADLINE; orderReverse = false">
+            {{ "deadline" | translate }}
+          </button>
+        </div>
       </div>
+    </ng-container>
+
+  </div>
+
+  <div class="col-auto">
+    <button class="btn icon btn-light" (click)="loadDashboard()">
+      <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+</div>
+
+<ng-container *ngIf="dashboard && !loadingError">
+  <div class="row justify-content-between">
+    <div class="col-1">
+      <app-task-status-side-banner [title]="getPrevTaskStatus()?.name"></app-task-status-side-banner>
     </div>
 
-  </div>
-</div>
+    <div class="col-8">
+      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"></app-task-preview-list>
+    </div>
 
-<div class="row justify-content-between" *ngIf="dashboard">
-  <div class="col-1">
-    <app-task-status-side-banner [title]="getPrevTaskStatus()?.name"></app-task-status-side-banner>
+    <div class="col-1">
+      <app-task-status-side-banner [title]="getNextTaskStatus()?.name"></app-task-status-side-banner>
+    </div>
   </div>
+</ng-container>
 
-  <div class="col-8">
-    <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()!.id)"></app-task-preview-list>
-  </div>
+<ng-container *ngIf="!dashboard && !loadingError">
+  <app-loader></app-loader>
+</ng-container>
 
-  <div class="col-1">
-    <app-task-status-side-banner [title]="getNextTaskStatus()?.name"></app-task-status-side-banner>
-  </div>
-</div>
+<ng-container *ngIf="loadingError">
+  <app-error-alert [title]="'loading-error'"></app-error-alert>
+</ng-container>
+
+

@@ -31,8 +31,6 @@ class DashboardService:
         :rtype DashboardModel:
         """
 
-        tasks = []
-
         if self.__auth_service.is_logged():         # take list of user logged task
             user_logged: UserModel = self.__auth_service.me()
 
@@ -41,8 +39,10 @@ class DashboardService:
                     WhereCondition(col="author_id", operator="=", value=user_logged.id)
                 )
 
-            # Logger.log_info(msg=f"dashboard get tasks... {tasks}", is_verbose=self.verbose)       too computationally demanding
+                dm = DashboardModel(task_status=self.__task_status_manager.all_as_model(),
+                                    default_task_status_id=self.__task_status_manager.doing_task_status_id,
+                                    tasks=tasks)
 
-        return DashboardModel(task_status=self.__task_status_manager.all_as_model(),
-                              default_task_status_id=self.__task_status_manager.doing_task_status_id,
-                              tasks=tasks)
+                Logger.log_info(msg=f"dashboard get {len(dm.tasks)} task(s)", is_verbose=self.verbose)  # too computationally demanding
+
+                return dm

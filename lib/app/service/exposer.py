@@ -6,6 +6,23 @@ from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
+import json
+
+
+def jsonify(func: Callable):
+    """
+    Decorator to dumps returned values of func
+
+    :param func:
+    :type func: Callable
+    :return: values as json
+    :rtype str:
+    """
+
+    def wrapped():
+        return json.dumps(func())
+
+    return wrapped
 
 
 class ExposerService:

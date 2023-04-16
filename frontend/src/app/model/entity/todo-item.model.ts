@@ -4,13 +4,13 @@ import { UserModel } from "./user.model";
 export interface TodoItemModel {
   id: number;
   description: string;
-  deadline?: Date;
+  deadline: Date | null;
   priority: number;
   created_at: Date;
   updated_at: Date;
 
   author_id: number;
   task_id: number;
-  author?: UserModel;
-  task?: TaskModel;
+  author: UserModel | null;
+  task: TaskModel | null;
 }
