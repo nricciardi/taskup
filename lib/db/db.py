@@ -216,6 +216,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[
                 self.user_table_name,
                 self.task_table_name
+            ], other_fields=[
+                Field.datetime_now("when")
             ]),
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [

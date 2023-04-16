@@ -41,6 +41,7 @@ Ref: task.task_status_id > task_status.id
 
 Table task_assignment {
   id integer [pk]
+  when datetime
 
   user_id integer
   task_id integer

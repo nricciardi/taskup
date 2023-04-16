@@ -41,11 +41,15 @@ class Field(ToSqlInterface):
 
     @classmethod
     def created_at_field(cls) -> 'Field':
-        return cls(name="created_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+        return Field.datetime_now("created_at")
 
     @classmethod
     def updated_at_field(cls) -> 'Field':
-        return cls(name="updated_at", type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+        return Field.datetime_now("updated_at")
+
+    @classmethod
+    def datetime_now(cls, name: str) -> 'Field':
+        return cls(name=name, type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
 
     @classmethod
     def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
@@ -109,10 +113,11 @@ class Table(ToSqlInterface):
         return self.fk_constraints is not None and len(self.fk_constraints) > 0
 
     @classmethod
-    def pivot(cls, table_name: str, tables: List[str]) -> 'Table':
-        fields = [
-            Field.id_field()
-        ]
+    def pivot(cls, table_name: str, tables: List[str], other_fields: List[Field] | None = None) -> 'Table':
+        fields = [Field.id_field()]
+
+        if other_fields is not None:
+            fields.extend(other_fields)
 
         fk_constraints = []
 

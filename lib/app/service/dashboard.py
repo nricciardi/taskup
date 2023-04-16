@@ -43,6 +43,6 @@ class DashboardService:
                                     default_task_status_id=self.__task_status_manager.doing_task_status_id,
                                     tasks=tasks)
 
-                Logger.log_info(msg=f"dashboard get {len(dm.tasks)} task(s)", is_verbose=self.verbose)  # too computationally demanding
+                Logger.log_info(msg=f"dashboard get {len(dm.tasks)} task(s)", is_verbose=self.verbose)
 
                 return dm
