@@ -1,5 +1,34 @@
 <app-page-heading [title]="'dashboard'"></app-page-heading>
 
+<div class="alert alert-secondary sticky-top">
+  <div class="row justify-content-between align-items-center">
+    <div class="col-sm-auto">
+      <button class="btn btn-lg icon icon-left btn-outline-primary" *ngIf="getPrevTaskStatus()">
+        <i class="bi bi-arrow-left"></i>
+        {{ getPrevTaskStatus()?.name }}
+      </button>
+    </div>
+
+    <div class="col-sm-8">
+        <ng-container *ngIf="getCurrentTaskStatus()">
+          <h3 class="text-center">
+            {{ getCurrentTaskStatus()?.name }}
+          </h3>
+          <p class="text-center">
+            {{ getCurrentTaskStatus()?.description }}
+          </p>
+        </ng-container>
+    </div>
+
+    <div class="col-sm-auto">
+      <button class="btn btn-lg icon icon-right btn-outline-primary" *ngIf="getNextTaskStatus()">
+        {{ getNextTaskStatus()?.name }}
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="row justify-content-between">
   <div class="col-auto">
     <!-- ORDER BY -->
@@ -42,16 +71,9 @@
 
 <ng-container *ngIf="dashboard && !loadingError">
   <div class="row justify-content-between">
-    <div class="col-1">
-      <app-task-status-side-banner [title]="getPrevTaskStatus()?.name"></app-task-status-side-banner>
-    </div>
 
-    <div class="col-8">
+    <div class="col-12">
       <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"></app-task-preview-list>
-    </div>
-
-    <div class="col-1">
-      <app-task-status-side-banner [title]="getNextTaskStatus()?.name"></app-task-status-side-banner>
     </div>
   </div>
 </ng-container>

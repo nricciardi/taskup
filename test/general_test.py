@@ -40,10 +40,6 @@ if __name__ == '__main__':
 
     # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
 
-
-
-
-
     users_manager.create_from_dict({"username": f"pm",
                                     "email": f"pm@pm.com",
                                     "password": "asdf123",
@@ -71,7 +67,7 @@ if __name__ == '__main__':
                                         "role_id": randint(2, 4)})
 
     offset = 0
-    count = 200
+    count = 50
 
     for n in range(count * offset, count * offset + count):
         # user = users_manager.create_from_dict({"username": f"franco{n}",

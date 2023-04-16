@@ -23,7 +23,15 @@ export class DashboardComponent {
   loadingError:boolean = false;
 
   dashboard: DashboardModel | null = null;
-  private _taskStatusIdIndex?: number;   // the index for task_status id
+  private _taskStatusIndex?: number;   // the index for task_status id
+
+  get taskStatusIndex() {
+    return this._taskStatusIndex;
+  }
+
+  set taskStatusIndex(newIndex) {
+    this._taskStatusIndex = newIndex;
+  }
 
 
   private _orderBy: OrderBy = this.OrderBy.PRIORITY;
@@ -65,7 +73,7 @@ export class DashboardComponent {
             this.dashboard = value;
 
             // set default id index
-            this.taskStatusIdIndex = this.dashboard.default_task_status_id;
+            this.taskStatusIndex = this.dashboard.default_task_status_id;
 
             this.loadingError = false;
           } else {
@@ -77,15 +85,8 @@ export class DashboardComponent {
     });
   }
 
-  get taskStatusIdIndex() {
-    return this._taskStatusIdIndex;
-  }
 
-  set taskStatusIdIndex(newIndex) {
-    this._taskStatusIdIndex = newIndex;
-  }
-
-  getTaskStatus(taskStatusId: number): TaskStatusModel | null {
+  getTaskStatusById(taskStatusId: number): TaskStatusModel | null {
 
     const result = this.dashboard?.task_status?.filter(taskStatus => taskStatus.id == taskStatusId);
 
@@ -97,8 +98,8 @@ export class DashboardComponent {
 
   getCurrentTaskStatus(): TaskStatusModel | null {
 
-    if(this.taskStatusIdIndex)
-      return this.getTaskStatus(this.taskStatusIdIndex);
+    if(this.taskStatusIndex)
+      return this.getTaskStatusById(this.taskStatusIndex);
 
     return null;
   }
@@ -119,7 +120,7 @@ export class DashboardComponent {
     let currentTaskStatus: TaskStatusModel | null = this.getCurrentTaskStatus();
 
     if(currentTaskStatus)
-      return currentTaskStatus.default_next_task_status;
+      return currentTaskStatus.default_prev_task_status;
     else
       return null
   }
