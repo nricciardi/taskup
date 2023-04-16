@@ -74,6 +74,7 @@ class TaskModel(BaseEntityModel):
 @dataclass
 class TaskAssignmentModel(BaseEntityModel):
     id: int
+    assigned_at: datetime
     user_id: int
     task_id: int
 

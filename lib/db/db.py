@@ -217,7 +217,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 self.user_table_name,
                 self.task_table_name
             ], other_fields=[
-                Field.datetime_now("when")
+                Field.datetime_now("assigned_at")
             ]),
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [
