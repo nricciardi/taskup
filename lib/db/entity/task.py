@@ -20,6 +20,7 @@ class TaskStatusModel(BaseEntityModel):
     default_next_task_status: Optional['TaskStatusModel'] = field(default=None)
     default_prev_task_status: Optional['TaskStatusModel'] = field(default=None)
     description: Optional[str] = field(default=None)
+    hex_color: Optional[str] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -41,7 +42,7 @@ class TaskTaskLabelPivotModel(BaseEntityModel):
 class TaskLabelModel(BaseEntityModel):
     id: int
     name: str
-    rgb_color: Optional[str] = field(default=None)
+    hex_color: Optional[str] = field(default=None)
     description: Optional[str] = field(default=None)
 
     # @property

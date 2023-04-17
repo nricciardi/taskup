@@ -184,6 +184,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
+                Field(name="hex_color", type="TEXT(6)", nullable=True),
                 Field.fk_field(name="default_next_task_status_id", nullable=True),
                 Field.fk_field(name="default_prev_task_status_id", nullable=True)
             ], fk_constraints=[
@@ -210,7 +211,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field(name="rgb_color", type="TEXT(6)", nullable=True)
+                Field(name="hex_color", type="TEXT(6)", nullable=True)
             ]),
 
             self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[
@@ -343,16 +344,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             # insert default task status
             query = f"""\
-                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id)
+                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id, hex_color)
                         Values
-                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL),
-                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL),
-                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL),
-                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL),
-                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL),
-                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL),
-                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL),
-                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL);
+                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "3eed72"),
+                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "b4e34f"),
+                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "e84157"),
+                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "f542da"),
+                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "e39440"),
+                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "4fdee3"),
+                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "42bcf5"),
+                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "f5d442");
                     """
 
             self.cursor.execute(query)
@@ -420,7 +421,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             # insert default task status
             query = f"""
-                        Insert Into {self.task_label_table_name} (name, description, rgb_color)
+                        Insert Into {self.task_label_table_name} (name, description, hex_color)
                         Values
                         ("Front-end", "Front-end tasks", "b6f542"),
                         ("Back-end", "Front-end tasks", "f56342"),

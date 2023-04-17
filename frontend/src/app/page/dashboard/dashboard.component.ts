@@ -12,6 +12,18 @@ enum OrderBy {
   DEADLINE = "deadline"
 }
 
+interface HSLColor {
+  h: number;
+  s: number;
+  l: number;
+}
+
+interface RGBColor {
+  r: number;
+  g: number;
+  b: number;
+}
+
 
 @Component({
   selector: 'app-dashboard',
@@ -169,4 +181,71 @@ export class DashboardComponent {
     return tasksBasedOnStatusId;
   }
 
+  getColorFromHex(hex: string | null | undefined): string | null {
+
+    if(!hex)
+      return null;
+
+    let rgb = this.hexToRgb(hex);
+
+    if(!rgb)
+      return null;
+
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+
+  }
+
+  hexToRgb(hex: string): RGBColor | null {
+    let result = /^#?([a-f\d]{2}])([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    if(!result)
+      return null;
+
+    let rgb: RGBColor = {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+    }
+
+    return rgb;
+  }
+
+  hexToHsl(hex: string): HSLColor | null {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    if(!result)
+      return null;
+
+    let r = parseInt(result[1], 16);
+    let g = parseInt(result[2], 16);
+    let b = parseInt(result[3], 16);
+    r /= 255, g /= 255, b /= 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if(max == min){
+      h = s = 0; // achromatic
+    }else{
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+
+      if(!h)
+        return null;
+
+      h /= 6;
+    }
+
+    let HSL: HSLColor = {
+      h: h,
+      s: s,
+      l: l
+    };
+
+    return HSL;
+  }
 }

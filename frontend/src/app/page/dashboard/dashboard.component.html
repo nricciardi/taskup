@@ -14,67 +14,75 @@
   </div>
 </div>
 
-<div class="sticky-top" *ngIf="getCurrentTaskStatus()">
-  <div class="row justify-content-between align-items-center">
-    <div class="col-sm-auto">
-      <button class="btn btn-lg icon icon-left btn-outline-primary" *ngIf="getPrevTaskStatus()">
-        <i class="bi bi-arrow-left"></i>
-        {{ getPrevTaskStatus()?.name }}
-      </button>
-    </div>
+<div class="card sticky-top" *ngIf="getCurrentTaskStatus()"
+      [style.background-color]="getColorFromHex(getCurrentTaskStatus()?.hex_color)"
+>
 
-    <div class="col-sm-8">
-
-        <h3 class="text-center">
-          {{ getCurrentTaskStatus()?.name }}
-        </h3>
-        <p class="text-center">
-          {{ getCurrentTaskStatus()?.description }}
-        </p>
-    </div>
-
-    <div class="col-sm-auto">
-      <button class="btn btn-lg icon icon-right btn-outline-primary" *ngIf="getNextTaskStatus()">
-        {{ getNextTaskStatus()?.name }}
-        <i class="bi bi-arrow-right"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="collapse mb-5" id="dashboard-operations">
-    <div class="divider">
-      <div class="divider-text" style="background-color: transparent;">
-        {{ "dashboard-operations" | translate }}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-auto">
-        <div class="btn-group mb-1">
-          <div class="dropdown">
-            <button
-              class="btn btn-primary dropdown-toggle me-1"
-              type="button"
-              id="dropdownMenuButton"
-              data-bs-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false">
-
-              {{ "task-status" | translate }}
+  <div class="card-content">
+    <div class="card-body">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-sm-auto">
+            <button class="btn btn-lg icon icon-left btn-outline-primary" *ngIf="getPrevTaskStatus()">
+              <i class="bi bi-arrow-left"></i>
+              {{ getPrevTaskStatus()?.name }}
             </button>
-            <div
-              class="dropdown-menu"
-              aria-labelledby="dropdownMenuButton">
-              <button class="dropdown-item" *ngFor="let status of dashboard?.task_status" (click)="taskStatusIdIndex = status.id">
-                {{ status.name }}
-              </button>
+          </div>
+
+          <div class="col-sm-8">
+
+              <h3 class="text-center">
+                {{ getCurrentTaskStatus()?.name }}
+              </h3>
+              <p class="text-center">
+                {{ getCurrentTaskStatus()?.description }}
+              </p>
+          </div>
+
+          <div class="col-sm-auto">
+            <button class="btn btn-lg icon icon-right btn-outline-primary" *ngIf="getNextTaskStatus()">
+              {{ getNextTaskStatus()?.name }}
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="collapse mb-5" id="dashboard-operations">
+          <div class="divider">
+            <div class="divider-text" style="background-color: transparent;">
+              {{ "dashboard-operations" | translate }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-auto">
+              <div class="btn-group mb-1">
+                <div class="dropdown">
+                  <button
+                    class="btn btn-primary dropdown-toggle me-1"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+
+                    {{ "task-status" | translate }}
+                  </button>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" *ngFor="let status of dashboard?.task_status" (click)="taskStatusIdIndex = status.id">
+                      {{ status.name }}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
+
 
 <div class="row justify-content-between">
   <div class="col-auto">

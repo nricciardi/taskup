@@ -2,6 +2,7 @@ export interface TaskStatusModel {
   id: number;
   name: string;
   description: string | null;
+  hex_color: string | null;
 
   default_next_task_status_id: number;
   default_next_task_status: TaskStatusModel | null;
