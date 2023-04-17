@@ -13,4 +13,8 @@ export class TaskPreviewListComponent {
   constructor() {
   }
 
+  scrollTop() {
+    window.scroll(0, 0);
+  }
+
 }

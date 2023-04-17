@@ -19,5 +19,7 @@
   "order-by": "Order by",
   "reverse": "Reverse",
   "priority": "Priority",
-  "deadline": "Deadline"
+  "deadline": "Deadline",
+  "dashboard-operations": "Dashboard operations",
+  "task-status": "Task Status"
 }

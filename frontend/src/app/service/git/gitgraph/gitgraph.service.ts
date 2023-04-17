@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 
-declare var GitgraphJS: any;
+export declare var GitgraphJS: any;
+
+interface GitgraphJSOption {
+  orientation?: string;
+  template?: string | Function;
+  mode?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,4 +14,8 @@ declare var GitgraphJS: any;
 export class GitgraphService {
 
   constructor() { }
+
+  public createGraph(htmlElement: HTMLElement, options: GitgraphJSOption = {}): any {
+    return GitgraphJS.createGitgraph(htmlElement, options);
+  }
 }

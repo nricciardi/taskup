@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
+import { LoggerService } from 'src/app/service/logger/logger.service';
 
 
 enum OrderBy {
@@ -19,19 +20,24 @@ enum OrderBy {
 })
 export class DashboardComponent {
 
+  constructor(private dashboardService: DashboardService) {
+  }
+
+  @ViewChild("statusGraph") statusGraphContainer?: ElementRef;
+
   OrderBy = OrderBy
 
   loadingError:boolean = false;
 
   dashboard: DashboardModel | null = null;
-  private _taskStatusIndex?: number;   // the index for task_status id
+  private _taskStatusIdIndex?: number;   // the index for task_status id
 
-  get taskStatusIndex() {
-    return this._taskStatusIndex;
+  get taskStatusIdIndex() {
+    return this._taskStatusIdIndex;
   }
 
-  set taskStatusIndex(newIndex) {
-    this._taskStatusIndex = newIndex;
+  set taskStatusIdIndex(newIndex) {
+    this._taskStatusIdIndex = newIndex;
   }
 
 
@@ -55,13 +61,9 @@ export class DashboardComponent {
     this._orderReverse = value;
   }
 
-  constructor(private dashboardService: DashboardService, gitgraph: GitgraphService) {
-  }
-
   ngOnInit() {
 
     this.loadDashboard();
-
   }
 
   loadDashboard(): void {
@@ -74,7 +76,7 @@ export class DashboardComponent {
             this.dashboard = value;
 
             // set default id index
-            this.taskStatusIndex = this.dashboard.default_task_status_id;
+            this.taskStatusIdIndex = this.dashboard.default_task_status_id;
 
             this.loadingError = false;
           } else {
@@ -98,8 +100,8 @@ export class DashboardComponent {
 
   getCurrentTaskStatus(): TaskStatusModel | null {
 
-    if(this.taskStatusIndex)
-      return this.getTaskStatusById(this.taskStatusIndex);
+    if(this.taskStatusIdIndex)
+      return this.getTaskStatusById(this.taskStatusIdIndex);
 
     return null;
   }
@@ -166,4 +168,5 @@ export class DashboardComponent {
 
     return tasksBasedOnStatusId;
   }
+
 }
