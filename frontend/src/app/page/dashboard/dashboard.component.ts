@@ -3,6 +3,7 @@ import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
+import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
 
 
 enum OrderBy {
@@ -54,7 +55,7 @@ export class DashboardComponent {
     this._orderReverse = value;
   }
 
-  constructor(private dashboardService: DashboardService) {
+  constructor(private dashboardService: DashboardService, gitgraph: GitgraphService) {
   }
 
   ngOnInit() {
@@ -84,7 +85,6 @@ export class DashboardComponent {
       })
     });
   }
-
 
   getTaskStatusById(taskStatusId: number): TaskStatusModel | null {
 

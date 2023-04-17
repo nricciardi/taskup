@@ -20,6 +20,7 @@ import { ErrorAlertComponent } from './widget/alert/error-alert/error-alert.comp
 import { HomeComponent } from './page/home/home.component';
 import { TaskStatusSideBannerComponent } from './widget/task/task-status-side-banner/task-status-side-banner.component';
 import { SidebarComponent } from './widget/sidebar/sidebar.component';
+import { TestComponent } from './page/test/test.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { SidebarComponent } from './widget/sidebar/sidebar.component';
     LoginComponent,
     ErrorAlertComponent,
     HomeComponent,
-    TaskStatusSideBannerComponent
+    TaskStatusSideBannerComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,

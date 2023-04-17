@@ -4,6 +4,7 @@ import { PageNotFoundComponent } from './page/page-not-found/page-not-found.comp
 import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { LoginComponent } from './page/login/login.component';
 import { HomeComponent } from './page/home/home.component';
+import { TestComponent } from './page/test/test.component';
 
 const routes: Routes = [
 
@@ -24,7 +25,10 @@ const routes: Routes = [
     path: "login",
     component: LoginComponent
   },
-
+  {
+    path: "test",
+    component: TestComponent
+  },
 
 
   {
