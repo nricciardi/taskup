@@ -16,14 +16,21 @@ export class HeaderComponent {
   userLogged: UserModel | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit() {
     this.authService.observeMe().subscribe({
       next: (value: UserModel | null) => {
+        console.log(value);
+
         this.userLogged = value;
       },
-      error: (e) => {
+      error: (e: any) => {
         LoggerService.logError(e);
       }
-    })
+    });
+
+    this.authService.refreshMe()
   }
 
   logout() {
