@@ -349,10 +349,10 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                         ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "3eed72"),
                         ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "b4e34f"),
                         ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "e84157"),
-                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "f542da"),
-                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "e39440"),
-                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "4fdee3"),
-                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "42bcf5"),
+                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "facdf3"),
+                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "ffbf7a"),
+                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "73f5fa"),
+                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "c9eeff"),
                         ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "f5d442");
                     """
 

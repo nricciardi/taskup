@@ -35,9 +35,11 @@ class DashboardService:
             user_logged: UserModel = self.__auth_service.me()
 
             if user_logged is not None:
-                tasks = self.__tasks_manager.where_as_model(
+                tasks: List[TaskModel] = self.__tasks_manager.where_as_model(
                     WhereCondition(col="author_id", operator="=", value=user_logged.id)
                 )
+
+                # tasks: List[TaskModel] = list(filter(lambda t: ), tasks)
 
                 dm = DashboardModel(task_status=self.__task_status_manager.all_as_model(),
                                     default_task_status_id=self.__task_status_manager.doing_task_status_id,
