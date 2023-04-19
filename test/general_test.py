@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
 
-    os.remove(db_path)
+    # os.remove(db_path)
     pm = ProjectManager()
 
     users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
@@ -35,15 +35,15 @@ if __name__ == '__main__':
     # print(users)
 
     #
-    # tasks = tasks_manager.find(1, with_relations=True, safe=False)
-    # print(tasks)
+    tasks = tasks_manager.find(1, with_relations=True, safe=False)
+    print(tasks.users)
 
     # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
 
-    users_manager.create_from_dict({"username": f"pm",
-                                    "email": f"pm@pm.com",
-                                    "password": "asdf123",
-                                    "role_id": 1})
+    # users_manager.create_from_dict({"username": f"pm",
+    #                                 "email": f"pm@pm.com",
+    #                                 "password": "asdf123",
+    #                                 "role_id": 1})
 
     # task = tasks_manager.create_from_dict({
     #     "name": f"prova task single" * randint(1, 4),
@@ -59,40 +59,40 @@ if __name__ == '__main__':
     #                                   ).strftime("%Y-%m-%d %H:%M:%S")
     # })
 
-    u = 8
-    for n in range(1, u):
-        users_manager.create_from_dict({"username": f"franco{n}",
-                                        "email": f"n{n}@r.com",
-                                        "password": "asdf123",
-                                        "role_id": randint(2, 4)})
-
-    offset = 0
-    count = 50
-
-    for n in range(count * offset, count * offset + count):
-        # user = users_manager.create_from_dict({"username": f"franco{n}",
-        #                             "email": f"n{n}@r.com",
-        #                             "password": "asdf123",
-        #                             "role_id": 1})
-        #
-        # print(user)
-
-        task = tasks_manager.create_from_dict({
-            "name": f"prova task{n}" * randint(1, 4),
-            "description": f"descrizione di prova{n}" * randint(10, 60),
-            "author_id": 1,# user.id,
-            "task_status_id": randint(1, 8),
-            "priority": randint(1, 20),
-            "deadline": datetime.datetime(2023,
-                                          randint(4, 7),
-                                          randint(1, 30),
-                                          randint(8, 19),
-                                          randint(1, 59)
-                                          ).strftime("%Y-%m-%d %H:%M:%S") if randint(1, 2) % 2 == 0 else None
-        })
-
-        for i in range(randint(1, 8)):
-            tasks_manager.addAssignment(task.id, randint(1, u))
+    # u = 8
+    # for n in range(1, u):
+    #     users_manager.create_from_dict({"username": f"franco{n}",
+    #                                     "email": f"n{n}@r.com",
+    #                                     "password": "asdf123",
+    #                                     "role_id": randint(2, 4)})
+    #
+    # offset = 0
+    # count = 50
+    #
+    # for n in range(count * offset, count * offset + count):
+    #     # user = users_manager.create_from_dict({"username": f"franco{n}",
+    #     #                             "email": f"n{n}@r.com",
+    #     #                             "password": "asdf123",
+    #     #                             "role_id": 1})
+    #     #
+    #     # print(user)
+    #
+    #     task = tasks_manager.create_from_dict({
+    #         "name": f"prova task{n}" * randint(1, 4),
+    #         "description": f"descrizione di prova{n}" * randint(10, 60),
+    #         "author_id": 1,# user.id,
+    #         "task_status_id": randint(1, 8),
+    #         "priority": randint(1, 20),
+    #         "deadline": datetime.datetime(2023,
+    #                                       randint(4, 7),
+    #                                       randint(1, 30),
+    #                                       randint(8, 19),
+    #                                       randint(1, 59)
+    #                                       ).strftime("%Y-%m-%d %H:%M:%S") if randint(1, 2) % 2 == 0 else None
+    #     })
+    #
+    #     for i in range(randint(1, 8)):
+    #         tasks_manager.addAssignment(task.id, randint(1, u))
 
 
 

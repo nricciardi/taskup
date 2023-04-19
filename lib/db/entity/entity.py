@@ -346,7 +346,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             # ==== ManyRelation ====
             elif isinstance(relation, ManyRelation):
-                return self.get_many_relation_data_based_on(relation)
+                return self.get_many_relation_data_based_on(em, relation)
 
             else:
                 Logger.log_warning(msg=f"{relation} does not exist as relationship type", is_verbose=self.verbose)
@@ -381,10 +381,12 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return relation.fk_model.from_dict(data)  # return a fk EM from tuple resulted
 
-    def get_many_relation_data_based_on(self, relation: ManyRelation) -> List[EntityModel] | None:
+    def get_many_relation_data_based_on(self, em: EntityModel, relation: ManyRelation) -> List[EntityModel] | None:
         """
         Return data for a many relation
 
+        :param em: entity from get data
+        :type em: EntityModel
         :param relation:
         :type relation: Relation
 
@@ -392,18 +394,22 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel] | None:
         """
 
-        pivot_data: List[relation.pivot_model] = self.__all_as_model(table_name=relation.pivot_table,
-                                                                     model=relation.pivot_model,
-                                                                     with_relations=False,
-                                                                     safe=True)  # False prevent call loop
+        fk_pivot_col = relation.of_table + "_id"    # col convention: <fk_table>_id
+        entity_pivot_col = self.table_name + "_id"
+
+        pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,
+                                                         WhereCondition(
+                                                             col=entity_pivot_col,
+                                                             operator="=",
+                                                             value=em.id
+                                                         ))
 
         data: List[relation.fk_model] = []
         for pivot_record in pivot_data:
-            pivot_fk = getattr(pivot_record, relation.of_table + "_id")  # use standard: <fk_table>_id, i.e. user_id
 
-            row: Dict = self.__find(pivot_fk, relation.of_table)
+            fk_record: Dict = self.__find(pivot_record[fk_pivot_col], relation.of_table)
 
-            data.append(relation.fk_model.from_dict(row))
+            data.append(relation.fk_model.from_dict(fk_record))
 
         return data
 
