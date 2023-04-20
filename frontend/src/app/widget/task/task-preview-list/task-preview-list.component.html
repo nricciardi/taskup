@@ -1,7 +1,8 @@
 <ng-container *ngIf="tasks">
 
-  <app-task-preview *ngFor="let task of tasks" [task]="task"></app-task-preview>
+  <app-task-preview *ngFor="let task of tasks" [task]="task" [loggedUser]="loggedUser"></app-task-preview>
 
+  <!-- SCROLL ON TOP BTN -->
   <div class="row justify-content-center">
     <div class="col-auto">
       <button class="btn icon btn-light" (click)="scrollTop()">

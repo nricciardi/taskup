@@ -6,6 +6,7 @@ export interface UserModel {
   name: string | null;
   surname: string | null;
   email: string;
+  avatar_hex_color: string;
   // password: string;    hidden
   role_id: number;
   role: RoleModel | null;

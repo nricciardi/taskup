@@ -21,5 +21,6 @@
   "priority": "Priority",
   "deadline": "Deadline",
   "dashboard-operations": "Dashboard operations",
-  "task-status": "Task Status"
+  "task-status": "Task Status",
+  "close": "Close"
 }

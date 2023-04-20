@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
+import { UserModel } from 'src/app/model/entity/user.model';
 import { environment } from 'src/environments/environment.development';
 
 enum DeadlineStatus {
@@ -17,6 +18,7 @@ enum DeadlineStatus {
 export class TaskPreviewComponent {
 
   @Input('task') task?: TaskModel;
+  @Input("loggedUser") loggedUser?: UserModel;
 
   DeadlineStatus = DeadlineStatus;
 
@@ -51,4 +53,18 @@ export class TaskPreviewComponent {
     return this.DeadlineStatus.PRIMARY;
   }
 
+  userAssignedToTask(userId: number | undefined): boolean {
+
+    if(!userId || !this.task)
+      return false;
+
+
+    let result = this.task.users?.map(u => u.id).includes(userId);
+
+
+    if(result)
+      return result;
+
+    return false;
+  }
 }

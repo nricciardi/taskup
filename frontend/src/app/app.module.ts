@@ -21,6 +21,7 @@ import { HomeComponent } from './page/home/home.component';
 import { TaskStatusSideBannerComponent } from './widget/task/task-status-side-banner/task-status-side-banner.component';
 import { SidebarComponent } from './widget/sidebar/sidebar.component';
 import { TestComponent } from './page/test/test.component';
+import { TextAvatarComponent } from './widget/avatar/text-avatar/text-avatar.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { TestComponent } from './page/test/test.component';
     ErrorAlertComponent,
     HomeComponent,
     TaskStatusSideBannerComponent,
-    TestComponent
+    TestComponent,
+    TextAvatarComponent
   ],
   imports: [
     BrowserModule,

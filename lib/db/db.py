@@ -163,6 +163,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="surname", type="VARCHAR(256)", nullable=True),
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
+                Field(name="avatar_hex_color", type="VARCHAR(6)", default="'cfcfcf'", nullable=False),
                 Field.fk_field(name="role_id"),
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name)
@@ -184,7 +185,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field(name="hex_color", type="TEXT(6)", nullable=True),
+                Field(name="hex_color", type="VARCHAR(6)", nullable=True),
                 Field.fk_field(name="default_next_task_status_id", nullable=True),
                 Field.fk_field(name="default_prev_task_status_id", nullable=True)
             ], fk_constraints=[
@@ -211,7 +212,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field(name="hex_color", type="TEXT(6)", nullable=True)
+                Field(name="hex_color", type="VARCHAR(6)", nullable=True)
             ]),
 
             self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[

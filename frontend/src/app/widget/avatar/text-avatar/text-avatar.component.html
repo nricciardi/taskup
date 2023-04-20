@@ -1,0 +1,65 @@
+<ng-container *ngIf="user">
+  <div class="avatar me-3"
+    [style.background-color]="'#' + user.avatar_hex_color"
+    data-bs-toggle="tooltip"
+    data-bs-placement="top"
+    [title]="user.username"
+    (click)="null"
+    data-bs-toggle="modal"
+    data-bs-target="#user"
+  >
+    <span class="avatar-content text-uppercase">
+      {{ getText() }}
+    </span>
+  </div>
+</ng-container>
+
+<div
+  class="modal fade text-left"
+  id="user"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="user"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" id="user">
+          {{ user?.username }}
+        </h5>
+        <button
+          type="button"
+          class="close rounded-pill"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          {{ user?.name ? user?.name + " " : "" }}
+          {{ user?.surname ? user?.surname : "" }}
+          {{ user?.name || user?.surname ? " aka " : "" }}
+          {{ user?.username }} ({{ user?.email }})
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn"
+          data-bs-dismiss="modal"
+        >
+          <i class="bx bx-x d-block d-sm-none"></i>
+          <span class="d-none d-sm-block">
+            {{ "close" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

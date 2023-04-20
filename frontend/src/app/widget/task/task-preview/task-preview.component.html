@@ -1,13 +1,22 @@
-<div class="card" *ngIf="task">
+<div class="card" *ngIf="task"
+[ngClass]="{
+  'not-assigned-task': userAssignedToTask(loggedUser?.id)
+}"
+>
   <div class="card-content">
     <div class="card-body">
       <h4 class="card-title">
-        {{ task.name }} priorità: {{ task.priority }}
+        {{ task.name }}
       </h4>
 
       <p class="card-text mt-2" *ngIf="task.description">
         {{ task.description }}
       </p>
+
+      <!-- AVATAR OF ASSIGNED USERS -->
+      <app-text-avatar  *ngFor="let assignedUser of task.users"
+                        [user]="assignedUser">
+      </app-text-avatar>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between">

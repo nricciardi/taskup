@@ -29,6 +29,7 @@ class UserModel(BaseEntityModel):
     username: str
     email: str
     password: str
+    avatar_hex_color: str
     role_id: int
     role: Optional[RoleModel] = field(default=None)
     name: Optional[str] = field(default=None)

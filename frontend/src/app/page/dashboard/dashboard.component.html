@@ -14,9 +14,10 @@
   </div>
 </div>
 
+<!-- STICKY HEADER -->
 <div class="card sticky-top" *ngIf="getCurrentTaskStatus()"
       [style.background-color]="getColorFromHex(getCurrentTaskStatus()?.hex_color)"
-      style="z-index: 1;"
+      style="z-index: 1; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;"
 >
 
   <div class="card-content">
@@ -129,7 +130,7 @@
   <div class="row justify-content-between">
 
     <div class="col-12">
-      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"></app-task-preview-list>
+      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"></app-task-preview-list>
     </div>
   </div>
 </ng-container>

@@ -96,6 +96,7 @@ export class DashboardComponent {
 
   getTaskStatusById(taskStatusId: number): TaskStatusModel | null {
 
+
     if(!this.taskStatusIdIndex)
       this.taskStatusIdIndex = this.dashboard?.default_task_status_id;
 

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
+import { UserModel } from 'src/app/model/entity/user.model';
 
 @Component({
   selector: 'app-task-preview-list',
@@ -9,6 +10,7 @@ import { TaskModel } from 'src/app/model/entity/task.model';
 export class TaskPreviewListComponent {
 
   @Input("tasks") tasks: TaskModel[] | null = null;
+  @Input("loggedUser") loggedUser?: UserModel;
 
   constructor() {
   }
