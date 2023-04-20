@@ -85,11 +85,12 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
   -  [ ] append relation on bem and not in another foreach
+- [ ] make sqlite fetch methods asynchronous
 
 ### DB
 - [x] Unique on user's username? Add name and surname?
 - [x] DB schema
-- [ ] deadline from date to datetime?
+- [x] deadline from date to datetime?
 
 ### Generals
 - [ ] Remove .vs and .idea directory from Git
