@@ -152,7 +152,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
-    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[EntityModel]:
+    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[
+        EntityModel]:
 
         tuples = self.__all_as_dict(table_name)
 
@@ -321,7 +322,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return all_relations
 
-    def get_relation_data_of(self, em: EntityModel, relation: Relation, safe: bool) -> EntityModel | List[EntityModel] | None:
+    def get_relation_data_of(self, em: EntityModel, relation: Relation, safe: bool) -> EntityModel | List[
+        EntityModel] | None:
         """
         Return the entities in relation(s) with an entity
 
@@ -394,7 +396,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel] | None:
         """
 
-        fk_pivot_col = relation.of_table + "_id"    # col convention: <fk_table>_id
+        fk_pivot_col = relation.of_table + "_id"  # col convention: <fk_table>_id
         entity_pivot_col = self.table_name + "_id"
 
         pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,

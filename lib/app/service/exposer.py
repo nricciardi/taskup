@@ -1,7 +1,7 @@
 import eel
 from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager
-from lib.db.entity.user import UsersManager
+from lib.db.entity.user import UsersManager, RolesManager
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
 from typing import Callable
@@ -47,12 +47,16 @@ class ExposerService:
         self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
                                             verbose=self.verbose)
 
+        self.__roles_manager = RolesManager(db_name=db_name, work_directory_path=work_directory_path,
+                                            verbose=self.verbose)
+
         self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path,
                                           verbose=self.verbose)
 
         self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager,
                                                     task_status_manager=self.__task_status_manager,
                                                     auth_service=self.__auth_service,
+                                                    roles_manager=self.__roles_manager,
                                                     verbose=self.verbose)
 
     def test(self, *args, **kwargs):

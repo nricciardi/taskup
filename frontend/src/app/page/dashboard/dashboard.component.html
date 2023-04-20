@@ -16,6 +16,7 @@
 
 <div class="card sticky-top" *ngIf="getCurrentTaskStatus()"
       [style.background-color]="getColorFromHex(getCurrentTaskStatus()?.hex_color)"
+      style="z-index: 1;"
 >
 
   <div class="card-content">
