@@ -22,6 +22,10 @@ import { TaskStatusSideBannerComponent } from './widget/task/task-status-side-ba
 import { SidebarComponent } from './widget/sidebar/sidebar.component';
 import { TestComponent } from './page/test/test.component';
 import { TextAvatarComponent } from './widget/avatar/text-avatar/text-avatar.component';
+import { DialogModalComponent } from './widget/modal/dialog-modal/dialog-modal.component';
+import { InputModalComponent } from './widget/modal/input-modal/input-modal.component';
+import { ManageAssignedUserModalComponent } from './widget/modal/manage-assigned-user-modal/manage-assigned-user-modal.component';
+import { IconAvatarComponent } from './widget/avatar/icon-avatar/icon-avatar.component';
 
 
 @NgModule({
@@ -41,7 +45,11 @@ import { TextAvatarComponent } from './widget/avatar/text-avatar/text-avatar.com
     HomeComponent,
     TaskStatusSideBannerComponent,
     TestComponent,
-    TextAvatarComponent
+    TextAvatarComponent,
+    DialogModalComponent,
+    InputModalComponent,
+    ManageAssignedUserModalComponent,
+    IconAvatarComponent,
   ],
   imports: [
     BrowserModule,

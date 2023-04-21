@@ -1,6 +1,6 @@
 from lib.db.db import DBManager
 from abc import ABC, abstractmethod
-from lib.db.entity.relation import Relation, OneRelation, ManyRelation
+from lib.db.entity.relation import Relation, OneRelation, ManyRelation, ExtendedManyRelation
 from lib.utils.logger import Logger
 from lib.db.entity.bem import BaseEntityModel, EntityModel
 from typing import Any, List, Tuple, Dict, Type, Generic
@@ -322,8 +322,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return all_relations
 
-    def get_relation_data_of(self, em: EntityModel, relation: Relation, safe: bool) -> EntityModel | List[
-        EntityModel] | None:
+    def get_relation_data_of(self, em: EntityModel, relation: Relation, safe: bool) -> EntityModel | List[EntityModel] | None:
         """
         Return the entities in relation(s) with an entity
 
@@ -345,6 +344,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             # ==== OneRelation ====
             if isinstance(relation, OneRelation):
                 return self.get_one_relation_data_of(em, relation)
+
+            # ==== ExtendedManyRelation ====
+            # ExtendedManyRelation is subclass of ManyRelation, the check have to be above
+            elif isinstance(relation, ExtendedManyRelation):
+                return self.get_extended_many_relation_data_based_on(em, relation)
 
             # ==== ManyRelation ====
             elif isinstance(relation, ManyRelation):
@@ -396,7 +400,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel] | None:
         """
 
-        fk_pivot_col = relation.of_table + "_id"  # col convention: <fk_table>_id
+        fk_pivot_col = relation.of_table + "_id"  # pivot col convention: <fk_table>_id
         entity_pivot_col = self.table_name + "_id"
 
         pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,
@@ -407,11 +411,56 @@ class EntitiesManager(ABC, Generic[EntityModel]):
                                                          ))
 
         data: List[relation.fk_model] = []
-        for pivot_record in pivot_data:
+        for pivot_record in pivot_data:     # for each pivot record append data to fk_record
 
             fk_record: Dict = self.__find(pivot_record[fk_pivot_col], relation.of_table)
 
             data.append(relation.fk_model.from_dict(fk_record))
+
+        return data
+
+    def get_extended_many_relation_data_based_on(self, em: EntityModel, relation: ExtendedManyRelation) -> List[EntityModel] | None:
+        """
+        Return data for an extended many relation
+
+        :param em: entity from get data
+        :type em: EntityModel
+        :param relation:
+        :type relation: Relation
+
+        :return: entities
+        :rtype List[EntityModel] | None:
+        """
+
+        fk_pivot_col = relation.of_table + "_id"  # pivot col convention: <fk_table>_id
+        entity_pivot_col = self.table_name + "_id"
+
+        pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,
+                                                         WhereCondition(
+                                                             col=entity_pivot_col,
+                                                             operator="=",
+                                                             value=em.id
+                                                         ))
+
+        data: List[relation.wrap_fk_model] = []
+        for pivot_record in pivot_data:
+
+            fk_record: Dict = self.__find(pivot_record[fk_pivot_col], relation.of_table)
+
+            # generate values to initialize wrap model
+            values = {
+                relation.fk_col: relation.fk_model.from_dict(fk_record)
+            }
+
+            for oc in relation.other_cols:      # for each other cols update values with the pivot value
+                values.update({
+                    oc: pivot_record[oc]
+                })
+
+            # create wrap model
+            wrap_model = relation.wrap_fk_model(**values)
+
+            data.append(wrap_model)
 
         return data
 

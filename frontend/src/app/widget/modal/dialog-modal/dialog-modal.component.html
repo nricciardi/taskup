@@ -1,0 +1,46 @@
+<div *ngIf="title"
+  class="modal fade text-left"
+  id="dialog"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" id="dialog">
+          {{ title | translate }}
+        </h5>
+        <button
+          type="button"
+          class="close rounded-pill"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="body">
+        <p>
+          {{ body | translate }}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn"
+          data-bs-dismiss="modal"
+        >
+          <i class="bx bx-x d-block d-sm-none"></i>
+          <span class="d-none d-sm-block">
+            {{ "close" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

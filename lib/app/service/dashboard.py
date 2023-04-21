@@ -56,9 +56,9 @@ class DashboardService:
                         :rtype: bool
                         """
 
-                        if t.users is not None:
-                            for u in t.users:
-                                if u.id == logged_user.id:
+                        if t.assigned_users is not None:
+                            for u in t.assigned_users:
+                                if u.user.id == logged_user.id:
                                     return True
 
                         return False
@@ -71,5 +71,6 @@ class DashboardService:
                                     of_user=self.__auth_service.me())
 
                 Logger.log_info(msg=f"dashboard get {len(dm.tasks)} task(s)", is_verbose=self.verbose)
+                # Logger.log_info(msg=f"tasks: {dm.tasks}")
 
                 return dm

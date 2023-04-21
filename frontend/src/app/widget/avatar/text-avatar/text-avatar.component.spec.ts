@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextAvatarComponent } from './text-avatar.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('TextAvatarComponent', () => {
   let component: TextAvatarComponent;
@@ -8,7 +9,8 @@ describe('TextAvatarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TextAvatarComponent ]
+      declarations: [ TextAvatarComponent ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

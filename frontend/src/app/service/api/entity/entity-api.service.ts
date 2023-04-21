@@ -11,7 +11,7 @@ export abstract class EntityApiService<T> {
   readonly abstract FIND: string;
 
 
-  constructor(private eelService: EelService) { }
+  constructor(public eelService: EelService) { }
 
   public async all(): Promise<Observable<T[]>> {
 

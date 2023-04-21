@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Type, TypeVar, Generic
+from dataclasses import dataclass, field
+from typing import Type, TypeVar, Generic, List, Optional
 from lib.db.entity.bem import EntityModel, BaseEntityModel
 from abc import ABC
 
@@ -42,6 +42,9 @@ class OneRelation(Relation):
 class ManyRelation(Relation):
     """
 
+    :ivar pivot_table: the pivot table
+    :ivar pivot_model: model which represents pivot records
+
     """
 
     pivot_table: str
@@ -50,3 +53,16 @@ class ManyRelation(Relation):
     def __post_init__(self) -> None:
         if self.pivot_model == self.fk_model:
             raise ValueError("a and b must be different types")
+
+
+@dataclass
+class ExtendedManyRelation(ManyRelation):
+    """
+    :ivar other_cols: other columns to add
+    :ivar fk_col: column's name of fk
+    :ivar wrap_fk_model: model which wraps relations
+    """
+
+    other_cols: List[str]
+    fk_col: str
+    wrap_fk_model: Type[dataclass]

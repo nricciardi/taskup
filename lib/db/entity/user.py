@@ -60,6 +60,7 @@ class UsersManager(EntitiesManager, TableNamesMixin):
     @property
     def relations(self) -> list[Relation]:
         return [
+            # role -< user
             OneRelation(fk_model=RoleModel, of_table=self.role_table_name, fk_field="role_id", to_attr="role")
         ]
 

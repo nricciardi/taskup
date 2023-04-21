@@ -1,3 +1,4 @@
+import { AssignedUserModel } from "./assigned-user.model";
 import { TaskLabelModel } from "./task-label.model";
 import { TaskStatusModel } from "./task-status.model";
 import { UserModel } from "./user.model";
@@ -16,5 +17,5 @@ export interface TaskModel {
   author: UserModel | null;
   task_status: TaskStatusModel | null;
   labels: TaskLabelModel[] | null;
-  users: UserModel[] | null;
+  assigned_users: AssignedUserModel[] | null;
 }

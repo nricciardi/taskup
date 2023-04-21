@@ -126,7 +126,7 @@ class ExposerService:
 
             self.expose_all_from_list(to_expose=[
                 self.__tasks_manager.create_from_dict,
-                self.__tasks_manager.removeAssignment,
+                self.__tasks_manager.remove_assignment,
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find), "task_find")

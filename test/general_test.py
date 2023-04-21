@@ -9,43 +9,25 @@ from random import randint
 import sqlite3
 import datetime
 
-if __name__ == '__main__':
 
-    db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
+db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
 
-    os.remove(db_path)
-    pm = ProjectManager()
+pm = ProjectManager()
 
-    users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-    task_assignment_manager = TaskAssignmentsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-    tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager, verbose=True)
+users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+task_assignment_manager = TaskAssignmentsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager, verbose=True)
 
-    # auth = AuthService(users_manager, "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/fakevault.json", True)
-    # auth.login("n1@r.com", "asdf123", False)
 
-    # query = SelectQueryBuilder.from_table("user").enable_binding().select().where("username", "=", "franco1")
-    # print(query.to_sql())
-    # print(query.data_bound)
-
-    #
-    # users = users_manager.all_as_dict(with_relations=True)
-    # print(users)
-
-    # users = users_manager.all_as_model(with_relations=True)
-    # print(users)
-
-    #
-    # tasks = tasks_manager.find(1, with_relations=True, safe=False)
-    # print(tasks.users)
-
-    # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
-
+def create_demo_db():
     def random_hex() -> str:
         random_number = randint(0, 16777215)
         hex_number = str(hex(random_number))
         hex_number = f"{hex_number[2:]}"
 
         return hex_number
+
+    os.remove(db_path)
 
     users_manager.create_from_dict({"username": f"pm",
                                     "email": f"pm@pm.com",
@@ -101,7 +83,34 @@ if __name__ == '__main__':
         })
 
         for i in range(randint(1, 8)):
-            tasks_manager.addAssignment(task.id, randint(1, u))
+            tasks_manager.add_assignment(task.id, randint(1, u))
+
+
+if __name__ == '__main__':
+
+
+
+    # auth = AuthService(users_manager, "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/fakevault.json", True)
+    # auth.login("n1@r.com", "asdf123", False)
+
+    # query = SelectQueryBuilder.from_table("user").enable_binding().select().where("username", "=", "franco1")
+    # print(query.to_sql())
+    # print(query.data_bound)
+
+    #
+    # users = users_manager.all_as_dict(with_relations=True)
+    # print(users)
+
+    # users = users_manager.all_as_model(with_relations=True)
+    # print(users)
+
+    #
+    tasks = tasks_manager.find(36, with_relations=True, safe=False)
+    print(tasks.assigned_users)
+
+    # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
+
+
 
 
 

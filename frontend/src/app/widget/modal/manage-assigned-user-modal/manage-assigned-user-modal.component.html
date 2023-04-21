@@ -1,0 +1,70 @@
+<div *ngIf="user"
+  class="modal fade text-left"
+  [id]="target"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="user"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" [id]="target">
+          {{ user.username }}
+        </h5>
+        <button
+          type="button"
+          class="close rounded-pill"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <span class="text-capitalize">{{ user.name ? user.name + " " : "" }}</span>
+          <span class="text-capitalize">{{ user.surname ? user.surname + " " : "" }}</span>
+          {{ user.name || user.surname ? " aka " : "" }}
+          <strong class="text-capitalize">
+            {{ user.username }}
+          </strong> ({{ user.email }})
+          <br>
+
+          <span *ngIf="assignmentDate">
+            {{ "assignment-date" | translate : { date: assignmentDate } }}
+          </span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <div class="row justify-content-between">
+          <div class="col-auto">
+            <button #close
+              type="button"
+              class="btn"
+              data-bs-dismiss="modal"
+            >
+              <i class="bx bx-x d-block d-sm-none"></i>
+              <span class="d-none d-sm-block">
+                {{ "close" | translate }}
+              </span>
+            </button>
+          </div>
+
+          <div class="col-auto">
+            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit(); close.click()">
+              {{ "remove-from-task" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

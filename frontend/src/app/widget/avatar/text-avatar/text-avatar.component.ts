@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { UserModel } from 'src/app/model/entity/user.model';
 
 @Component({
@@ -8,13 +8,7 @@ import { UserModel } from 'src/app/model/entity/user.model';
 })
 export class TextAvatarComponent {
 
-  @Input("user") user?: UserModel;
-
-  getText(): string {
-    if(this.user?.name && this.user?.surname) {
-      return this.user.name.substring(0, 1) + this.user.surname.substring(0, 1)
-    } else {
-      return this.user ? this.user.username.substring(0, 2) : "-";
-    }
-  }
+  @Input("color") color?: string;
+  @Input("text") text?: string;
+  @Input("tooltip") tooltip: string = "";
 }

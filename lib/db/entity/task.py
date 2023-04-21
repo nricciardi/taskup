@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
 from datetime import date, datetime
 from typing import Type, Optional, List
-from lib.db.entity.relation import Relation, OneRelation, ManyRelation
+from lib.db.entity.relation import Relation, OneRelation, ManyRelation, ExtendedManyRelation
 from lib.db.entity.user import UserModel
 from lib.db.component import WhereCondition
 from lib.utils.logger import Logger
@@ -51,6 +51,12 @@ class TaskLabelModel(BaseEntityModel):
 
 
 @dataclass
+class AssignedUser:
+    user: Optional[UserModel] = field(default=None)
+    assigned_at: Optional[datetime] = field(default=None)
+
+
+@dataclass
 class TaskModel(BaseEntityModel):
     id: int
     name: str
@@ -65,7 +71,7 @@ class TaskModel(BaseEntityModel):
     author: Optional[UserModel] = field(default=None)
     task_status: Optional[TaskStatusModel] = field(default=None)
     labels: Optional[List[TaskLabelModel]] = field(default=None)
-    users: Optional[List[UserModel]] = field(default=None)
+    assigned_users: Optional[List[AssignedUser]] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -151,7 +157,7 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
     def EM(self) -> Type[TaskAssignmentModel]:
         return TaskAssignmentModel
 
-    def removeAssignment(self, task_id: int, user_id: int):
+    def remove_assignment(self, task_id: int, user_id: int):
         """
         Remove an assignment from task
 
@@ -169,7 +175,7 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
             WhereCondition(col="task_id", operator="=", value=task_id),
         )
 
-    def addAssignment(self, task_id: int, user_id: int):
+    def add_assignment(self, task_id: int, user_id: int):
         """
         Add an assignment from task
 
@@ -210,17 +216,25 @@ class TasksManager(EntitiesManager, TableNamesMixin):
     @property
     def relations(self) -> list[Relation]:
         return [
+            # user -< task
             OneRelation(fk_model=UserModel, of_table=self.user_table_name, fk_field="author_id", to_attr="author"),
+
+            # task_status -< task
             OneRelation(fk_model=TaskStatusModel, of_table=self.task_status_table_name, fk_field="task_status_id",
                         to_attr="task_status"),
+
+            # task >-< task_label
             ManyRelation(fk_model=TaskLabelModel, of_table=self.task_label_table_name,
                          pivot_model=TaskTaskLabelPivotModel,
                          pivot_table=self.task_task_label_pivot_table_name, to_attr="labels"),
-            ManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
-                         pivot_table=self.task_assignment_table_name, to_attr="users")
+
+            # task >-< user
+            ExtendedManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
+                                 pivot_table=self.task_assignment_table_name, to_attr="assigned_users",
+                                 other_cols=['assigned_at'], fk_col="user", wrap_fk_model=AssignedUser)
         ]
 
-    def removeAssignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
+    def remove_assignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
         """
         Remove an assignment from task
 
@@ -237,7 +251,9 @@ class TasksManager(EntitiesManager, TableNamesMixin):
 
         try:
 
-            self.__task_assignment_manager.removeAssignment(task_id, user_id)
+            Logger.log_info(msg=f"removing assigned user (id: {user_id}) from task with id: {task_id}")
+
+            self.__task_assignment_manager.remove_assignment(task_id, user_id)
 
             return True
 
@@ -250,7 +266,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
 
             return False
 
-    def addAssignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
+    def add_assignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:
         """
         Add an assignment from task
 
@@ -279,7 +295,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
 
                 return True
 
-            self.__task_assignment_manager.addAssignment(task_id, user_id)
+            self.__task_assignment_manager.add_assignment(task_id, user_id)
 
             return True
 

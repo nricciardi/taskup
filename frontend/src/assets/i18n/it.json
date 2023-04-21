@@ -22,5 +22,8 @@
   "deadline": "Scadenza",
   "dashboard-operations": "Operazioni",
   "task-status": "Task Status",
-  "close": "Chiudi"
+  "close": "Chiudi",
+  "assignment-date": "Data di assegnamento: {{ date }}",
+  "remove-from-task": "Rimuovi dal task",
+  "add-new-user": "Aggiungi nuovo utente"
 }

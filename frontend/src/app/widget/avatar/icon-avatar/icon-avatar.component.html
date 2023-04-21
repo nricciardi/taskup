@@ -1,12 +1,12 @@
-<ng-container *ngIf="text && color">
+<ng-container *ngIf="iconClass && color">
   <div class="avatar me-3"
     [style.background-color]="'#' + color"
     data-bs-toggle="tooltip"
     data-bs-placement="top"
-    [title]="tooltip"
+    [title]="tooltip | translate"
   >
     <span class="avatar-content text-uppercase">
-      {{ text | translate }}
+      <i [class]="iconClass"></i>
     </span>
   </div>
 </ng-container>
