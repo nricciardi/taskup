@@ -494,3 +494,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         return self.__db_manager.delete(table_name, *conditions)
+
+    def delete_by_id(self, entity_id: int) -> bool:
+        """
+        Delete entity data by its id
+
+        :param entity_id:
+        :return:
+        """
+
+        return self.delete(
+            WhereCondition("id", "=", entity_id)
+        )

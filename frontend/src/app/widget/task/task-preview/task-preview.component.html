@@ -38,15 +38,11 @@
 
                   <!-- Delete -->
                   <button class="dropdown-item"
-                          (click)="delete()"
                           data-bs-toggle="modal"
-                          [attr.data-bs-target]="'#deleteRequest'">
+                          [attr.data-bs-target]="'#delete-request-' + task.id">
                     <i class="bi bi-trash me-50"></i>
                     {{ "delete" | translate }}
                   </button>
-
-                  <app-dialog-modal target="deleteRequest" title="delete-request"></app-dialog-modal>
-
                 </div>
               </div>
             </div>
@@ -56,6 +52,8 @@
 
       <p class="card-text mt-2" *ngIf="task.description">
         {{ task.description }}
+
+
 
         <ng-container>
           <div style="background-color: aqua;">
@@ -115,4 +113,16 @@
 
     <button class="btn btn-light-primary">Read More</button>
   </div>
+
+
+
+  <!-- MODALs -->
+  <app-dialog-modal [target]="'delete-request-' + task.id" title="delete-request"
+                    [centered]="true"
+                    [confirmBtn]="true"
+                    [confirmBtnTxt]="'confirm'"
+                    [borderless]="true"
+                    (onConfirm)="delete()">
+  </app-dialog-modal>
+
 </div>

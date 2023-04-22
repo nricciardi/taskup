@@ -33,5 +33,7 @@
   "no-user": "Nessun utente disponibile",
   "modify": "Modifica",
   "delete": "Elimina",
-  "delete-request": "Confermi l'eliminazione?"
+  "delete-request": "Confermi l'eliminazione?",
+  "submit": "Submit",
+  "confirm": "Conferma"
 }

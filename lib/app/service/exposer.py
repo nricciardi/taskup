@@ -128,6 +128,7 @@ class ExposerService:
                 self.__tasks_manager.create_from_dict,
                 self.__tasks_manager.remove_assignment,
                 self.__tasks_manager.add_assignment,
+                self.__tasks_manager.delete_by_id,
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
@@ -181,6 +182,7 @@ class ExposerService:
 
             self.expose_all_from_list(to_expose=[
                 self.__users_manager.create_from_dict,
+                self.__users_manager.delete_by_id,
             ], prefix="user_")
 
             self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")

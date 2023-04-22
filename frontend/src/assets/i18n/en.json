@@ -33,5 +33,7 @@
   "no-user": "No users available",
   "modify": "Modify",
   "delete": "Delete",
-  "delete-request": "Confirm deletion?"
+  "delete-request": "Confirm deletion?",
+  "submit": "Submit",
+  "confirm": "Confirm"
 }

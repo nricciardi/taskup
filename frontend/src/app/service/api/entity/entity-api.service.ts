@@ -9,7 +9,7 @@ export abstract class EntityApiService<T> {
 
   readonly abstract ALL: string;
   readonly abstract FIND: string;
-
+  readonly abstract DELETE_BY_ID: string;
 
   constructor(public eelService: EelService) { }
 
@@ -21,5 +21,10 @@ export abstract class EntityApiService<T> {
   public async find(id: number): Promise<Observable<T>> {
 
     return this.eelService.call(this.FIND, id);
+  }
+
+  public async deleteById(id: number): Promise<Observable<T>> {
+
+    return this.eelService.call(this.DELETE_BY_ID, id);
   }
 }

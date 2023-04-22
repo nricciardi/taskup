@@ -146,7 +146,19 @@ export class TaskPreviewComponent {
   }
 
   delete() {
+
+    if(!this.task)
+      return;
+
     LoggerService.logInfo("Remove task " + this.task?.name);
+
+    this.taskService.deleteById(this.task.id).then((response) => {
+      response.subscribe({
+        next: (value) => {
+          
+        }
+      })
+    })
   }
 
 }
