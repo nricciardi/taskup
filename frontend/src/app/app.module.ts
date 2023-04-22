@@ -26,6 +26,9 @@ import { DialogModalComponent } from './widget/modal/dialog-modal/dialog-modal.c
 import { InputModalComponent } from './widget/modal/input-modal/input-modal.component';
 import { ManageAssignedUserModalComponent } from './widget/modal/manage-assigned-user-modal/manage-assigned-user-modal.component';
 import { IconAvatarComponent } from './widget/avatar/icon-avatar/icon-avatar.component';
+import { NewAssignmentModalComponent } from './widget/modal/new-assignment-modal/new-assignment-modal.component';
+import { CloseBtnComponent } from './widget/modal/close-btn/close-btn.component';
+import { XBtnComponent } from './widget/modal/x-btn/x-btn.component';
 
 
 @NgModule({
@@ -50,6 +53,9 @@ import { IconAvatarComponent } from './widget/avatar/icon-avatar/icon-avatar.com
     InputModalComponent,
     ManageAssignedUserModalComponent,
     IconAvatarComponent,
+    NewAssignmentModalComponent,
+    CloseBtnComponent,
+    XBtnComponent,
   ],
   imports: [
     BrowserModule,

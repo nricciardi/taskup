@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
+import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
 import { environment } from 'src/environments/environment.development';
 
@@ -65,11 +66,16 @@ export class TaskPreviewComponent {
 
     let result = this.task.assigned_users?.map(au => au.user.id).includes(userId);
 
-
     if(result)
       return result;
 
     return false;
+  }
+
+  getAssignedUsers(): UserModel[] {
+
+    return this.task?.assigned_users?.map(au => au.user) ?? [];
+
   }
 
   getAvatarText(user: UserModel): string {
@@ -109,4 +115,35 @@ export class TaskPreviewComponent {
 
 
   }
+
+  async addAssignment(user: UserModel): Promise<void> {
+
+    if(!this.task)
+      return
+
+    LoggerService.logInfo(`Add user ${user.username} to task: ${this.task.id} - ${this.task.name}`);
+
+    this.taskService.addAssignment(this.task.id, user.id).then((response) => {
+      response.subscribe({
+        next: (value: boolean) => {
+          console.log(value);
+
+          if(value) {
+            // refresh task
+            this.taskService.find(this.task!.id).then((respose) => {
+              respose.subscribe({
+                next: (t) => {
+                  this.task = t;
+                }
+              })
+            })
+          }
+
+        }
+      })
+    });
+
+
+  }
+
 }

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 import { UserModel } from 'src/app/model/entity/user.model';
 
 @Component({
@@ -12,4 +13,11 @@ export class ManageAssignedUserModalComponent {
   @Input("assignmentDate") assignmentDate?: Date;
 
   @Output() onRemoveFromTask = new EventEmitter<void>();
+
+  closeSubject = new Subject<boolean>();
+
+  ngOnDestroy() {
+    console.log("addio amici addio");
+
+  }
 }

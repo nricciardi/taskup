@@ -150,10 +150,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         models = self.__all_as_model(table_name=self.table_name, with_relations=with_relations, model=self.EM,
                                      safe=safe)
 
+        Logger.log_info(msg=f"get {len(models)} entities from database")
+
         return models
 
-    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[
-        EntityModel]:
+    def __all_as_model(self, table_name: str, with_relations: bool, model: EntityModel, safe: bool) -> List[EntityModel]:
 
         tuples = self.__all_as_dict(table_name)
 
@@ -181,7 +182,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         data: Dict = self.__find(entity_id, self.table_name)
-        em = self.EM.from_dict(data)
+        em = self.EM.from_dict(data)    # create a new EntityModel from found data (dict)
 
         if with_relations:
             self.append_relations_data_on(em, safe=safe)

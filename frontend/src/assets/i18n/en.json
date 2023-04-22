@@ -25,5 +25,10 @@
   "close": "Close",
   "assignment-date": "Assignment date: {{ date }}",
   "remove-from-task": "Remove from task",
-  "add-new-user": "Add new user"
+  "add-new-user": "Add new user",
+  "add-new-assignment": "Assign new user",
+  "add-new-assignment-description": "Select a user from the following list to assign to this task.",
+  "add": "Add",
+  "select": "Select",
+  "no-user": "No users available"
 }

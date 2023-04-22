@@ -127,10 +127,11 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__tasks_manager.create_from_dict,
                 self.__tasks_manager.remove_assignment,
+                self.__tasks_manager.add_assignment,
             ], prefix="task_")
 
-            self.expose(to_dict(self.__tasks_manager.find), "task_find")
-            self.expose(to_dict(self.__tasks_manager.all_as_dict), "task_all")
+            self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
+            self.expose(to_dict(self.__tasks_manager.all_as_dict, self.verbose), "task_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -149,8 +150,8 @@ class ExposerService:
                 self.__auth_service.logout,
             ], prefix="auth_")
 
-            self.expose(to_dict(self.__auth_service.login), "auth_login")
-            self.expose(to_dict(self.__auth_service.me), "auth_me")
+            self.expose(to_dict(self.__auth_service.login, self.verbose), "auth_login")
+            self.expose(to_dict(self.__auth_service.me, self.verbose), "auth_me")
 
         except Exception as excepetion:
             Logger.log_error(msg="auth exposure error", is_verbose=self.verbose, full=True)
@@ -164,7 +165,7 @@ class ExposerService:
 
         try:
 
-            self.expose(to_dict(self.__dashboard_service.get_data), "dashboard_get_data")
+            self.expose(to_dict(self.__dashboard_service.get_data, self.verbose), "dashboard_get_data")
 
         except Exception as excepetion:
             Logger.log_error(msg="dashboard exposure error", is_verbose=self.verbose, full=True)
@@ -182,8 +183,8 @@ class ExposerService:
                 self.__users_manager.create_from_dict,
             ], prefix="user_")
 
-            self.expose(to_dict(self.__users_manager.find), "user_find")
-            self.expose(to_dict(self.__users_manager.all_as_model), "user_all")
+            self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")
+            self.expose(to_dict(self.__users_manager.all_as_model, self.verbose), "user_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="user exposure error", is_verbose=self.verbose, full=True)

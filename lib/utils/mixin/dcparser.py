@@ -18,12 +18,23 @@ def to_dict(method: Callable, verbose: bool = False):
     def wrapper(*args, **kwargs):
         res = method(*args, **kwargs)
 
-        Logger.log_info(msg=f"data to_dict: {res}", is_verbose=verbose)
+        def apply(item) -> Dict:
+            if hasattr(item, "to_dict"):
+                return item.to_dict()
 
-        if hasattr(res, "to_dict"):
-            return res.to_dict()
+            return item
 
-        return None
+        if isinstance(res, list):
+            data_to_dict = []
+            for i in range(len(res)):
+                data_to_dict.append(apply(res[i]))
+
+        else:
+            data_to_dict = apply(res)
+
+        Logger.log(msg=f"convert data to_dict: {data_to_dict}", is_verbose=verbose, truncate=100)
+
+        return data_to_dict
 
     return wrapper
 

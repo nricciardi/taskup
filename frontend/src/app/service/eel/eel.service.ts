@@ -92,12 +92,12 @@ export class EelService {
 
           try {
 
-            if(!this.logger_except.includes(name))
+            if(!this.logger_except.includes(name))      // force NO verbose for excepted names
               LoggerService.logInfo("Eel Call:", name);
 
             let result = await eel[name](...args)();   // call the eel exposed method and await response (double parentesis)
 
-            if(!this.logger_except.includes(name))
+            if(!this.logger_except.includes(name))    // force NO verbose for excepted names
               LoggerService.logInfo("Eel Result:", result);
 
             observer.next(result);    // send result on response observer

@@ -134,10 +134,12 @@ class Logger:
         print(f"{Fore.YELLOW}{'WARNING: ' + Fore.RESET if prefix else ''}{str(msg)}")
 
     @staticmethod
-    def log(msg: Any, is_verbose: bool = True, msg_row: bool = False) -> None:
+    def log(msg: Any, is_verbose: bool = True, msg_row: bool = False, truncate: int | None = None) -> None:
         """
         Log pre-formatted text
 
+        :param truncate: max length of message
+        :type truncate: int
         :param msg_row: prevent manipulation on msg
         :type msg_row: bool
         :param msg: message to print
@@ -153,7 +155,12 @@ class Logger:
         if msg_row is False and Logger.capitalize:
             msg = str(msg).capitalize()
 
-        print(f"{str(msg)}")
+        msg: str = str(msg)
+
+        if isinstance(truncate, int):
+            msg = msg[0:truncate] + "... [message truncates]"
+
+        print(f"{msg}")
 
     @staticmethod
     def log_custom(msg: Any, is_verbose: bool = True, prefix: str = None, color: colorama = Fore.MAGENTA, capitalize: bool = True) -> None:

@@ -25,5 +25,10 @@
   "close": "Chiudi",
   "assignment-date": "Data di assegnamento: {{ date }}",
   "remove-from-task": "Rimuovi dal task",
-  "add-new-user": "Aggiungi nuovo utente"
+  "add-new-user": "Aggiungi nuovo utente",
+  "add-new-assignment": "Assegna un nuovo utente",
+  "add-new-assignment-description": "Seleziona dalla seguente lista un utente da assegnare a questo task.",
+  "add": "Aggiungi",
+  "select": "Seleziona",
+  "no-user": "Nessun utente disponibile"
 }

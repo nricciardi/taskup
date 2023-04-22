@@ -3,7 +3,7 @@ from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
-from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition
+from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition, UniqueConstraint
 from lib.utils.util import Util
 
 
@@ -13,7 +13,7 @@ def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
 
     :param cursor: sqlite3 cursor
     :type cursor: sqlite3.Cursor
-    :param row: row as a tuple
+    :param row: row as tuple
     :type row: tuple
 
     :return:

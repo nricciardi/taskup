@@ -1,6 +1,6 @@
 <div class="card" *ngIf="task"
 [ngClass]="{
-  'not-assigned-task': userAssignedToTask(loggedUser?.id)
+  'not-assigned-task': !userAssignedToTask(loggedUser?.id)
 }"
 >
   <div class="card-content">
@@ -11,6 +11,13 @@
 
       <p class="card-text mt-2" *ngIf="task.description">
         {{ task.description }}
+
+        <ng-container>
+          <div style="background-color: aqua;">
+            id: {{ task.id }} - priority: {{ task.priority }}
+          </div>
+
+        </ng-container>
       </p>
 
       <!-- AVATAR OF ASSIGNED USERS -->
@@ -32,8 +39,17 @@
 
       <app-icon-avatar color="5b6370"
                        iconClass="bi bi-plus"
-                       tooltip="add-new-user">
+                       tooltip="add-new-user"
+                       (click)="null"
+                       data-bs-toggle="modal"
+                       [attr.data-bs-target]="'#new-assignment-modal'">
       </app-icon-avatar>
+
+      <app-new-assignment-modal
+                                  [target]="'new-assignment-modal'"
+                                  [alreadyAssignedUsers]="getAssignedUsers()"
+                                  (onAddAssignment)="addAssignment($event)">
+        </app-new-assignment-modal>
 
       <!-- AVATAR OF ASSIGNED USERS END -->
     </div>

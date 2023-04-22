@@ -3,7 +3,7 @@
   [id]="target"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="user"
+  [attr.aria-labelledby]="target"
   aria-hidden="true"
 >
   <div
@@ -15,14 +15,7 @@
         <h5 class="modal-title text-capitalize" [id]="target">
           {{ user.username }}
         </h5>
-        <button
-          type="button"
-          class="close rounded-pill"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        >
-          <i class="bi bi-x"></i>
-        </button>
+        <app-x-btn></app-x-btn>
       </div>
       <div class="modal-body">
         <p>
@@ -42,20 +35,12 @@
       <div class="modal-footer">
         <div class="row justify-content-between">
           <div class="col-auto">
-            <button #close
-              type="button"
-              class="btn"
-              data-bs-dismiss="modal"
-            >
-              <i class="bx bx-x d-block d-sm-none"></i>
-              <span class="d-none d-sm-block">
-                {{ "close" | translate }}
-              </span>
-            </button>
+            <app-close-btn>
+            </app-close-btn>
           </div>
 
           <div class="col-auto">
-            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit(); close.click()">
+            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit()" data-bs-dismiss="modal">
               {{ "remove-from-task" | translate }}
             </button>
           </div>

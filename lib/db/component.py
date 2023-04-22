@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Optional, TypeVar
 from lib.utils.mixin.sql import ToSqlInterface
 from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
+from abc import ABC
 
 
 @dataclass
@@ -83,6 +84,15 @@ class Field(ToSqlInterface):
 
 
 @dataclass
+class RawSql(ToSqlInterface):
+
+    sql: str
+
+    def to_sql(self) -> str:
+        return self.sql
+
+
+@dataclass
 class FKConstraint(ToSqlInterface):
     fk_field: str
     on_table: str
@@ -94,7 +104,7 @@ class FKConstraint(ToSqlInterface):
 
     def to_sql(self) -> str:
         """
-        Get sql strin for FK constraint
+        Get sql string for FK constraint
 
         :return: SQL
         :rtype str:
@@ -102,18 +112,41 @@ class FKConstraint(ToSqlInterface):
 
         return f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
 
+@dataclass
+class UniqueConstraint(ToSqlInterface):
+    cols: List[str]
+
+    def to_sql(self) -> str:
+        """
+        Get sql string for UNIQUE constraint
+
+        :return: SQL
+        :rtype str:
+        """
+
+        return f"UNIQUE({', '.join(self.cols)})"
+
+
+Constraint = TypeVar('Constraint', FKConstraint, UniqueConstraint)
+
 
 @dataclass
 class Table(ToSqlInterface):
     name: str
     fields: List[Field]
-    fk_constraints: List[FKConstraint] = field(default=None)
+    fk_constraints: Optional[List[FKConstraint]] = field(default=None)
+    other_constraints: Optional[List[Constraint]] = field(default=None)
 
-    def has_fk_constraint(self) -> bool:
+    def has_fk_constraints(self) -> bool:
         return self.fk_constraints is not None and len(self.fk_constraints) > 0
 
+    def has_other_constraints(self) -> bool:
+        return self.other_constraints is not None and len(self.other_constraints) > 0
+
     @classmethod
-    def pivot(cls, table_name: str, tables: List[str], other_fields: List[Field] | None = None) -> 'Table':
+    def pivot(cls, table_name: str, tables: List[str], other_fields: List[Field] | None = None,
+              other_constraints: List[Constraint] | None = None, unique_record: bool = False) -> 'Table':
+
         fields = [Field.id_field()]
 
         if other_fields is not None:
@@ -121,13 +154,22 @@ class Table(ToSqlInterface):
 
         fk_constraints = []
 
+        names = []
         for t in tables:
             name = f"{t}_id"
+            names.append(name)
 
             fields.append(Field.fk_field(name=name))
             fk_constraints.append(FKConstraint.on_id(name, t))
 
-        return cls(table_name, fields, fk_constraints)
+        if unique_record:
+
+            if other_constraints is None:
+                other_constraints = []
+
+            other_constraints.append(UniqueConstraint(names))
+
+        return cls(table_name, fields, fk_constraints, other_constraints=other_constraints)
 
     def to_sql(self, if_not_exist: bool = True) -> str:
         """
@@ -142,7 +184,8 @@ class Table(ToSqlInterface):
         return f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
             {fields}
 
-            {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraint() else "" if self.has_fk_constraint() else ""}
+            {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraints() else ""}
+            {"," + ','.join(constraint.to_sql() for constraint in self.other_constraints) if self.has_other_constraints() else ""}
         );
         """
 

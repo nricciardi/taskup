@@ -11,7 +11,7 @@ import datetime
 
 
 db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
-
+#os.remove(db_path)
 pm = ProjectManager()
 
 users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
@@ -27,7 +27,6 @@ def create_demo_db():
 
         return hex_number
 
-    os.remove(db_path)
 
     users_manager.create_from_dict({"username": f"pm",
                                     "email": f"pm@pm.com",
@@ -35,19 +34,19 @@ def create_demo_db():
                                     "avatar_hex_color": random_hex(),
                                     "role_id": 1})
 
-    task = tasks_manager.create_from_dict({
-        "name": f"prova task single" * randint(1, 4),
-        "description": f"descrizione di prova single" * randint(10, 60),
-        "author_id": 1,  # user.id,
-        "task_status_id": 4,
-        "priority": randint(1, 20),
-        "deadline": datetime.datetime(2023,
-                                      4,
-                                      17,
-                                      9,
-                                      4
-                                      ).strftime("%Y-%m-%d %H:%M:%S")
-    })
+    # task = tasks_manager.create_from_dict({
+    #     "name": f"prova task single" * randint(1, 4),
+    #     "description": f"descrizione di prova single" * randint(10, 60),
+    #     "author_id": 1,  # user.id,
+    #     "task_status_id": 4,
+    #     "priority": randint(1, 20),
+    #     "deadline": datetime.datetime(2023,
+    #                                   4,
+    #                                   17,
+    #                                   9,
+    #                                   4
+    #                                   ).strftime("%Y-%m-%d %H:%M:%S")
+    # })
 
     u = 8
     for n in range(1, u):
@@ -87,7 +86,7 @@ def create_demo_db():
 
 
 if __name__ == '__main__':
-
+    print("start main...")
 
 
     # auth = AuthService(users_manager, "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/fakevault.json", True)
@@ -101,16 +100,16 @@ if __name__ == '__main__':
     # users = users_manager.all_as_dict(with_relations=True)
     # print(users)
 
-    # users = users_manager.all_as_model(with_relations=True)
-    # print(users)
+    users = users_manager.all_as_model(with_relations=True)
+    print(users)
 
     #
-    tasks = tasks_manager.find(36, with_relations=True, safe=False)
-    print(tasks.assigned_users)
+    # tasks = tasks_manager.find(36, with_relations=True, safe=False)
+    # print(tasks.assigned_users)
 
     # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
 
-
+    # create_demo_db()
 
 
 
