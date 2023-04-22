@@ -12,7 +12,6 @@ enum DeadlineStatus {
   DANGER
 }
 
-
 @Component({
   selector: 'app-task-preview',
   templateUrl: './task-preview.component.html',
@@ -144,6 +143,10 @@ export class TaskPreviewComponent {
     });
 
 
+  }
+
+  delete() {
+    LoggerService.logInfo("Remove task " + this.task?.name);
   }
 
 }

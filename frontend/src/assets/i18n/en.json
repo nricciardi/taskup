@@ -30,5 +30,8 @@
   "add-new-assignment-description": "Select a user from the following list to assign to this task.",
   "add": "Add",
   "select": "Select",
-  "no-user": "No users available"
+  "no-user": "No users available",
+  "modify": "Modify",
+  "delete": "Delete",
+  "delete-request": "Confirm deletion?"
 }

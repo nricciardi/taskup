@@ -6,7 +6,52 @@
   <div class="card-content">
     <div class="card-body">
       <h4 class="card-title">
-        {{ task.name }}
+        <div class="row justify-content-between">
+          <div class="col-md-auto">
+            <!-- TASK TITLE -->
+            {{ task.name }}
+          </div>
+
+          <div class="col-md-auto">
+            <!-- MODIFY BTN -->
+            <div class="btn-group mb-1">
+              <div class="dropdown icon-left">
+                <button
+                  class="btn icon btn-sm btn-light me-1"
+                  type="button"
+                  id="dropdownMenuButtonIconRight"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  aria-labelledby="dropdownMenuButtonIconRight"
+                >
+                  <!-- Modify -->
+                  <button class="dropdown-item">
+                    <i class="bi bi-pencil me-50"></i>
+                    {{ "modify" | translate }}
+                  </button>
+
+                  <!-- Delete -->
+                  <button class="dropdown-item"
+                          (click)="delete()"
+                          data-bs-toggle="modal"
+                          [attr.data-bs-target]="'#deleteRequest'">
+                    <i class="bi bi-trash me-50"></i>
+                    {{ "delete" | translate }}
+                  </button>
+
+                  <app-dialog-modal target="deleteRequest" title="delete-request"></app-dialog-modal>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </h4>
 
       <p class="card-text mt-2" *ngIf="task.description">
@@ -28,7 +73,8 @@
                         [tooltip]="assignedUser.user.username"
                         (click)="null"
                         data-bs-toggle="modal"
-                        [attr.data-bs-target]="'#' + assignedUser.user.username + '-modal'">
+                        [attr.data-bs-target]="'#' + assignedUser.user.username + '-modal'"
+                        class="cursor-pointer">
         </app-text-avatar>
         <app-manage-assigned-user-modal [user]="assignedUser.user"
                                         [target]="assignedUser.user.username + '-modal'"
@@ -43,7 +89,8 @@
                        (click)="null"
                        data-bs-toggle="modal"
                        [attr.data-bs-target]="'#new-assignment-modal'"
-                       [shiny]="true">
+                       [shiny]="true"
+                       class="cursor-pointer">
       </app-icon-avatar>
 
       <app-new-assignment-modal

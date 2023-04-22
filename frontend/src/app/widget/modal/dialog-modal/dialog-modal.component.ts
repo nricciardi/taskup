@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 export class DialogModalComponent {
   @Input("body") body?: string;
   @Input("title") title?: string;
-  @Input("target") target?: string;
+  @Input("target") target: string = "dialog";
 }
