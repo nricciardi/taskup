@@ -9,4 +9,5 @@ export class IconAvatarComponent {
   @Input("color") color?: string;
   @Input("iconClass") iconClass?: string;
   @Input("tooltip") tooltip: string = "";
+  @Input("shiny") shiny: boolean = false;
 }
