@@ -94,6 +94,8 @@
         </ng-container>
       </p>
 
+      <app-task-todo-list></app-task-todo-list>
+
       <!-- AVATAR OF ASSIGNED USERS -->
       <ng-container *ngFor="let assignedUser of task.assigned_users">
         <app-text-avatar
@@ -112,16 +114,17 @@
         </app-manage-assigned-user-modal>
       </ng-container>
 
-      <app-icon-avatar color="5b6370"
+      <ng-container *ngIf="!!loggedUser?.role?.permission_change_assignment">
+        <app-icon-avatar color="5b6370"
                        iconClass="bi bi-plus"
                        tooltip="add-new-user"
                        (click)="null"
                        data-bs-toggle="modal"
                        [attr.data-bs-target]="'#new-assignment-modal'"
                        class="cursor-pointer">
-      </app-icon-avatar>
+        </app-icon-avatar>
 
-      <app-new-assignment-modal
+        <app-new-assignment-modal
                                   [target]="'new-assignment-modal'"
                                   [alreadyAssignedUsers]="getAssignedUsers()"
                                   (onAddAssignment)="addAssignment($event)"
@@ -130,6 +133,7 @@
                                     new: task
                                   });">
         </app-new-assignment-modal>
+      </ng-container>
 
       <!-- AVATAR OF ASSIGNED USERS END -->
     </div>

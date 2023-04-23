@@ -1,1 +1,17 @@
-<p>task-todo-list works!</p>
+<div class="card widget-todo" *ngIf="todoItems.length > 0">
+  <div
+    class="card-header border-bottom d-flex justify-content-between align-items-center"
+  >
+    <h4 class="card-title d-flex">
+      <i class="bx bx-check font-medium-5 pl-25 pr-75"></i>
+      {{ "sub-task" | translate }}
+    </h4>
+  </div>
+  <div class="card-body px-0 py-1 overflow-auto">
+    <ul class="widget-todo-list-wrapper" id="widget-todo-list">
+      <app-task-todo-item *ngFor="let item of todoItems"
+                          [item]="item">
+      </app-task-todo-item>
+    </ul>
+  </div>
+</div>

@@ -456,6 +456,18 @@ class TodoItemsManager(EntitiesManager, TableNamesMixin):
     def EM(self) -> Type[TodoItemModel]:
         return TodoItemModel
 
+    def all_of(self, task_id: int) -> List[TodoItemModel]:
+        """
+        Return all to-do of task based on task id
+
+        :param task_id:
+        :return:
+        """
+
+        return self.where_as_model(
+            WhereCondition(col="task_id", operator="=", value=task_id)
+        )
+
 
 class TaskLabelsManager(EntitiesManager, TableNamesMixin):
 

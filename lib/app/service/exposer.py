@@ -1,6 +1,6 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager
+from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
 from lib.db.entity.user import UsersManager, RolesManager
 from lib.app.service.auth import AuthService, login_required, permission_required
 from lib.app.service.dashboard import DashboardService
@@ -36,6 +36,9 @@ class ExposerService:
 
         self.__task_status_manager = TaskStatusManager(db_name=db_name, work_directory_path=work_directory_path,
                                                        verbose=self.verbose)
+
+        self.__todo_items_manager = TodoItemsManager(db_name=db_name, work_directory_path=work_directory_path,
+                                                     verbose=self.verbose)
 
         self.__task_assignment_manager = TaskAssignmentsManager(db_name=db_name, work_directory_path=work_directory_path,
                                                                 verbose=self.verbose)
@@ -132,6 +135,7 @@ class ExposerService:
 
         try:
 
+            # expose task
             self.expose_all_from_list(to_expose=[
                 self.__tasks_manager.create_from_dict,
                 self.__tasks_manager.remove_assignment,
@@ -144,8 +148,24 @@ class ExposerService:
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
             self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.verbose), "task_all")
 
+            # expose task label
+            self.expose_all_from_list(to_expose=[
+                self.__task_labels_manager.create_from_dict,
+                self.__task_labels_manager.delete_by_id,
+            ], prefix="task_label_")
+
             self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
             self.expose(login_required(self.__task_labels_manager.all_as_dict, self.__auth_service, self.verbose), "task_label_all")
+
+            # expose to-do
+            self.expose_all_from_list(to_expose=[
+                self.__todo_items_manager.create_from_dict,
+                self.__todo_items_manager.delete_by_id,
+            ], prefix="todo_")
+
+            self.expose(to_dict(self.__todo_items_manager.find, self.verbose), "todo_find")
+            self.expose(login_required(self.__todo_items_manager.all_as_dict, self.__auth_service, self.verbose), "todo_all")
+            self.expose(login_required(self.__todo_items_manager.all_of, self.__auth_service, self.verbose), "todo_all_of")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)

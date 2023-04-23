@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TodoItemModel } from 'src/app/model/entity/todo-item.model';
 
 @Component({
   selector: 'app-task-todo-item',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class TaskTodoItemComponent {
 
+  @Input("item") item?: TodoItemModel;
 }

@@ -36,5 +36,6 @@
   "delete": "Elimina",
   "delete-request": "Confermi l'eliminazione?",
   "submit": "Submit",
-  "confirm": "Conferma"
+  "confirm": "Conferma",
+  "sub-task": "Sub-task"
 }
