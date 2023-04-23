@@ -79,7 +79,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] (!) Implement try-except in exposed methods
 - [x] Prevent Eel closing on error -> caused by shutdown_delay (Eel .start)
 - [x] Create common method to add a table and insert base values
-- [ ] Migrate from __insert_base to seeder
+- [x] Migrate from __insert_base to seeder
 - [ ] Improve QueryBuilder (join, subquery, group by, order by)
 - [ ] Crypt password of users
 - [ ] Improve common methods of entity (py) as in typescript

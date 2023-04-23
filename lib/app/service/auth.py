@@ -3,7 +3,7 @@ from lib.db.component import WhereCondition
 from lib.utils.collections import CollectionsUtils
 from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
-from typing import List
+from typing import List, Callable, Optional
 
 
 class AuthService:
@@ -150,3 +150,33 @@ class AuthService:
             Logger.log_warning(msg="vault erase error", is_verbose=self.verbose)
 
             return False
+
+
+def error_msg(msg: str) -> Callable:
+
+    return msg
+
+
+def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:
+    """
+    Prevent function's call if user is NOT logged in
+
+    :param verbose:
+    :param func:
+    :type func: Callable
+    :param auth:
+    :type auth: AuthService
+
+    :return:
+    """
+
+    def wrapper() -> Callable:
+        if not auth.is_logged():
+            if verbose:
+                Logger.log_error(msg=f"login is required to call {func}")
+
+            return error_msg("login is required")
+
+        return func()
+
+    return wrapper

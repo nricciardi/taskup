@@ -2,7 +2,7 @@ import eel
 from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager
 from lib.db.entity.user import UsersManager, RolesManager
-from lib.app.service.auth import AuthService
+from lib.app.service.auth import AuthService, login_required
 from lib.app.service.dashboard import DashboardService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
@@ -132,7 +132,7 @@ class ExposerService:
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
-            self.expose(to_dict(self.__tasks_manager.all_as_dict, self.verbose), "task_all")
+            self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.verbose), "task_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -186,7 +186,7 @@ class ExposerService:
             ], prefix="user_")
 
             self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")
-            self.expose(to_dict(self.__users_manager.all_as_model, self.verbose), "user_all")
+            self.expose(login_required(self.__users_manager.all_as_dict, self.__auth_service, self.verbose), "user_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="user exposure error", is_verbose=self.verbose, full=True)
@@ -199,7 +199,7 @@ class ExposerService:
         """
 
         try:
-            Logger.log_info(msg="expose py methods...", is_verbose=self.verbose, end=" ")
+            Logger.log_info(msg="expose py methods...", is_verbose=self.verbose)
 
             self.expose(self.test)
 
@@ -208,7 +208,7 @@ class ExposerService:
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
 
-            Logger.log_success(msg="OK", is_verbose=self.verbose, prefix=False, msg_row=True)
+            Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
 
         except Exception as excepetion:
             Logger.log_error(msg="eel exposure error", is_verbose=self.verbose, full=True)
