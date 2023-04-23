@@ -4,6 +4,7 @@ from lib.utils.collections import CollectionsUtils
 from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
 from typing import List, Callable, Optional
+from lib.utils.error import Errors
 
 
 class AuthService:
@@ -152,11 +153,6 @@ class AuthService:
             return False
 
 
-def error_msg(msg: str) -> Callable:
-
-    return msg
-
-
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:
     """
     Prevent function's call if user is NOT logged in
@@ -170,12 +166,12 @@ def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> 
     :return:
     """
 
-    def wrapper() -> Callable:
+    def wrapper():
         if not auth.is_logged():
             if verbose:
                 Logger.log_error(msg=f"login is required to call {func}")
 
-            return error_msg("login is required")
+            return Errors.LOGIN_REQUIRE.to_dict()
 
         return func()
 
