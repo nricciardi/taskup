@@ -1,0 +1,45 @@
+<div *ngIf="label"
+  class="modal fade text-left"
+  [id]="target"
+  tabindex="-1"
+  role="dialog"
+  [attr.aria-labelledby]="target"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" [id]="target">
+          {{ label.name }}
+        </h5>
+        <app-x-btn></app-x-btn>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="label.description">
+          {{ label.description }}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <div class="row justify-content-between">
+          <div class="col-auto">
+            <app-close-btn>
+            </app-close-btn>
+          </div>
+
+          <div class="col-auto">
+            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit()" data-bs-dismiss="modal">
+              {{ "remove-from-task" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

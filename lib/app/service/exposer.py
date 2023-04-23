@@ -1,6 +1,6 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager
+from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager
 from lib.db.entity.user import UsersManager, RolesManager
 from lib.app.service.auth import AuthService, login_required, permission_required
 from lib.app.service.dashboard import DashboardService
@@ -40,8 +40,13 @@ class ExposerService:
         self.__task_assignment_manager = TaskAssignmentsManager(db_name=db_name, work_directory_path=work_directory_path,
                                                                 verbose=self.verbose)
 
+        self.__task_task_label_pivot_model = TaskTaskLabelPivotManager(db_name=db_name,
+                                                                       work_directory_path=work_directory_path,
+                                                                       verbose=self.verbose)
+
         self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
                                             task_assignment_manager=self.__task_assignment_manager,
+                                            task_task_label_pivot_manager=self.__task_task_label_pivot_model,
                                             verbose=self.verbose)
 
         self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
@@ -129,6 +134,8 @@ class ExposerService:
                 self.__tasks_manager.remove_assignment,
                 self.__tasks_manager.add_assignment,
                 self.__tasks_manager.delete_by_id,
+                self.__tasks_manager.add_label,
+                self.__tasks_manager.remove_label
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")

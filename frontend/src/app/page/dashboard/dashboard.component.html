@@ -131,7 +131,9 @@
 
     <div class="col-12">
       <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"
-                              (onDeletion)="removeTask($event)">
+                              (onDeletion)="removeTask($event)"
+                              (onAddAssignment)="updateTask($event)"
+                              (onRemoveAssignment)="updateTask($event)">
     </app-task-preview-list>
     </div>
   </div>

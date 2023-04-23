@@ -14,8 +14,6 @@ export class ManageAssignedUserModalComponent {
 
   @Output() onRemoveFromTask = new EventEmitter<void>();
 
-  closeSubject = new Subject<boolean>();
-
   ngOnDestroy() {
 
   }

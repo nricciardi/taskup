@@ -194,12 +194,68 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
         })
 
 
+class TaskTaskLabelPivotManager(EntitiesManager, TableNamesMixin):
+
+    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+        self.verbose = verbose
+        self.db_name = db_name
+        work_directory_path = work_directory_path
+
+        super().__init__(db_name=self.db_name, verbose=self.verbose,
+                         work_directory_path=work_directory_path)
+
+    @property
+    def table_name(self) -> str:
+        return self.task_task_label_pivot_table_name
+
+    @property
+    def EM(self) -> Type[TaskTaskLabelPivotModel]:
+        return TaskTaskLabelPivotModel
+
+    def remove_from(self, task_id: int, label_id: int):
+        """
+        Remove a label from task
+
+        :param task_id:
+        :type task_id: int
+        :param label_id:
+        :type label_id: int
+
+        :return: result
+        """
+
+        return self.delete(
+            WhereCondition(col="task_label_id", operator="=", value=label_id),
+            WhereCondition(col="task_id", operator="=", value=task_id),
+        )
+
+    def append_to_task(self, task_id: int, label_id: int):
+        """
+        Append label to task
+
+        :param task_id:
+        :type task_id: int
+        :param label_id:
+        :type label_id: int
+
+        :return: result
+        :rtype bool:
+        """
+
+        self.create_from_dict({
+            "task_label_id": label_id,
+            "task_id": task_id
+        })
+
+
 class TasksManager(EntitiesManager, TableNamesMixin):
     def __init__(self, db_name: str, work_directory_path: str, task_assignment_manager: TaskAssignmentsManager,
-                 verbose: bool = False):
+                 task_task_label_pivot_manager: TaskTaskLabelPivotManager, verbose: bool = False):
+
         self.verbose = verbose
         self.db_name = db_name
         self.__task_assignment_manager = task_assignment_manager
+        self.__task_task_label_pivot_manager = task_task_label_pivot_manager
         work_directory_path = work_directory_path
 
         super().__init__(db_name=self.db_name, verbose=self.verbose,
@@ -241,7 +297,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
         :param task_id:
         :type task_id: int
         :param user_id:
-        :type user_id: type
+        :type user_id: int
         :param safe: if it is a safe operation
         :type safe: bool
 
@@ -273,7 +329,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
         :param task_id:
         :type task_id: int
         :param user_id:
-        :type user_id: type
+        :type user_id: int
         :param safe: if it is a safe operation
         :type safe: bool
 
@@ -296,6 +352,80 @@ class TasksManager(EntitiesManager, TableNamesMixin):
                 return True
 
             self.__task_assignment_manager.add_assignment(task_id, user_id)
+
+            return True
+
+        except Exception as exception:
+
+            Logger.log_error(msg=exception, full=True, is_verbose=self.verbose)
+
+            if not safe:
+                raise exception
+
+            return False
+
+    def remove_label(self, task_id: int, label_id: int, safe: bool = True) -> bool:
+        """
+        Remove an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param label_id:
+        :type label_id: int
+        :param safe: if it is a safe operation
+        :type safe: bool
+
+        :return: result
+        :rtype bool:
+        """
+
+        try:
+
+            Logger.log_info(msg=f"removing label (id: {label_id}) from task with id: {task_id}")
+
+            self.__task_task_label_pivot_manager.remove_from(task_id, label_id)
+
+            return True
+
+        except Exception as exception:
+
+            Logger.log_error(msg=exception, full=True, is_verbose=self.verbose)
+
+            if not safe:
+                raise exception
+
+            return False
+
+    def add_label(self, task_id: int, label_id: int, safe: bool = True) -> bool:
+        """
+        Add an assignment from task
+
+        :param task_id:
+        :type task_id: int
+        :param label_id:
+        :type label_id: int
+        :param safe: if it is a safe operation
+        :type safe: bool
+
+        :return: result
+        :rtype bool:
+        """
+
+        try:
+
+            past_assignment: List[TaskTaskLabelPivotModel] = self.__task_task_label_pivot_manager.where_as_model(
+                WhereCondition(col="task_id", operator="=", value=task_id),
+                WhereCondition(col="task_label_id", operator="=", value=label_id),
+            )
+
+            if len(past_assignment) > 0:
+                msg: str = f"task (id: {task_id}) already has (label_id: {label_id})"
+
+                Logger.log_warning(msg=msg, is_verbose=self.verbose)
+
+                return True
+
+            self.__task_task_label_pivot_manager.append_to_task(task_id, label_id)
 
             return True
 

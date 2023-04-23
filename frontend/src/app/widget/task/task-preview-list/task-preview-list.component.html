@@ -3,7 +3,9 @@
   <app-task-preview *ngFor="let task of tasks"
                     [task]="task"
                     [loggedUser]="loggedUser"
-                    (onDeletion)="onDeletion.emit($event)">
+                    (onDeletion)="onDeletion.emit($event)"
+                    (onAddAssignment)="onAddAssignment.emit($event)"
+                    (onRemoveAssignment)="onRemoveAssignment.emit($event)">
   </app-task-preview>
 
   <!-- SCROLL ON TOP BTN -->

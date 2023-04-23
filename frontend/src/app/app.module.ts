@@ -29,6 +29,11 @@ import { IconAvatarComponent } from './widget/avatar/icon-avatar/icon-avatar.com
 import { NewAssignmentModalComponent } from './widget/modal/new-assignment-modal/new-assignment-modal.component';
 import { CloseBtnComponent } from './widget/modal/close-btn/close-btn.component';
 import { XBtnComponent } from './widget/modal/x-btn/x-btn.component';
+import { TaskTodoListComponent } from './widget/task/task-todo-list/task-todo-list.component';
+import { TaskTodoItemComponent } from './widget/task/task-todo-item/task-todo-item.component';
+import { BadgeComponent } from './widget/badge/badge.component';
+import { ManageTaskLabelModalComponent } from './widget/modal/manage-task-label-modal/manage-task-label-modal.component';
+import { AddTaskLabelModalComponent } from './widget/modal/add-task-label-modal/add-task-label-modal.component';
 
 
 @NgModule({
@@ -56,6 +61,11 @@ import { XBtnComponent } from './widget/modal/x-btn/x-btn.component';
     NewAssignmentModalComponent,
     CloseBtnComponent,
     XBtnComponent,
+    TaskTodoListComponent,
+    TaskTodoItemComponent,
+    BadgeComponent,
+    ManageTaskLabelModalComponent,
+    AddTaskLabelModalComponent,
   ],
   imports: [
     BrowserModule,

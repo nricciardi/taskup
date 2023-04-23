@@ -259,7 +259,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         return {
             self.task_label_table_name: Seeder(table=self.task_label_table_name,
                                                values=[
-                                                   ("Front-end", "Front-end tasks", "b6f542"),
+                                                   ("Front-end", "Front-end tasks", "32a852"),
                                                    ("Back-end", "Front-end tasks", "f56342"),
                                                    ("Documentation", "Documentation tasks", "f242f5")
                                                ], cols=("name", "description", "hex_color")),

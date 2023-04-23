@@ -52,10 +52,27 @@
         </div>
       </h4>
 
+      <!-- LABELs -->
+      <div class="d-flex justify-content-start">
+        <ng-container  *ngFor="let label of task.labels">
+          <app-badge  [text]="label.name"
+                      [color]="label.hex_color"
+                      class="cursor-pointer"
+                      data-bs-toggle="modal"
+                      [attr.data-bs-target]="'#label-' + label.id + '-task-' + task.id + '-modal'">
+        </app-badge>
+
+        <app-manage-task-label-modal [target]="'label-' + label.id + '-task-' + task.id + '-modal'" [label]="label"
+                                     (onRemoveFromTask)="removeLabelFromTask(label.id)">
+        </app-manage-task-label-modal>
+        </ng-container>
+
+        <!-- Add new label -->
+        <app-badge [text]="'+'" class="cursor-pointer"></app-badge>
+      </div>
+
       <p class="card-text mt-2" *ngIf="task.description">
         {{ task.description }}
-
-
 
         <ng-container>
           <div style="background-color: aqua;">
@@ -89,14 +106,17 @@
                        (click)="null"
                        data-bs-toggle="modal"
                        [attr.data-bs-target]="'#new-assignment-modal'"
-                       [shiny]="true"
                        class="cursor-pointer">
       </app-icon-avatar>
 
       <app-new-assignment-modal
                                   [target]="'new-assignment-modal'"
                                   [alreadyAssignedUsers]="getAssignedUsers()"
-                                  (onAddAssignment)="addAssignment($event)">
+                                  (onAddAssignment)="addAssignment($event)"
+                                  (onClose)="this.onAddAssignment.emit({
+                                    target: task.id,
+                                    new: task
+                                  });">
         </app-new-assignment-modal>
 
       <!-- AVATAR OF ASSIGNED USERS END -->

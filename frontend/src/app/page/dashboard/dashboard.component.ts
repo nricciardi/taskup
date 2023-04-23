@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
+import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
@@ -215,4 +216,16 @@ export class DashboardComponent {
     this.dashboard.tasks = this.dashboard.tasks.filter(t => t.id != taskId);
   }
 
+  updateTask(managedTask: UpdateTaskModel) {
+    if(!this.dashboard?.tasks)
+      return;
+
+    for (let index = 0; index < this.dashboard.tasks.length; index++) {
+      const element = this.dashboard.tasks[index];
+
+      if(element.id == managedTask.target)
+        this.dashboard.tasks[index] = managedTask.new;
+
+    }
+  }
 }

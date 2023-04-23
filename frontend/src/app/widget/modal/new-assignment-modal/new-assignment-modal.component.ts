@@ -19,10 +19,15 @@ export class NewAssignmentModalComponent {
   usersCanBeAssign?: UserModel[];
 
   @Output() onAddAssignment = new EventEmitter<UserModel>();   // emit assigned user
+  @Output() onClose = new EventEmitter<void>();
 
   ngOnInit() {
     // this.setUsersCanBeAssign();
 
+  }
+
+  ngOnDestroy() {
+    this.onClose.emit();
   }
 
   selectUser(user: UserModel) {

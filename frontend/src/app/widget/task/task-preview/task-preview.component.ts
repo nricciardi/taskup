@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
+import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
@@ -24,6 +25,10 @@ export class TaskPreviewComponent {
   @Input("loggedUser") loggedUser?: UserModel;
 
   @Output() onDeletion = new EventEmitter<number>();
+  @Output() onRemoveAssignment = new EventEmitter<UpdateTaskModel>();
+  @Output() onAddAssignment = new EventEmitter<UpdateTaskModel>();
+  @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
+  @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
   DeadlineStatus = DeadlineStatus;
 
@@ -33,7 +38,6 @@ export class TaskPreviewComponent {
   }
 
   ngOnInit() {
-    this.authService.refreshMe();   // so after i can use .loggedUser
   }
 
   getDeadlineStatus(): DeadlineStatus | undefined {
@@ -100,18 +104,19 @@ export class TaskPreviewComponent {
     this.taskService.removeAssignment(this.task.id, userId).then((response) => {
       response.subscribe({
         next: (value: boolean) => {
-          console.log(value);
 
-          if(value) {
-            // refresh task
-            this.taskService.find(this.task!.id).then((respose) => {
-              respose.subscribe({
-                next: (t) => {
-                  this.task = t;
-                }
-              })
+          // refresh task
+          this.taskService.find(this.task!.id).then((respose) => {
+            respose.subscribe({
+              next: (t) => {
+                this.task = t;
+                this.onRemoveAssignment.emit({
+                  target: this.task.id,
+                  new: t
+                });
+              }
             })
-          }
+          })
 
         }
       })
@@ -130,18 +135,19 @@ export class TaskPreviewComponent {
     this.taskService.addAssignment(this.task.id, user.id).then((response) => {
       response.subscribe({
         next: (value: boolean) => {
-          console.log(value);
 
-          if(value) {
-            // refresh task
-            this.taskService.find(this.task!.id).then((respose) => {
-              respose.subscribe({
-                next: (t) => {
-                  this.task = t;
-                }
-              })
+          // refresh task
+          this.taskService.find(this.task!.id).then((respose) => {
+            respose.subscribe({
+              next: (t) => {
+                this.task = t;
+                this.onRemoveAssignment.emit({
+                  target: this.task.id,
+                  new: t
+                });
+              }
             })
-          }
+          })
 
         }
       })
@@ -200,6 +206,61 @@ export class TaskPreviewComponent {
 
     return false;
 
+  }
+
+  removeLabelFromTask(labelId: number) {
+    if(!this.task)
+      return;
+
+    LoggerService.logInfo("Remove label");
+
+    this.taskService.removeLabel(this.task.id, labelId).then((response) => {
+      response.subscribe({
+        next: (value) => {
+          
+          // refresh task
+          this.taskService.find(this.task!.id).then((respose) => {
+            respose.subscribe({
+              next: (t) => {
+                this.task = t;
+                this.onRemoveAssignment.emit({
+                  target: this.task.id,
+                  new: t
+                });
+              }
+            })
+          })
+        }
+      })
+    });
+  }
+
+  addLabelFromTask(labelId: number) {
+    if(!this.task)
+      return;
+
+    LoggerService.logInfo("Add label");
+
+    this.taskService.addLabel(this.task.id, labelId).then((response) => {
+      response.subscribe({
+        next: (value) => {
+
+
+          // refresh task
+          this.taskService.find(this.task!.id).then((respose) => {
+            respose.subscribe({
+              next: (t) => {
+                this.task = t;
+                this.onRemoveAssignment.emit({
+                  target: this.task.id,
+                  new: t
+                });
+              }
+            })
+          })
+        }
+      })
+    });
   }
 
 }
