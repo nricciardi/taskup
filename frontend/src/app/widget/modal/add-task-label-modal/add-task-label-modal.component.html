@@ -1,1 +1,77 @@
-<p>add-task-label-modal works!</p>
+<div
+  class="modal fade text-left"
+  [id]="target"
+  tabindex="-1"
+  role="dialog"
+  [attr.aria-labelledby]="target"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" [id]="target">
+          {{ "add-new-assignment" | translate }}
+        </h5>
+        <app-x-btn></app-x-btn>
+      </div>
+      <div class="modal-body">
+        <p>
+          {{ "add-new-assignment-description" | translate }}
+        </p>
+        <div class="d-flex justify-content-center"
+              style="padding-bottom: 20vh;">
+
+          <div class="btn-group dropdown me-1 mb-1">
+
+            <button type="button" class="btn btn-outline-primary"
+                    (click)="onAdd.emit(labelSelected); labelSelected = undefined">
+              {{ "add" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-reference="parent"
+              (click)="setLabelsCanBeAssign()"
+            >
+
+              <span class="sr-only" *ngIf="labelSelected === undefined; else selected">
+                {{ "select" | translate }}
+              </span>
+              <ng-template #selected>
+                <span class="sr-only">
+                  {{ labelSelected?.name }}
+                </span>
+              </ng-template>
+
+            </button>
+
+            <div class="dropdown-menu">
+              <button class="dropdown-item" *ngFor="let label of labelsCanBeAssign" (click)="select(label)">
+                {{ label.name }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="noLabels">
+          <div class="alert alert-light-warning">
+            <p>
+              {{ "no-labels" | translate }}
+            </p>
+          </div>
+        </ng-container>
+
+      </div>
+      <div class="modal-footer">
+        <app-close-btn>
+        </app-close-btn>
+      </div>
+    </div>
+  </div>
+</div>

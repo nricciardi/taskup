@@ -63,12 +63,24 @@
         </app-badge>
 
         <app-manage-task-label-modal [target]="'label-' + label.id + '-task-' + task.id + '-modal'" [label]="label"
-                                     (onRemoveFromTask)="removeLabelFromTask(label.id)">
+                                     (onRemoveFromTask)="removeLabelFromTask(label)">
         </app-manage-task-label-modal>
         </ng-container>
 
         <!-- Add new label -->
-        <app-badge [text]="'+'" class="cursor-pointer"></app-badge>
+        <app-badge  [text]="'+'" class="cursor-pointer"
+                    data-bs-toggle="modal"
+                    [attr.data-bs-target]="'#add-label-task-' + task.id + '-modal'">
+        </app-badge>
+
+        <app-add-task-label-modal [target]="'add-label-task-' + task.id + '-modal'"
+                                  [alreadyAssignedLabels]="task.labels ?? []"
+                                  (onAdd)="addLabelFromTask($event)"
+                                  (onClose)="this.onRemoveAssignment.emit({
+                                    target: this.task.id,
+                                    new: task
+                                  });">
+        </app-add-task-label-modal>
       </div>
 
       <p class="card-text mt-2" *ngIf="task.description">

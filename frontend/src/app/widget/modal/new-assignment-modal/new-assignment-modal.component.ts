@@ -16,6 +16,8 @@ export class NewAssignmentModalComponent {
 
   userSelected?: UserModel;
 
+  noUsers: boolean = false;
+
   usersCanBeAssign?: UserModel[];
 
   @Output() onAddAssignment = new EventEmitter<UserModel>();   // emit assigned user
@@ -36,6 +38,8 @@ export class NewAssignmentModalComponent {
 
   setUsersCanBeAssign() {
 
+    this.noUsers = false;
+
     this.userService.all().then((response) => {
 
       response.subscribe({
@@ -43,6 +47,9 @@ export class NewAssignmentModalComponent {
           this.usersCanBeAssign = value.filter((item: UserModel) => {
             return !this.alreadyAssignedUsers.map(u => u.id).includes(item.id);
           });
+
+          if(!this.usersCanBeAssign || this.usersCanBeAssign.length == 0)
+            this.noUsers = true;
 
         }
       });

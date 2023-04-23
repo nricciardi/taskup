@@ -18,55 +18,53 @@
         <app-x-btn></app-x-btn>
       </div>
       <div class="modal-body">
-        <ng-container *ngIf="true || usersCanBeAssign; else noUser">
-          <ng-container *ngIf="true || usersCanBeAssign?.length != 0; else noUser">
-            <p>
-              {{ "add-new-assignment-description" | translate }}
-            </p>
-            <div class="d-flex justify-content-center"
-                  style="padding-bottom: 20vh;">
+        <p>
+          {{ "add-new-assignment-description" | translate }}
+        </p>
+        <div class="d-flex justify-content-center"
+              style="padding-bottom: 20vh;">
 
-              <div class="btn-group dropdown me-1 mb-1">
-                <button type="button" class="btn btn-outline-primary"
-                        (click)="onAddAssignment.emit(userSelected); userSelected = undefined">
-                  {{ "add" | translate }}
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  data-reference="parent"
-                  (click)="setUsersCanBeAssign()"
-                >
+          <div class="btn-group dropdown me-1 mb-1">
+            <button type="button" class="btn btn-outline-primary"
+                    (click)="onAddAssignment.emit(userSelected); userSelected = undefined">
+              {{ "add" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-reference="parent"
+              (click)="setUsersCanBeAssign()"
+            >
 
-                  <span class="sr-only" *ngIf="userSelected === undefined; else selected">
-                    {{ "select" | translate }}
-                  </span>
-                  <ng-template #selected>
-                    <span class="sr-only">
-                      {{ userSelected?.username }}
-                    </span>
-                  </ng-template>
+              <span class="sr-only" *ngIf="userSelected === undefined; else selected">
+                {{ "select" | translate }}
+              </span>
+              <ng-template #selected>
+                <span class="sr-only">
+                  {{ userSelected?.username }}
+                </span>
+              </ng-template>
 
-                </button>
+            </button>
 
-                <div class="dropdown-menu">
-                  <button class="dropdown-item" *ngFor="let user of usersCanBeAssign" (click)="selectUser(user)">
-                    {{ user.username }}
-                  </button>
-                </div>
-              </div>
+            <div class="dropdown-menu">
+              <button class="dropdown-item" *ngFor="let user of usersCanBeAssign" (click)="selectUser(user)">
+                {{ user.username }}
+              </button>
             </div>
-          </ng-container>
-        </ng-container>
+          </div>
+        </div>
 
-        <ng-template #noUser>
-          <p>
-            {{ "no-user" | translate }}
-          </p>
-        </ng-template>
+        <ng-container *ngIf="noUsers">
+          <div class="alert alert-light-warning">
+            <p>
+              {{ "no-users" | translate }}
+            </p>
+          </div>
+        </ng-container>
       </div>
       <div class="modal-footer">
         <app-close-btn>

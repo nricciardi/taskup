@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TaskLabelModel } from 'src/app/model/entity/task-label.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
@@ -141,12 +142,8 @@ export class TaskPreviewComponent {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
-                this.onRemoveAssignment.emit({
-                  target: this.task.id,
-                  new: t
-                });
               }
-            })
+            });
           })
 
         }
@@ -208,16 +205,16 @@ export class TaskPreviewComponent {
 
   }
 
-  removeLabelFromTask(labelId: number) {
+  removeLabelFromTask(label: TaskLabelModel) {
     if(!this.task)
       return;
 
     LoggerService.logInfo("Remove label");
 
-    this.taskService.removeLabel(this.task.id, labelId).then((response) => {
+    this.taskService.removeLabel(this.task.id, label.id).then((response) => {
       response.subscribe({
         next: (value) => {
-          
+
           // refresh task
           this.taskService.find(this.task!.id).then((respose) => {
             respose.subscribe({
@@ -235,13 +232,13 @@ export class TaskPreviewComponent {
     });
   }
 
-  addLabelFromTask(labelId: number) {
+  addLabelFromTask(label: TaskLabelModel) {
     if(!this.task)
       return;
 
     LoggerService.logInfo("Add label");
 
-    this.taskService.addLabel(this.task.id, labelId).then((response) => {
+    this.taskService.addLabel(this.task.id, label.id).then((response) => {
       response.subscribe({
         next: (value) => {
 
@@ -251,10 +248,7 @@ export class TaskPreviewComponent {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
-                this.onRemoveAssignment.emit({
-                  target: this.task.id,
-                  new: t
-                });
+
               }
             })
           })
