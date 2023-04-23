@@ -15,6 +15,11 @@ export class AuthService {
   private readonly ME: string = "auth_me";
   private readonly IS_LOGGED: string = "auth_is_logged";
 
+  private _loggedUser: UserModel | null = null;
+  get loggedUser() {
+    return this._loggedUser
+  }
+
   private emitMeChangeSource = new Subject<UserModel | null>();
 
   constructor(private eelService: EelService) { }
@@ -86,6 +91,7 @@ export class AuthService {
 
       response.subscribe({
         next: (value: UserModel | null) => {
+          this._loggedUser = value;
           this.emitMeChangeSource.next(value);
 
         },

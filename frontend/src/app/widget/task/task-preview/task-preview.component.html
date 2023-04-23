@@ -31,7 +31,8 @@
                   aria-labelledby="dropdownMenuButtonIconRight"
                 >
                   <!-- Modify -->
-                  <button class="dropdown-item">
+                  <button class="dropdown-item"
+                          [disabled]="!canModify()">
                     <i class="bi bi-pencil me-50"></i>
                     {{ "modify" | translate }}
                   </button>
@@ -39,7 +40,8 @@
                   <!-- Delete -->
                   <button class="dropdown-item"
                           data-bs-toggle="modal"
-                          [attr.data-bs-target]="'#delete-request-' + task.id">
+                          [attr.data-bs-target]="'#delete-request-' + task.id"
+                          [disabled]="!canDelete()">
                     <i class="bi bi-trash me-50"></i>
                     {{ "delete" | translate }}
                   </button>

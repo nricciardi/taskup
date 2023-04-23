@@ -11,7 +11,7 @@ import datetime
 
 
 db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
-#os.remove(db_path)
+os.remove(db_path)
 pm = ProjectManager()
 
 users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
@@ -100,8 +100,8 @@ if __name__ == '__main__':
     # users = users_manager.all_as_dict(with_relations=True)
     # print(users)
 
-    users = users_manager.all_as_model(with_relations=True)
-    print(users)
+    # users = users_manager.all_as_model(with_relations=True)
+    # print(users)
 
     #
     # tasks = tasks_manager.find(36, with_relations=True, safe=False)
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     # users_manager.where_as_model(WhereCondition("username", "=", "franco2"))
 
-    # create_demo_db()
+    create_demo_db()
 
 
 

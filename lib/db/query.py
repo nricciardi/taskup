@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Any, List, Generic, TypeVar, Dict, Tuple
+from typing import Any, List, Generic, TypeVar, Dict, Tuple, Optional
 from lib.db.component import WhereCondition
 from lib.utils.mixin.sql import ToSqlInterface
 
@@ -109,14 +109,18 @@ class QueryBuilder(ToSqlInterface, ABC):
 
         return self
 
-    def insert_from_tuple(self, columns: List[str], *values: Dict) -> 'QueryBuilder':
+    def insert_from_tuple(self, *values: Tuple, columns: Optional[List[str] | Tuple[str]] = None) -> 'QueryBuilder':
         """
         Insert data from tuple
 
         :return:
         """
 
-        columns: str = ", ".join(columns)
+        if isinstance(columns, list) or isinstance(columns, tuple):
+            columns: str = ", ".join(columns)
+            columns = f"({columns})"
+        else:
+            columns: str = ""
 
         if self.binding:
             data: List[str] = []
@@ -131,7 +135,7 @@ class QueryBuilder(ToSqlInterface, ABC):
 
         self.query = f"""\
         Insert into {self.table_name}{columns}
-        Values ({data})\
+        Values {data}\
         """
 
         return self

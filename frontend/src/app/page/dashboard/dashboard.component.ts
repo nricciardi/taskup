@@ -212,9 +212,6 @@ export class DashboardComponent {
     if(!this.dashboard?.tasks)
       return;
 
-    console.log("devo rimuovere un task dalla lista", taskId);
-
-
     this.dashboard.tasks = this.dashboard.tasks.filter(t => t.id != taskId);
   }
 

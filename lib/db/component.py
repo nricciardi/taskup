@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Any, Optional, TypeVar
-from lib.utils.mixin.sql import ToSqlInterface
 from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
-from abc import ABC
+from lib.utils.mixin.sql import ToSqlInterface
 
 
 @dataclass
@@ -188,13 +187,6 @@ class Table(ToSqlInterface):
             {"," + ','.join(constraint.to_sql() for constraint in self.other_constraints) if self.has_other_constraints() else ""}
         );
         """
-
-
-@dataclass
-class Seeder:
-    table: str
-    values: List[Tuple | Dict]
-    fields: List | None = None
 
 
 @dataclass

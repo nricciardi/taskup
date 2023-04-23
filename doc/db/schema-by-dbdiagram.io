@@ -5,9 +5,12 @@ Table role {    // all not null
   permission_read_all integer
   permission_move_backward integer
   permission_move_forward integer
-  permission_edit integer
+  permission_edit_own integer
+  permission_edit_all integer
   permission_change_role integer
   permission_change_assignment integer
+  permission_delete_own integer
+  permission_delete_all integer
 }
 
 Table user {
@@ -17,6 +20,7 @@ Table user {
   surname varcharvarchar(256)
   email varchar(256) unique
   password varchar(256)
+  avatar_hex_color varchar(6)
 
   role_id integer
 }
@@ -54,7 +58,7 @@ Table task_label {
   id integer [pk]
   name varchar(500) unique
   description varchar(1000)
-  rgb_color text(6)
+  hex_color varchar(6)
 }
 
 Table task_task_label_pivot {

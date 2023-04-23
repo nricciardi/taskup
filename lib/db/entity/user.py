@@ -14,9 +14,12 @@ class RoleModel(BaseEntityModel):
     permission_read_all: bool
     permission_move_backward: bool
     permission_move_forward: bool
-    permission_edit: bool
+    permission_edit_own: bool
+    permission_edit_all: bool
     permission_change_role: bool
     permission_change_assignment: bool
+    permission_delete_own: bool
+    permission_delete_all: bool
 
     # @property
     # def table_name(self) -> str:

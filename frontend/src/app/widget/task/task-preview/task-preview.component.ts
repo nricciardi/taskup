@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
+import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
@@ -28,10 +29,12 @@ export class TaskPreviewComponent {
 
   dateFormat: string = environment.fullDateFormat;
 
-  constructor(private taskService: TaskService) {
+  constructor(private taskService: TaskService, public authService: AuthService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.authService.refreshMe();   // so after i can use .loggedUser
+  }
 
   getDeadlineStatus(): DeadlineStatus | undefined {
 
@@ -161,6 +164,42 @@ export class TaskPreviewComponent {
         }
       })
     })
+  }
+
+  canDelete(): boolean {
+    let loggedUser = this.authService.loggedUser;
+
+    if(!loggedUser) {
+      return false;
+    }
+
+    if(!!loggedUser.role?.permission_delete_all)
+      return true;
+
+    if(this.task?.author_id == loggedUser.id && !!loggedUser.role?.permission_delete_own)
+      return true;
+
+
+    return false;
+
+  }
+
+  canModify(): boolean {
+    let loggedUser = this.authService.loggedUser;
+
+    if(!loggedUser) {
+      return false;
+    }
+
+    if(!!loggedUser.role?.permission_edit_all)
+      return true;
+
+    if(this.task?.author_id == loggedUser.id && !!loggedUser.role?.permission_edit_own)
+      return true;
+
+
+    return false;
+
   }
 
 }

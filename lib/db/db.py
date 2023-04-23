@@ -3,7 +3,8 @@ from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
-from lib.db.component import Table, Field, FKConstraint, Seeder, WhereCondition, UniqueConstraint
+from lib.db.component import Table, Field, FKConstraint, WhereCondition
+from lib.db.seeder import Seeder
 from lib.utils.util import Util
 
 
@@ -172,13 +173,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             self.role_table_name: Table(self.role_table_name, [
                 Field.id_field(),
                 Field.name_field(),
-                Field(name="permission_create", type="INTEGER"),
-                Field(name="permission_read_all", type="INTEGER"),
-                Field(name="permission_move_backward", type="INTEGER"),
-                Field(name="permission_move_forward", type="INTEGER"),
-                Field(name="permission_edit", type="INTEGER"),
-                Field(name="permission_change_role", type="INTEGER"),
-                Field(name="permission_change_assignment", type="INTEGER"),
+                Field(name="permission_create", type="INTEGER", default='1'),
+                Field(name="permission_read_all", type="INTEGER", default='0'),
+                Field(name="permission_move_backward", type="INTEGER", default='1'),
+                Field(name="permission_move_forward", type="INTEGER", default='1'),
+                Field(name="permission_edit_own", type="INTEGER", default='1'),
+                Field(name="permission_edit_all", type="INTEGER", default='0'),
+                Field(name="permission_change_role", type="INTEGER", default='0'),
+                Field(name="permission_change_assignment", type="INTEGER", default='0'),
+                Field(name="permission_delete_own", type="INTEGER", default='1'),
+                Field(name="permission_delete_all", type="INTEGER", default='0'),
             ]),
 
             self.task_status_table_name: Table(self.task_status_table_name, [
@@ -210,7 +214,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.task_label_table_name: Table(self.task_label_table_name, [
                 Field.id_field(),
-                Field.name_field(),
+                Field.name_field(unique=True),
                 Field.description_field(),
                 Field(name="hex_color", type="VARCHAR(6)", nullable=True)
             ]),
@@ -253,8 +257,48 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         """
 
         return {
+            self.task_label_table_name: Seeder(table=self.task_label_table_name,
+                                               values=[
+                                                   ("Front-end", "Front-end tasks", "b6f542"),
+                                                   ("Back-end", "Front-end tasks", "f56342"),
+                                                   ("Documentation", "Documentation tasks", "f242f5")
+                                               ], cols=("name", "description", "hex_color")),
 
+            self.role_table_name: Seeder(table=self.role_table_name,
+                                         values=[
+                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1),
+                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1),
+                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0),
+                                           ("Base",             1, 0, 0, 0,     0, 0, 0, 0,     1, 0),
+                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0)
+                                         ], cols=("name",
+                                                  "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
+                                                  "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
+                                                  "permission_delete_own", "permission_delete_all"
+                                                  )
+                                         )
         }
+
+    def run_seeder(self, name) -> None:
+        """
+        Run seeder by name
+
+        :param name:
+        :return:
+        """
+
+        try:
+
+            Logger.log_info(f"run seeder: {name}", is_verbose=self.verbose)
+
+            self.cursor.execute(self.seeders[name].to_sql())
+
+            Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)
+
+        except Exception as exception:
+
+            Logger.log_error(msg=f"error occurs during run seeder: {name}", full=True,
+                             is_verbose=self.verbose)
 
     @property
     def db_path(self):
@@ -298,38 +342,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
         self.connection.commit()
-
-    def __insert_base_roles(self) -> None:
-        """
-        Insert into db base roles
-
-        :return: None
-        :rtype None:
-        """
-
-        try:
-
-            Logger.log_info(f"start to fill {self.role_table_name}", is_verbose=self.verbose)
-
-            query = f"""
-                        Insert Into {self.role_table_name} (name, permission_create, permission_read_all,
-                         permission_move_backward, permission_move_forward, permission_edit, permission_change_role,
-                         permission_change_assignment)
-                        Values
-                        ("Project Manager", 1, 1, 1, 1, 1, 1, 1),
-                        ("Supervisor", 1, 1, 1, 1, 1, 0, 1),
-                        ("Teammate", 1, 0, 1, 1, 0, 0, 0),
-                        ("Base", 0, 0, 0, 0, 0, 0, 0);
-                    """
-
-            self.cursor.execute(query)
-
-            Logger.log_info(f"inserted base data in {self.role_table_name}", is_verbose=self.verbose)
-
-        except Exception as exception:
-
-            Logger.log_error(msg=f"error occurs during fill {self.role_table_name}", full=True,
-                             is_verbose=self.verbose)
 
     def __insert_base_task_status(self) -> None:
         """
@@ -408,36 +420,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
                              is_verbose=self.verbose)
 
-    def __insert_base_task_labels(self) -> None:
-        """
-        Insert base task labels in DB
-
-        :return:
-        :rtype None:
-        """
-
-        try:
-
-            Logger.log_info(f"start to fill {self.task_label_table_name}", is_verbose=self.verbose)
-
-            # insert default task status
-            query = f"""
-                        Insert Into {self.task_label_table_name} (name, description, hex_color)
-                        Values
-                        ("Front-end", "Front-end tasks", "b6f542"),
-                        ("Back-end", "Front-end tasks", "f56342"),
-                        ("Documentation", "Documentation tasks", "f242f5");
-                    """
-
-            self.cursor.execute(query)
-
-            Logger.log_info(f"inserted base data in {self.task_status_table_name}", is_verbose=self.verbose)
-
-        except Exception as exception:
-
-            Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
-                             is_verbose=self.verbose)
-
     @property
     def task_task_label_pivot_table_name(self) -> str:
         return "task_task_label_pivot"
@@ -459,7 +441,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.create_table(self.role_table_name)
 
-            self.__insert_base_roles()
+            self.run_seeder(self.role_table_name)
 
             self.create_table(self.user_table_name)
 
@@ -475,7 +457,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.create_table(self.task_label_table_name)
 
-            self.__insert_base_task_labels()
+            self.run_seeder(self.task_label_table_name)
 
             self.create_table(self.task_task_label_pivot_table_name)
 
