@@ -465,7 +465,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return data
 
-    def delete(self, *conditions: WhereCondition, safe: bool = True):
+    def delete(self, *conditions: WhereCondition, safe: bool = True) -> bool:
         """
         Delete entities data
 
@@ -483,6 +483,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             if not safe:
                 raise exception
+
+            return False
 
     def __delete(self, table_name: str, *conditions: WhereCondition):
         """

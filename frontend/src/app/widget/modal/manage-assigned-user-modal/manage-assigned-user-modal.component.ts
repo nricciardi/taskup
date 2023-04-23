@@ -17,7 +17,6 @@ export class ManageAssignedUserModalComponent {
   closeSubject = new Subject<boolean>();
 
   ngOnDestroy() {
-    console.log("addio amici addio");
 
   }
 }

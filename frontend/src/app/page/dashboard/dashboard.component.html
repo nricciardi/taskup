@@ -130,7 +130,9 @@
   <div class="row justify-content-between">
 
     <div class="col-12">
-      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"></app-task-preview-list>
+      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"
+                              (onDeletion)="removeTask($event)">
+    </app-task-preview-list>
     </div>
   </div>
 </ng-container>

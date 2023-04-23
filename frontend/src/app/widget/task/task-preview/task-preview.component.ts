@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
@@ -21,6 +21,8 @@ export class TaskPreviewComponent {
 
   @Input('task') task?: TaskModel;
   @Input("loggedUser") loggedUser?: UserModel;
+
+  @Output() onDeletion = new EventEmitter<number>();
 
   DeadlineStatus = DeadlineStatus;
 
@@ -155,7 +157,7 @@ export class TaskPreviewComponent {
     this.taskService.deleteById(this.task.id).then((response) => {
       response.subscribe({
         next: (value) => {
-          
+          this.onDeletion.emit(this.task!.id);
         }
       })
     })

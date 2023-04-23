@@ -1,6 +1,10 @@
 <ng-container *ngIf="tasks">
 
-  <app-task-preview *ngFor="let task of tasks" [task]="task" [loggedUser]="loggedUser"></app-task-preview>
+  <app-task-preview *ngFor="let task of tasks"
+                    [task]="task"
+                    [loggedUser]="loggedUser"
+                    (onDeletion)="onDeletion.emit($event)">
+  </app-task-preview>
 
   <!-- SCROLL ON TOP BTN -->
   <div class="row justify-content-center" *ngIf="tasks.length > 1">
