@@ -86,6 +86,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
   -  [x] all_as_model
   -  [ ] append relation on bem and not in another foreach
 - [ ] make sqlite fetch methods asynchronous
+- [ ] add permission control
 
 ### DB
 - [x] Unique on user's username? Add name and surname?

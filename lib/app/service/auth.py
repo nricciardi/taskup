@@ -1,4 +1,4 @@
-from lib.db.entity.user import UserModel, UsersManager
+from lib.db.entity.user import UserModel, UsersManager, RolesManager, RoleModel
 from lib.db.component import WhereCondition
 from lib.utils.collections import CollectionsUtils
 from lib.utils.logger import Logger
@@ -172,6 +172,35 @@ def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> 
                 Logger.log_error(msg=f"login is required to call {func}")
 
             return Errors.LOGIN_REQUIRE.to_dict()
+
+        return func()
+
+    return wrapper
+
+
+def permission_required(func: Callable, auth: AuthService, roles_manager: RolesManager, *permissions_names, verbose: bool = False) -> Callable:
+    """
+    Prevent function's call if user has NO permission(s)
+
+    :param roles_manager:
+    :param verbose:
+    :param func:
+    :type func: Callable
+    :param auth:
+    :type auth: AuthService
+
+    :return:
+    """
+
+    def wrapper():
+        if not auth.is_logged():
+            return login_required(func, auth, verbose)
+
+        logged_user: UserModel = auth.me()
+
+        for p_name in permissions_names:
+            if roles_manager.able_to(logged_user.role_id, p_name):
+                return Errors.PERMISSION_DENIED.to_dict()
 
         return func()
 

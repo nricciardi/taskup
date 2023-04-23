@@ -13,3 +13,8 @@ class Errors:
         code="A1",
         message="login require"
     )
+
+    PERMISSION_DENIED = Error(
+        code="A2",
+        message="permission denied"
+    )

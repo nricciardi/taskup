@@ -85,3 +85,16 @@ class RolesManager(EntitiesManager, TableNamesMixin):
     @property
     def table_name(self) -> str:
         return self.role_table_name
+
+    def able_to(self, role_id: int, permission_name: str) -> bool:
+        """
+        Return True if users with role_id have permission specified
+
+        :param role_id:
+        :param permission_name:
+        :return:
+        """
+
+        role: RoleModel = self.find(role_id)
+
+        return bool(role.to_dict()[permission_name])

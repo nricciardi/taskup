@@ -2,7 +2,7 @@ import eel
 from lib.utils.logger import Logger
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager
 from lib.db.entity.user import UsersManager, RolesManager
-from lib.app.service.auth import AuthService, login_required
+from lib.app.service.auth import AuthService, login_required, permission_required
 from lib.app.service.dashboard import DashboardService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
