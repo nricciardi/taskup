@@ -34,6 +34,7 @@ import { TaskTodoItemComponent } from './widget/task/task-todo-item/task-todo-it
 import { BadgeComponent } from './widget/badge/badge.component';
 import { ManageTaskLabelModalComponent } from './widget/modal/manage-task-label-modal/manage-task-label-modal.component';
 import { AddTaskLabelModalComponent } from './widget/modal/add-task-label-modal/add-task-label-modal.component';
+import { DeadlineBadgeComponent } from './widget/deadline-badge/deadline-badge.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { AddTaskLabelModalComponent } from './widget/modal/add-task-label-modal/
     BadgeComponent,
     ManageTaskLabelModalComponent,
     AddTaskLabelModalComponent,
+    DeadlineBadgeComponent
   ],
   imports: [
     BrowserModule,

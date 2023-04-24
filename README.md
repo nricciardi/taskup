@@ -74,6 +74,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] 404 and 500 pages
 - [ ] Fix dark mode color
 - [ ] Remove year from deadline if we are in the current year
+- [ ] Fix env file (now is used .dev instead of .prod)
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods

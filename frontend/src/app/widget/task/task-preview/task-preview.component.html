@@ -94,13 +94,13 @@
         </ng-container>
       </p>
 
-      <app-task-todo-list></app-task-todo-list>
+      <app-task-todo-list [taskId]="task.id"></app-task-todo-list>
 
       <!-- AVATAR OF ASSIGNED USERS -->
       <ng-container *ngFor="let assignedUser of task.assigned_users">
         <app-text-avatar
                         [color]="assignedUser.user.avatar_hex_color"
-                        [text]="getAvatarText(assignedUser.user)"
+                        [text]="utilsService.getAvatarText(assignedUser.user)"
                         [tooltip]="assignedUser.user.username"
                         (click)="null"
                         data-bs-toggle="modal"
@@ -140,13 +140,8 @@
   </div>
   <div class="card-footer d-flex justify-content-between">
     <span>
-      <span class="badge" [class.bg-light-primary]="getDeadlineStatus() === DeadlineStatus.PRIMARY"
-                        [class.bg-light-warning]="getDeadlineStatus() === DeadlineStatus.WARNING"
-                        [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
-                        *ngIf="!!task.deadline">
-
-          {{ task.deadline | date:dateFormat }}
-        </span>
+      <!-- DEADLINE BADGE -->
+      <app-deadline-badge [deadline]="task.deadline"></app-deadline-badge>
     </span>
 
     <button class="btn btn-light-primary">Read More</button>

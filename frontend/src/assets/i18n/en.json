@@ -37,5 +37,7 @@
   "delete-request": "Confirm deletion?",
   "submit": "Submit",
   "confirm": "Confirm",
-  "sub-task": "Sub-task"
+  "sub-task": "Sub-task",
+  "description": "Description",
+  "author": "Author"
 }

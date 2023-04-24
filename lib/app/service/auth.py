@@ -166,14 +166,14 @@ def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> 
     :return:
     """
 
-    def wrapper():
+    def wrapper(*args, **kwargs):
         if not auth.is_logged():
             if verbose:
                 Logger.log_error(msg=f"login is required to call {func}")
 
             return Errors.LOGIN_REQUIRE.to_dict()
 
-        return func()
+        return func(*args, **kwargs)
 
     return wrapper
 
@@ -192,7 +192,7 @@ def permission_required(func: Callable, auth: AuthService, roles_manager: RolesM
     :return:
     """
 
-    def wrapper():
+    def wrapper(*args, **kwargs):
         if not auth.is_logged():
             return login_required(func, auth, verbose)
 
@@ -202,6 +202,6 @@ def permission_required(func: Callable, auth: AuthService, roles_manager: RolesM
             if roles_manager.able_to(logged_user.role_id, p_name):
                 return Errors.PERMISSION_DENIED.to_dict()
 
-        return func()
+        return func(*args, **kwargs)
 
     return wrapper

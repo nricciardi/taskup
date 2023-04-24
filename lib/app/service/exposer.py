@@ -164,8 +164,8 @@ class ExposerService:
             ], prefix="todo_")
 
             self.expose(to_dict(self.__todo_items_manager.find, self.verbose), "todo_find")
-            self.expose(login_required(self.__todo_items_manager.all_as_dict, self.__auth_service, self.verbose), "todo_all")
-            self.expose(login_required(self.__todo_items_manager.all_of, self.__auth_service, self.verbose), "todo_all_of")
+            self.expose(login_required(to_dict(self.__todo_items_manager.all_as_dict), self.__auth_service, self.verbose), "todo_all")
+            self.expose(login_required(to_dict(self.__todo_items_manager.all_of), self.__auth_service, self.verbose), "todo_all_of")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)

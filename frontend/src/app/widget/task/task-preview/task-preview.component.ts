@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 import { environment } from 'src/environments/environment.development';
 
 enum DeadlineStatus {
@@ -31,40 +32,10 @@ export class TaskPreviewComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
-  DeadlineStatus = DeadlineStatus;
-
-  dateFormat: string = environment.fullDateFormat;
-
-  constructor(private taskService: TaskService, public authService: AuthService) {
+  constructor(private taskService: TaskService, public authService: AuthService, public utilsService: UtilsService) {
   }
 
   ngOnInit() {
-  }
-
-  getDeadlineStatus(): DeadlineStatus | undefined {
-
-    if(!this.task)
-      return undefined;
-
-    if(!this.task.deadline)
-      return undefined;
-
-    const now = new Date(Date.now());
-    const dealine: Date = new Date(this.task.deadline);
-
-    const dangerDate = new Date(dealine);
-    dangerDate.setDate(dangerDate.getDate() - environment.dangerDateDayBefore);
-    if(now > dangerDate) {
-      return this.DeadlineStatus.DANGER;
-    }
-
-    const warningDate = new Date(dealine);
-    warningDate.setDate(warningDate.getDate() - environment.warningDateDayBefore);
-    if(now > warningDate) {
-      return this.DeadlineStatus.WARNING;
-    }
-
-    return this.DeadlineStatus.PRIMARY;
   }
 
   userAssignedToTask(userId: number | undefined): boolean {
@@ -85,14 +56,6 @@ export class TaskPreviewComponent {
 
     return this.task?.assigned_users?.map(au => au.user) ?? [];
 
-  }
-
-  getAvatarText(user: UserModel): string {
-    if(user?.name && user?.surname) {
-      return user.name.substring(0, 1) + user.surname.substring(0, 1)
-    } else {
-      return user ? user.username.substring(0, 2) : "-";
-    }
   }
 
   async removeUserFromTask(userId: number): Promise<void> {

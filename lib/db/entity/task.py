@@ -93,9 +93,7 @@ class TaskAssignmentModel(BaseEntityModel):
 @dataclass
 class TodoItemModel(BaseEntityModel):
     id: int
-    name: str
     description: str
-    priority: int
     created_at: datetime
     updated_at: datetime
     done: bool
@@ -455,6 +453,15 @@ class TodoItemsManager(EntitiesManager, TableNamesMixin):
     @property
     def EM(self) -> Type[TodoItemModel]:
         return TodoItemModel
+
+    @property
+    def relations(self) -> list[Relation]:
+        return [
+            # user -< to-do
+            OneRelation(fk_model=UserModel, of_table=self.user_table_name, fk_field="author_id", to_attr="author"),
+
+            # task relationship isn't used
+        ]
 
     def all_of(self, task_id: int) -> List[TodoItemModel]:
         """

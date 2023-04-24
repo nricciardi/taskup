@@ -7,7 +7,30 @@
       {{ "sub-task" | translate }}
     </h4>
   </div>
+
   <div class="card-body px-0 py-1 overflow-auto">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between">
+      <div style="margin-left: 5vw;">
+        <span class="badge bg-light-secondary">
+          {{ "description" | translate }}
+        </span>
+      </div>
+
+      <div style="margin-right: 2vw;">
+        <div class="d-flex justify-content-between">
+          <span class="badge bg-light-secondary">
+            {{ "deadline" | translate }}
+          </span>
+
+          <span class="badge bg-light-secondary">
+            {{ "author" | translate }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
     <ul class="widget-todo-list-wrapper" id="widget-todo-list">
       <app-task-todo-item *ngFor="let item of todoItems"
                           [item]="item">
