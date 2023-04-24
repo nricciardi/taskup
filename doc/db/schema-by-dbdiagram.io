@@ -85,7 +85,6 @@ Table todo_item {
   id integer [pk]
   description varchar(1000)
   deadline datetime
-  priority integer
   created_at datetime
   updated_at datetime
   done integer

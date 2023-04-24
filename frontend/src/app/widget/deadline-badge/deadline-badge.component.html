@@ -1,7 +1,9 @@
 <span class="badge" [class.bg-light-primary]="getDeadlineStatus() === DeadlineStatus.PRIMARY"
                     [class.bg-light-warning]="getDeadlineStatus() === DeadlineStatus.WARNING"
                     [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
-                    *ngIf="!!deadline">
+                    [class.bg-light-success]="getDeadlineStatus() === DeadlineStatus.DONE"
+                    *ngIf="!!deadline"
+                    [class.done]="!!done">
 
   {{ deadline | date:dateFormat }}
 </span>

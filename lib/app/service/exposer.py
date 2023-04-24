@@ -147,6 +147,7 @@ class ExposerService:
 
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
             self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.verbose), "task_all")
+            self.expose(login_required(to_dict(self.__tasks_manager.update_from_dict), self.__auth_service, self.verbose), "task_update")
 
             # expose task label
             self.expose_all_from_list(to_expose=[
@@ -156,6 +157,8 @@ class ExposerService:
 
             self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
             self.expose(login_required(self.__task_labels_manager.all_as_dict, self.__auth_service, self.verbose), "task_label_all")
+            self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose), "task_label_update")
+
 
             # expose to-do
             self.expose_all_from_list(to_expose=[
@@ -166,6 +169,7 @@ class ExposerService:
             self.expose(to_dict(self.__todo_items_manager.find, self.verbose), "todo_find")
             self.expose(login_required(to_dict(self.__todo_items_manager.all_as_dict), self.__auth_service, self.verbose), "todo_all")
             self.expose(login_required(to_dict(self.__todo_items_manager.all_of), self.__auth_service, self.verbose), "todo_all_of")
+            self.expose(login_required(to_dict(self.__todo_items_manager.update_from_dict), self.__auth_service, self.verbose), "todo_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -220,6 +224,7 @@ class ExposerService:
 
             self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")
             self.expose(login_required(self.__users_manager.all_as_dict, self.__auth_service, self.verbose), "user_all")
+            self.expose(login_required(to_dict(self.__users_manager.update_from_dict), self.__auth_service, self.verbose), "user_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="user exposure error", is_verbose=self.verbose, full=True)

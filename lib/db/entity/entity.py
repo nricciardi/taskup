@@ -508,3 +508,19 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         return self.delete(
             WhereCondition("id", "=", entity_id)
         )
+
+    def update_from_dict(self, entity_id: int, data: Dict) -> EntityModel:
+        """
+        Update entity by id with key-value data and return updated entity as model
+
+        :param entity_id:
+        :param data:
+        :return:
+        """
+
+        self.__db_manager.update(self.table_name,
+                                 WhereCondition("id", "=", entity_id),
+                                 **data
+                                 )
+
+        return self.find(entity_id)

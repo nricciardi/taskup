@@ -14,3 +14,8 @@ export interface TodoItemModel {
   author: UserModel | null;
   task: TaskModel | null;
 }
+
+export interface NewTodoItemModel {
+  description: string;
+  deadline: Date | null;
+}

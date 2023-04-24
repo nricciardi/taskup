@@ -39,5 +39,7 @@
   "confirm": "Confirm",
   "sub-task": "Sub-task",
   "description": "Description",
-  "author": "Author"
+  "author": "Author",
+  "add-new-todo": "Add new todo",
+  "no-todo-items": "No todo items"
 }

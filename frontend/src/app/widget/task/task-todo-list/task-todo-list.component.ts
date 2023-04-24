@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { TodoItemModel } from 'src/app/model/entity/todo-item.model';
+import { NewTodoItemModel, TodoItemModel } from 'src/app/model/entity/todo-item.model';
+import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TodoService } from 'src/app/service/api/entity/todo/todo.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { TodoService } from 'src/app/service/api/entity/todo/todo.service';
 })
 export class TaskTodoListComponent {
 
-  constructor(private todoService: TodoService) {}
+  constructor(private todoService: TodoService, private authService: AuthService) {}
 
   @Input("taskId") taskId?: number;
 
@@ -31,5 +32,26 @@ export class TaskTodoListComponent {
         }
       })
     })
+  }
+
+  newTodo(todo: NewTodoItemModel) {
+
+    if(!this.taskId || !this.authService.loggedUser)
+      return;
+
+    this.todoService.create({
+      description: todo.description,
+      deadline: todo.deadline,
+      task_id: this.taskId,
+      author_id: this.authService.loggedUser.id
+
+    }).then((response) => {
+      response.subscribe({
+        next: (value) => {
+          this.loadTodoItems();   // refresh todos
+        }
+      })
+    })
+
   }
 }

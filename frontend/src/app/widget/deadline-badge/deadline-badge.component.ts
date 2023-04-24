@@ -5,7 +5,8 @@ import { environment } from 'src/environments/environment.development';
 export enum DeadlineStatus {
   PRIMARY,
   WARNING,
-  DANGER
+  DANGER,
+  DONE
 };
 
 
@@ -21,11 +22,16 @@ export class DeadlineBadgeComponent {
   DeadlineStatus = DeadlineStatus;
 
   @Input("deadline") deadline: Date | null = null;
+  @Input("done") done: boolean = false;
 
   getDeadlineStatus(): DeadlineStatus | null {
 
     if(!this.deadline)
       return null;
+
+    if(this.done) {
+      return DeadlineStatus.DONE;
+    }
 
     const now = new Date(Date.now());
     const dealine: Date = new Date(this.deadline);

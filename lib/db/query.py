@@ -70,6 +70,31 @@ class QueryBuilder(ToSqlInterface, ABC):
 
         return self
 
+    def update_from_dict(self, data: Dict) -> 'QueryBuilder':
+        """
+        Update query from dict
+
+        :param data:
+        :return:
+        """
+
+        self.query = f"Update {self.table_name}\nSet "
+
+        if self.binding:
+            keys = []
+            values = []
+            for key in data.keys():
+                keys.append(key)
+                values.append(data[key])
+
+            self.query += ",\n".join(str(key) + " = ?" for key in keys)
+            self.data_bound = values
+
+        else:
+            self.query += ",\n".join(str(key) + " = " + str(data[key]) for key in data.keys())
+
+        return self
+
     def insert_from_dict(self, *values: Dict, columns: List[str] | None = None) -> 'QueryBuilder':
         """
         Insert data from dict

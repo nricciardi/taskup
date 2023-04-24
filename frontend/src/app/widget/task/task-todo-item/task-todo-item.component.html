@@ -8,17 +8,19 @@
           class="form-check-input"
           [id]="'checkbox-todo-' + item.id"
           [checked]="!!item.done"
+          (click)="done()"
         />
         <label for="checkbox1"></label>
       </div>
-      <span class="widget-todo-title ml-50">
+      <span class="widget-todo-title ml-50"
+            [class.done]="!!item.done">
         {{ item.description }}
       </span>
     </div>
     <div class="widget-todo-item-action d-flex align-items-center">
 
       <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="item.deadline" *ngIf="item.deadline"></app-deadline-badge>
+      <app-deadline-badge [deadline]="item.deadline" *ngIf="item.deadline" style="margin-right: 1vw;" [done]="!!item.done"></app-deadline-badge>
 
       <app-text-avatar  *ngIf="item.author"
                         [color]="item.author.avatar_hex_color"

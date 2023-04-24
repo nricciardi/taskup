@@ -568,7 +568,34 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         query_built = QueryBuilder.from_table(table_name).enable_binding().delete().apply_conditions(*conditions)
 
         query: str = query_built.to_sql()
-        data: list = query_built.data_bound
+        data: List = query_built.data_bound
+
+        res = self.cursor.execute(query, data)
+
+        self.connection.commit()
+
+        return res
+
+    def update(self, table_name: str, *conditions: WhereCondition, **data):
+        """
+        Update row of table_name using data where conditions
+
+        :param table_name:
+        :param conditions:
+        :param data:
+        :return:
+        """
+
+        if isinstance(conditions, WhereCondition):
+            conditions = [conditions]
+
+        query_built = QueryBuilder.from_table(table_name)\
+                                  .enable_binding()\
+                                  .update_from_dict(data)\
+                                  .apply_conditions(*conditions)
+
+        query: str = query_built.to_sql()
+        data: List = query_built.data_bound
 
         res = self.cursor.execute(query, data)
 

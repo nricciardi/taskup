@@ -1,0 +1,65 @@
+<div
+  class="modal fade text-left"
+  [id]="target"
+  tabindex="-1"
+  role="dialog"
+  [attr.aria-labelledby]="target"
+  aria-hidden="true"
+  *ngIf="target"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" [id]="target">
+          {{ "add-new-todo" | translate }}
+        </h5>
+        <app-x-btn></app-x-btn>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newItemForm">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="description-icon">
+              <i class="bi bi-justify" style="margin-top: -10px;"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Description"
+              aria-label="Description"
+              aria-describedby="description-icon"
+              formControlName="description"
+            />
+          </div>
+
+          <input
+            type="datetime-local"
+            class="form-control flatpickr-time-picker-24h"
+            placeholder="Deadline"
+            formControlName="deadline"
+          />
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <app-close-btn>
+        </app-close-btn>
+
+        <button
+          type="button"
+          class="btn btn-primary ml-1"
+          data-bs-dismiss="modal"
+          (click)="_onSubmit()"
+          [disabled]="newItemForm.invalid"
+        >
+          <i class="bx bx-check d-block d-sm-none"></i>
+          <span class="d-none d-sm-block">
+            {{ "confirm" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
