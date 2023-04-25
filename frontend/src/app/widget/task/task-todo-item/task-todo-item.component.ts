@@ -32,4 +32,17 @@ export class TaskTodoItemComponent {
     })
 
   }
+
+  delete() {
+    if(!this.item)
+      return;
+
+    this.todoService.deleteById(this.item.id).then((response) => {
+      response.subscribe({
+        next: (value) => {
+          this.refreshRequest.emit();
+        }
+      })
+    })
+  }
 }

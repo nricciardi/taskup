@@ -41,5 +41,6 @@
   "description": "Description",
   "author": "Author",
   "add-new-todo": "Add new todo",
-  "no-todo-items": "No todo items"
+  "no-todo-items": "No todo items",
+  "actions": "Actions"
 }

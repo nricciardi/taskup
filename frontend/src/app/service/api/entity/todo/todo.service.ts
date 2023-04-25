@@ -10,7 +10,7 @@ export class TodoService extends EntityApiService<TodoItemModel> {
 
   override ALL = "todo_all";
   override FIND = "todo_find";
-  override DELETE_BY_ID = "todo_delete_by";
+  override DELETE_BY_ID = "todo_delete_by_id";
   readonly ALL_OF = "todo_all_of";
   override UPDATE: string = "todo_update";
   override CREATE: string = "todo_create_from_dict";

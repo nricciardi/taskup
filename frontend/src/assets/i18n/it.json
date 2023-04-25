@@ -41,5 +41,6 @@
   "description": "Descrizione",
   "author": "Autore",
   "add-new-todo": "Aggiungi nuovo todo",
-  "no-todo-items": "Nessun todo"
+  "no-todo-items": "Nessun todo",
+  "actions": "Azioni"
 }
