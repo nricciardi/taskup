@@ -269,7 +269,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                                            ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1),
                                            ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1),
                                            ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0),
-                                           ("Base",             1, 0, 0, 0,     0, 0, 0, 0,     1, 0),
+                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0),
                                            ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0)
                                          ], cols=("name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",

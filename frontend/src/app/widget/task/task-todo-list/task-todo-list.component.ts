@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NewTodoItemModel, TodoItemModel } from 'src/app/model/entity/todo-item.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TodoService } from 'src/app/service/api/entity/todo/todo.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-task-todo-list',

@@ -32,7 +32,7 @@ export class TaskPreviewComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
-  constructor(private taskService: TaskService, public authService: AuthService, public utilsService: UtilsService) {
+  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService) {
   }
 
   ngOnInit() {
@@ -130,42 +130,6 @@ export class TaskPreviewComponent {
         }
       })
     })
-  }
-
-  canDelete(): boolean {
-    let loggedUser = this.authService.loggedUser;
-
-    if(!loggedUser) {
-      return false;
-    }
-
-    if(!!loggedUser.role?.permission_delete_all)
-      return true;
-
-    if(this.task?.author_id == loggedUser.id && !!loggedUser.role?.permission_delete_own)
-      return true;
-
-
-    return false;
-
-  }
-
-  canModify(): boolean {
-    let loggedUser = this.authService.loggedUser;
-
-    if(!loggedUser) {
-      return false;
-    }
-
-    if(!!loggedUser.role?.permission_edit_all)
-      return true;
-
-    if(this.task?.author_id == loggedUser.id && !!loggedUser.role?.permission_edit_own)
-      return true;
-
-
-    return false;
-
   }
 
   removeLabelFromTask(label: TaskLabelModel) {

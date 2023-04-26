@@ -1,7 +1,6 @@
 <li class="widget-todo-item" *ngIf="item">
-  <div class="widget-todo-title-wrapper d-flex justify-content-between align-items-center mb-50">
-    <div class="widget-todo-title-area d-flex align-items-center gap-2">
-      <i data-feather="list" class="cursor-move"></i>
+  <div class="widget-todo-title-wrapper row justify-content-between align-items-center mb-50">
+    <div class="col-xl-9 widget-todo-title-area d-flex align-items-center gap-2">
       <div class="checkbox checkbox-shadow">
         <input
           type="checkbox"
@@ -17,25 +16,34 @@
         {{ item.description }}
       </span>
     </div>
-    <div class="widget-todo-item-action d-flex align-items-center">
+    <div class="col-xl-3 widget-todo-item-action row align-items-center">
 
       <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="item.deadline" *ngIf="item.deadline" style="margin-right: 1vw;" [done]="!!item.done"></app-deadline-badge>
+      <div class="col-6">
+        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;" [done]="!!item.done" *ngIf="item.deadline">
+        </app-deadline-badge>
+      </div>
 
       <!-- AUTHOR AVATAR -->
-      <app-text-avatar  *ngIf="item.author"
+      <div class="col-2">
+        <app-text-avatar  *ngIf="item.author"
                         [color]="item.author.avatar_hex_color"
-                        [text]="utilsService.getAvatarText(item.author)">
+                        [text]="utilsService.getAvatarText(item.author)"
+                        [tooltip]="item.author.username"
+                        class="cursor-arrow">
       </app-text-avatar>
+      </div>
 
+      <div class="col-2">
+        <button class="btn btn-sm icon btn-light mr-1" *ngIf="utilsService.canModify(item.author_id)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
 
-      <button class="btn btn-sm icon btn-light">
-        <i class="bi bi-pencil"></i>
-      </button>
-
-      <button class="btn btn-sm icon btn-light"
+      <div class="col-2">
+        <button class="btn btn-sm icon btn-light"
               data-bs-toggle="modal"
-              [attr.data-bs-target]="'#delete-todo-item-' + item.id">
+              [attr.data-bs-target]="'#delete-todo-item-' + item.id"  *ngIf="utilsService.canDelete(item.author_id)">
         <i class="bi bi-trash"></i>
       </button>
 
@@ -48,6 +56,7 @@
                         [borderless]="true"
                         (onConfirm)="delete()">
       </app-dialog-modal>
+      </div>
 
     </div>
   </div>

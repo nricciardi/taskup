@@ -32,7 +32,7 @@
                 >
                   <!-- Modify -->
                   <button class="dropdown-item"
-                          [disabled]="!canModify()">
+                          [disabled]="!utilsService.canModify(task.author_id)">
                     <i class="bi bi-pencil me-50"></i>
                     {{ "modify" | translate }}
                   </button>
@@ -41,7 +41,7 @@
                   <button class="dropdown-item"
                           data-bs-toggle="modal"
                           [attr.data-bs-target]="'#delete-request-' + task.id"
-                          [disabled]="!canDelete()">
+                          [disabled]="!utilsService.canDelete(task.author_id)">
                     <i class="bi bi-trash me-50"></i>
                     {{ "delete" | translate }}
                   </button>
