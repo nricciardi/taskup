@@ -5,7 +5,7 @@ import os
 from typing import List, Tuple, Dict, Any
 from lib.db.component import Table, Field, FKConstraint, WhereCondition
 from lib.db.seeder import Seeder
-from lib.utils.util import Util
+from lib.utils.utils import Utils
 
 
 def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
@@ -142,7 +142,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             Logger.log_error(exception, is_verbose=self.verbose)
 
-            Util.exit()
+            Utils.exit()
 
     def __del__(self):
         self.__db_connection.close()
@@ -470,7 +470,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             Logger.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             if strict:
-                Util.exit()
+                Utils.exit()
 
             raise exception
 

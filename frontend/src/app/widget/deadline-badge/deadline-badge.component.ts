@@ -25,8 +25,9 @@ export class DeadlineBadgeComponent {
   @Input("done") done: boolean = false;   // flag to set done
   @Input("editable") editable: boolean = false;   // enable modal to modify
   @Input("id") id?: string;     // unique id to prevent mismatch on edit modal
+  @Input("creable") creable: boolean = false;
 
-  @Output() onDeadlineModified = new EventEmitter<Date>();
+  @Output() onDeadlineModified = new EventEmitter<Date | null>();
 
 
   getDeadlineStatus(): DeadlineStatus | null {

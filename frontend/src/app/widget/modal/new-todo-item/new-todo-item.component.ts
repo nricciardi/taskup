@@ -21,9 +21,12 @@ export class NewTodoItemComponent {
 
   ngAfterContentInit() {
     this.newItemForm.setValue({
-      description: this.baseData?.description ?? "",
+      description: this.baseData?.description ?? null,
       deadline: this.baseData?.deadline ?? null
     });
+
+    console.log("dal new-todo: ", this.baseData, this.target);
+
   }
 
 
@@ -35,7 +38,11 @@ export class NewTodoItemComponent {
       this.onSubmit.emit({
         description: this.newItemForm.controls["description"].value!,
         deadline: this.newItemForm.controls["deadline"].value
-      })
+      });
+
+      // erase old data to prevent autofill
+      this.baseData = undefined;
+      this.newItemForm.reset();
 
     }
 

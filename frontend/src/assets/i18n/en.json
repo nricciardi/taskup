@@ -42,5 +42,7 @@
   "author": "Author",
   "add-new-todo": "Add new todo",
   "no-todo-items": "No todo items",
-  "actions": "Actions"
+  "actions": "Actions",
+  "add-deadline": "Aggiungi deadline",
+  "reset": "Reset"
 }

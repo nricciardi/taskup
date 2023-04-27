@@ -1,18 +1,37 @@
-<span class="badge" [class.bg-light-primary]="getDeadlineStatus() === DeadlineStatus.PRIMARY"
-                    [class.bg-light-warning]="getDeadlineStatus() === DeadlineStatus.WARNING"
-                    [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
-                    [class.bg-light-success]="getDeadlineStatus() === DeadlineStatus.DONE"
-                    *ngIf="!!deadline"
-                    [class.done]="!!done"
-                    [class.cursor-pointer]="editable"
-                    [attr.data-bs-toggle]="editable ? 'modal' : ''"
-                    [attr.data-bs-target]="editable ? '#manage-deadline' + id + '-modal' : ''"
-                    >
+<ng-container *ngIf="id">
+  <span class="badge" [class.bg-light-primary]="getDeadlineStatus() === DeadlineStatus.PRIMARY"
+                      [class.bg-light-warning]="getDeadlineStatus() === DeadlineStatus.WARNING"
+                      [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
+                      [class.bg-light-success]="getDeadlineStatus() === DeadlineStatus.DONE"
+                      [class.done]="!!done"
+                      [class.cursor-pointer]="editable"
+                      [attr.data-bs-toggle]="editable ? 'modal' : ''"
+                      [attr.data-bs-target]="editable ? '#modify-deadline' + id + '-modal' : ''"
+                      *ngIf="!!deadline; else newDeadline"
+                      >
 
-  {{ deadline | date:dateFormat }}
-</span>
+    {{ deadline | date:dateFormat }}
+  </span>
 
-<app-manage-deadline  [value]="deadline"
-                      [target]="'manage-deadline' + id + '-modal'"
-                      (onSubmit)="onDeadlineModified.emit($event)">
-</app-manage-deadline>
+  <!-- MODIFY -->
+  <app-manage-deadline  [value]="deadline"
+                        [target]="'modify-deadline' + id + '-modal'"
+                        (onSubmit)="onDeadlineModified.emit($event)"
+                        *ngIf="!!deadline">
+  </app-manage-deadline>
+
+
+  <!-- CREATE -->
+  <ng-template #newDeadline>
+    <span class="badge bg-light-secondary cursor-pointer"
+          [attr.data-bs-toggle]="editable ? 'modal' : ''"
+          [attr.data-bs-target]="editable ? '#add-deadline' + id + '-modal' : ''">
+      {{ "add-deadline" | translate }}
+    </span>
+
+    <app-manage-deadline  [value]="deadline"
+                          [target]="'add-deadline' + id + '-modal'"
+                          (onSubmit)="onDeadlineModified.emit($event)">
+  </app-manage-deadline>
+  </ng-template>
+</ng-container>

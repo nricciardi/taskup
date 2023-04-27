@@ -4,7 +4,7 @@ from lib.file.file_manager import FileManger
 import os
 from typing import Any
 from lib.utils.base import Base
-from lib.utils.util import Util
+from lib.utils.utils import Utils
 
 
 class SettingsBase:
@@ -77,7 +77,7 @@ class SettingsManager(SettingsBase):
 
         except json.JSONDecodeError as json_decode_error:
             print(f"Configuration file {self.SETTINGS_FILE_NAME} JSON syntax error")
-            Util.exit()
+            Utils.exit()
 
         finally:
             self.verify_mandatory_settings()
@@ -92,7 +92,7 @@ class SettingsManager(SettingsBase):
 
         except KeyError as key_error:
             print(f"'{self.KEY_PROJECT_PATH}' is mandatory setting")
-            Util.exit()
+            Utils.exit()
 
     def override_settings(self) -> None:
         """

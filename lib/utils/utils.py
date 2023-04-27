@@ -1,7 +1,7 @@
 import sys
 
 
-class Util:
+class Utils:
 
     @staticmethod
     def exit():

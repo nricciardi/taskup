@@ -20,18 +20,20 @@
 
       <!-- DEADLINE BADGE -->
       <div class="col-6">
-        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;" [done]="!!item.done" *ngIf="item.deadline"
-                            [editable]="utilsService.canModify(item.author_id)">
+        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;"
+                            [done]="!!item.done" *ngIf="item.deadline"
+                            [editable]="utilsService.canModify(item.author_id)"
+                            [id]="'deadline-todo-' + item.id">
         </app-deadline-badge>
       </div>
 
       <!-- AUTHOR AVATAR -->
       <div class="col-2">
         <app-text-avatar  *ngIf="item.author"
-                        [color]="item.author.avatar_hex_color"
-                        [text]="utilsService.getAvatarText(item.author)"
-                        [tooltip]="item.author.username"
-                        class="cursor-arrow">
+                          [color]="item.author.avatar_hex_color"
+                          [text]="utilsService.getAvatarText(item.author)"
+                          [tooltip]="item.author.username"
+                          class="cursor-arrow">
       </app-text-avatar>
       </div>
 

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from lib.db.entity.relation import Relation, OneRelation, ManyRelation, ExtendedManyRelation
 from lib.utils.logger import Logger
 from lib.db.entity.bem import BaseEntityModel, EntityModel
-from typing import Any, List, Tuple, Dict, Type, Generic
+from typing import Any, List, Dict, Type, Generic
 from lib.db.query import QueryBuilder
 from lib.db.component import WhereCondition
 from lib.utils.pair import PairAttrValue

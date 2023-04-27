@@ -145,7 +145,8 @@
                           [editable]="utilsService.canModify(task.author_id)"
                           (onDeadlineModified)="modify({
                             deadline: $event
-                          })">
+                          })"
+                          [id]="'deadline-tas-' + task.id">
       </app-deadline-badge>
     </span>
 

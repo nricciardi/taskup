@@ -10,7 +10,7 @@ export class ManageDeadlineComponent {
   @Input("value") value: Date | null = null;
   @Input("target") target?: string;
 
-  @Output() onSubmit = new EventEmitter<Date>();
+  @Output() onSubmit = new EventEmitter<Date | null>();
 
   manageDeadlineForm = new FormGroup({
     deadline: new FormControl<Date | null>(null),
@@ -19,16 +19,16 @@ export class ManageDeadlineComponent {
   ngAfterContentInit() {
     this.manageDeadlineForm.controls["deadline"].setValue(this.value ?? null);
 
-    console.log("date passata: ", this.value);
-
   }
 
   _onSubmit() {
 
-    if(this.manageDeadlineForm.valid && this.manageDeadlineForm.controls["deadline"].value) {
+    if(this.manageDeadlineForm.valid) {
 
       this.onSubmit.emit(this.manageDeadlineForm.controls["deadline"].value);
 
+      this.value = null;
+      this.manageDeadlineForm.reset();
     }
 
 
