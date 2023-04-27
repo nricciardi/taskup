@@ -20,7 +20,8 @@
 
       <!-- DEADLINE BADGE -->
       <div class="col-6">
-        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;" [done]="!!item.done" *ngIf="item.deadline">
+        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;" [done]="!!item.done" *ngIf="item.deadline"
+                            [editable]="utilsService.canModify(item.author_id)">
         </app-deadline-badge>
       </div>
 

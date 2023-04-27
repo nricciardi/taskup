@@ -523,4 +523,6 @@ class EntitiesManager(ABC, Generic[EntityModel]):
                                  **data
                                  )
 
+        Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+
         return self.find(entity_id)

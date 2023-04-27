@@ -4,8 +4,10 @@
                     [class.bg-light-success]="getDeadlineStatus() === DeadlineStatus.DONE"
                     *ngIf="!!deadline"
                     [class.done]="!!done"
-                    data-bs-toggle="modal"
-                    [attr.data-bs-target]="'#manage-deadline' + id + '-modal'">
+                    [class.cursor-pointer]="editable"
+                    [attr.data-bs-toggle]="editable ? 'modal' : ''"
+                    [attr.data-bs-target]="editable ? '#manage-deadline' + id + '-modal' : ''"
+                    >
 
   {{ deadline | date:dateFormat }}
 </span>

@@ -143,7 +143,6 @@
       <!-- DEADLINE BADGE -->
       <app-deadline-badge [deadline]="task.deadline"
                           [editable]="utilsService.canModify(task.author_id)"
-                          class="cursor-pointer"
                           (onDeadlineModified)="modify({
                             deadline: $event
                           })">

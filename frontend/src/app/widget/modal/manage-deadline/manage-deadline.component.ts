@@ -18,6 +18,9 @@ export class ManageDeadlineComponent {
 
   ngAfterContentInit() {
     this.manageDeadlineForm.controls["deadline"].setValue(this.value ?? null);
+
+    console.log("date passata: ", this.value);
+
   }
 
   _onSubmit() {
