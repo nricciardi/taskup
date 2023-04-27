@@ -129,9 +129,18 @@
 <ng-container *ngIf="dashboard && !loadingError">
   <div class="row justify-content-between">
 
+    <!-- <app-task-preview
+                      [task]="task"
+                      [loggedUser]="authService.loggedUser ?? undefined"
+                      (onDeletion)="onDeletion.emit($event)"
+                      (onAddAssignment)="onAddAssignment.emit($event)"
+                      (onRemoveAssignment)="onRemoveAssignment.emit($event)"
+                      (onModify)="onModify.emit($event)">
+    </app-task-preview> -->
+
     <!-- TASK LIST -->
     <div class="col-12">
-      <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"
+      <app-task-preview-list  [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"
                               (onDeletion)="removeTask($event)"
                               (onAddAssignment)="updateTask($event)"
                               (onRemoveAssignment)="updateTask($event)"
@@ -150,3 +159,33 @@
 </ng-container>
 
 
+<!-- FAB ADD TASK BTN -->
+<div class="fab-container pos-fixed">
+  <div class="fab shadow">
+    <div class="fab-content">
+      <span class="material-icons cursor-pointer" (click)="newTask()">
+        <i class="bi bi-plus"></i>
+      </span>
+    </div>
+  </div>
+  <!-- <div class="sub-button shadow">
+    <a href="google.com" target="_blank">
+      <span class="material-icons">phone</span>
+    </a>
+  </div>
+  <div class="sub-button shadow">
+    <a href="google.com" target="_blank">
+      <span class="material-icons">mail_outline</span>
+    </a>
+  </div>
+  <div class="sub-button shadow">
+    <a href="google.com" target="_blank">
+      <span class="material-icons">language</span>
+    </a>
+  </div>
+  <div class="sub-button shadow">
+    <a href="google.com" target="_blank">
+      <span class="material-icons">help_outline</span>
+    </a>
+  </div> -->
+</div>

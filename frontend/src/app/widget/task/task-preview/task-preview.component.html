@@ -115,13 +115,13 @@
       </ng-container>
 
       <ng-container *ngIf="!!loggedUser?.role?.permission_change_assignment">
-        <app-icon-avatar color="5b6370"
-                       iconClass="bi bi-plus"
-                       tooltip="add-new-user"
-                       (click)="null"
-                       data-bs-toggle="modal"
-                       [attr.data-bs-target]="'#new-assignment-modal'"
-                       class="cursor-pointer">
+        <app-icon-avatar  color="5b6370"
+                          iconClass="bi bi-plus"
+                          tooltip="add-new-user"
+                          (click)="null"
+                          data-bs-toggle="modal"
+                          [attr.data-bs-target]="'#new-assignment-modal'"
+                          class="cursor-pointer">
         </app-icon-avatar>
 
         <app-new-assignment-modal

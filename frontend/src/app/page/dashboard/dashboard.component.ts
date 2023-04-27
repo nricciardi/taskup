@@ -3,6 +3,7 @@ import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
+import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
@@ -27,7 +28,7 @@ interface RGBColor {
 })
 export class DashboardComponent {
 
-  constructor(private dashboardService: DashboardService) {
+  constructor(private dashboardService: DashboardService, public authService: AuthService) {
   }
 
   @ViewChild("statusGraph") statusGraphContainer?: ElementRef;
@@ -227,5 +228,9 @@ export class DashboardComponent {
         this.dashboard.tasks[index] = managedTask.new;
 
     }
+  }
+
+  newTask() {
+    window.scroll(0, 0);
   }
 }

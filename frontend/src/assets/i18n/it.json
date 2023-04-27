@@ -44,5 +44,6 @@
   "no-todo-items": "Nessun todo",
   "actions": "Azioni",
   "add-deadline": "Aggiungi scadenza",
-  "reset": "Reset"
+  "reset": "Reset",
+  "add-task": "Aggiungi task"
 }

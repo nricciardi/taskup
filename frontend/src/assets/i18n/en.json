@@ -44,5 +44,6 @@
   "no-todo-items": "No todo items",
   "actions": "Actions",
   "add-deadline": "Aggiungi deadline",
-  "reset": "Reset"
+  "reset": "Reset",
+  "add-task": "Add task"
 }
