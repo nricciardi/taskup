@@ -9,14 +9,22 @@ import { NewTodoItemModel } from 'src/app/model/entity/todo-item.model';
 })
 export class NewTodoItemComponent {
   @Input("target") target?: string;
+  @Input("baseData") baseData?: NewTodoItemModel;
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<NewTodoItemModel>();
 
   newItemForm = new FormGroup({
-    description: new FormControl(null, [Validators.required]),
-    deadline: new FormControl(null),
+    description: new FormControl<string | null>(null, [Validators.required]),
+    deadline: new FormControl<Date | null>(null),
   });
+
+  ngAfterContentInit() {
+    this.newItemForm.setValue({
+      description: this.baseData?.description ?? "",
+      deadline: this.baseData?.deadline ?? null
+    });
+  }
 
 
   _onSubmit() {

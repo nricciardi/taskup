@@ -35,10 +35,23 @@
       </div>
 
       <div class="col-2">
-        <button class="btn btn-sm icon btn-light mr-1" *ngIf="utilsService.canModify(item.author_id)">
+        <button class="btn btn-sm icon btn-light mr-1"
+                *ngIf="utilsService.canModify(item.author_id)"
+                data-bs-toggle="modal"
+                [attr.data-bs-target]="'#modify-todo-item-' + item.id"
+                >
           <i class="bi bi-pencil"></i>
         </button>
       </div>
+
+      <!-- Modify Modal -->
+      <app-new-todo-item-modal  [target]="'modify-todo-item-' + item.id"
+                                [baseData]="{
+                                  description: item.description,
+                                  deadline: item.deadline
+                                }"
+                                (onSubmit)="modify($event)">
+      </app-new-todo-item-modal>
 
       <div class="col-2">
         <button class="btn btn-sm icon btn-light"
