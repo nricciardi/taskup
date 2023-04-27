@@ -2,7 +2,7 @@ import os
 from lib.db.query import QueryBuilder
 from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
-from lib.db.entity.task import TasksManager, TaskAssignmentsManager
+from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager
 from lib.db.component import WhereCondition
 from lib.app.service.auth import AuthService
 from random import randint
@@ -16,7 +16,10 @@ pm = ProjectManager()
 
 users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
 task_assignment_manager = TaskAssignmentsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager, verbose=True)
+task_labels_manager = TaskLabelsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+task_task_labels_manager = TaskTaskLabelPivotManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
+tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager,
+                             task_task_label_pivot_manager=task_task_labels_manager, verbose=True)
 
 
 def create_demo_db():
