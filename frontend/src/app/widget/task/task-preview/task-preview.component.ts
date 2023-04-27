@@ -27,6 +27,7 @@ export class TaskPreviewComponent {
   @Input("loggedUser") loggedUser?: UserModel;
 
   @Output() onDeletion = new EventEmitter<number>();
+  @Output() onModify = new EventEmitter<UpdateTaskModel>();
   @Output() onRemoveAssignment = new EventEmitter<UpdateTaskModel>();
   @Output() onAddAssignment = new EventEmitter<UpdateTaskModel>();
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
@@ -184,4 +185,30 @@ export class TaskPreviewComponent {
     });
   }
 
+  modify(values: Object) {
+
+    if(!this.task)
+      return;
+
+    LoggerService.logInfo("Modify task " + this.task?.name);
+
+    this.taskService.update(this.task.id, values).then((response) => {
+      response.subscribe({
+        next: (value) => {
+
+          // refresh task
+          this.taskService.find(this.task!.id).then((respose) => {
+            respose.subscribe({
+              next: (t) => {
+                this.task = t;
+
+              }
+            })
+          })
+          
+        }
+      })
+    })
+
+  }
 }

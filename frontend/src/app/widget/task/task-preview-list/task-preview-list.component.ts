@@ -15,6 +15,7 @@ export class TaskPreviewListComponent {
   @Input("loggedUser") loggedUser?: UserModel;
 
   @Output() onDeletion = new EventEmitter<number>();
+  @Output() onModify = new EventEmitter<UpdateTaskModel>();
   @Output() onRemoveAssignment = new EventEmitter<UpdateTaskModel>();
   @Output() onAddAssignment = new EventEmitter<UpdateTaskModel>();
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();

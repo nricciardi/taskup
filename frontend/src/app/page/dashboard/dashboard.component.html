@@ -129,11 +129,13 @@
 <ng-container *ngIf="dashboard && !loadingError">
   <div class="row justify-content-between">
 
+    <!-- TASK LIST -->
     <div class="col-12">
       <app-task-preview-list [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)" [loggedUser]="dashboard.of_user"
                               (onDeletion)="removeTask($event)"
                               (onAddAssignment)="updateTask($event)"
-                              (onRemoveAssignment)="updateTask($event)">
+                              (onRemoveAssignment)="updateTask($event)"
+                              (onModify)="updateTask($event)">
     </app-task-preview-list>
     </div>
   </div>

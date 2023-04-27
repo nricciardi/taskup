@@ -141,7 +141,13 @@
   <div class="card-footer d-flex justify-content-between">
     <span>
       <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="task.deadline"></app-deadline-badge>
+      <app-deadline-badge [deadline]="task.deadline"
+                          [editable]="utilsService.canModify(task.author_id)"
+                          class="cursor-pointer"
+                          (onDeadlineModified)="modify({
+                            deadline: $event
+                          })">
+      </app-deadline-badge>
     </span>
 
     <button class="btn btn-light-primary">Read More</button>

@@ -3,7 +3,14 @@
                     [class.bg-light-danger]="getDeadlineStatus() === DeadlineStatus.DANGER"
                     [class.bg-light-success]="getDeadlineStatus() === DeadlineStatus.DONE"
                     *ngIf="!!deadline"
-                    [class.done]="!!done">
+                    [class.done]="!!done"
+                    data-bs-toggle="modal"
+                    [attr.data-bs-target]="'#manage-deadline' + id + '-modal'">
 
   {{ deadline | date:dateFormat }}
 </span>
+
+<app-manage-deadline  [value]="deadline"
+                      [target]="'manage-deadline' + id + '-modal'"
+                      (onSubmit)="onDeadlineModified.emit($event)">
+</app-manage-deadline>

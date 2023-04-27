@@ -105,9 +105,12 @@
                 </p>
               </div>
               <div class="user-img d-flex align-items-center">
-                <div class="avatar avatar-md">
-                  <img src="./assets/images/jpg/1.jpg" />
-                </div>
+                <app-text-avatar  *ngIf="userLogged"
+                        [color]="userLogged.avatar_hex_color"
+                        [text]="utilsService.getAvatarText(userLogged)"
+                        [tooltip]="userLogged.username"
+                        class="cursor-arrow">
+                </app-text-avatar>
               </div>
             </div>
           </a>

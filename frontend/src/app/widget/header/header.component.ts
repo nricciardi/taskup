@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,7 @@ export class HeaderComponent {
 
   userLogged: UserModel | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, public utilsService: UtilsService) {
   }
 
   ngOnInit() {
