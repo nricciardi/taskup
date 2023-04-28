@@ -3,9 +3,9 @@ from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
 from typing import List, Tuple, Dict, Any
-from lib.db.component import Table, Field, FKConstraint, WhereCondition
+from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
-from lib.utils.utils import Utils
+from lib.utils.utils import Utils, SqlUtils
 
 
 def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
@@ -211,7 +211,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
                 FKConstraint.on_id(fk_field="task_status_id", on_table=self.task_status_table_name),
-            ], with_updater_trigger=True),
+            ], with_triggers=Trigger(
+                name=f"{self.task_table_name}_updater_trigger",
+                on_action=f"Update On {self.task_table_name}",
+                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.id"
+            )),
 
             self.task_label_table_name: Table(self.task_label_table_name, [
                 Field.id_field(),
@@ -226,7 +230,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], other_fields=[
                 Field.datetime_now("assigned_at"),
                 Field.datetime_now("last_visit_at")
-            ]),
+            ], with_triggers=Trigger(
+                name=f"{self.task_table_name}_updater_trigger",
+                on_action=f"Update On {self.task_assignment_table_name}",
+                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
+            )),
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [
                 Field.id_field(),
@@ -240,12 +248,20 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
                 FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name),
-            ], with_updater_trigger=True),
+            ], with_triggers=Trigger(
+                name=f"{self.task_table_name}_updater_trigger",
+                on_action=f"Update Of {self.todo_item_table_name} On {self.task_table_name}",
+                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
+            )),
 
             self.task_task_label_pivot_table_name: Table.pivot(self.task_task_label_pivot_table_name, [
                 self.task_table_name,
                 self.task_label_table_name
-            ])
+            ], with_triggers=Trigger(
+                name=f"{self.task_table_name}_updater_trigger",
+                on_action=f"Update On {self.task_task_label_pivot_table_name}",
+                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
+            ))
 
         }
 

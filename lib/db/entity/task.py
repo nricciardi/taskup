@@ -54,6 +54,7 @@ class TaskLabelModel(BaseEntityModel):
 class AssignedUser:
     user: Optional[UserModel] = field(default=None)
     assigned_at: Optional[datetime] = field(default=None)
+    last_visit_at: Optional[datetime] = field(default=None)
 
 
 @dataclass

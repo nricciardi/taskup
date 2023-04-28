@@ -14,6 +14,28 @@ class WhereCondition(DCToDictMixin, DCToTupleMixin):
 
 
 @dataclass
+class Trigger(ToSqlInterface):
+
+    name: str
+    on_action: str
+    script: str
+    temporary: bool = field(default=False)
+    if_not_exists: bool = field(default=True)
+
+    def to_sql(self) -> str:
+
+        query = f"""
+        Create Trigger{'Temporary ' if self.temporary else ' '}{'If Not Exists ' if self.if_not_exists else ' '}{self.name}
+        {self.on_action}
+        Begin
+            {self.script};
+        End;
+        """
+
+        return query
+
+
+@dataclass
 class Field(ToSqlInterface):
     name: str
     type: str
@@ -129,8 +151,7 @@ class Table(ToSqlInterface):
     fields: List[Field]
     fk_constraints: Optional[List[FKConstraint]] = field(default=None)
     other_constraints: Optional[List[Constraint]] = field(default=None)
-    with_updater_trigger: bool = field(default=False)
-    updater_trigger_table_target: Optional[str] = field(default=None)
+    with_triggers: Optional[List[Trigger] | Trigger] = field(default=None)
 
     def has_fk_constraints(self) -> bool:
         return self.fk_constraints is not None and len(self.fk_constraints) > 0
@@ -140,7 +161,7 @@ class Table(ToSqlInterface):
 
     @classmethod
     def pivot(cls, table_name: str, tables: List[str], other_fields: List[Field] | None = None,
-              other_constraints: List[Constraint] | None = None, unique_record: bool = False) -> 'Table':
+              other_constraints: List[Constraint] | None = None, unique_record: bool = False, with_triggers: List[Trigger] | Trigger | None = None) -> 'Table':
 
         fields = [Field.id_field()]
 
@@ -164,7 +185,7 @@ class Table(ToSqlInterface):
 
             other_constraints.append(UniqueConstraint(names))
 
-        return cls(table_name, fields, fk_constraints, other_constraints=other_constraints)
+        return cls(table_name, fields, fk_constraints, other_constraints=other_constraints, with_triggers=with_triggers)
 
     def to_sql(self, if_not_exist: bool = True) -> str:
         """
@@ -184,15 +205,13 @@ class Table(ToSqlInterface):
         );
         """
 
-        if self.with_updater_trigger:        # append trigger to field: updated_at
-            table_target: str = self.updater_trigger_table_target if self.updater_trigger_table_target is not None else self.name
+        if self.with_triggers is not None:
+            # append triggers
 
-            table += f"""
-            CREATE TRIGGER {self.name}_updated_at_trig AFTER UPDATE ON {table_target}
-            BEGIN
-                Update {table_target} Set updated_on = datetime('now') WHERE user_id = NEW.user_id;
-            END;
-            """
+            if isinstance(self.with_triggers, Trigger):
+                self.with_triggers = [self.with_triggers]       # cast to list
+
+            table += "\n".join(trigger.to_sql() for trigger in self.with_triggers)
 
         return table
 

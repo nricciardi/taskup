@@ -41,6 +41,19 @@ class QueryBuilder(ToSqlInterface, ABC):
 
         return cls(table_name, alias, binding_mode)
 
+    def query_raw(self, raw: str) -> 'QueryBuilder':
+        """
+        Append to query a raw content
+
+        :param raw: raw content
+        :type raw: str
+        :return:
+        """
+
+        self.query += raw
+
+        return self
+
     def select(self, *columns: str) -> 'QueryBuilder':
         """
         Select the columns to get.
