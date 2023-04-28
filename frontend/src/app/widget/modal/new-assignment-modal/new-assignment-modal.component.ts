@@ -44,8 +44,6 @@ export class NewAssignmentModalComponent {
 
       response.subscribe({
         next: (value: UserModel[]) => {
-          console.log(value);
-
 
           this.usersCanBeAssign = value.filter((user: UserModel) => {
             return !this.alreadyAssignedUsers.map(u => u.id).includes(user.id);
