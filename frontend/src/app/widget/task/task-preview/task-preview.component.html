@@ -188,12 +188,12 @@
                           tooltip="add-new-user"
                           (click)="null"
                           data-bs-toggle="modal"
-                          [attr.data-bs-target]="'#new-assignment-modal'"
+                          [attr.data-bs-target]="'#new-assignment-modal-' + task.id"
                           class="cursor-pointer">
         </app-icon-avatar>
 
         <app-new-assignment-modal
-                                  [target]="'new-assignment-modal'"
+                                  [target]="'new-assignment-modal-' + task.id"
                                   [alreadyAssignedUsers]="getAssignedUsers()"
                                   (onAddAssignment)="addAssignment($event)"
                                   (onClose)="this.onAddAssignment.emit({

@@ -24,8 +24,6 @@ export class NewAssignmentModalComponent {
   @Output() onClose = new EventEmitter<void>();
 
   ngOnInit() {
-    // this.setUsersCanBeAssign();
-
   }
 
   ngOnDestroy() {
