@@ -129,6 +129,8 @@ class Table(ToSqlInterface):
     fields: List[Field]
     fk_constraints: Optional[List[FKConstraint]] = field(default=None)
     other_constraints: Optional[List[Constraint]] = field(default=None)
+    with_updater_trigger: bool = field(default=False)
+    updater_trigger_table_target: Optional[str] = field(default=None)
 
     def has_fk_constraints(self) -> bool:
         return self.fk_constraints is not None and len(self.fk_constraints) > 0
@@ -164,7 +166,7 @@ class Table(ToSqlInterface):
 
         return cls(table_name, fields, fk_constraints, other_constraints=other_constraints)
 
-    def to_sql(self, if_not_exist: bool = True, with_updater_trigger: bool = False) -> str:
+    def to_sql(self, if_not_exist: bool = True) -> str:
         """
         Get sql string to create table
 
@@ -182,11 +184,13 @@ class Table(ToSqlInterface):
         );
         """
 
-        if with_updater_trigger:        # append trigger to field: updated_at
+        if self.with_updater_trigger:        # append trigger to field: updated_at
+            table_target: str = self.updater_trigger_table_target if self.updater_trigger_table_target is not None else self.name
+
             table += f"""
-            CREATE TRIGGER {self.name}_updated_at_trig AFTER UPDATE ON {self.name}
+            CREATE TRIGGER {self.name}_updated_at_trig AFTER UPDATE ON {table_target}
             BEGIN
-                Update {self.name} Set updated_on = datetime('now') WHERE user_id = NEW.user_id;
+                Update {table_target} Set updated_on = datetime('now') WHERE user_id = NEW.user_id;
             END;
             """
 

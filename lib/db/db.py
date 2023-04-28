@@ -211,7 +211,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
                 FKConstraint.on_id(fk_field="task_status_id", on_table=self.task_status_table_name),
-            ]),
+            ], with_updater_trigger=True),
 
             self.task_label_table_name: Table(self.task_label_table_name, [
                 Field.id_field(),
@@ -240,7 +240,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
                 FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name),
-            ]),
+            ], with_updater_trigger=True),
 
             self.task_task_label_pivot_table_name: Table.pivot(self.task_task_label_pivot_table_name, [
                 self.task_table_name,
@@ -339,7 +339,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         query: str = self.tables[table_name].to_sql(if_not_exist=if_not_exists)
 
-        self.cursor.execute(query)
+        self.cursor.executescript(query)
 
         Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
