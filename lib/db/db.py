@@ -19,6 +19,7 @@ def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
 
     :return:
     """
+
     fields = [column[0] for column in cursor.description]
     return {key: value for key, value in zip(fields, row)}
 
@@ -223,7 +224,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 self.user_table_name,
                 self.task_table_name
             ], other_fields=[
-                Field.datetime_now("assigned_at")
+                Field.datetime_now("assigned_at"),
+                Field.datetime_now("last_visit_at")
             ]),
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [
@@ -588,6 +590,10 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         if isinstance(conditions, WhereCondition):
             conditions = [conditions]
+
+        # append updated_at to data with "now" if not exist and if table name has updated_at
+        # if "updated_at" in self.tables[table_name]:
+        #     data = dict(updated_at=).update(data)
 
         query_built = QueryBuilder.from_table(table_name)\
                                   .enable_binding()\
