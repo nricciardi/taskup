@@ -45,5 +45,7 @@
   "actions": "Azioni",
   "add-deadline": "Aggiungi scadenza",
   "reset": "Reset",
-  "add-task": "Aggiungi task"
+  "add-task": "Aggiungi task",
+  "add-new-label": "Aggiungi una nuova label",
+  "add-new-label-description": "Seleziona dalla seguente lista una label da aggiungere a questo task."
 }
