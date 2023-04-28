@@ -82,6 +82,7 @@ class TaskModel(BaseEntityModel):
 class TaskAssignmentModel(BaseEntityModel):
     id: int
     assigned_at: datetime
+    last_visit_at: datetime
     user_id: int
     task_id: int
 
@@ -285,7 +286,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
             # task >-< user
             ExtendedManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
                                  pivot_table=self.task_assignment_table_name, to_attr="assigned_users",
-                                 other_cols=['assigned_at'], fk_col="user", wrap_fk_model=AssignedUser)
+                                 other_cols=['assigned_at', 'last_visit_at'], fk_col="user", wrap_fk_model=AssignedUser)
         ]
 
     def remove_assignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Any, Optional, TypeVar
 from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 from lib.utils.mixin.sql import ToSqlInterface
+from lib.utils.utils import SqlUtils
 
 
 @dataclass
@@ -48,26 +49,18 @@ class Field(ToSqlInterface):
         return Field.datetime_now("updated_at")
 
     @classmethod
-    def datetime_now(cls, name: str) -> 'Field':
-        return cls(name=name, type="DATETIME", default="strftime('%Y-%m-%d %H:%M:%S', 'now')")
+    def datetime_now(cls, name: str, use_localtime: bool = False) -> 'Field':
+        return cls(name=name, type="DATETIME", default=SqlUtils.datetime_strf_now(use_localtime))
 
     @classmethod
-    def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
+    def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL', use_localtime: bool = False) -> 'Field':
         return cls(name=name, type="DATE", default=default, nullable=True,
-                   check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
+                   check=f"{name} IS NULL OR {SqlUtils.date_str_format(name, use_localtime=use_localtime)} > {SqlUtils.date_strf_now(use_localtime=use_localtime)}")
 
     @classmethod
-    def nullable_datetime_with_now_check_field(cls, name: str, default: str | None = 'NULL') -> 'Field':
+    def nullable_datetime_with_now_check_field(cls, name: str, default: str | None = 'NULL', use_localtime: bool = False) -> 'Field':
         return cls(name=name, type="DATETIME", default=default, nullable=True,
-                   check=f"{name} IS NULL OR {Field.get_date_sql(name)} > {Field.get_date_sql('now', strict_string=True)}")
-
-    @staticmethod
-    def get_datetime_sql(datetime: str, strict_string: bool = False, use_localtime: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d %H:%M:%S', {"'" if strict_string else ""}{datetime}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
-
-    @staticmethod
-    def get_date_sql(date: str, strict_string: bool = False, use_localtime: bool = False) -> str:
-        return f"""strftime('%Y-%m-%d', {"'" if strict_string else ""}{date}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
+                   check=f"{name} IS NULL OR {SqlUtils.datetime_str_format(name, use_localtime=use_localtime)} > {SqlUtils.datetime_strf_now(use_localtime=use_localtime)}")
 
     def to_sql(self) -> str:
         """

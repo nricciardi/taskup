@@ -30,7 +30,6 @@ def create_demo_db():
 
         return hex_number
 
-
     users_manager.create_from_dict({"username": f"pm",
                                     "email": f"pm@pm.com",
                                     "password": "asdf123",
