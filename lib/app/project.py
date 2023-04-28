@@ -14,7 +14,7 @@ class ProjectManager:
         db_name, use_localtime, project_path, work_directory_path = self.get_settings()
 
         if not Utils.exist_dir(project_path):
-            Logger.log_error(msg="selected project path NOT found", is_verbose=self.verbose)
+            Logger.log_error(msg=f"selected project path '{project_path}' NOT found", is_verbose=self.verbose)
 
             Utils.exit()
 
