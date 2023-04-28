@@ -7,6 +7,7 @@ from lib.app.service.dashboard import DashboardService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
 import json
+from lib.db.db import DBManager
 
 
 def jsonify(func: Callable):
@@ -31,34 +32,33 @@ class ExposerService:
 
     """
 
-    def __init__(self, db_name: str, work_directory_path: str, vault_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, vault_path: str, verbose: bool = False):
         self.verbose = verbose
 
-        self.__task_status_manager = TaskStatusManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__task_status_manager = TaskStatusManager(db_manager=db_manager,
                                                        verbose=self.verbose)
 
-        self.__todo_items_manager = TodoItemsManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__todo_items_manager = TodoItemsManager(db_manager=db_manager,
                                                      verbose=self.verbose)
 
-        self.__task_assignment_manager = TaskAssignmentsManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__task_assignment_manager = TaskAssignmentsManager(db_manager=db_manager,
                                                                 verbose=self.verbose)
 
-        self.__task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_name=db_name,
-                                                                         work_directory_path=work_directory_path,
+        self.__task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=db_manager,
                                                                          verbose=self.verbose)
 
-        self.__task_labels_manager = TaskLabelsManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__task_labels_manager = TaskLabelsManager(db_manager=db_manager,
                                                        verbose=self.verbose)
 
-        self.__tasks_manager = TasksManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__tasks_manager = TasksManager(db_manager=db_manager,
                                             task_assignment_manager=self.__task_assignment_manager,
                                             task_task_label_pivot_manager=self.__task_task_label_pivot_manager,
                                             verbose=self.verbose)
 
-        self.__users_manager = UsersManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__users_manager = UsersManager(db_manager=db_manager,
                                             verbose=self.verbose)
 
-        self.__roles_manager = RolesManager(db_name=db_name, work_directory_path=work_directory_path,
+        self.__roles_manager = RolesManager(db_manager=db_manager,
                                             verbose=self.verbose)
 
         self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path,

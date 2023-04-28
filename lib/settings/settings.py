@@ -131,6 +131,7 @@ class SettingsManager(SettingsBase):
 
         return self.settings[key]
 
+    @property
     def verbose(self) -> bool:
         """
         Return verbose mode
@@ -141,6 +142,7 @@ class SettingsManager(SettingsBase):
 
         return self.get(SettingsBase.KEY_VERBOSE)
 
+    @property
     def project_directory_path(self) -> str:
         """
         Return the app directory
@@ -150,6 +152,7 @@ class SettingsManager(SettingsBase):
 
         return os.path.abspath(self.get(self.KEY_PROJECT_PATH))
 
+    @property
     def work_directory_path(self) -> str:
         """
         Return the work directory path inside the app
@@ -157,8 +160,9 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        return os.path.join(self.project_directory_path(), self.WORK_DIRECTORY_NAME)
+        return os.path.join(self.project_directory_path, self.WORK_DIRECTORY_NAME)
 
+    @property
     def db_name(self) -> str:
         """
         Return the database name
@@ -168,6 +172,7 @@ class SettingsManager(SettingsBase):
 
         return self.get(self.KEY_DB_NAME)
 
+    @property
     def db_path(self) -> str:
         """
         Return the database path of the app
@@ -175,8 +180,9 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path(), self.get(self.KEY_DB_NAME))
+        return os.path.join(self.work_directory_path, self.get(self.KEY_DB_NAME))
 
+    @property
     def vault_path(self) -> str:
         """
         Return the vault path of the app.
@@ -185,8 +191,9 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path(), SettingsBase.VAULT_FILE_NAME)
+        return os.path.join(self.work_directory_path, SettingsBase.VAULT_FILE_NAME)
 
+    @property
     def debug_mode(self) -> bool:
         """
         Return True if app is in debug mode
@@ -197,6 +204,7 @@ class SettingsManager(SettingsBase):
 
         return self.get(SettingsBase.KEY_DEBUG_MODE)
 
+    @property
     def frontend_directory(self) -> str:
         """
         Return frontend directory of app
@@ -207,6 +215,7 @@ class SettingsManager(SettingsBase):
 
         return self.get(SettingsBase.KEY_FRONTEND_DIRECTORY)
 
+    @property
     def frontend_start(self) -> str:
         """
         Return the start file of frontend.
@@ -215,11 +224,12 @@ class SettingsManager(SettingsBase):
         :rtype str:
         """
 
-        if self.debug_mode():
+        if self.debug_mode:
             return { 'port': 4200 }
 
         return self.get(SettingsBase.KEY_FRONTEND_START)
 
+    @property
     def port(self) -> int:
         """
         Return the port to use (in Eel)

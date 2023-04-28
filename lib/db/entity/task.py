@@ -1,4 +1,4 @@
-from lib.db.db import TableNamesMixin, BaseTaskStatusIdMixin
+from lib.db.db import TableNamesMixin, BaseTaskStatusIdMixin, DBManager
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
@@ -113,12 +113,10 @@ class TodoItemModel(BaseEntityModel):
 # ================================== MANAGER ========================
 class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose, work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def EM(self) -> Type[TaskStatusModel]:
@@ -141,13 +139,10 @@ class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin)
 
 class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def table_name(self) -> str:
@@ -196,13 +191,10 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
 
 class TaskTaskLabelPivotManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def table_name(self) -> str:
@@ -249,17 +241,14 @@ class TaskTaskLabelPivotManager(EntitiesManager, TableNamesMixin):
 
 
 class TasksManager(EntitiesManager, TableNamesMixin):
-    def __init__(self, db_name: str, work_directory_path: str, task_assignment_manager: TaskAssignmentsManager,
+    def __init__(self, db_manager: DBManager, task_assignment_manager: TaskAssignmentsManager,
                  task_task_label_pivot_manager: TaskTaskLabelPivotManager, verbose: bool = False):
 
         self.verbose = verbose
-        self.db_name = db_name
         self.__task_assignment_manager = task_assignment_manager
         self.__task_task_label_pivot_manager = task_task_label_pivot_manager
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def EM(self) -> Type[TaskModel]:
@@ -441,12 +430,10 @@ class TasksManager(EntitiesManager, TableNamesMixin):
 
 class TodoItemsManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose, work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def table_name(self) -> str:
@@ -480,13 +467,10 @@ class TodoItemsManager(EntitiesManager, TableNamesMixin):
 
 class TaskLabelsManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def table_name(self) -> str:

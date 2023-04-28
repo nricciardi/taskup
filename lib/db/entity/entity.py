@@ -15,15 +15,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
     """
 
     db_use_localtime: bool = False
-    __db_manager: DBManager
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
-
-        self.__db_name = db_name
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.__verbose = verbose
 
-        self.__db_manager = DBManager(db_name=self.__db_name, work_directory_path=work_directory_path, verbose=verbose,
-                                      use_localtime=self.db_use_localtime)
+        self.__db_manager = db_manager
+
+    @property
+    def db_manager(self) -> DBManager:
+        return self.__db_manager
 
     @property
     def verbose(self) -> bool:
@@ -130,7 +130,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         query = QueryBuilder.from_table(table_name).select().to_sql()
 
-        records = self.__db_manager.cursor.execute(query).fetchall()
+        records = self.db_manager.cursor.execute(query).fetchall()
 
         return records
 
@@ -207,7 +207,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         query = self.__get_find_query(entity_id, table_name)
 
-        res = self.__db_manager.cursor.execute(query)
+        res = self.db_manager.cursor.execute(query)
 
         return dict(res.fetchone() if res is not None else {})
 
@@ -242,10 +242,10 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         try:
-            self.__db_manager.insert_from_dict(self.table_name, data)
+            self.db_manager.insert_from_dict(self.table_name, data)
 
             # call explicitly find to prevent use of override
-            entity = self.find(self.__db_manager.cursor.lastrowid)
+            entity = self.find(self.db_manager.cursor.lastrowid)
 
             return entity
 
@@ -276,7 +276,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel]:
         """
 
-        result: List[Dict] = self.__db_manager.where(self.table_name, *conditions, columns=columns)
+        result: List[Dict] = self.db_manager.where(self.table_name, *conditions, columns=columns)
 
         models = self.EM.all_from_dicts(result)
 
@@ -404,8 +404,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         fk_pivot_col = relation.of_table + "_id"  # pivot col convention: <fk_table>_id
         entity_pivot_col = self.table_name + "_id"
 
-        pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,
-                                                         WhereCondition(
+        pivot_data: List[Dict] = self.db_manager.where(relation.pivot_table,
+                                                       WhereCondition(
                                                              col=entity_pivot_col,
                                                              operator="=",
                                                              value=em.id
@@ -436,8 +436,8 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         fk_pivot_col = relation.of_table + "_id"  # pivot col convention: <fk_table>_id
         entity_pivot_col = self.table_name + "_id"
 
-        pivot_data: List[Dict] = self.__db_manager.where(relation.pivot_table,
-                                                         WhereCondition(
+        pivot_data: List[Dict] = self.db_manager.where(relation.pivot_table,
+                                                       WhereCondition(
                                                              col=entity_pivot_col,
                                                              operator="=",
                                                              value=em.id
@@ -495,7 +495,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :return:
         """
 
-        return self.__db_manager.delete(table_name, *conditions)
+        return self.db_manager.delete(table_name, *conditions)
 
     def delete_by_id(self, entity_id: int) -> bool:
         """
@@ -518,10 +518,10 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :return:
         """
 
-        self.__db_manager.update(self.table_name,
-                                 WhereCondition("id", "=", entity_id),
-                                 **data
-                                 )
+        self.db_manager.update(self.table_name,
+                               WhereCondition("id", "=", entity_id),
+                               **data
+                               )
 
         Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
 

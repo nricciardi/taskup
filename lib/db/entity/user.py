@@ -1,4 +1,4 @@
-from lib.db.db import TableNamesMixin
+from lib.db.db import TableNamesMixin, DBManager
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
@@ -45,12 +45,10 @@ class UserModel(BaseEntityModel):
 
 class UsersManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose, work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def EM(self) -> Type[UserModel]:
@@ -70,13 +68,10 @@ class UsersManager(EntitiesManager, TableNamesMixin):
 
 class RolesManager(EntitiesManager, TableNamesMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str, verbose: bool = False):
+    def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.verbose = verbose
-        self.db_name = db_name
-        work_directory_path = work_directory_path
 
-        super().__init__(db_name=self.db_name, verbose=self.verbose,
-                         work_directory_path=work_directory_path)
+        super().__init__(db_manager=db_manager, verbose=self.verbose)
 
     @property
     def EM(self) -> Type[RoleModel]:

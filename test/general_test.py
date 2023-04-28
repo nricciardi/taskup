@@ -11,14 +11,16 @@ import datetime
 
 
 db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
-os.remove(db_path)
+
+if os.path.isfile(db_path):
+    os.remove(db_path)
 pm = ProjectManager()
 
-users_manager = UsersManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-task_assignment_manager = TaskAssignmentsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-task_labels_manager = TaskLabelsManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-task_task_labels_manager = TaskTaskLabelPivotManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", verbose=True)
-tasks_manager = TasksManager("database.db", "/home/ncla/Desktop/project/project-pi/code/fakeproject/work", task_assignment_manager,
+users_manager = UsersManager(pm.db_manager, verbose=True)
+task_assignment_manager = TaskAssignmentsManager(pm.db_manager, verbose=True)
+task_labels_manager = TaskLabelsManager(pm.db_manager, verbose=True)
+task_task_labels_manager = TaskTaskLabelPivotManager(pm.db_manager, verbose=True)
+tasks_manager = TasksManager(pm.db_manager, task_assignment_manager,
                              task_task_label_pivot_manager=task_task_labels_manager, verbose=True)
 
 

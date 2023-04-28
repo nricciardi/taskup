@@ -8,30 +8,27 @@ from lib.app.service.exposer import ExposerService
 
 
 class App:
-    __settings_manager = SettingsManager()
 
     def __init__(self):
-        self.__verbose = self.__settings_manager.verbose()  # get verbose
+        Logger.log_info(msg="App init...", is_verbose=True)
 
-        Logger.log_info(msg="App init...", is_verbose=self.__verbose)
+        # run project manager
+        self.project_manager = ProjectManager()
 
-        frontend_directory = self.__settings_manager.frontend_directory()
-        eel.init(frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
+        self.verbose = self.project_manager.settings.verbose
+        self.frontend_start = self.project_manager.settings.frontend_start
+        self.frontend_port = self.project_manager.settings.port
 
-        self.__project_manager = ProjectManager()
-
-        db_name = self.__settings_manager.db_name()
-        work_directory_path = self.__settings_manager.work_directory_path()
-        vault_path = self.__settings_manager.vault_path()
+        # init Eel
+        Logger.log_info(msg="Init frontend with Eel", is_verbose=self.verbose)
+        eel.init(self.project_manager.settings.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
         # expose methods
-        exposer = ExposerService(db_name, work_directory_path, vault_path, verbose=self.__verbose)
+        exposer = ExposerService(self.project_manager.db_manager, self.project_manager.settings.vault_path, verbose=self.verbose)
         exposer.expose_methods()
 
     def start(self):
-        start_file = self.__settings_manager.frontend_start()
-        port = self.__settings_manager.port()
 
-        eel.start(start_file, port=port, shutdown_delay=600)  # start eel: this generates a loop
+        eel.start(self.frontend_start, port=self.frontend_port, shutdown_delay=600)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
