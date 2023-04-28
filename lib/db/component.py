@@ -111,6 +111,7 @@ class FKConstraint(ToSqlInterface):
 
         return f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
 
+
 @dataclass
 class UniqueConstraint(ToSqlInterface):
     cols: List[str]
@@ -170,7 +171,7 @@ class Table(ToSqlInterface):
 
         return cls(table_name, fields, fk_constraints, other_constraints=other_constraints)
 
-    def to_sql(self, if_not_exist: bool = True) -> str:
+    def to_sql(self, if_not_exist: bool = True, with_updater_trigger: bool = False) -> str:
         """
         Get sql string to create table
 
@@ -180,7 +181,7 @@ class Table(ToSqlInterface):
 
         fields = ',\n'.join(f.to_sql() for f in self.fields)
 
-        return f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
+        table = f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
             {fields}
 
             {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraints() else ""}
@@ -188,9 +189,31 @@ class Table(ToSqlInterface):
         );
         """
 
+        if with_updater_trigger:        # append trigger to field: updated_at
+            table += f"""
+            CREATE TRIGGER {self.name}_updated_at_trig AFTER UPDATE ON {self.name}
+            BEGIN
+                Update {self.name} Set updated_on = datetime('now') WHERE user_id = NEW.user_id;
+            END;
+            """
+
+        return table
+
+    @property
+    def fields_name(self) -> Tuple:
+        """
+        Return the tuple of fields names
+
+        :return: fields name
+        :rtype tuple:
+        """
+
+        return tuple(f.name for f in self.fields)
+
 
 @dataclass
 class DBStructure:
     name: str
     tables: List[Table]
     use_localtime: bool = False
+
