@@ -7,9 +7,30 @@
     <div class="card-body">
       <h4 class="card-title">
         <div class="row justify-content-between">
-          <div class="col-md-auto">
+          <div class="col-md-10">
             <!-- TASK TITLE -->
-            {{ task.name }}
+            <ng-container *ngIf="!inModify; else titleModification">
+
+                {{ task.name }}
+
+            </ng-container>
+
+            <ng-template #titleModification>
+
+
+              <div class="form-group">
+                <textarea
+                        class="form-control"
+                        id="task-title"
+                        placeholder="Task Title"
+                        [value]="task.name"
+
+                        appAutoHeight
+                        [base]="0"
+                        [offset]="10">
+                </textarea>
+              </div>
+            </ng-template>
           </div>
 
           <div class="col-md-auto">
@@ -32,7 +53,8 @@
                 >
                   <!-- Modify -->
                   <button class="dropdown-item"
-                          [disabled]="!utilsService.canModify(task.author_id)">
+                          [disabled]="!utilsService.canModify(task.author_id)"
+                          (click)="inModify = true">
                     <i class="bi bi-pencil me-50"></i>
                     {{ "modify" | translate }}
                   </button>
@@ -60,11 +82,11 @@
                       class="cursor-pointer"
                       data-bs-toggle="modal"
                       [attr.data-bs-target]="'#label-' + label.id + '-task-' + task.id + '-modal'">
-        </app-badge>
+          </app-badge>
 
-        <app-manage-task-label-modal [target]="'label-' + label.id + '-task-' + task.id + '-modal'" [label]="label"
-                                     (onRemoveFromTask)="removeLabelFromTask(label)">
-        </app-manage-task-label-modal>
+          <app-manage-task-label-modal [target]="'label-' + label.id + '-task-' + task.id + '-modal'" [label]="label"
+                                      (onRemoveFromTask)="removeLabelFromTask(label)">
+          </app-manage-task-label-modal>
         </ng-container>
 
         <!-- Add new label -->
@@ -84,7 +106,24 @@
       </div>
 
       <p class="card-text mt-2" *ngIf="task.description">
-        {{ task.description }}
+        <ng-container *ngIf="!inModify; else descriptionModification">
+
+          {{ task.description }}
+
+        </ng-container>
+
+        <ng-template #descriptionModification>
+          <div class="form-group">
+            <textarea
+                    class="form-control"
+                    id="task-description"
+                    rows="auto"
+                    [value]="task.description"
+
+                    appAutoHeight>
+            </textarea>
+          </div>
+        </ng-template>
 
         <ng-container>
           <div style="background-color: aqua;">

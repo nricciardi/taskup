@@ -31,7 +31,7 @@ export class DashboardComponent {
   constructor(private dashboardService: DashboardService, public authService: AuthService) {
   }
 
-  @ViewChild("statusGraph") statusGraphContainer?: ElementRef;
+  blueprintTask?: TaskModel;
 
   OrderBy = OrderBy
 

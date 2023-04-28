@@ -39,6 +39,16 @@ export class TaskPreviewComponent {
   ngOnInit() {
   }
 
+  private _inModify: boolean = false;
+
+  get inModify() {
+    return this._inModify;
+  }
+
+  set inModify(value: boolean) {
+    this._inModify = value;
+  }
+
   userAssignedToTask(userId: number | undefined): boolean {
 
     if(!userId || !this.task)
@@ -205,7 +215,7 @@ export class TaskPreviewComponent {
               }
             })
           })
-          
+
         }
       })
     })

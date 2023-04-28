@@ -25,7 +25,6 @@ export class NewTodoItemComponent {
       deadline: this.baseData?.deadline ?? null
     });
 
-    console.log("dal new-todo: ", this.baseData, this.target);
 
   }
 
@@ -33,7 +32,6 @@ export class NewTodoItemComponent {
   _onSubmit() {
 
     if(this.newItemForm.valid) {
-      console.log(this.newItemForm.controls);
 
       this.onSubmit.emit({
         description: this.newItemForm.controls["description"].value!,

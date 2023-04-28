@@ -37,6 +37,7 @@ import { AddTaskLabelModalComponent } from './widget/modal/add-task-label-modal/
 import { DeadlineBadgeComponent } from './widget/deadline-badge/deadline-badge.component';
 import { NewTodoItemComponent } from './widget/modal/new-todo-item/new-todo-item.component';
 import { ManageDeadlineComponent } from './widget/modal/manage-deadline/manage-deadline.component';
+import { AutoHeightDirective } from './directive/auto-height/auto-height.directive';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { ManageDeadlineComponent } from './widget/modal/manage-deadline/manage-d
     DeadlineBadgeComponent,
     NewTodoItemComponent,
     ManageDeadlineComponent,
+    AutoHeightDirective,
   ],
   imports: [
     BrowserModule,
