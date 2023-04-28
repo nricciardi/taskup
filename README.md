@@ -5,7 +5,12 @@ This is a university project for teaching object-oriented programming at UniMoRe
 **TODO**
 
 ## Get Started
-**TODO**
+
+### Dependencies
+To run this project are required the followings dependencies:
+- [Python 3.10+](https://www.python.org/downloads/)
+- [Eel](https://pypi.org/project/Eel/) (Python module to create frontend)
+- [Colorama](https://pypi.org/project/colorama/) (Python module for Logger)
 
 # Documentation for Users
 **TODO**
