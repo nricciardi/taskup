@@ -131,10 +131,39 @@
           </div>
 
         </ng-container>
+
+
+
+        <button class="btn btn-light-primary">Read More</button>
       </p>
 
       <app-task-todo-list [taskId]="task.id"></app-task-todo-list>
 
+      <!-- DEADLINE BADGE -->
+      <app-deadline-badge [deadline]="task.deadline"
+                          [editable]="utilsService.canModify(task.author_id)"
+                          (onDeadlineModified)="modify({
+                            deadline: $event
+                          })"
+                          [id]="'deadline-tas-' + task.id">
+      </app-deadline-badge>
+    </div>
+  </div>
+  <div class="card-footer row justify-content-between">
+
+    <div class="col-md-auto">
+      <button class="btn btn-lg icon icon-left btn-outline-primary"
+              *ngIf="task.task_status?.default_prev_task_status_id"
+              (click)="modify({
+                task_status_id: task.task_status?.default_prev_task_status_id
+              })">
+        <i class="bi bi-arrow-left"></i>
+
+        {{ task.task_status?.default_prev_task_status?.name }}
+      </button>
+    </div>
+
+    <div class="col-md-auto">
       <!-- AVATAR OF ASSIGNED USERS -->
       <ng-container *ngFor="let assignedUser of task.assigned_users">
         <app-text-avatar
@@ -175,21 +204,21 @@
       </ng-container>
 
       <!-- AVATAR OF ASSIGNED USERS END -->
-    </div>
-  </div>
-  <div class="card-footer d-flex justify-content-between">
-    <span>
-      <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="task.deadline"
-                          [editable]="utilsService.canModify(task.author_id)"
-                          (onDeadlineModified)="modify({
-                            deadline: $event
-                          })"
-                          [id]="'deadline-tas-' + task.id">
-      </app-deadline-badge>
-    </span>
 
-    <button class="btn btn-light-primary">Read More</button>
+    </div>
+
+    <div class="col-md-auto">
+      <button class="btn btn-lg icon icon-right btn-outline-primary"
+              *ngIf="task.task_status?.default_next_task_status_id"
+              (click)="modify({
+                task_status_id: task.task_status?.default_next_task_status_id
+              })">
+
+        {{ task.task_status?.default_next_task_status?.name }}
+
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
   </div>
 
 

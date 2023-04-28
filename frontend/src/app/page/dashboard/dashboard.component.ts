@@ -83,8 +83,9 @@ export class DashboardComponent {
           if(value) {
             this.dashboard = value;
 
-            // set default id index
-            this.taskStatusIdIndex = this.dashboard.default_task_status_id;
+            // set default id index if it is not setted
+            if(!this.taskStatusIdIndex)
+              this.taskStatusIdIndex = this.dashboard.default_task_status_id;
 
             this.loadingError = false;
           } else {

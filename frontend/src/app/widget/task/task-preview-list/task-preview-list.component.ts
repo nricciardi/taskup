@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
@@ -13,6 +14,9 @@ export class TaskPreviewListComponent {
 
   @Input("tasks") tasks: TaskModel[] | null = null;
   @Input("loggedUser") loggedUser?: UserModel;
+  @Input("nextTaskStatus") nextTaskStatus: TaskStatusModel | null = null;
+  @Input("prevTaskStatus") prevTaskStatus: TaskStatusModel | null = null;
+
 
   @Output() onDeletion = new EventEmitter<number>();
   @Output() onModify = new EventEmitter<UpdateTaskModel>();
