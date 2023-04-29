@@ -1,6 +1,7 @@
 <ng-container *ngIf="tasks">
 
-  <app-task-preview *ngFor="let task of tasks"
+  <app-task-preview *ngFor="let task of tasks; let i = index"
+                    [todoCollapseStatus]="i == 0"
                     [task]="task"
                     [loggedUser]="loggedUser"
                     (onDeletion)="onDeletion.emit($event)"

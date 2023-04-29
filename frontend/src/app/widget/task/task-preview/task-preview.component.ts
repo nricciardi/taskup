@@ -25,6 +25,7 @@ export class TaskPreviewComponent {
 
   @Input('task') task?: TaskModel;
   @Input("loggedUser") loggedUser?: UserModel;
+  @Input("todoCollapseStatus") todoCollapseStatus: boolean = false;
 
   @Output() onDeletion = new EventEmitter<number>();
   @Output() onModify = new EventEmitter<UpdateTaskModel>();

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { NewTodoItemModel, TodoItemModel } from 'src/app/model/entity/todo-item.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TodoService } from 'src/app/service/api/entity/todo/todo.service';
@@ -14,11 +14,24 @@ export class TaskTodoListComponent {
   constructor(private todoService: TodoService, private authService: AuthService) {}
 
   @Input("taskId") taskId?: number;
+  @Input("todoCollapseStatus") todoCollapseStatus: boolean = false;
+
+  @ViewChild('showTodoBtn') showTodoBtn?: ElementRef;
 
   todoItems: TodoItemModel[] = [];
 
   ngOnInit() {
     this.loadTodoItems();
+  }
+
+  ngAfterViewInit() {
+
+    // if on init todoCollapseStatus is true => show todo list
+    if(this.todoCollapseStatus) {
+      this.showTodoBtn?.nativeElement.click();
+
+      this.todoCollapseStatus = true;
+    }
   }
 
   loadTodoItems(): void {

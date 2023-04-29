@@ -15,54 +15,74 @@
 
         <i class="bi bi-plus"></i>
       </button>
+
+      <button class="btn icon btn-light"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#show-todo-' + taskId"
+              aria-expanded="false"
+              [attr.aria-controls]="'show-todo-' + taskId"
+
+              #showTodoBtn
+              (click)="todoCollapseStatus = !todoCollapseStatus"
+              >
+
+        <i  class="bi bi-eye"
+            [class.bi-eye]="todoCollapseStatus"
+            [class.bi-eye-slash]="!todoCollapseStatus">
+        </i>
+        {{ todoCollapseStatus ? 'true' : 'false' }}
+      </button>
     </div>
 
   </div>
 
   <div class="card-body px-0 py-1 overflow-auto">
-    <ng-container *ngIf="todoItems.length > 0; else noTodo">
-      <!-- HEADER -->
-      <div class="d-flex justify-content-between">
-        <div style="margin-left: 5vw;">
-          <span class="badge bg-light-secondary">
-            {{ "description" | translate }}
-          </span>
-        </div>
-
-        <div style="margin-right: 2vw;">
-          <div class="d-flex justify-content-between">
-            <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-              {{ "deadline" | translate }}
-            </span>
-
-            <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-              {{ "author" | translate }}
-            </span>
-
-            <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-              {{ "actions" | translate }}
+    <div class="collapse" [id]="'show-todo-' + taskId">
+      <ng-container *ngIf="todoItems.length > 0; else noTodo">
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between">
+          <div style="margin-left: 5vw;">
+            <span class="badge bg-light-secondary">
+              {{ "description" | translate }}
             </span>
           </div>
+
+          <div style="margin-right: 2vw;">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+                {{ "deadline" | translate }}
+              </span>
+
+              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+                {{ "author" | translate }}
+              </span>
+
+              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+                {{ "actions" | translate }}
+              </span>
+            </div>
+          </div>
+
         </div>
 
-      </div>
+        <ul class="widget-todo-list-wrapper" id="widget-todo-list">
+          <app-task-todo-item *ngFor="let item of todoItems"
+                              [item]="item"
+                              (refreshRequest)="loadTodoItems()">
+          </app-task-todo-item>
+        </ul>
+      </ng-container>
 
-      <ul class="widget-todo-list-wrapper" id="widget-todo-list">
-        <app-task-todo-item *ngFor="let item of todoItems"
-                            [item]="item"
-                            (refreshRequest)="loadTodoItems()">
-        </app-task-todo-item>
-      </ul>
-    </ng-container>
+      <ng-template #noTodo>
 
-    <ng-template #noTodo>
-
-        <p class="text-center">
-          <span class="badge bg-light-secondary">
-            {{ "no-todo-items" | translate }}
-          </span>
-        </p>
-    </ng-template>
+          <p class="text-center">
+            <span class="badge bg-light-secondary">
+              {{ "no-todo-items" | translate }}
+            </span>
+          </p>
+      </ng-template>
+    </div>
   </div>
 
 

@@ -137,7 +137,8 @@
         <button class="btn btn-light-primary">Read More</button>
       </p>
 
-      <app-task-todo-list [taskId]="task.id"></app-task-todo-list>
+      <!-- TO-DO LIST -->
+      <app-task-todo-list [taskId]="task.id" [todoCollapseStatus]="todoCollapseStatus"></app-task-todo-list>
 
       <!-- DEADLINE BADGE -->
       <app-deadline-badge [deadline]="task.deadline"

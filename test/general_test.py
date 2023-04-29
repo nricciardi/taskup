@@ -62,7 +62,7 @@ def create_demo_db():
                                         "role_id": randint(2, 4)})
 
     offset = 0
-    count = 300
+    count = 50
 
     for n in range(count * offset, count * offset + count):
         # user = users_manager.create_from_dict({"username": f"franco{n}",
