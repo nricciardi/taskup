@@ -72,6 +72,11 @@ Moreover, it allows to create the base structure of the database: tables and rel
 **EntitiesManager** is the base class for the _entities managers_, that are classes that manage entities (find, create, delete, ...).
 
 ## TO-DO
+
+### Generals
+- [ ] Remove .vs and .idea directory from Git
+
+
 ### Frontend
 - [ ] Why some js file aren't tracked?
 - [x] Internalization
@@ -80,6 +85,18 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Fix dark mode color
 - [ ] Remove year from deadline if we are in the current year
 - [ ] Fix env file (now is used .dev instead of .prod)
+- [ ] Add "done" button on deadline
+- [ ] Create a new task
+- [ ] Modify task
+- [ ] Graphic refactor
+- [ ] Manage label section
+- [ ] Manage task status section
+- [ ] Profile page
+- [ ] Home page: 
+  - [ ] Select project
+  - [ ] Count of updates
+- [ ] "News" of a task
+- [ ] Manage Git
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
@@ -91,16 +108,16 @@ Moreover, it allows to create the base structure of the database: tables and rel
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
   -  [ ] append relation on bem and not in another foreach
-- [ ] make sqlite fetch methods asynchronous
-- [ ] add permission control
+- [ ] Make sqlite fetch methods asynchronous
+- [ ] Add permission control
+- [ ] Add "done" for deadline
+- [ ] Deploy
+- [ ] Manage Git
 
 ### DB
 - [x] Unique on user's username? Add name and surname?
 - [x] DB schema
 - [x] deadline from date to datetime?
-
-### Generals
-- [ ] Remove .vs and .idea directory from Git
 
 
 ## Help the Open Source Community
