@@ -2,7 +2,7 @@ import os
 from lib.db.query import QueryBuilder
 from lib.db.entity.user import UsersManager
 from lib.app.project import ProjectManager
-from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager
+from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager, TodoItemsManager
 from lib.db.component import WhereCondition
 from lib.app.service.auth import AuthService
 from random import randint
@@ -20,6 +20,7 @@ users_manager = UsersManager(pm.db_manager, verbose=True)
 task_assignment_manager = TaskAssignmentsManager(pm.db_manager, verbose=True)
 task_labels_manager = TaskLabelsManager(pm.db_manager, verbose=True)
 task_task_labels_manager = TaskTaskLabelPivotManager(pm.db_manager, verbose=True)
+todo_item_manager = TodoItemsManager(pm.db_manager, verbose=True)
 tasks_manager = TasksManager(pm.db_manager, task_assignment_manager,
                              task_task_label_pivot_manager=task_task_labels_manager, verbose=True)
 
@@ -61,7 +62,7 @@ def create_demo_db():
                                         "role_id": randint(2, 4)})
 
     offset = 0
-    count = 50
+    count = 300
 
     for n in range(count * offset, count * offset + count):
         # user = users_manager.create_from_dict({"username": f"franco{n}",
@@ -74,7 +75,7 @@ def create_demo_db():
         task = tasks_manager.create_from_dict({
             "name": f"prova task{n}" * randint(1, 4),
             "description": f"descrizione di prova{n}" * randint(10, 60),
-            "author_id": 1,# user.id,
+            "author_id": randint(1, u),
             "task_status_id": randint(1, 8),
             "priority": randint(1, 20),
             "deadline": datetime.datetime(2023,
@@ -87,6 +88,22 @@ def create_demo_db():
 
         for i in range(randint(1, 8)):
             tasks_manager.add_assignment(task.id, randint(1, u))
+
+        for i in range(randint(3, 15)):
+            todo = todo_item_manager.create_from_dict({
+                "description": f"sono un todo del task {n}" * randint(1, 3),
+                "author_id": randint(1, u),
+                "task_id": task.id,
+                "deadline": datetime.datetime(2023,
+                                              randint(4, 7),
+                                              randint(1, 30),
+                                              randint(8, 19),
+                                              randint(1, 59)
+                                              ).strftime("%Y-%m-%d %H:%M:%S") if randint(1, 2) % 2 == 0 else None
+            })
+
+        for i in range(1, randint(1, 3)):
+            tasks_manager.add_label(task.id, i)
 
 
 if __name__ == '__main__':
