@@ -31,7 +31,6 @@
             [class.bi-eye]="todoCollapseStatus"
             [class.bi-eye-slash]="!todoCollapseStatus">
         </i>
-        {{ todoCollapseStatus ? 'true' : 'false' }}
       </button>
     </div>
 
@@ -40,48 +39,55 @@
   <div class="card-body px-0 py-1 overflow-auto">
     <div class="collapse" [id]="'show-todo-' + taskId">
       <ng-container *ngIf="todoItems.length > 0; else noTodo">
+
         <!-- HEADER -->
-        <div class="d-flex justify-content-between">
-          <div style="margin-left: 5vw;">
+        <div class="row justify-content-between">
+          <div class="col-5 offset-1">
             <span class="badge bg-light-secondary">
               {{ "description" | translate }}
             </span>
           </div>
 
-          <div style="margin-right: 2vw;">
-            <div class="d-flex justify-content-between">
-              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-                {{ "deadline" | translate }}
-              </span>
+          <div class="col-2">
+            <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+              {{ "deadline" | translate }}
+            </span>
+          </div>
 
-              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-                {{ "author" | translate }}
-              </span>
+          <div class="col-2">
+                <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+                  {{ "author" | translate }}
+                </span>
+          </div>
 
-              <span class="badge bg-light-secondary" style="margin-right: 1vw;">
-                {{ "actions" | translate }}
-              </span>
-            </div>
+          <div class="col-2">
+            <span class="badge bg-light-secondary" style="margin-right: 1vw;">
+                  {{ "actions" | translate }}
+                </span>
           </div>
 
         </div>
 
-        <ul class="widget-todo-list-wrapper" id="widget-todo-list">
-          <app-task-todo-item *ngFor="let item of todoItems"
-                              [item]="item"
-                              (refreshRequest)="loadTodoItems()">
-          </app-task-todo-item>
-        </ul>
+
+
+      <ul class="widget-todo-list-wrapper" id="widget-todo-list">
+        <app-task-todo-item *ngFor="let item of todoItems"
+                            [item]="item"
+                            (refreshRequest)="loadTodoItems()">
+        </app-task-todo-item>
+      </ul>
+
       </ng-container>
 
       <ng-template #noTodo>
 
-          <p class="text-center">
-            <span class="badge bg-light-secondary">
-              {{ "no-todo-items" | translate }}
-            </span>
-          </p>
+        <p class="text-center">
+          <span class="badge bg-light-secondary">
+            {{ "no-todo-items" | translate }}
+          </span>
+        </p>
       </ng-template>
+
     </div>
   </div>
 

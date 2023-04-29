@@ -112,6 +112,8 @@
 
         </ng-container>
 
+      </p>
+
         <ng-template #descriptionModification>
           <div class="form-group">
             <textarea
@@ -132,10 +134,40 @@
 
         </ng-container>
 
+        <!-- MORE DETAILS -->
+        <div
+          class="accordion accordion-flush"
+          id="moreDeatilsAccordion"
+        >
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseDetails"
+              aria-expanded="false"
+              aria-controls="flush-collapseOne"
+            >
+              {{ "more-details" | translate }}
+            </button>
+          </h2>
+          <div
+            id="flush-collapseDetails"
+            class="accordion-collapse collapse"
+            aria-labelledby="flush-headingOne"
+            data-bs-parent="#moreDeatilsAccordion"
+          >
+            <div class="accordion-body">
 
+              
 
-        <button class="btn btn-light-primary">Read More</button>
-      </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- MORE DETAILS END -->
+
 
       <!-- TO-DO LIST -->
       <app-task-todo-list [taskId]="task.id" [todoCollapseStatus]="todoCollapseStatus"></app-task-todo-list>
