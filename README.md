@@ -97,6 +97,7 @@ Moreover, it allows to create the base structure of the database: tables and rel
   - [ ] Count of updates
 - [ ] "News" of a task
 - [ ] Manage Git
+- [ ] Task pagination
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
