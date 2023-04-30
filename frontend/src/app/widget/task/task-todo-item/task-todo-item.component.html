@@ -1,6 +1,9 @@
 <li class="widget-todo-item" *ngIf="item">
-  <div class="widget-todo-title-wrapper row justify-content-between align-items-center mb-50">
-    <div class="widget-todo-title-area d-flex align-items-center gap-2">
+
+  <div class="row">
+
+    <!-- CHECKBOX -->
+    <div class="col-1">
       <div class="checkbox checkbox-shadow">
         <input
           type="checkbox"
@@ -9,71 +12,79 @@
           [checked]="!!item.done"
           (click)="done()"
         />
-        <label for="checkbox1"></label>
       </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="col-8">
       <span class="widget-todo-title ml-50"
             [class.done]="!!item.done">
         {{ item.description }}
       </span>
     </div>
-    <div class="widget-todo-item-action align-items-center">
 
-      <!-- DEADLINE BADGE -->
-      <div class="col-6">
-        <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;"
-                            [done]="!!item.done" *ngIf="item.deadline"
-                            [editable]="utilsService.canModify(item.author_id)"
-                            [id]="'deadline-todo-' + item.id">
-        </app-deadline-badge>
+    <div class="col-xxl-3">
+      <div class="row justify-content-between">
+        <!-- DEADLINE BADGE -->
+        <div class="col-6 d-flex justify-content-center">
+          <app-deadline-badge [deadline]="item.deadline" style="margin-right: 1vw;"
+                              [done]="!!item.done" *ngIf="item.deadline"
+                              [editable]="utilsService.canModify(item.author_id)"
+                              [id]="'deadline-todo-' + item.id">
+          </app-deadline-badge>
+        </div>
+
+        <!-- AUTHOR AVATAR -->
+        <div class="col-2 d-flex justify-content-center">
+          <app-text-avatar  *ngIf="item.author"
+                            [color]="item.author.avatar_hex_color"
+                            [text]="utilsService.getAvatarText(item.author)"
+                            [tooltip]="item.author.username"
+                            class="cursor-arrow">
+          </app-text-avatar>
+        </div>
+
+        <div class="col-4 d-flex justify-content-center">
+
+          <button class="btn btn-sm icon btn-light mr-1"
+                    *ngIf="utilsService.canModify(item.author_id)"
+                    data-bs-toggle="modal"
+                    [attr.data-bs-target]="'#modify-todo-item-' + item.id"
+                    >
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <!-- Modify Modal -->
+          <app-new-todo-item-modal  [target]="'modify-todo-item-' + item.id"
+                                    [baseData]="{
+                                      description: item.description,
+                                      deadline: item.deadline
+                                    }"
+                                    (onSubmit)="modify($event)">
+          </app-new-todo-item-modal>
+
+          <button class="btn btn-sm icon btn-light"
+                  data-bs-toggle="modal"
+                  [attr.data-bs-target]="'#delete-todo-item-' + item.id"  *ngIf="utilsService.canDelete(item.author_id)">
+            <i class="bi bi-trash"></i>
+          </button>
+
+          <!-- Delete Modal -->
+          <app-dialog-modal [target]="'delete-todo-item-' + item.id"
+                            title="delete-request"
+                            [centered]="true"
+                            [confirmBtn]="true"
+                            [confirmBtnTxt]="'confirm'"
+                            [borderless]="true"
+                            (onConfirm)="delete()">
+          </app-dialog-modal>
+
+        </div>
       </div>
-
-      <!-- AUTHOR AVATAR -->
-      <div class="col-2">
-        <app-text-avatar  *ngIf="item.author"
-                          [color]="item.author.avatar_hex_color"
-                          [text]="utilsService.getAvatarText(item.author)"
-                          [tooltip]="item.author.username"
-                          class="cursor-arrow">
-      </app-text-avatar>
-      </div>
-
-      <div class="col-2">
-        <button class="btn btn-sm icon btn-light mr-1"
-                *ngIf="utilsService.canModify(item.author_id)"
-                data-bs-toggle="modal"
-                [attr.data-bs-target]="'#modify-todo-item-' + item.id"
-                >
-          <i class="bi bi-pencil"></i>
-        </button>
-      </div>
-
-      <!-- Modify Modal -->
-      <app-new-todo-item-modal  [target]="'modify-todo-item-' + item.id"
-                                [baseData]="{
-                                  description: item.description,
-                                  deadline: item.deadline
-                                }"
-                                (onSubmit)="modify($event)">
-      </app-new-todo-item-modal>
-
-      <div class="col-2">
-        <button class="btn btn-sm icon btn-light"
-              data-bs-toggle="modal"
-              [attr.data-bs-target]="'#delete-todo-item-' + item.id"  *ngIf="utilsService.canDelete(item.author_id)">
-        <i class="bi bi-trash"></i>
-      </button>
-
-      <!-- Delete Modal -->
-      <app-dialog-modal [target]="'delete-todo-item-' + item.id"
-                        title="delete-request"
-                        [centered]="true"
-                        [confirmBtn]="true"
-                        [confirmBtnTxt]="'confirm'"
-                        [borderless]="true"
-                        (onConfirm)="delete()">
-      </app-dialog-modal>
-      </div>
-
     </div>
+
+
+
   </div>
+
 </li>
