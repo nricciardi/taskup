@@ -26,6 +26,7 @@
 - [ ] Manage Git
 - [ ] Task pagination
 - [ ] Dark color if avatar color is light
+- [ ] Switch badge to "light badge" 
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
