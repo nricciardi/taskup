@@ -27,9 +27,16 @@ tasks_manager = TasksManager(pm.db_manager, task_assignment_manager,
 
 def create_demo_db():
     def random_hex() -> str:
-        random_number = randint(0, 16777215)
-        hex_number = str(hex(random_number))
-        hex_number = f"{hex_number[2:]}"
+        hex_number = ""
+
+        for _ in range(3):
+            random_number = randint(0, 255)
+            h = str(hex(random_number))[2:]
+
+            if len(h) is not 2:
+                h = f"0{h}"
+
+            hex_number += h
 
         return hex_number
 
