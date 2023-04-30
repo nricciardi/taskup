@@ -22,7 +22,6 @@ export class HeaderComponent {
   ngOnInit() {
     this.authService.observeMe().subscribe({
       next: (value: UserModel | null) => {
-        console.log(value);
 
         this.userLogged = value;
       },

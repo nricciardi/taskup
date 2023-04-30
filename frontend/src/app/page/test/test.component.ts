@@ -10,6 +10,8 @@ import { UserService } from 'src/app/service/api/entity/user/user.service';
 })
 export class TestComponent {
 
+  taskStatus = this.taskStatusService.getTaskById(1)
+
   constructor(public taskStatusService: TaskStatusService) {}
 
   ngOnInit() {
@@ -18,8 +20,6 @@ export class TestComponent {
 
 
   async test() {
-    return this.taskStatusService.getTaskById(1);
-
-    // return r.name;
+    return ;
   }
 }

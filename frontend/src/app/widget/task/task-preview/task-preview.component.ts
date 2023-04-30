@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskLabelModel } from 'src/app/model/entity/task-label.model';
+import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
+import { TaskStatusService } from 'src/app/service/api/entity/task-status/task-status.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
@@ -34,10 +36,24 @@ export class TaskPreviewComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
-  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService) {
+  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService, private taskStatusService: TaskStatusService) {
   }
 
+  nextStatus?: Promise<TaskStatusModel>;
+  prevStatus?: Promise<TaskStatusModel>;
+
   ngOnInit() {
+
+    if(this.task) {
+
+      if(this.task.task_status) {
+        this.nextStatus = this.taskStatusService.getTaskById(this.task.task_status.default_next_task_status_id);
+        this.prevStatus = this.taskStatusService.getTaskById(this.task.task_status.default_prev_task_status_id);
+      }
+
+    }
+
+
   }
 
   private _inModify: boolean = false;
