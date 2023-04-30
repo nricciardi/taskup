@@ -11,4 +11,11 @@ export class TextAvatarComponent {
   @Input("color") color?: string;
   @Input("text") text?: string;
   @Input("tooltip") tooltip: string = "";
+
+  darkTxt(): boolean {
+    if(!this.color)
+      return false;
+
+    return parseInt(this.color, 16) > (0.75 * parseInt("ffffff", 16));
+  }
 }
