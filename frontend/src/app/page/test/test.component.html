@@ -29,3 +29,12 @@ develop.commit("Prepare v1");
 master.merge(develop).tag("v1.0.0");
   }, 2000)
 </script>
+
+
+<button class="btn btn-primary" (click)="test()">
+  Test now
+</button>
+
+<p>
+  {{ (test() | async) }}
+</p>

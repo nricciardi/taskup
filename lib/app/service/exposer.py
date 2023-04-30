@@ -149,17 +149,17 @@ class ExposerService:
             self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.verbose), "task_all")
             self.expose(login_required(to_dict(self.__tasks_manager.update_from_dict), self.__auth_service, self.verbose), "task_update")
 
-            # expose task label
-            self.expose_all_from_list(to_expose=[
-                self.__task_labels_manager.create_from_dict,
-                self.__task_labels_manager.delete_by_id,
-            ], prefix="task_label_")
+        except Exception as excepetion:
+            Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
 
-            self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
-            self.expose(login_required(self.__task_labels_manager.all_as_dict, self.__auth_service, self.verbose), "task_label_all")
-            self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose), "task_label_update")
+    def __expose_todo_items_methods(self) -> None:
+        """
+        Expose to-do items methods
 
+        :return: None
+        """
 
+        try:
             # expose to-do
             self.expose_all_from_list(to_expose=[
                 self.__todo_items_manager.create_from_dict,
@@ -172,7 +172,50 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__todo_items_manager.update_from_dict), self.__auth_service, self.verbose), "todo_update")
 
         except Exception as excepetion:
-            Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
+            Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_task_label_methods(self) -> None:
+        """
+        Expose task labels methods
+
+        :return: None
+        """
+
+        try:
+            # expose task label
+            self.expose_all_from_list(to_expose=[
+                self.__task_labels_manager.create_from_dict,
+                self.__task_labels_manager.delete_by_id,
+            ], prefix="task_label_")
+
+            self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
+            self.expose(login_required(self.__task_labels_manager.all_as_dict, self.__auth_service, self.verbose),
+                        "task_label_all")
+            self.expose(
+                login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose),
+                "task_label_update")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_task_status_methods(self) -> None:
+        """
+        Expose task labels methods
+
+        :return: None
+        """
+
+        try:
+            # expose task status
+            self.expose_all_from_list(to_expose=[
+                self.__task_status_manager.create_from_dict,
+                self.__task_status_manager.delete_by_id,
+            ], prefix="task_status_")
+
+            self.expose(to_dict(self.__task_status_manager.find, self.verbose), "task_status_find")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_auth_methods(self) -> None:
         """
@@ -242,6 +285,9 @@ class ExposerService:
             self.expose(self.test)
 
             self.__expose_task_methods()
+            self.__expose_task_label_methods()
+            self.__expose_todo_items_methods()
+            self.__expose_task_status_methods()
             self.__expose_user_methods()
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()

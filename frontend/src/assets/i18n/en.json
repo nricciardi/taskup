@@ -48,5 +48,6 @@
   "add-task": "Add task",
   "add-new-label": "Add a new label",
   "add-new-label-description": "Select a label from the following list to assign to this task.",
-  "more-details": "More details"
+  "more-details": "More details",
+  "show-list": "Show list"
 }

@@ -114,31 +114,40 @@
 
       </p>
 
-        <ng-template #descriptionModification>
-          <div class="form-group">
-            <textarea
-                    class="form-control"
-                    id="task-description"
-                    rows="auto"
-                    [value]="task.description"
+      <ng-template #descriptionModification>
+        <div class="form-group">
+          <textarea
+                  class="form-control"
+                  id="task-description"
+                  rows="auto"
+                  [value]="task.description"
 
-                    appAutoHeight>
-            </textarea>
-          </div>
-        </ng-template>
+                  appAutoHeight>
+          </textarea>
+        </div>
+      </ng-template>
 
-        <ng-container>
-          <div style="background-color: aqua;">
-            id: {{ task.id }} - priority: {{ task.priority }}
-          </div>
+        <!-- DEADLINE BADGE -->
+      <app-deadline-badge [deadline]="task.deadline"
+                          [editable]="utilsService.canModify(task.author_id)"
+                          (onDeadlineModified)="modify({
+                            deadline: $event
+                          })"
+                          [id]="'deadline-tas-' + task.id">
+      </app-deadline-badge>
 
-        </ng-container>
+      <ng-container>
+        <div style="background-color: aqua;">
+          id: {{ task.id }} - priority: {{ task.priority }}
+        </div>
 
-        <!-- MORE DETAILS -->
-        <div
-          class="accordion accordion-flush"
-          id="moreDeatilsAccordion"
-        >
+      </ng-container>
+
+      <!-- MORE DETAILS -->
+      <div
+        class="accordion accordion-flush"
+        id="moreDeatilsAccordion"
+      >
         <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingOne">
             <button
@@ -158,9 +167,10 @@
             aria-labelledby="flush-headingOne"
             data-bs-parent="#moreDeatilsAccordion"
           >
+            <!-- MORE DETAILS BODY (hidden default) -->
             <div class="accordion-body">
 
-
+              
 
             </div>
           </div>
@@ -172,14 +182,6 @@
       <!-- TO-DO LIST -->
       <app-task-todo-list [taskId]="task.id" [todoCollapseStatus]="todoCollapseStatus"></app-task-todo-list>
 
-      <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="task.deadline"
-                          [editable]="utilsService.canModify(task.author_id)"
-                          (onDeadlineModified)="modify({
-                            deadline: $event
-                          })"
-                          [id]="'deadline-tas-' + task.id">
-      </app-deadline-badge>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between">
