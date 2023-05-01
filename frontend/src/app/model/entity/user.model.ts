@@ -7,6 +7,7 @@ export interface UserModel {
   surname: string | null;
   email: string;
   avatar_hex_color: string;
+  phone: string | null;
   // password: string;    hidden
   role_id: number;
   role: RoleModel | null;

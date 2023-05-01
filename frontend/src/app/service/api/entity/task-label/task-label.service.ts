@@ -12,5 +12,6 @@ export class TaskLabelService extends EntityApiService<TaskLabelModel> {
   override DELETE_BY_ID: string = "task_label_delete_by_id";
   override UPDATE: string = "task_label_update";
   override CREATE: string = "task_label_create_from_dict";
+  override CHECK_ALREADY_USED: string = "task_label_check_already_used";
 
 }

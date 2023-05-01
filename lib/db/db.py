@@ -166,6 +166,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
                 Field(name="avatar_hex_color", type="VARCHAR(6)", default="'cfcfcf'", nullable=False),
+                Field(name="phone", type="VARCHAR(30)", nullable=True),
                 Field.fk_field(name="role_id"),
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name)

@@ -1,5 +1,5 @@
-<div class="row justify-content-center" *ngIf="authService.loggedUser">
-  <div class="col-md-10">
+<div class="row justify-content-center" *ngIf="loggedUser">
+  <div class="col-12">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title">
@@ -37,17 +37,18 @@
                 >
                 {{ "avatar" | translate }}
               </a>
-              <!--<a
-                class="nav-link"
-                id="v-pills-messages-tab"
-                data-bs-toggle="pill"
-                href="#v-pills-messages"
-                role="tab"
-                aria-controls="v-pills-messages"
-                aria-selected="false"
-                >Messages</a
-              >
               <a
+                class="nav-link"
+                id="v-pills-password-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-password"
+                role="tab"
+                aria-controls="v-pills-password"
+                aria-selected="false"
+                >
+                {{ "password" | translate }}
+                </a>
+              <!--<a
                 class="nav-link"
                 id="v-pills-settings-tab"
                 data-bs-toggle="pill"
@@ -67,15 +68,130 @@
                 role="tabpanel"
                 aria-labelledby="v-pills-master-data-tab"
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Nulla ut nulla neque. Ut hendrerit nulla a
-                euismod pretium. Fusce venenatis sagittis ex
-                efficitur suscipit. In tempor mattis fringilla. Sed
-                id tincidunt orci, et volutpat ligula. Aliquam
-                sollicitudin sagittis ex, a rhoncus nisl feugiat
-                quis. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Nunc ultricies ligula a tempor
-                vulputate. Suspendisse pretium mollis ultrices.
+
+                <section id="basic-horizontal-layouts">
+                  <div class="row match-height">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-header">
+                          <h4 class="card-title">
+                            {{ "master-data" | translate }}
+                          </h4>
+                        </div>
+                        <div class="card-content">
+                          <div class="card-body">
+                            <form class="form form-horizontal" [formGroup]="blueprintUserForm">
+                              <div class="form-body">
+                                <div class="row">
+
+                                  <div class="col-md-4">
+                                    <label>
+                                      {{ "username" | translate }}
+                                    </label>
+                                  </div>
+                                  <div class="col-md-8 form-group">
+                                    <input
+                                      type="text"
+                                      id="username"
+                                      class="form-control"
+                                      name="username"
+                                      placeholder="Username"
+                                      formControlName="username"
+                                    />
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <label>
+                                      {{ "email" | translate }}
+                                    </label>
+                                  </div>
+                                  <div class="col-md-8 form-group">
+                                    <input
+                                      type="email"
+                                      id="email"
+                                      class="form-control"
+                                      name="email"
+                                      placeholder="Email"
+                                      formControlName="email"
+                                    />
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <label>
+                                      {{ "name" | translate }}
+                                    </label>
+                                  </div>
+                                  <div class="col-md-8 form-group">
+                                    <input
+                                      type="text"
+                                      id="name"
+                                      class="form-control"
+                                      name="name"
+                                      placeholder="Name"
+                                      formControlName="name"
+                                    />
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <label>
+                                      {{ "surname" | translate }}
+                                    </label>
+                                  </div>
+                                  <div class="col-md-8 form-group">
+                                    <input
+                                      type="text"
+                                      id="surname"
+                                      class="form-control"
+                                      name="surname"
+                                      placeholder="Surname"
+                                      formControlName="surname"
+                                    />
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <label>
+                                      {{ "phone" | translate }}
+                                    </label>
+                                  </div>
+                                  <div class="col-md-8 form-group">
+                                    <input
+                                      type="number"
+                                      id="phone"
+                                      class="form-control"
+                                      name="phone"
+                                      placeholder="Phone"
+                                      formControlName="phone"
+                                    />
+                                  </div>
+
+
+                                  <div class="col-sm-12 d-flex justify-content-end">
+                                    <button
+                                      type="button"
+                                      class="btn btn-primary me-1 mb-1"
+                                      [disabled]="blueprintUserForm.invalid"
+                                      (click)="submit()"
+                                    >
+                                      {{ "confirm" | translate }}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="btn btn-light-secondary me-1 mb-1"
+                                      (click)="loadDefaultMasterDataValues()"
+                                    >
+                                      {{ "reset" | translate }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
               </div>
               <div
                 class="tab-pane fade"
@@ -95,7 +211,7 @@
                         class="form-control"
                         id="color-picker"
                         #colorPicker
-                        [value]="'#' + authService.loggedUser.avatar_hex_color"
+                        [value]="'#' + loggedUser.avatar_hex_color"
                         (input)="colorPicked = colorPicker.value.substring(1)"
                       />
                     </div>
@@ -103,8 +219,8 @@
                   </div>
 
                   <div class="col-auto">
-                    <app-text-avatar  [color]="colorPicked ? colorPicked : authService.loggedUser.avatar_hex_color"
-                                      [text]="utilsService.getAvatarText(authService.loggedUser)"
+                    <app-text-avatar  [color]="colorPicked ? colorPicked : loggedUser.avatar_hex_color"
+                                      [text]="utilsService.getAvatarText(loggedUser)"
                                       >
                     </app-text-avatar>
                   </div>
@@ -112,7 +228,7 @@
 
                 <div class="row justify-content-center">
                   <div class="col-auto">
-                    <button class="btn btn-outline-secondary" (click)="colorPicker.value = '#' + colorPicked = authService.loggedUser.avatar_hex_color">
+                    <button class="btn btn-outline-secondary" (click)="colorPicker.value = '#' + colorPicked = loggedUser.avatar_hex_color">
                       {{ "reset" | translate }}
                     </button>
                   </div>
@@ -120,27 +236,50 @@
                   <div class="col-auto">
                     <button class="btn btn-outline-primary" (click)="modify({
                       avatar_hex_color: colorPicked
-                    })">
-                      {{ "confirm" | translate }}
+                    }, true)">
+                      {{ "update" | translate }}
                     </button>
                   </div>
                 </div>
 
               </div>
-              <!-- <div
-                class="tab-pane fade"
-                id="v-pills-messages"
-                role="tabpanel"
-                aria-labelledby="v-pills-messages-tab"
-              >
-                Integer pretium dolor at sapien laoreet ultricies.
-                Fusce congue et lorem id convallis. Nulla volutpat
-                tellus nec molestie finibus. In nec odio tincidunt
-                eros finibus ullamcorper. Ut sodales, dui nec
-                posuere finibus, nisl sem aliquam metus, eu accumsan
-                lacus felis at odio.
-              </div>
               <div
+                class="tab-pane fade"
+                id="v-pills-password"
+                role="tabpanel"
+                aria-labelledby="v-pills-password-tab"
+              >
+
+                <div class="col-md-4">
+                  <label>
+                    {{ "password" | translate }}
+                  </label>
+                </div>
+                <div class="col-md-8 form-group">
+                  <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    name="password"
+                    placeholder="Password"
+                  />
+                </div>
+                <div class="col-12 col-md-8 offset-md-4 form-group">
+                  <div class="form-check">
+                    <div class="checkbox">
+                      <input
+                        type="checkbox"
+                        id="checkbox1"
+                        class="form-check-input"
+                        checked
+                      />
+                      <label for="checkbox1">Remember Me</label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- <div
                 class="tab-pane fade"
                 id="v-pills-settings"
                 role="tabpanel"

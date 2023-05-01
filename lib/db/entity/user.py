@@ -2,7 +2,7 @@ from lib.db.db import TableNamesMixin, DBManager
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
-from typing import Type, Optional
+from typing import Type, Optional, Any
 from lib.db.entity.relation import Relation, OneRelation
 
 
@@ -37,6 +37,7 @@ class UserModel(BaseEntityModel):
     role: Optional[RoleModel] = field(default=None)
     name: Optional[str] = field(default=None)
     surname: Optional[str] = field(default=None)
+    phone: Optional[str] = field(default=None)
 
     # @property
     # def table_name(self) -> str:

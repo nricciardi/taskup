@@ -143,6 +143,7 @@ class ExposerService:
                 self.__tasks_manager.delete_by_id,
                 self.__tasks_manager.add_label,
                 self.__tasks_manager.remove_label,
+                self.__tasks_manager.check_already_used,
             ], prefix="task_")
 
             self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
@@ -164,6 +165,7 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__todo_items_manager.create_from_dict,
                 self.__todo_items_manager.delete_by_id,
+                self.__todo_items_manager.check_already_used,
             ], prefix="todo_")
 
             self.expose(to_dict(self.__todo_items_manager.find, self.verbose), "todo_find")
@@ -186,6 +188,7 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__task_labels_manager.create_from_dict,
                 self.__task_labels_manager.delete_by_id,
+                self.__task_labels_manager.check_already_used,
             ], prefix="task_label_")
 
             self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
@@ -210,6 +213,8 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__task_status_manager.create_from_dict,
                 self.__task_status_manager.delete_by_id,
+                self.__task_status_manager.check_already_used,
+
             ], prefix="task_status_")
 
             self.expose(to_dict(self.__task_status_manager.find, self.verbose), "task_status_find")
@@ -229,7 +234,7 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__auth_service.is_logged,
                 self.__auth_service.logout,
-                self.__auth_service.refresh_me
+                self.__auth_service.refresh_me,
             ], prefix="auth_")
 
             self.expose(to_dict(self.__auth_service.login, self.verbose), "auth_login")
@@ -264,6 +269,7 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__users_manager.create_from_dict,
                 self.__users_manager.delete_by_id,
+                self.__users_manager.check_already_used,
             ], prefix="user_")
 
             self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")

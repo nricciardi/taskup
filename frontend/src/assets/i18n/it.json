@@ -54,5 +54,11 @@
   "username": "Username",
   "avatar": "Avatar",
   "master-data": "Anagrafica",
-  "pick-color-for-avatar": "Seleziona un colore per il tuo avatar"
+  "pick-color-for-avatar": "Seleziona un colore per il tuo avatar",
+  "name": "Nome",
+  "surname": "Cognome",
+  "password": "Password",
+  "phone": "Telefono",
+  "email": "Email",
+  "update": "Aggiorna"
 }

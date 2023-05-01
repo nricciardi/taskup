@@ -286,6 +286,18 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
+    def check_already_used(self, field_name: str, value: Any) -> bool:
+        """
+        Check if the value passed is already used (where alias)
+
+        :param field_name:
+        :param value:
+        :return:
+        """
+
+        return len(self.where_as_model(WhereCondition(col=field_name, operator="=", value=value),
+                                       with_relations=False, safe=True)) > 0
+
     def append_relations_data_on(self, em: EntityModel, safe: bool) -> None:
         """
         Append relations data on entity passed

@@ -54,5 +54,11 @@
   "username": "Username",
   "avatar": "Avatar",
   "master-data": "Master data",
-  "pick-color-for-avatar": "Pick a color for your avatar"
+  "pick-color-for-avatar": "Pick a color for your avatar",
+  "name": "Name",
+  "surname": "Surname",
+  "email": "Email",
+  "password": "Password",
+  "phone": "Phone",
+  "update": "Update"
 }

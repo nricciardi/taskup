@@ -12,6 +12,7 @@ export abstract class EntityApiService<T> {
   readonly abstract DELETE_BY_ID: string;
   readonly abstract UPDATE: string;
   readonly abstract CREATE: string;
+  readonly abstract CHECK_ALREADY_USED: string;
 
   constructor(public eelService: EelService) { }
 
@@ -38,5 +39,10 @@ export abstract class EntityApiService<T> {
   public async create(data: object): Promise<Observable<T>> {
 
     return this.eelService.call(this.CREATE, data);
+  }
+
+  public async checkAlreadyUsed(data: object): Promise<Observable<T>> {
+
+    return this.eelService.call(this.CHECK_ALREADY_USED, data);
   }
 }
