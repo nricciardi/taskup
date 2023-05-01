@@ -14,6 +14,7 @@ export class AuthService {
   private readonly LOGOUT: string = "auth_logout";
   private readonly ME: string = "auth_me";
   private readonly IS_LOGGED: string = "auth_is_logged";
+  private readonly REFRESH_ME: string = "auth_refresh_me";
 
   private _loggedUser: UserModel | null = null;
   get loggedUser() {
@@ -87,22 +88,30 @@ export class AuthService {
 
   public refreshMe(): void {
 
-    this.me().then((response) => {
+    this.eelService.call(this.REFRESH_ME).then((response) => {
 
       response.subscribe({
-        next: (value: UserModel | null) => {
-          this._loggedUser = value;
-          this.emitMeChangeSource.next(value);
+        next: (value: any) => {
+          this.me().then((response) => {
 
-        },
-        error: (e) => {
-          LoggerService.logError(e);
+            response.subscribe({
+              next: (value: UserModel | null) => {
+                this._loggedUser = value;
+                this.emitMeChangeSource.next(value);
+
+              },
+              error: (e) => {
+                LoggerService.logError(e);
+              }
+            })
+
+          }).catch((e) => {
+            LoggerService.logError(e);
+          });
         }
       })
 
-    }).catch((e) => {
-      LoggerService.logError(e);
-    });
+    })
 
 
   }

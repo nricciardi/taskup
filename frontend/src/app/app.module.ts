@@ -38,6 +38,7 @@ import { DeadlineBadgeComponent } from './widget/deadline-badge/deadline-badge.c
 import { NewTodoItemComponent } from './widget/modal/new-todo-item/new-todo-item.component';
 import { ManageDeadlineComponent } from './widget/modal/manage-deadline/manage-deadline.component';
 import { AutoHeightDirective } from './directive/auto-height/auto-height.directive';
+import { MyProfileComponent } from './page/my-profile/my-profile.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { AutoHeightDirective } from './directive/auto-height/auto-height.directi
     NewTodoItemComponent,
     ManageDeadlineComponent,
     AutoHeightDirective,
+    MyProfileComponent,
   ],
   imports: [
     BrowserModule,

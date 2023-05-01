@@ -49,5 +49,10 @@
   "add-new-label": "Aggiungi una nuova label",
   "add-new-label-description": "Seleziona dalla seguente lista una label da aggiungere a questo task.",
   "more-details": "More details",
-  "show-list": "Mostra lista"
+  "show-list": "Mostra lista",
+  "my-profile": "Il mio profilo",
+  "username": "Username",
+  "avatar": "Avatar",
+  "master-data": "Anagrafica",
+  "pick-color-for-avatar": "Seleziona un colore per il tuo avatar"
 }

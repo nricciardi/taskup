@@ -123,10 +123,10 @@
               <h6 class="dropdown-header">{{ "hello" | translate }}, {{ userLogged.name }}!</h6>
             </li>
             <li>
-              <a class="dropdown-item" href="#"
-                ><i class="icon-mid bi bi-person me-2"></i> My
-                Profile</a
-              >
+              <a class="dropdown-item" [routerLink]="['/my-profile']" routerLinkActive="router-link-active" >
+                <i class="icon-mid bi bi-person me-2"></i>
+                  {{ "my-profile" | translate }}
+                </a>
             </li>
             <li>
               <a class="dropdown-item" href="#"

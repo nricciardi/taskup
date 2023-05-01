@@ -1,0 +1,153 @@
+<div class="row justify-content-center" *ngIf="authService.loggedUser">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          {{ "my-profile" | translate }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-3">
+            <div
+              class="nav flex-column nav-pills"
+              id="v-pills-tab"
+              role="tablist"
+              aria-orientation="vertical"
+            >
+              <a
+                class="nav-link active"
+                id="v-pills-master-data-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-master-data"
+                role="tab"
+                aria-controls="v-pills-master-data"
+                aria-selected="true"
+                >
+                {{ "master-data" | translate }}
+                </a>
+              <a
+                class="nav-link"
+                id="v-pills-avatar-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-avatar"
+                role="tab"
+                aria-controls="v-pills-avatar"
+                aria-selected="false"
+                >
+                {{ "avatar" | translate }}
+              </a>
+              <!--<a
+                class="nav-link"
+                id="v-pills-messages-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-messages"
+                role="tab"
+                aria-controls="v-pills-messages"
+                aria-selected="false"
+                >Messages</a
+              >
+              <a
+                class="nav-link"
+                id="v-pills-settings-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-settings"
+                role="tab"
+                aria-controls="v-pills-settings"
+                aria-selected="false"
+                >Settings</a
+              >-->
+            </div>
+          </div>
+          <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+              <div
+                class="tab-pane fade show active"
+                id="v-pills-master-data"
+                role="tabpanel"
+                aria-labelledby="v-pills-master-data-tab"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Nulla ut nulla neque. Ut hendrerit nulla a
+                euismod pretium. Fusce venenatis sagittis ex
+                efficitur suscipit. In tempor mattis fringilla. Sed
+                id tincidunt orci, et volutpat ligula. Aliquam
+                sollicitudin sagittis ex, a rhoncus nisl feugiat
+                quis. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Nunc ultricies ligula a tempor
+                vulputate. Suspendisse pretium mollis ultrices.
+              </div>
+              <div
+                class="tab-pane fade"
+                id="v-pills-avatar"
+                role="tabpanel"
+                aria-labelledby="v-pills-avatar-tab"
+              >
+
+                <div class="row justify-content-center">
+                  <div class="col-auto">
+                    <div class="form-group">
+                      <label for="color-picker">
+                        {{ "pick-color-for-avatar" | translate }}
+                      </label>
+                      <input
+                        type="color"
+                        class="form-control"
+                        id="color-picker"
+                        #colorPicker
+                        [value]="'#' + authService.loggedUser.avatar_hex_color"
+                        (input)="colorPicked = colorPicker.value.substring(1)"
+                      />
+                    </div>
+
+                  </div>
+
+                  <div class="col-auto">
+                    <app-text-avatar  [color]="colorPicked ? colorPicked : authService.loggedUser.avatar_hex_color"
+                                      [text]="utilsService.getAvatarText(authService.loggedUser)"
+                                      >
+                    </app-text-avatar>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-auto">
+                    <button class="btn btn-outline-primary" (click)="modify({
+                      avatar_hex_color: colorPicked
+                    })">
+                      {{ "confirm" | translate }}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+              <!-- <div
+                class="tab-pane fade"
+                id="v-pills-messages"
+                role="tabpanel"
+                aria-labelledby="v-pills-messages-tab"
+              >
+                Integer pretium dolor at sapien laoreet ultricies.
+                Fusce congue et lorem id convallis. Nulla volutpat
+                tellus nec molestie finibus. In nec odio tincidunt
+                eros finibus ullamcorper. Ut sodales, dui nec
+                posuere finibus, nisl sem aliquam metus, eu accumsan
+                lacus felis at odio.
+              </div>
+              <div
+                class="tab-pane fade"
+                id="v-pills-settings"
+                role="tabpanel"
+                aria-labelledby="v-pills-settings-tab"
+              >
+                Sed lacus quam, convallis quis condimentum ut,
+                accumsan congue massa. Pellentesque et quam vel
+                massa pretium ullamcorper vitae eu tortor.
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

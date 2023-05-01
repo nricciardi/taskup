@@ -5,11 +5,19 @@ from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
 from typing import List, Callable, Optional
 from lib.utils.error import Errors
+from dataclasses import dataclass
+
+
+@dataclass
+class VaultData:
+    email: str
+    password: str
 
 
 class AuthService:
     __users_manager: UsersManager
     __me: UserModel | None = None
+    __local_vault: Optional[VaultData] = None
 
     EMAIL = "email"
     PASSWORD = "password"
@@ -27,6 +35,21 @@ class AuthService:
     @property
     def vault_path(self) -> str:
         return self.__vault_path
+
+    def refresh_me(self) -> None:
+        """
+        Refresh logged user data using local vault data
+
+        :return:
+        """
+
+        users_matched: List = self.__users_manager.where_as_model(
+            WhereCondition("email", "=", self.__local_vault.email),
+            WhereCondition("password", "=", self.__local_vault.password),
+            with_relations=True
+        )
+
+        self.__me = CollectionsUtils.first(users_matched)
 
     def me(self) -> UserModel | None:
         return self.__me
@@ -71,13 +94,8 @@ class AuthService:
         :rtype: UserModel
         """
 
-        users_matched: List = self.__users_manager.where_as_model(
-            WhereCondition("email", "=", email),
-            WhereCondition("password", "=", password),
-            with_relations=True
-        )
-
-        self.__me = CollectionsUtils.first(users_matched)
+        self.__local_vault = VaultData(email=email, password=password)
+        self.refresh_me()
 
         if self.__me is None:
             msg: str = f"no match with {email} + {password}"

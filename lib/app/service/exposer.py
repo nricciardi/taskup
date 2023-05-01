@@ -229,6 +229,7 @@ class ExposerService:
             self.expose_all_from_list(to_expose=[
                 self.__auth_service.is_logged,
                 self.__auth_service.logout,
+                self.__auth_service.refresh_me
             ], prefix="auth_")
 
             self.expose(to_dict(self.__auth_service.login, self.verbose), "auth_login")
