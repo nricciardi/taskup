@@ -47,8 +47,12 @@ export class TaskPreviewComponent {
     if(this.task) {
 
       if(this.task.task_status) {
-        this.nextStatus = this.taskStatusService.getTaskById(this.task.task_status.default_next_task_status_id);
-        this.prevStatus = this.taskStatusService.getTaskById(this.task.task_status.default_prev_task_status_id);
+
+        if(this.task.task_status.default_next_task_status_id)
+          this.nextStatus = this.taskStatusService.getTaskById(this.task.task_status.default_next_task_status_id);
+
+        if(this.task.task_status.default_prev_task_status_id)
+          this.prevStatus = this.taskStatusService.getTaskById(this.task.task_status.default_prev_task_status_id);
       }
 
     }
@@ -93,17 +97,19 @@ export class TaskPreviewComponent {
 
     LoggerService.logInfo(`Removing user with id ${userId} from task: ${this.task.id} - ${this.task.name}`);
 
-    this.taskService.removeAssignment(this.task.id, userId).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.removeAssignment(id, userId).then((response) => {
       response.subscribe({
         next: (value: boolean) => {
 
           // refresh task
-          this.taskService.find(this.task!.id).then((respose) => {
+          this.taskService.find(id).then((respose) => {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
                 this.onRemoveAssignment.emit({
-                  target: this.task.id,
+                  target: id,
                   new: t
                 });
               }
@@ -124,12 +130,14 @@ export class TaskPreviewComponent {
 
     LoggerService.logInfo(`Add user ${user.username} to task: ${this.task.id} - ${this.task.name}`);
 
-    this.taskService.addAssignment(this.task.id, user.id).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.addAssignment(id, user.id).then((response) => {
       response.subscribe({
         next: (value: boolean) => {
 
           // refresh task
-          this.taskService.find(this.task!.id).then((respose) => {
+          this.taskService.find(id).then((respose) => {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
@@ -151,10 +159,12 @@ export class TaskPreviewComponent {
 
     LoggerService.logInfo("Remove task " + this.task?.name);
 
-    this.taskService.deleteById(this.task.id).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.deleteById(id).then((response) => {
       response.subscribe({
         next: (value) => {
-          this.onDeletion.emit(this.task!.id);
+          this.onDeletion.emit(id);
         }
       })
     })
@@ -166,17 +176,19 @@ export class TaskPreviewComponent {
 
     LoggerService.logInfo("Remove label");
 
-    this.taskService.removeLabel(this.task.id, label.id).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.removeLabel(id, label.id).then((response) => {
       response.subscribe({
         next: (value) => {
 
           // refresh task
-          this.taskService.find(this.task!.id).then((respose) => {
+          this.taskService.find(id).then((respose) => {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
                 this.onRemoveAssignment.emit({
-                  target: this.task.id,
+                  target: id,
                   new: t
                 });
               }
@@ -187,19 +199,21 @@ export class TaskPreviewComponent {
     });
   }
 
-  addLabelFromTask(label: TaskLabelModel) {
+  addLabelToTask(label: TaskLabelModel) {
     if(!this.task)
       return;
 
     LoggerService.logInfo("Add label");
 
-    this.taskService.addLabel(this.task.id, label.id).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.addLabel(id, label.id).then((response) => {
       response.subscribe({
         next: (value) => {
 
 
           // refresh task
-          this.taskService.find(this.task!.id).then((respose) => {
+          this.taskService.find(id).then((respose) => {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
@@ -219,15 +233,22 @@ export class TaskPreviewComponent {
 
     LoggerService.logInfo("Modify task " + this.task?.name);
 
-    this.taskService.update(this.task.id, values).then((response) => {
+    const id = this.task.id;
+
+    this.taskService.update(id, values).then((response) => {
       response.subscribe({
         next: (value) => {
 
           // refresh task
-          this.taskService.find(this.task!.id).then((respose) => {
+          this.taskService.find(id).then((respose) => {
             respose.subscribe({
               next: (t) => {
                 this.task = t;
+
+                this.onModify.emit({
+                  target: id,
+                  new: this.task
+                })
 
               }
             })

@@ -25,6 +25,7 @@ export class TaskPreviewListComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
+
   constructor(private authService: AuthService) {
     this.authService.refreshMe();   // so after i can use .loggedUser
   }

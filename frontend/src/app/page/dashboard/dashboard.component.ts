@@ -229,6 +229,9 @@ export class DashboardComponent {
         this.dashboard.tasks[index] = managedTask.new;
 
     }
+
+    console.log(this.dashboard.tasks);
+
   }
 
   newTask() {

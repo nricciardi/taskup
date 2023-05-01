@@ -97,8 +97,8 @@
 
         <app-add-task-label-modal [target]="'add-label-task-' + task.id + '-modal'"
                                   [alreadyAssignedLabels]="task.labels ?? []"
-                                  (onAdd)="addLabelFromTask($event)"
-                                  (onClose)="this.onRemoveAssignment.emit({
+                                  (onAdd)="addLabelToTask($event)"
+                                  (onClose)="this.onAddLabel.emit({
                                     target: this.task.id,
                                     new: task
                                   });">
