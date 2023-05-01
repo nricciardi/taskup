@@ -8,7 +8,8 @@
 - [ ] Why some js file aren't tracked?
 - [x] Internalization
 - [ ] Set link in Documentation and Contribute in menu
-- [ ] 404 and 500 pages
+- [x] 404 page
+- [ ] 500 page
 - [ ] Fix dark mode color
 - [ ] Remove year from deadline if we are in the current year
 - [ ] Fix env file (now is used .dev instead of .prod)
@@ -28,6 +29,7 @@
 - [ ] Dark color if avatar color is light
 - [ ] Switch badge to "light badge"
 - [ ] Prevent todo-list refresh on task updates
+- [ ] Add custom menu on right click on page
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
