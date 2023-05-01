@@ -112,6 +112,12 @@
 
                 <div class="row justify-content-center">
                   <div class="col-auto">
+                    <button class="btn btn-outline-secondary" (click)="colorPicker.value = '#' + colorPicked = authService.loggedUser.avatar_hex_color">
+                      {{ "reset" | translate }}
+                    </button>
+                  </div>
+
+                  <div class="col-auto">
                     <button class="btn btn-outline-primary" (click)="modify({
                       avatar_hex_color: colorPicked
                     })">
