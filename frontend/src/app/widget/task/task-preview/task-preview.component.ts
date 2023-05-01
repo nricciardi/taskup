@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskLabelModel } from 'src/app/model/entity/task-label.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
-import { TaskModel } from 'src/app/model/entity/task.model';
+import { BlueprintTaskModel, TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
@@ -42,6 +42,9 @@ export class TaskPreviewComponent {
   nextStatus?: Promise<TaskStatusModel>;
   prevStatus?: Promise<TaskStatusModel>;
 
+  blueprintModificateTask?: BlueprintTaskModel;
+
+
   ngOnInit() {
 
     if(this.task) {
@@ -68,6 +71,17 @@ export class TaskPreviewComponent {
 
   set inModify(value: boolean) {
     this._inModify = value;
+
+    if(this.task && value) {
+
+      this.blueprintModificateTask = {
+        id: this.task.id,
+        name: this.task.name,
+        description: this.task.description,
+        priority: this.task.priority,
+      }
+
+    }
   }
 
   userAssignedToTask(userId: number | undefined): boolean {

@@ -1,7 +1,7 @@
 <div class="card" *ngIf="task"
-[ngClass]="{
-  'not-assigned-task': !userAssignedToTask(loggedUser?.id)
-}"
+    [ngClass]="{
+      'not-assigned-task': !userAssignedToTask(loggedUser?.id)
+    }"
 >
   <div class="card-content">
     <div class="card-body">
@@ -11,7 +11,7 @@
             <!-- TASK TITLE -->
             <ng-container *ngIf="!inModify; else titleModification">
 
-                {{ task.name }}
+              {{ task.name }}
 
             </ng-container>
 
@@ -23,19 +23,22 @@
                         class="form-control"
                         id="task-title"
                         placeholder="Task Title"
-                        [value]="task.name"
+                        [value]="blueprintModificateTask?.name"
 
                         appAutoHeight
                         [base]="0"
-                        [offset]="10">
+                        [offset]="10"
+
+                        #titleTA
+                        (input)="blueprintModificateTask!.name = titleTA.value">
                 </textarea>
               </div>
             </ng-template>
           </div>
 
           <div class="col-md-auto">
-            <!-- MODIFY BTN -->
-            <div class="btn-group mb-1">
+            <!-- MENU -->
+            <div class="btn-group mb-1" *ngIf="!inModify; else confirmModifyBtn">
               <div class="dropdown icon-left">
                 <button
                   class="btn icon btn-sm btn-light me-1"
@@ -54,7 +57,7 @@
                   <!-- Modify -->
                   <button class="dropdown-item"
                           [disabled]="!utilsService.canModify(task.author_id)"
-                          (click)="inModify = true">
+                          (click)="inModify = true; openMoreDetailsBtn.click()">
                     <i class="bi bi-pencil me-50"></i>
                     {{ "modify" | translate }}
                   </button>
@@ -70,6 +73,18 @@
                 </div>
               </div>
             </div>
+
+            <ng-template #confirmModifyBtn>
+
+              <!-- SUBMIT CHANGES -->
+              <button class="btn icon icon-right btn-primary"
+                      (click)="modify(blueprintModificateTask!)">
+                {{ "submit" | translate }}
+                <i class="bi bi-check-lg"></i>
+              </button>
+
+            </ng-template>
+
           </div>
         </div>
       </h4>
@@ -121,9 +136,12 @@
                   class="form-control"
                   id="task-description"
                   rows="auto"
-                  [value]="task.description"
+                  [value]="blueprintModificateTask?.description"
 
-                  appAutoHeight>
+                  appAutoHeight
+
+                  #descriptionTA
+                  (input)="blueprintModificateTask!.description = descriptionTA.value">
           </textarea>
         </div>
       </ng-template>
@@ -146,25 +164,26 @@
 
       <!-- MORE DETAILS -->
       <div
-        class="accordion accordion-flush"
+        class="accordion accordion-flush mb-1"
         id="moreDeatilsAccordion"
       >
-        <div class="accordion-item">
+        <div class="accordion-item rounded">
           <h2 class="accordion-header" id="flush-headingOne">
             <button
-              class="accordion-button collapsed"
+              class="accordion-button collapsed rounded"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#flush-collapseDetails"
               aria-expanded="false"
               aria-controls="flush-collapseOne"
+              #openMoreDetailsBtn
             >
               {{ "more-details" | translate }}
             </button>
           </h2>
           <div
             id="flush-collapseDetails"
-            class="accordion-collapse collapse"
+            class="accordion-collapse collapse rounded"
             aria-labelledby="flush-headingOne"
             data-bs-parent="#moreDeatilsAccordion"
           >

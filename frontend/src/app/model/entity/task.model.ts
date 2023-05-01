@@ -19,3 +19,21 @@ export interface TaskModel {
   labels: TaskLabelModel[] | null;
   assigned_users: AssignedUserModel[] | null;
 }
+
+
+export interface BlueprintTaskModel {
+  id?: number;
+  name?: string;
+  description?: string | null;
+  deadline?: Date | null;
+  priority?: number;
+  created_at?: Date;
+  updated_at?: Date;
+
+  author_id?: number;
+  task_status_id?: number;
+  author?: UserModel | null;
+  task_status?: TaskStatusModel | null;
+  labels?: TaskLabelModel[] | null;
+  assigned_users?: AssignedUserModel[] | null;
+}

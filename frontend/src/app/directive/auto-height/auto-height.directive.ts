@@ -30,10 +30,12 @@ export class AutoHeightDirective {
     let h: number = this.base;
 
     if(host.scrollHeight) {
-      h = host.scrollHeight;
+
+      h = host.scrollHeight + 0;
     }
 
-    host.style.height = (h + this.offset) + "px";
+    host.style.height = h + "px";
+    host.style.overflowY = "hidden";
   }
 
 }
