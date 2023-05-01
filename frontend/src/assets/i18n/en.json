@@ -60,5 +60,8 @@
   "email": "Email",
   "password": "Password",
   "phone": "Phone",
-  "update": "Update"
+  "update": "Update",
+  "logout-after-update": "Warning: update some data as email or password will cause automatic logout.",
+  "repassword": "Re-password"
+
 }

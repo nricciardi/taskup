@@ -5,6 +5,9 @@
         <h4 class="card-title">
           {{ "my-profile" | translate }}
         </h4>
+        <p>
+          {{ "logout-after-update" | translate }}
+        </p>
       </div>
       <div class="card-body">
         <div class="row">
@@ -37,17 +40,7 @@
                 >
                 {{ "avatar" | translate }}
               </a>
-              <a
-                class="nav-link"
-                id="v-pills-email-tab"
-                data-bs-toggle="pill"
-                href="#v-pills-email"
-                role="tab"
-                aria-controls="v-pills-email"
-                aria-selected="false"
-                >
-                {{ "email" | translate }}
-                </a>
+
               <a
                 class="nav-link"
                 id="v-pills-password-tab"
@@ -82,7 +75,7 @@
                         </div>
                         <div class="card-content">
                           <div class="card-body">
-                            <form class="form form-horizontal" [formGroup]="blueprintUserForm">
+                            <form class="form form-horizontal" [formGroup]="blueprintMasterDataUserForm">
                               <div class="form-body">
                                 <div class="row">
 
@@ -99,8 +92,8 @@
                                       name="username"
                                       placeholder="Username"
                                       formControlName="username"
-                                      [class.is-valid]="blueprintUserForm.controls['username'].dirty && !blueprintUserForm.controls['username'].errors"
-                                      [class.is-invalid]="blueprintUserForm.controls['username'].dirty && blueprintUserForm.controls['username'].errors"
+                                      [class.is-valid]="blueprintMasterDataUserForm.controls['username'].dirty && !blueprintMasterDataUserForm.controls['username'].errors"
+                                      [class.is-invalid]="blueprintMasterDataUserForm.controls['username'].dirty && blueprintMasterDataUserForm.controls['username'].errors"
                                     />
                                   </div>
 
@@ -117,8 +110,8 @@
                                       name="email"
                                       placeholder="Email"
                                       formControlName="email"
-                                      [class.is-valid]="blueprintUserForm.controls['email'].dirty && !blueprintUserForm.controls['email'].errors"
-                                      [class.is-invalid]="blueprintUserForm.controls['email'].dirty && blueprintUserForm.controls['email'].errors"
+                                      [class.is-valid]="blueprintMasterDataUserForm.controls['email'].dirty && !blueprintMasterDataUserForm.controls['email'].errors"
+                                      [class.is-invalid]="blueprintMasterDataUserForm.controls['email'].dirty && blueprintMasterDataUserForm.controls['email'].errors"
                                     />
                                   </div>
 
@@ -175,15 +168,15 @@
                                     <button
                                       type="button"
                                       class="btn btn-primary me-1 mb-1"
-                                      [disabled]="blueprintUserForm.invalid"
-                                      (click)="submit()"
+                                      [disabled]="blueprintMasterDataUserForm.invalid"
+                                      (click)="submitMasterData()"
                                     >
                                       {{ "confirm" | translate }}
                                     </button>
                                     <button
                                       type="button"
                                       class="btn btn-light-secondary me-1 mb-1"
-                                      (click)="loadDefaultMasterDataValues()"
+                                      (click)="loadDefaultValues(blueprintMasterDataUserForm)"
                                     >
                                       {{ "reset" | translate }}
                                     </button>
@@ -253,46 +246,81 @@
 
               <div
                 class="tab-pane fade"
-                id="v-pills-email"
-                role="tabpanel"
-                aria-labelledby="v-pills-email-tab"
-              >
-
-
-              <div
-                class="tab-pane fade"
                 id="v-pills-password"
                 role="tabpanel"
                 aria-labelledby="v-pills-password-tab"
               >
 
-                <div class="col-md-4">
-                  <label>
-                    {{ "password" | translate }}
-                  </label>
-                </div>
-                <div class="col-md-8 form-group">
-                  <input
-                    type="password"
-                    id="password"
-                    class="form-control"
-                    name="password"
-                    placeholder="Password"
-                  />
-                </div>
-                <div class="col-12 col-md-8 offset-md-4 form-group">
-                  <div class="form-check">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox1"
-                        class="form-check-input"
-                        checked
-                      />
-                      <label for="checkbox1">Remember Me</label>
+              <section id="basic-horizontal-layouts">
+                <div class="row match-height">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title">
+                          {{ "password" | translate }}
+                        </h4>
+                      </div>
+                      <div class="card-content">
+                        <div class="card-body">
+                          <form class="form form-horizontal" [formGroup]="blueprintPasswordUserForm">
+                            <div class="form-body">
+                              <div class="row">
+
+                                <div class="col-md-4">
+                                  <label>
+                                    {{ "password" | translate }}
+                                  </label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                  <input
+                                    type="password"
+                                    id="password"
+                                    class="form-control"
+                                    name="password"
+                                    placeholder="Password"
+                                    formControlName="password"
+                                  />
+                                </div>
+
+                                <div class="col-md-4">
+                                  <label>
+                                    {{ "repassword" | translate }}
+                                  </label>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                  <input
+                                    type="password"
+                                    id="repassword"
+                                    class="form-control"
+                                    name="repassword"
+                                    placeholder="Re-password"
+                                    formControlName="repassword"
+                                  />
+                                </div>
+
+                                <div class="col-sm-12 d-flex justify-content-end">
+                                  <button
+                                    type="submit"
+                                    class="btn btn-primary me-1 mb-1"
+                                  >
+                                    Submit
+                                  </button>
+                                  <button
+                                    type="reset"
+                                    class="btn btn-light-secondary me-1 mb-1"
+                                  >
+                                    Reset
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </section>
 
               </div>
 

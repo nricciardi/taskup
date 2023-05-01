@@ -60,5 +60,7 @@
   "password": "Password",
   "phone": "Telefono",
   "email": "Email",
-  "update": "Aggiorna"
+  "update": "Aggiorna",
+  "logout-after-update": "Attenzione: aggiornare alcune informazioni come email e password causeranno il logout automatico dal sistema.",
+  "repassword": "Re-password"
 }

@@ -18,13 +18,18 @@ export class MyProfileComponent {
 
   colorPicked?: string;
 
-  blueprintUserForm = new FormGroup({
+  blueprintMasterDataUserForm = new FormGroup({
     username: new FormControl<string>('', [Validators.required], this.checkUnique("username")),
     name: new FormControl<string | null>(null),
     surname: new FormControl<string | null>(null),
     email: new FormControl<string>('', [Validators.required], this.checkUnique("email")),
     phone: new FormControl<string | null>(null),
-  })
+  });
+
+  blueprintPasswordUserForm = new FormGroup({
+    password: new FormControl<string>('', [Validators.required]),
+    repassword: new FormControl<string>('', [Validators.required]),
+  });
 
   constructor(private authService: AuthService, public utilsService: UtilsService, private userService: UserService) {
     this.loadLoggedUser();
@@ -39,24 +44,24 @@ export class MyProfileComponent {
         next: (value: UserModel) => {
           this.loggedUser = value;
 
-          this.loadDefaultMasterDataValues();
+          this.loadDefaultValues(this.blueprintMasterDataUserForm);
 
         }
       })
     });
   }
 
-  loadDefaultMasterDataValues() {
+  loadDefaultValues(form: FormGroup) {
 
     if(!this.loggedUser)
       return;
 
-    const keys = Object.keys(this.blueprintUserForm.controls);
+    const keys = Object.keys(form.controls);
 
     for (let index = 0; index < keys.length; index++) {
       const fieldName = keys[index];
 
-      (this.blueprintUserForm.controls as any)[fieldName].setValue((this.loggedUser as any)[fieldName]);      // set default values
+      (form.controls as any)[fieldName].setValue((this.loggedUser as any)[fieldName]);      // set default values
 
     }
 
@@ -88,9 +93,9 @@ export class MyProfileComponent {
     })
   }
 
-  submit() {
-    if(this.blueprintUserForm.valid) {
-      this.modify(this.blueprintUserForm.value);
+  submitMasterData() {
+    if(this.blueprintMasterDataUserForm.valid) {
+      this.modify(this.blueprintMasterDataUserForm.value);
 
     }
   }
