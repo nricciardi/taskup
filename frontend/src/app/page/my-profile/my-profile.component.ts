@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Observable, map, of } from 'rxjs';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
@@ -18,10 +19,10 @@ export class MyProfileComponent {
   colorPicked?: string;
 
   blueprintUserForm = new FormGroup({
-    username: new FormControl<string>('', [Validators.required]),
+    username: new FormControl<string>('', [Validators.required], this.checkUnique("username")),
     name: new FormControl<string | null>(null),
     surname: new FormControl<string | null>(null),
-    email: new FormControl<string>('', [Validators.required]),
+    email: new FormControl<string>('', [Validators.required], this.checkUnique("email")),
     phone: new FormControl<string | null>(null),
   })
 
@@ -50,12 +51,16 @@ export class MyProfileComponent {
     if(!this.loggedUser)
       return;
 
-    // set default values
-    this.blueprintUserForm.controls["email"].setValue(this.loggedUser["email"]);
-    this.blueprintUserForm.controls["username"].setValue(this.loggedUser["username"]);
-    this.blueprintUserForm.controls["name"].setValue(this.loggedUser["name"]);
-    this.blueprintUserForm.controls["surname"].setValue(this.loggedUser["surname"]);
-    this.blueprintUserForm.controls["phone"].setValue(this.loggedUser["phone"]);
+    const keys = Object.keys(this.blueprintUserForm.controls);
+
+    for (let index = 0; index < keys.length; index++) {
+      const fieldName = keys[index];
+
+      (this.blueprintUserForm.controls as any)[fieldName].setValue((this.loggedUser as any)[fieldName]);      // set default values
+
+    }
+
+
   }
 
   modify(values: Object, reload: boolean = true) {
@@ -90,7 +95,31 @@ export class MyProfileComponent {
     }
   }
 
-  checkUnique(field: string, value: string) {
-    // this.userService.checkAlreadyUsed()
+  private checkUnique(field: string): AsyncValidatorFn {
+
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+
+      return new Observable<boolean>((observer) => {
+        this.userService.checkAlreadyUsed(field, control.value).then((response) => {
+          response.subscribe({
+            next: (exists: boolean) => {
+
+              if(control.value != (this.loggedUser as any)[field]) {
+                observer.next(exists);
+              } else {
+                observer.next(false);   // prevent false-error on first check
+              }
+
+              observer.complete();
+            }
+          });
+        })
+
+      }).pipe(map((exists) => {
+        return exists ? { 'uniqueError': true } : null;
+      }));
+    };
   }
 }
+
+

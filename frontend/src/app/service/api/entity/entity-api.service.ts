@@ -41,8 +41,8 @@ export abstract class EntityApiService<T> {
     return this.eelService.call(this.CREATE, data);
   }
 
-  public async checkAlreadyUsed(data: object): Promise<Observable<T>> {
+  public async checkAlreadyUsed(field: string, value: any): Promise<Observable<boolean>> {
 
-    return this.eelService.call(this.CHECK_ALREADY_USED, data);
+    return this.eelService.call(this.CHECK_ALREADY_USED, field, value);
   }
 }

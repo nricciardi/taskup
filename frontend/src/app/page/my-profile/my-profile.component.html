@@ -39,6 +39,17 @@
               </a>
               <a
                 class="nav-link"
+                id="v-pills-email-tab"
+                data-bs-toggle="pill"
+                href="#v-pills-email"
+                role="tab"
+                aria-controls="v-pills-email"
+                aria-selected="false"
+                >
+                {{ "email" | translate }}
+                </a>
+              <a
+                class="nav-link"
                 id="v-pills-password-tab"
                 data-bs-toggle="pill"
                 href="#v-pills-password"
@@ -48,16 +59,7 @@
                 >
                 {{ "password" | translate }}
                 </a>
-              <!--<a
-                class="nav-link"
-                id="v-pills-settings-tab"
-                data-bs-toggle="pill"
-                href="#v-pills-settings"
-                role="tab"
-                aria-controls="v-pills-settings"
-                aria-selected="false"
-                >Settings</a
-              >-->
+
             </div>
           </div>
           <div class="col-9">
@@ -97,6 +99,8 @@
                                       name="username"
                                       placeholder="Username"
                                       formControlName="username"
+                                      [class.is-valid]="blueprintUserForm.controls['username'].dirty && !blueprintUserForm.controls['username'].errors"
+                                      [class.is-invalid]="blueprintUserForm.controls['username'].dirty && blueprintUserForm.controls['username'].errors"
                                     />
                                   </div>
 
@@ -113,6 +117,8 @@
                                       name="email"
                                       placeholder="Email"
                                       formControlName="email"
+                                      [class.is-valid]="blueprintUserForm.controls['email'].dirty && !blueprintUserForm.controls['email'].errors"
+                                      [class.is-invalid]="blueprintUserForm.controls['email'].dirty && blueprintUserForm.controls['email'].errors"
                                     />
                                   </div>
 
@@ -155,7 +161,7 @@
                                   </div>
                                   <div class="col-md-8 form-group">
                                     <input
-                                      type="number"
+                                      type="text"
                                       id="phone"
                                       class="form-control"
                                       name="phone"
@@ -193,6 +199,7 @@
                 </section>
 
               </div>
+
               <div
                 class="tab-pane fade"
                 id="v-pills-avatar"
@@ -243,6 +250,15 @@
                 </div>
 
               </div>
+
+              <div
+                class="tab-pane fade"
+                id="v-pills-email"
+                role="tabpanel"
+                aria-labelledby="v-pills-email-tab"
+              >
+
+
               <div
                 class="tab-pane fade"
                 id="v-pills-password"
@@ -279,16 +295,7 @@
                 </div>
 
               </div>
-              <!-- <div
-                class="tab-pane fade"
-                id="v-pills-settings"
-                role="tabpanel"
-                aria-labelledby="v-pills-settings-tab"
-              >
-                Sed lacus quam, convallis quis condimentum ut,
-                accumsan congue massa. Pellentesque et quam vel
-                massa pretium ullamcorper vitae eu tortor.
-              </div> -->
+
             </div>
           </div>
         </div>
