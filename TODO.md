@@ -26,7 +26,8 @@
 - [ ] Manage Git
 - [ ] Task pagination
 - [ ] Dark color if avatar color is light
-- [ ] Switch badge to "light badge" 
+- [ ] Switch badge to "light badge"
+- [ ] Prevent todo-list refresh on task updates
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
