@@ -71,6 +71,17 @@ Moreover, it allows to create the base structure of the database: tables and rel
 ### EntitiesManager
 **EntitiesManager** is the base class for the _entities managers_, that are classes that manage entities (find, create, delete, ...).
 
+### User, Task, TaskLabel and so on Managers
+The entities (**User, Task, TaskLabel, ...**) are the classes used to manage the single entity of database.
+Each of them has the base shared methods and some specific methods. For example, _TaskManager_ and _TaskLabelManager_ have `add_label` method to add a label on specific task.
+
+### QueryBuilder
+**QueryBuilder** is a custom _query builder_ based on Python `sqlite3` that implements the common utilities to build a query with Python code instead of SQL.
+It support binding with specific method as `enable_binding`.
+
+## Frontend
+The frontend of this application uses the _Angular framework_. 
+
 
 ## Help the Open Source Community
 
