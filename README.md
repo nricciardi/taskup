@@ -80,8 +80,21 @@ Each of them has the base shared methods and some specific methods. For example,
 It support binding with specific method as `enable_binding`.
 
 ## Frontend
-The frontend of this application uses the _Angular framework_. 
+The frontend of this application uses the _Angular framework_.
 
+Angular is a TypeScript-based, free and open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
+
+The frontend is structured in:
+- **page** contains final pages as _login page_ or _home page_
+- **widget** contains simple widgets shared between pages as _user avatar_
+- **service** contains the _services_ that are used to implements shared methods and communication with backend
+- **model** contains a list of interface for objects that also represents entities data to show
+- **directive** contains custom Angular directives
+
+### Services
+The services in Angular are used to manage connections with backend and provide some other functionality to app.
+
+To communicate with Eel backend was implemented `EelService` which uses a global declared variable `eel` to provide the main class method `call` to call Python exposed methods.
 
 ## Help the Open Source Community
 
@@ -105,3 +118,11 @@ eel._expose("other_name", my_class.my_method)
 ```
 
 Watch out "**_**" in `_expose(...)`, it is different from `expose(...)`
+
+## Credits, libraries and plug in used
+- Bootstrap framework
+- Bootstrap icon
+- Eel library
+- Sqlite3 library
+- Colorama library
+- Mazer template
