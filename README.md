@@ -11,6 +11,7 @@ To run this project are required the followings dependencies:
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Eel](https://pypi.org/project/Eel/) (Python module to create frontend)
 - [Colorama](https://pypi.org/project/colorama/) (Python module for Logger)
+- [Chromium](https://www.chromium.org/) based software (as Google Chrome or Firefox)
 
 # Documentation for Users
 **TODO**
