@@ -259,6 +259,9 @@
                         <h4 class="card-title">
                           {{ "password" | translate }}
                         </h4>
+                        <p>
+                          {{ "password-requirements" | translate }}
+                        </p>
                       </div>
                       <div class="card-content">
                         <div class="card-body">
@@ -279,6 +282,8 @@
                                     name="password"
                                     placeholder="Password"
                                     formControlName="password"
+                                    [class.is-valid]="blueprintPasswordUserForm.controls['password'].dirty && !blueprintPasswordUserForm.controls['password'].errors"
+                                    [class.is-invalid]="blueprintPasswordUserForm.controls['password'].dirty && blueprintPasswordUserForm.controls['password'].errors"
                                   />
                                 </div>
 
@@ -295,21 +300,25 @@
                                     name="repassword"
                                     placeholder="Re-password"
                                     formControlName="repassword"
+                                    [class.is-valid]="blueprintPasswordUserForm.controls['repassword'].dirty && !blueprintPasswordUserForm.controls['repassword'].errors"
+                                    [class.is-invalid]="blueprintPasswordUserForm.controls['repassword'].dirty && blueprintPasswordUserForm.controls['repassword'].errors"
                                   />
                                 </div>
 
                                 <div class="col-sm-12 d-flex justify-content-end">
                                   <button
-                                    type="submit"
+                                    type="button"
                                     class="btn btn-primary me-1 mb-1"
+                                    [disabled]="blueprintPasswordUserForm.invalid"
+                                    (click)="submitPasswordData()"
                                   >
-                                    Submit
+                                    {{ "submit" | translate }}
                                   </button>
                                   <button
                                     type="reset"
                                     class="btn btn-light-secondary me-1 mb-1"
                                   >
-                                    Reset
+                                    {{ "reset" | translate }}
                                   </button>
                                 </div>
                               </div>

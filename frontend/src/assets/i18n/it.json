@@ -62,5 +62,6 @@
   "email": "Email",
   "update": "Aggiorna",
   "logout-after-update": "Attenzione: aggiornare alcune informazioni come email e password causeranno il logout automatico dal sistema.",
-  "repassword": "Re-password"
+  "repassword": "Re-password",
+  "password-requirements": "Una lettera minuscola, una maiscuola, un numero e almeno 8 caratteri"
 }

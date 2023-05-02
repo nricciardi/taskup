@@ -62,6 +62,7 @@
   "phone": "Phone",
   "update": "Update",
   "logout-after-update": "Warning: update some data as email or password will cause automatic logout.",
-  "repassword": "Re-password"
+  "repassword": "Re-password",
+  "password-requirements": "One lower letter, one upper letter, one number and 8 lenght"
 
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, map, of } from 'rxjs';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
@@ -27,8 +27,8 @@ export class MyProfileComponent {
   });
 
   blueprintPasswordUserForm = new FormGroup({
-    password: new FormControl<string>('', [Validators.required]),
-    repassword: new FormControl<string>('', [Validators.required]),
+    password: new FormControl<string>('', [Validators.required, createPasswordStrengthValidator(8)]),
+    repassword: new FormControl<string>('', [Validators.required, matchValidator('password')]),
   });
 
   constructor(private authService: AuthService, public utilsService: UtilsService, private userService: UserService) {
@@ -95,8 +95,16 @@ export class MyProfileComponent {
 
   submitMasterData() {
     if(this.blueprintMasterDataUserForm.valid) {
-      this.modify(this.blueprintMasterDataUserForm.value);
+      this.modify(this.blueprintMasterDataUserForm.value, true);
 
+    }
+  }
+
+  submitPasswordData() {
+    if(this.blueprintPasswordUserForm.valid) {
+      this.modify({
+        password: this.blueprintPasswordUserForm.controls["password"].value
+      }, true)
     }
   }
 
@@ -128,3 +136,46 @@ export class MyProfileComponent {
 }
 
 
+export function createPasswordStrengthValidator(minLenght: number): ValidatorFn {
+  return (control:AbstractControl) : ValidationErrors | null => {
+
+      const value = control.value;
+
+      if (!value) {
+          return null;
+      }
+
+      const hasUpperCase = /[A-Z]+/.test(value);
+
+      const hasLowerCase = /[a-z]+/.test(value);
+
+      const hasNumeric = /[0-9]+/.test(value);
+
+      const hasLenght = value.length >= minLenght;
+
+      const passwordValid = hasUpperCase && hasLowerCase && hasNumeric && hasLenght;
+
+      return !passwordValid ? {passwordStrength:true}: null;
+  }
+}
+
+export function matchValidator(
+  matchTo: string,
+  reverse?: boolean
+): ValidatorFn {
+
+  return (control: AbstractControl): ValidationErrors | null => {
+
+    if (control.parent && reverse) {
+      const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
+      if (c) {
+        c.updateValueAndValidity();
+      }
+      return null;
+    }
+
+    return !!control.parent &&
+      !!control.parent.value &&
+      control.value === (control.parent?.controls as any)[matchTo].value ? null : { matching: true };
+  };
+}
