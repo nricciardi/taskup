@@ -39,6 +39,8 @@ This project uses the [Eel library](https://github.com/python-eel/Eel) to send d
 
 Eel hosts a local webserver, then lets you annotate functions in Python so that they can be called from Javascript, and vice versa.
 
+![websocket schema](./doc/img/websocket-schema1.png)
+
 The App class in `app.py` implements `__init__` and `start` methods to load and start Eel. It takes the configuration files
 from `settings.json` using the Settings class.
 In `__init__` it uses the Exposer class to expose all methods for frontend.
