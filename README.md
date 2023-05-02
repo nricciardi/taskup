@@ -136,7 +136,11 @@ public async addAssignment(taskId: number, userId: number): Promise<Observable<b
 }
 ```
 
-
+### Task
+The task visualization is made using a set of widgets:
+- **TaskPreview** is the main component which is a card with all task information as title, description and so on
+- **TaskPreviewList** is a component which display a list of task passed in a set of _TaskPreview_
+- **TaskTodo** and **TaskTodoList** are the components used to show the list of todo-item for each task 
 
 ## Help the Open Source Community
 
