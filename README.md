@@ -99,7 +99,7 @@ It uses a _generic type_ which represents the specif _entity model_, so it can b
 Each method returns a _Promise of Observable_, the observable is connected with websocket of backend.
 To call the specific method of entity services, this class uses _readonly abstract variable_, each child service override them. 
 
-For example the `all` method, which returns all data of an entity:
+For example the `find` method, which returns data of an entity searched by its id:
 
 ```typescript
 export abstract class EntityApiService<T> {
@@ -108,12 +108,35 @@ export abstract class EntityApiService<T> {
 
   constructor(public eelService: EelService) { }
 
-  public async all(): Promise<Observable<T[]>> {
+  public async find(id: number): Promise<Observable<T>> {
 
-    return this.eelService.call(this.ALL);
+    return this.eelService.call(this.FIND, id);
   }
 }
 ```
+
+Using, for example, TaskService: 
+```typescript
+this.taskService.find(id).then((respose) => {
+    respose.subscribe({
+      next: (task: TaskModel) => {
+        // ...
+      }
+    })
+})
+```
+
+In addition, the _entities services_ as `TaskService` or `UserService` have other specific methods.
+For example, `TaskService` has `addAssignment` method:
+
+```typescript
+public async addAssignment(taskId: number, userId: number): Promise<Observable<boolean>> {
+
+    return this.eelService.call(this.ADD_ASSIGNMENT, taskId, userId);
+}
+```
+
+
 
 ## Help the Open Source Community
 
@@ -126,7 +149,6 @@ export abstract class EntityApiService<T> {
 ### How to set alias in Eel?
 ```python
 import eel
-
 
 class MyClass:
    def my_method(self):
