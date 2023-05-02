@@ -2,7 +2,7 @@
 
 ### Generals
 - [ ] Remove .vs and .idea directory from Git
-
+- [ ] Create image diagram for doc
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
