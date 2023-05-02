@@ -77,13 +77,11 @@ Each of them has the base shared methods and some specific methods. For example,
 
 ### QueryBuilder
 **QueryBuilder** is a custom _query builder_ based on Python `sqlite3` that implements the common utilities to build a query with Python code instead of SQL.
-It support binding with specific method as `enable_binding`.
+It supports binding with specific method as `enable_binding`.
 
 ## Frontend
 The frontend of this application uses the _Angular framework_.
-
 Angular is a TypeScript-based, free and open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
-
 The frontend is structured in:
 - **page** contains final pages as _login page_ or _home page_
 - **widget** contains simple widgets shared between pages as _user avatar_
@@ -93,8 +91,29 @@ The frontend is structured in:
 
 ### Services
 The services in Angular are used to manage connections with backend and provide some other functionality to app.
-
 To communicate with Eel backend was implemented `EelService` which uses a global declared variable `eel` to provide the main class method `call` to call Python exposed methods.
+
+### EntityApiService
+The `EntityApiService` is a service which is used to share common methods between entity services.
+It uses a _generic type_ which represents the specif _entity model_, so it can be used in some methods.
+Each method returns a _Promise of Observable_, the observable is connected with websocket of backend.
+To call the specific method of entity services, this class uses _readonly abstract variable_, each child service override them. 
+
+For example the `all` method, which returns all data of an entity:
+
+```typescript
+export abstract class EntityApiService<T> {
+
+  readonly abstract ALL: string;
+
+  constructor(public eelService: EelService) { }
+
+  public async all(): Promise<Observable<T[]>> {
+
+    return this.eelService.call(this.ALL);
+  }
+}
+```
 
 ## Help the Open Source Community
 
