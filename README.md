@@ -34,6 +34,9 @@ To run Sphinx doc:
 - **Work Directory:** the work directory inside _project directory_
 
 ## App
+
+![structure of the project](./doc/img/structure-diagram.jpg)
+
 ### Eel and WebSocket
 This project uses the [Eel library](https://github.com/python-eel/Eel) to send data between client (frontend) and server
 (Python). Eel is a little Python library for making simple Electron-like offline HTML/JS GUI apps, with full access to Python capabilities and libraries.
