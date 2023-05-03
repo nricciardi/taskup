@@ -6,6 +6,9 @@ import { LoginComponent } from './page/login/login.component';
 import { HomeComponent } from './page/home/home.component';
 import { TestComponent } from './page/test/test.component';
 import { MyProfileComponent } from './page/my-profile/my-profile.component';
+import { ManageTaskStatusComponent } from './page/manage-task-status/manage-task-status.component';
+import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task-labels.component';
+import { ManageUsersComponent } from './page/manage-users/manage-users.component';
 
 const routes: Routes = [
 
@@ -33,6 +36,18 @@ const routes: Routes = [
   {
     path: "my-profile",
     component: MyProfileComponent
+  },
+  {
+    path: "manage-task-status",
+    component: ManageTaskStatusComponent
+  },
+  {
+    path: "manage-task-labels",
+    component: ManageTaskLabelsComponent
+  },
+  {
+    path: "manage-users",
+    component: ManageUsersComponent
   },
 
 

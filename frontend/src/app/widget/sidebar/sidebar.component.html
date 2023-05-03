@@ -98,6 +98,33 @@
         </a>
       </li>
 
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-status')">
+        <a [routerLink]="['/manage-task-status']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-kanban-fill"></i>
+          <span>
+            {{ 'manage-task-status' | translate }}
+          </span>
+        </a>
+      </li>
+
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-labels')">
+        <a [routerLink]="['/manage-task-labels']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-bookmarks-fill"></i>
+          <span>
+            {{ 'manage-task-labels' | translate }}
+          </span>
+        </a>
+      </li>
+
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-users')">
+        <a [routerLink]="['/manage-users']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-people-fill"></i>
+          <span>
+            {{ 'manage-users' | translate }}
+          </span>
+        </a>
+      </li>
+
       <!-- <li class="sidebar-item has-sub">
         <a href="#" class="sidebar-link">
           <i class="bi bi-stack"></i>

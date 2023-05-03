@@ -63,6 +63,10 @@
   "update": "Update",
   "logout-after-update": "Warning: update some data as email or password will cause automatic logout.",
   "repassword": "Re-password",
-  "password-requirements": "One lower letter, one upper letter, one number and 8 lenght"
+  "password-requirements": "One lower letter, one upper letter, one number and 8 lenght",
+  "manage-users": "Manage users",
+  "manage-task-labels": "Manage labels",
+  "manage-task-status": "Manage task status",
+  "filters": "Filters"
 
 }

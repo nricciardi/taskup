@@ -63,5 +63,9 @@
   "update": "Aggiorna",
   "logout-after-update": "Attenzione: aggiornare alcune informazioni come email e password causeranno il logout automatico dal sistema.",
   "repassword": "Re-password",
-  "password-requirements": "Una lettera minuscola, una maiscuola, un numero e almeno 8 caratteri"
+  "password-requirements": "Una lettera minuscola, una maiscuola, un numero e almeno 8 caratteri",
+  "manage-users": "Gestisci utenti",
+  "manage-task-labels": "Gestisci labels",
+  "manage-task-status": "Gestisci task status",
+  "filters": "Filtri"
 }

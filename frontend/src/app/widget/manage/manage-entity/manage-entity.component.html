@@ -1,0 +1,71 @@
+<ng-container *ngIf="!!form && !!editableFields">
+  <div class="card">
+    <div class="card-header" *ngIf="title">
+      <h4 class="card-title">
+        {{ title | translate }}
+      </h4>
+    </div>
+
+    <div class="card-content">
+      <div class="card-body">
+        <form class="form form-horizontal" [formGroup]="form">
+          <div class="form-body">
+
+            <div class="row" *ngFor="let field of editableFields">
+
+              <div class="col-md-4">
+                <label>
+                  {{ field.name | translate }}
+                </label>
+              </div>
+              <div class="col-md-8 form-group">
+
+                <ng-container *ngIf="field.type !== 'textarea'; else textareaField">
+                  <input
+                    [type]="field.type"
+                    class="form-control"
+                    [name]="field.name"
+                    [placeholder]="field.placeholder"
+                    [formControlName]="field.name"
+                  />
+                </ng-container>
+
+                <ng-template #textareaField>
+                  <div class="form-group mb-3">
+                    <textarea
+                      class="form-control"
+                      rows="5"
+                      [formControlName]="field.name"
+                    ></textarea>
+                  </div>
+                </ng-template>
+
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 d-flex justify-content-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary me-1 mb-1"
+                >
+                  {{ "submit" | translate }}
+                </button>
+                <button
+                  type="reset"
+                  class="btn btn-light-secondary me-1 mb-1"
+                >
+                  {{ "reset" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+
+

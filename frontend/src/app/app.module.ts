@@ -39,6 +39,11 @@ import { NewTodoItemComponent } from './widget/modal/new-todo-item/new-todo-item
 import { ManageDeadlineComponent } from './widget/modal/manage-deadline/manage-deadline.component';
 import { AutoHeightDirective } from './directive/auto-height/auto-height.directive';
 import { MyProfileComponent } from './page/my-profile/my-profile.component';
+import { ManageTaskStatusComponent } from './page/manage-task-status/manage-task-status.component';
+import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task-labels.component';
+import { ManageUsersComponent } from './page/manage-users/manage-users.component';
+import { ManageEntitiesComponent } from './widget/manage/manage-entities/manage-entities.component';
+import { ManageEntityComponent } from './widget/manage/manage-entity/manage-entity.component';
 
 
 @NgModule({
@@ -76,6 +81,11 @@ import { MyProfileComponent } from './page/my-profile/my-profile.component';
     ManageDeadlineComponent,
     AutoHeightDirective,
     MyProfileComponent,
+    ManageTaskStatusComponent,
+    ManageTaskLabelsComponent,
+    ManageUsersComponent,
+    ManageEntitiesComponent,
+    ManageEntityComponent,
   ],
   imports: [
     BrowserModule,
