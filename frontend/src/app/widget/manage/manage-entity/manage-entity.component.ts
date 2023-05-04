@@ -24,11 +24,6 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
     this.createForm();
 
-    setInterval(() => {
-      console.log(this.form?.valid, this.form?.controls);
-
-    }, 2500);
-
   }
 
   createForm() {
@@ -114,5 +109,41 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
       resetResultFlag();
     })
 
+  }
+
+  delete() {
+    if(!this.entity || !this.manager)
+      return;
+
+    const id = this.entity.id;
+
+    const resetResultFlag = () => {
+      setTimeout(() => {
+        this.submitResult = undefined;
+      }, environment.alertTimeout);
+    }
+
+    this.manager?.deleteById(id).then((response) => {
+
+      response.subscribe({
+        next: (value) => {
+          this.entity = undefined;
+
+          this.submitResult = true;
+
+          resetResultFlag();
+        },
+        error: (e) => {
+          this.submitResult = false;
+
+          resetResultFlag();
+        }
+      })
+
+    }).catch((reason) => {
+      this.submitResult = false;
+
+      resetResultFlag();
+    })
   }
 }

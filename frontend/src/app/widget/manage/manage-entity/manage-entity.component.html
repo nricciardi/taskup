@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!form && !!editableFields && !!manager">
+<ng-container *ngIf="!!form && !!editableFields && !!manager && !!entity">
   <div class="card">
     <div class="card-header" *ngIf="title">
       <h4 class="card-title">
@@ -60,8 +60,17 @@
 
             </div>
 
-            <div class="row" *ngIf="submitResult === undefined; else showSubmitResult">
-              <div class="col-sm-12 d-flex justify-content-end">
+            <div class="row justify-content-between" *ngIf="submitResult === undefined; else showSubmitResult">
+
+              <div class="col-auto">
+                <button type="button" class="btn icon btn-light"
+                        data-bs-toggle="modal"
+                        [attr.data-bs-target]="'#delete-request-' + entity.id">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+
+              <div class="col-sm-auto d-flex justify-content-end">
                 <button
                   type="button"
                   class="btn btn-light-secondary me-1 mb-1"
@@ -78,6 +87,15 @@
                 >
                   {{ "modify" | translate }}
                 </button>
+
+                <app-dialog-modal [target]="'delete-request-' + entity.id"
+                    title="delete-request"
+                    [centered]="true"
+                    [confirmBtn]="true"
+                    [confirmBtnTxt]="'confirm'"
+                    [borderless]="true"
+                    (onConfirm)="delete()">
+                </app-dialog-modal>
               </div>
             </div>
 
