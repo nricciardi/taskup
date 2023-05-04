@@ -150,6 +150,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=self.verbose)
 
+            # add FK checks
+            self.__db_connection.execute('PRAGMA foreign_keys = ON;')
+
             if not db_exists:
                 self.generate_base_db_structure(strict=True)
 
