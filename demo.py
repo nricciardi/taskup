@@ -133,9 +133,10 @@ class Demo:
             for i in range(randint(1, 8)):
                 self.__tasks_manager.add_assignment(task.id, randint(1, n_users))
 
+            # add to-do items
             for i in range(randint(3, 15)):
                 todo = self.__todo_item_manager.create_from_dict({
-                    "description": f"To-do {i} of task",
+                    "description": f" {i + 1}° To-do of task",
                     "author_id": randint(1, n_users),
                     "task_id": task.id,
                     "deadline": datetime.datetime(today.year,
