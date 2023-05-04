@@ -1,5 +1,6 @@
 import sys
 import os
+from random import randint
 
 
 class Utils:
@@ -23,6 +24,20 @@ class Utils:
         # check if exist
         return os.path.isdir(dir_path)
 
+    @staticmethod
+    def random_hex() -> str:
+        hex_number = ""
+
+        for _ in range(3):
+            random_number = randint(0, 255)
+            h = str(hex(random_number))[2:]
+
+            if len(h) is not 2:
+                h = f"0{h}"
+
+            hex_number += h
+
+        return hex_number
 
 class SqlUtils:
 
