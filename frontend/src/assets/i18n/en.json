@@ -68,6 +68,7 @@
   "manage-task-labels": "Manage labels",
   "manage-task-status": "Manage task status",
   "filters": "Filters",
-  "hex_color": "Color"
+  "hex_color": "Color",
+  "show-password": "Show password"
 
 }

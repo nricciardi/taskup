@@ -20,6 +20,8 @@ export class LoginComponent {
   loading: boolean = false;
   loginError: boolean = false;
 
+  showPsw: boolean = false;
+
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
