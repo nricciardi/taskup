@@ -2,8 +2,8 @@
 
 ### Generals
 - [ ] Remove .vs and .idea directory from Git
-- [ ] Create image diagram for doc
-- [ ] Make _demo script_
+- [x] Create image diagram for doc
+- [x] Make _demo script_
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
@@ -20,7 +20,7 @@
 - [ ] Graphic refactor
 - [ ] Manage label section
 - [ ] Manage task status section
-- [ ] Profile page
+- [x] Profile page
 - [ ] Home page: 
   - [ ] Select project
   - [ ] Count of updates
@@ -31,6 +31,7 @@
 - [ ] Switch badge to "light badge"
 - [ ] Prevent todo-list refresh on task updates
 - [ ] Add custom menu on right click on page
+- [ ] Forgot password
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
