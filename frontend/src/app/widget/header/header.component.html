@@ -130,7 +130,9 @@
             </li>
             <li>
               <a class="dropdown-item" href="#"
-                ><i class="icon-mid bi bi-gear me-2"></i> Settings</a
+                ><i class="icon-mid bi bi-gear me-2"></i>
+                {{ "settings" | translate }}
+                </a
               >
             </li>
             <li>
@@ -139,7 +141,7 @@
             <li>
               <button class="dropdown-item" (click)="logout()">
                 <i class="icon-mid bi bi-box-arrow-left me-2"></i>
-                Logout
+                {{ "logout" | translate }}
             </button>
             </li>
           </ul>

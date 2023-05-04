@@ -69,5 +69,8 @@
   "manage-task-status": "Gestisci task status",
   "filters": "Filtri",
   "hex_color": "Colore",
-  "show-password": "Mostra password"
+  "show-password": "Mostra password",
+  "operation-successful": "Operazione completata con successo",
+  "settings": "Impostazioni",
+  "logout": "Logout"
 }

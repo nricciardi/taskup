@@ -7,5 +7,4 @@ import { environment } from 'src/environments/environment.development';
 export class BaseService {
 
   constructor() { }
-
 }

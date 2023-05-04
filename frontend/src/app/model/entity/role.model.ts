@@ -1,4 +1,6 @@
-export interface RoleModel {
+import { BaseEntity } from "./base-entity.model";
+
+export interface RoleModel extends BaseEntity {
   id: number;
   name: string;
   permission_create: number;

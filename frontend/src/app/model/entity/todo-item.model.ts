@@ -1,7 +1,8 @@
+import { BaseEntity } from "./base-entity.model";
 import { TaskModel } from "./task.model";
 import { UserModel } from "./user.model";
 
-export interface TodoItemModel {
+export interface TodoItemModel extends BaseEntity {
   id: number;
   description: string;
   deadline: Date | null;

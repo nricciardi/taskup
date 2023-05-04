@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!form && !!editableFields">
+<ng-container *ngIf="!!form && !!editableFields && !!manager">
   <div class="card">
     <div class="card-header" *ngIf="title">
       <h4 class="card-title">
@@ -44,22 +44,34 @@
 
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="submitResult === undefined; showSubmitResult">
               <div class="col-sm-12 d-flex justify-content-end">
                 <button
-                  type="submit"
-                  class="btn btn-primary me-1 mb-1"
-                >
-                  {{ "submit" | translate }}
-                </button>
-                <button
-                  type="reset"
+                  type="button"
                   class="btn btn-light-secondary me-1 mb-1"
+                  (click)="setFormDefaultValue()"
                 >
                   {{ "reset" | translate }}
                 </button>
+
+                <button
+                  type="button"
+                  class="btn btn-primary me-1 mb-1"
+                  (click)="submit()"
+                  [disabled]="form.invalid"
+                >
+                  {{ "modify" | translate }}
+                </button>
               </div>
             </div>
+
+            <ng-template #showSubmitResult>
+
+              <app-error-alert *ngIf="!submitResult" [title]="'loading-error'"></app-error-alert>
+
+              <app-success-alert *ngIf="!!submitResult" [title]="'operation-successful'"></app-success-alert>
+            </ng-template>
+
           </div>
         </form>
       </div>

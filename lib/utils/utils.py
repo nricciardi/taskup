@@ -26,18 +26,15 @@ class Utils:
 
     @staticmethod
     def random_hex() -> str:
-        hex_number = ""
+        r = randint(0, 255)
+        g = randint(0, 255)
+        b = randint(0, 255)
 
-        for _ in range(3):
-            random_number = randint(0, 255)
-            h = str(hex(random_number))[2:]
+        # "#RRGGBB"
+        hex_color = "#{:02x}{:02x}{:02x}".format(r, g, b)
 
-            if len(h) is not 2:
-                h = f"0{h}"
+        return hex_color
 
-            hex_number += h
-
-        return hex_number
 
 class SqlUtils:
 

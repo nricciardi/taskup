@@ -1,8 +1,8 @@
-import { FormControl } from "@angular/forms";
+import { AsyncValidator, FormControl, Validator } from "@angular/forms";
 
 export interface FormField {
   name: string;
   type: string;
   placeholder?: string;
-  formControl: FormControl
+  blueprintFormControl: FormControl;
 }

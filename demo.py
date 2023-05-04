@@ -87,9 +87,12 @@ class Demo:
             Logger.log_error(msg=f"error is occurred during the demo launch", is_verbose=self.verbose, full=True)
 
     def add_users(self, n_users: int) -> None:
+
         # create PM (user)
         self.__users_manager.create_from_dict({"username": f"project.manager",
                                                "email": f"pm@email.com",
+                                               "name": self.NAMES[randint(0, len(self.NAMES) - 1)],
+                                               "surname": self.SURNAMES[randint(0, len(self.SURNAMES) - 1)],
                                                "password": "asd123",
                                                "avatar_hex_color": Utils.random_hex(),
                                                "role_id": 1
@@ -99,8 +102,8 @@ class Demo:
             name: str = self.NAMES[randint(0, len(self.NAMES) - 1)]
             surname: str = self.SURNAMES[randint(0, len(self.SURNAMES) - 1)]
 
-            self.__users_manager.create_from_dict({"username": f"{name}.{surname}",
-                                                   "email": f"{name}.{surname}@email{n}.com",
+            self.__users_manager.create_from_dict({"username": f"{name}.{surname}".lower(),
+                                                   "email": f"{name}.{surname}{n}@email.com".lower(),
                                                    "name": name,
                                                    "surname": surname,
                                                    "password": "asd123",

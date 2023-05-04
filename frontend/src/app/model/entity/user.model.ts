@@ -1,6 +1,7 @@
+import { BaseEntity } from "./base-entity.model";
 import { RoleModel } from "./role.model";
 
-export interface UserModel {
+export interface UserModel extends BaseEntity {
   id: number;
   username: string;
   name: string | null;

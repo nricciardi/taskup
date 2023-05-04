@@ -1,1 +1,5 @@
-<app-manage-entities></app-manage-entities>
+<app-manage-entities  [editableFields]="fields"
+                      [title]="'manage-task-labels'"
+                      [filterFields]="['name']"
+                      [manager]="taskStatusService">
+</app-manage-entities>

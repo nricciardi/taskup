@@ -192,11 +192,8 @@ class ExposerService:
             ], prefix="task_label_")
 
             self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
-            self.expose(login_required(self.__task_labels_manager.all_as_dict, self.__auth_service, self.verbose),
-                        "task_label_all")
-            self.expose(
-                login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose),
-                "task_label_update")
+            self.expose(login_required(to_dict(self.__task_labels_manager.all_as_dict), self.__auth_service, self.verbose), "task_label_all")
+            self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose), "task_label_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
@@ -218,6 +215,8 @@ class ExposerService:
             ], prefix="task_status_")
 
             self.expose(to_dict(self.__task_status_manager.find, self.verbose), "task_status_find")
+
+            self.expose(login_required(to_dict(self.__task_status_manager.all_as_dict), self.__auth_service, self.verbose), "task_status_all")
 
         except Exception as excepetion:
             Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)

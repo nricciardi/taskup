@@ -1,9 +1,10 @@
 import { AssignedUserModel } from "./assigned-user.model";
+import { BaseEntity } from "./base-entity.model";
 import { TaskLabelModel } from "./task-label.model";
 import { TaskStatusModel } from "./task-status.model";
 import { UserModel } from "./user.model";
 
-export interface TaskModel {
+export interface TaskModel extends BaseEntity {
   id: number;
   name: string;
   description: string | null;

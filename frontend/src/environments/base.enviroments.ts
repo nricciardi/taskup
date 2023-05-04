@@ -3,6 +3,7 @@ export const baseEnvironment = {
   fullDateFormat: 'dd/MM/yyyy H:mm',
   dateFormat: 'dd/MM/yyyy',
   timeFormat: 'H:mm',
-  warningDateDayBefore: 7,
-  dangerDateDayBefore: 3
+  warningDateDayBefore: 7,    // day
+  dangerDateDayBefore: 3,     // day
+  alertTimeout: 3000          // milliseconds
 };

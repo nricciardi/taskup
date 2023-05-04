@@ -1,4 +1,6 @@
-export interface TaskAssignmentModel {
+import { BaseEntity } from "./base-entity.model";
+
+export interface TaskAssignmentModel extends BaseEntity {
   id: number;
   assigned_at: Date;
 

@@ -195,7 +195,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="surname", type="VARCHAR(256)", nullable=True),
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
-                Field(name="avatar_hex_color", type="VARCHAR(6)", default="'cfcfcf'", nullable=False),
+                Field.hex_color(name="avatar_hex_color", default="'cfcfcf'", nullable=False),
                 Field(name="phone", type="VARCHAR(30)", nullable=True),
                 Field.fk_field(name="role_id"),
             ], fk_constraints=[
@@ -221,7 +221,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(),
                 Field.description_field(),
-                Field(name="hex_color", type="VARCHAR(6)", nullable=True),
+                Field.hex_color(name="hex_color", nullable=True),
                 Field.fk_field(name="default_next_task_status_id", nullable=True),
                 Field.fk_field(name="default_prev_task_status_id", nullable=True)
             ], fk_constraints=[
@@ -252,7 +252,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.name_field(unique=True),
                 Field.description_field(),
-                Field(name="hex_color", type="VARCHAR(6)", nullable=True)
+                Field.hex_color(name="hex_color", nullable=True)
             ]),
 
             self.task_assignment_table_name: Table.pivot(self.task_assignment_table_name, tables=[
@@ -308,9 +308,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         return {
             self.task_label_table_name: Seeder(table=self.task_label_table_name,
                                                values=[
-                                                   ("Front-end", "Front-end tasks", "32a852"),
-                                                   ("Back-end", "Front-end tasks", "f56342"),
-                                                   ("Documentation", "Documentation tasks", "f242f5")
+                                                   ("Front-end", "Front-end tasks", "#32a852"),
+                                                   ("Back-end", "Back-end tasks", "#f56342"),
+                                                   ("Documentation", "Documentation tasks", "#f242f5")
                                                ], cols=("name", "description", "hex_color")),
 
             self.role_table_name: Seeder(table=self.role_table_name,
@@ -408,14 +408,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             query = f"""\
                         Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id, hex_color)
                         Values
-                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "3eed72"),
-                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "b4e34f"),
-                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "e84157"),
-                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "facdf3"),
-                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "ffbf7a"),
-                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "73f5fa"),
-                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "c9eeff"),
-                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "f5d442");
+                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "#3eed72"),
+                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "#b4e34f"),
+                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "#e84157"),
+                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "#facdf3"),
+                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "#ffbf7a"),
+                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "#73f5fa"),
+                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "#c9eeff"),
+                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "#f5d442");
                     """
 
             self.cursor.execute(query)

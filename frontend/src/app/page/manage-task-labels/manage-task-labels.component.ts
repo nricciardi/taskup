@@ -11,53 +11,27 @@ import { TaskLabelService } from 'src/app/service/api/entity/task-label/task-lab
 })
 export class ManageTaskLabelsComponent {
 
-  constructor(private taskLabelService: TaskLabelService) {}
-
-  entities: TaskLabelModel[] = [];
+  constructor(public taskLabelService: TaskLabelService) {}
 
   fields: FormField[] = [
     {
       name: "name",
       type: "text",
       placeholder: "Name",
-      formControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('', [Validators.required])
     },
     {
       name: "description",
       type: "textarea",
       placeholder: "Description",
-      formControl: new FormControl('')
+      blueprintFormControl: new FormControl('')
     },
     {
       name: "hex_color",
       type: "color",
       placeholder: "Color",
-      formControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('', [Validators.required])
     },
   ]
 
-  ngOnInit() {
-    this.loadEntities();
-  }
-
-  loadEntities() {
-
-    this.taskLabelService.all().then((response) => {
-
-      response.subscribe({
-        next: (values: TaskLabelModel[]) => {
-
-          if(!!values) {
-
-            // modify already existing array since that it is passed as input in copy to child
-            this.entities.splice(0, this.entities.length);
-            values.forEach((v) => this.entities.push(v));
-          }
-
-        }
-      })
-
-    })
-
-  }
 }

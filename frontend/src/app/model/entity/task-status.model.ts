@@ -1,4 +1,6 @@
-export interface TaskStatusModel {
+import { BaseEntity } from "./base-entity.model";
+
+export interface TaskStatusModel extends BaseEntity {
   id: number;
   name: string;
   description: string | null;

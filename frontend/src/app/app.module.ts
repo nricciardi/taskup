@@ -44,6 +44,8 @@ import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task
 import { ManageUsersComponent } from './page/manage-users/manage-users.component';
 import { ManageEntitiesComponent } from './widget/manage/manage-entities/manage-entities.component';
 import { ManageEntityComponent } from './widget/manage/manage-entity/manage-entity.component';
+import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
+import { SuccessAlertComponent } from './widget/alert/success-alert/success-alert.component';
 
 
 @NgModule({
@@ -86,6 +88,8 @@ import { ManageEntityComponent } from './widget/manage/manage-entity/manage-enti
     ManageUsersComponent,
     ManageEntitiesComponent,
     ManageEntityComponent,
+    ManageRolesComponent,
+    SuccessAlertComponent,
   ],
   imports: [
     BrowserModule,

@@ -39,7 +39,7 @@ class Trigger(ToSqlInterface):
 class Field(ToSqlInterface):
     name: str
     type: str
-    default: str | None = field(default=None)
+    default: Optional[str] = field(default=None)
     pk: bool = field(default=False)
     autoincrement: bool = field(default=False)
     unique: bool = field(default=False)
@@ -83,6 +83,10 @@ class Field(ToSqlInterface):
     def nullable_datetime_with_now_check_field(cls, name: str, default: str | None = 'NULL', use_localtime: bool = False) -> 'Field':
         return cls(name=name, type="DATETIME", default=default, nullable=True,
                    check=f"{name} IS NULL OR {SqlUtils.datetime_str_format(name, use_localtime=use_localtime)} > {SqlUtils.datetime_strf_now(use_localtime=use_localtime)}")
+
+    @classmethod
+    def hex_color(cls, name: str = "hex_color", nullable: bool = False, default: Optional[str] = None):
+        return cls(name=name, type="VARCHAR(7)", nullable=nullable, default=default)     # 7 because it includes '#' of html typical hex color
 
     def to_sql(self) -> str:
         """
