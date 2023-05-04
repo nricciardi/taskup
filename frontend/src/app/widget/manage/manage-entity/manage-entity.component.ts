@@ -16,9 +16,6 @@ export class ManageEntityComponent<T> {
 
   ngOnInit() {
 
-    console.log(this.entity);
-
-
     // create reactive form dynamically
     this.form = new FormGroup({});
 
@@ -30,8 +27,8 @@ export class ManageEntityComponent<T> {
       if(element.type == "color")
         value = "#" + value;
 
-      element.formControl.setValue(value);
       this.form.addControl(element.name, element.formControl);
+      element.formControl.setValue(value);
 
     }
 

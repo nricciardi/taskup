@@ -64,8 +64,8 @@
   </section>
 
 
-  <ng-container *ngFor="let entity of entitiesManagable; let index as i">
-    {{ $any(entity)["name"] }}
+  <ng-container *ngFor="let entity of entitiesManagable">
+    
     <app-manage-entity
                     [entity]="entity"
                     [editableFields]="editableFields">

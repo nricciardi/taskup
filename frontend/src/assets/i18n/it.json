@@ -67,5 +67,6 @@
   "manage-users": "Gestisci utenti",
   "manage-task-labels": "Gestisci labels",
   "manage-task-status": "Gestisci task status",
-  "filters": "Filtri"
+  "filters": "Filtri",
+  "hex_color": "Colore"
 }
