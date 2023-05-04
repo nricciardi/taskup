@@ -20,7 +20,7 @@
               </div>
               <div class="col-md-8 form-group">
 
-                <ng-container *ngIf="field.type !== 'textarea'; else textareaField">
+                <ng-container *ngIf="field.type !== 'textarea' && field.type !== 'checkbox'; else otherTypes">
                   <input
                     [type]="field.type"
                     class="form-control"
@@ -30,21 +30,37 @@
                   />
                 </ng-container>
 
-                <ng-template #textareaField>
-                  <div class="form-group mb-3">
-                    <textarea
-                      class="form-control"
-                      rows="5"
-                      [formControlName]="field.name"
-                    ></textarea>
-                  </div>
+                <ng-template #otherTypes>
+                  <ng-container *ngIf="field.type == 'textarea'">
+                    <div class="form-group mb-3">
+                      <textarea
+                        class="form-control"
+                        rows="5"
+                        [formControlName]="field.name"
+                      ></textarea>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="field.type == 'checkbox'">
+                    <div class="form-check">
+                      <div class="checkbox">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [name]="field.name"
+                          [placeholder]="field.placeholder"
+                          [formControlName]="field.name"
+                        />
+                      </div>
+                    </div>
+                  </ng-container>
                 </ng-template>
 
               </div>
 
             </div>
 
-            <div class="row" *ngIf="submitResult === undefined; showSubmitResult">
+            <div class="row" *ngIf="submitResult === undefined; else showSubmitResult">
               <div class="col-sm-12 d-flex justify-content-end">
                 <button
                   type="button"

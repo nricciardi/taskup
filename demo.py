@@ -102,7 +102,7 @@ class Demo:
             name: str = self.NAMES[randint(0, len(self.NAMES) - 1)]
             surname: str = self.SURNAMES[randint(0, len(self.SURNAMES) - 1)]
 
-            self.__users_manager.create_from_dict({"username": f"{name}.{surname}".lower(),
+            self.__users_manager.create_from_dict({"username": f"{name}.{surname}{n}".lower(),
                                                    "email": f"{name}.{surname}{n}@email.com".lower(),
                                                    "name": name,
                                                    "surname": surname,

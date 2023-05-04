@@ -53,3 +53,4 @@
 - [x] Unique on user's username? Add name and surname?
 - [x] DB schema
 - [x] deadline from date to datetime?
+- [ ] Permission "edit_deadline"

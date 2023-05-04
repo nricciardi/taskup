@@ -196,7 +196,7 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose), "task_label_update")
 
         except Exception as excepetion:
-            Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
+            Logger.log_error(msg="task labels exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_task_status_methods(self) -> None:
         """
@@ -217,9 +217,34 @@ class ExposerService:
             self.expose(to_dict(self.__task_status_manager.find, self.verbose), "task_status_find")
 
             self.expose(login_required(to_dict(self.__task_status_manager.all_as_dict), self.__auth_service, self.verbose), "task_status_all")
+            self.expose(login_required(to_dict(self.__task_status_manager.update_from_dict), self.__auth_service, self.verbose), "task_status_update")
 
         except Exception as excepetion:
-            Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
+            Logger.log_error(msg="task status exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_role_methods(self) -> None:
+        """
+        Expose task labels methods
+
+        :return: None
+        """
+
+        try:
+            # expose task status
+            self.expose_all_from_list(to_expose=[
+                self.__roles_manager.create_from_dict,
+                self.__roles_manager.delete_by_id,
+                self.__roles_manager.check_already_used,
+
+            ], prefix="role_")
+
+            self.expose(to_dict(self.__roles_manager.find, self.verbose), "role_find")
+
+            self.expose(login_required(to_dict(self.__roles_manager.all_as_dict), self.__auth_service, self.verbose), "role_all")
+            self.expose(login_required(to_dict(self.__roles_manager.update_from_dict), self.__auth_service, self.verbose), "role_update")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_auth_methods(self) -> None:
         """
@@ -295,6 +320,7 @@ class ExposerService:
             self.__expose_todo_items_methods()
             self.__expose_task_status_methods()
             self.__expose_user_methods()
+            self.__expose_role_methods()
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
 

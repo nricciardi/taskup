@@ -209,6 +209,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="permission_read_all", type="INTEGER", default='0'),
                 Field(name="permission_move_backward", type="INTEGER", default='1'),
                 Field(name="permission_move_forward", type="INTEGER", default='1'),
+                Field(name="permission_move", type="INTEGER", default='0'),
                 Field(name="permission_edit_own", type="INTEGER", default='1'),
                 Field(name="permission_edit_all", type="INTEGER", default='0'),
                 Field(name="permission_change_role", type="INTEGER", default='0'),
@@ -315,15 +316,15 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1),
-                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1),
-                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0),
-                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0),
-                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0)
+                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1),
+                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1),
+                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1),
+                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0),
+                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0)
                                          ], cols=("name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
                                                   "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
-                                                  "permission_delete_own", "permission_delete_all"
+                                                  "permission_delete_own", "permission_delete_all", "permission_move"
                                                   )
                                          )
         }

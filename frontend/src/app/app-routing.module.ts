@@ -9,6 +9,7 @@ import { MyProfileComponent } from './page/my-profile/my-profile.component';
 import { ManageTaskStatusComponent } from './page/manage-task-status/manage-task-status.component';
 import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task-labels.component';
 import { ManageUsersComponent } from './page/manage-users/manage-users.component';
+import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 
 const routes: Routes = [
 
@@ -49,7 +50,10 @@ const routes: Routes = [
     path: "manage-users",
     component: ManageUsersComponent
   },
-
+  {
+    path: "manage-roles",
+    component: ManageRolesComponent
+  },
 
   {
     path: "**",

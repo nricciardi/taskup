@@ -125,6 +125,15 @@
         </a>
       </li>
 
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-roles')">
+        <a [routerLink]="['/manage-roles']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span>
+            {{ 'manage-roles' | translate }}
+          </span>
+        </a>
+      </li>
+
       <!-- <li class="sidebar-item has-sub">
         <a href="#" class="sidebar-link">
           <i class="bi bi-stack"></i>

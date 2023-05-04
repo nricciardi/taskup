@@ -24,6 +24,11 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
     this.createForm();
 
+    setInterval(() => {
+      console.log(this.form?.valid, this.form?.controls);
+
+    }, 2500);
+
   }
 
   createForm() {
@@ -34,7 +39,7 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
       const element = this.editableFields[index];
 
       let value = (this.entity as any)[element.name];
-      
+
 
       // create form controls as copy of blueprint form control
       const blueprint = element.blueprintFormControl;
