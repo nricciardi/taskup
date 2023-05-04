@@ -66,6 +66,9 @@ class ProjectManager:
             use_localtime = self.__settings_manager.get(self.__settings_manager.KEY_DB_LOCALTIME)
             work_directory_path = self.__settings_manager.work_directory_path
 
+            if isinstance(self.__db_manager, DBManager):
+                self.__db_manager.close_connection()        # close prev connection
+
             # this generates db base structure if db doesn't exist
             self.__db_manager = DBManager(db_name=db_name,
                                           work_directory_path=work_directory_path,

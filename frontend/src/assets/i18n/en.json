@@ -14,7 +14,7 @@
   "loading+dots": "Loading...",
   "login-error": "Error occurs during login",
   "loading-error": "Error occurs during loading",
-  "logout-error": "Error occurs during logout",
+  "logout-error": "Error occurs during logout, check credentials and try again",
   "hello": "Hello",
   "order-by": "Order by",
   "reverse": "Reverse",

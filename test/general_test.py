@@ -10,11 +10,11 @@ import sqlite3
 import datetime
 
 
-db_path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject/work/database.db"
+db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
 
-if os.path.isfile(db_path):
-    os.remove(db_path)
+
 pm = ProjectManager()
+
 
 users_manager = UsersManager(pm.db_manager, verbose=True)
 task_assignment_manager = TaskAssignmentsManager(pm.db_manager, verbose=True)
@@ -23,7 +23,10 @@ task_task_labels_manager = TaskTaskLabelPivotManager(pm.db_manager, verbose=True
 todo_item_manager = TodoItemsManager(pm.db_manager, verbose=True)
 tasks_manager = TasksManager(pm.db_manager, task_assignment_manager,
                              task_task_label_pivot_manager=task_task_labels_manager, verbose=True)
+if os.path.isfile(db_path):
+    os.remove(db_path)
 
+pm.load_db_manager()
 
 def create_demo_db():
     def random_hex() -> str:
@@ -33,7 +36,7 @@ def create_demo_db():
             random_number = randint(0, 255)
             h = str(hex(random_number))[2:]
 
-            if len(h) is not 2:
+            if len(h) != 2:
                 h = f"0{h}"
 
             hex_number += h

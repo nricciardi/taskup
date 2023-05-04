@@ -119,6 +119,21 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.__work_directory_path: str = work_directory_path
         self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
 
+        # open a new connection
+        self.__db_connection = None     # initialized in __init__ to use it in open_connection()
+        self.__db_cursor = None         # initialized in __init__ to use it in open_connection()
+        self.open_connection()
+
+    def __del__(self):
+        self.close_connection()
+
+    def open_connection(self) -> None:
+        """
+        Open a new connection with DB
+
+        :return:
+        """
+
         # check if db already exists
         db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
 
@@ -126,14 +141,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         if db_exists:
             Logger.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
         else:
-            Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=verbose)
+            Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=self.verbose)
 
         try:
-            self.__db_connection = sqlite3.connect(self.__db_path)      # connect to db
-            self.__db_connection.row_factory = dict_factory             # set row factory to get dict instead of tuple
-            self.__db_cursor = self.__db_connection.cursor()            # set cursor as attr
+            self.__db_connection = sqlite3.connect(self.__db_path)  # connect to db
+            self.__db_connection.row_factory = dict_factory  # set row factory to get dict instead of tuple
+            self.__db_cursor = self.__db_connection.cursor()  # set cursor as attr
 
-            Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=verbose)
+            Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=self.verbose)
 
             if not db_exists:
                 self.generate_base_db_structure(strict=True)
@@ -145,7 +160,22 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             Utils.exit()
 
-    def __del__(self):
+    def refresh_connection(self) -> None:
+        """
+        Refresh DB connection
+
+        :return:
+        """
+
+        self.open_connection()
+
+    def close_connection(self) -> None:
+        """
+        Close DB connection
+
+        :return:
+        """
+        Logger.log_info(msg="closing db connection...", is_verbose=self.verbose)
         self.__db_connection.close()
 
     @property
