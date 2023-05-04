@@ -202,7 +202,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="phone", type="VARCHAR(30)", nullable=True),
                 Field.fk_field(name="role_id"),
             ], fk_constraints=[
-                FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name)
+                FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name, on_update="CASCADE", on_delete="RESTRICT")
             ]),
 
             self.role_table_name: Table(self.role_table_name, [
@@ -229,8 +229,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.fk_field(name="default_next_task_status_id", nullable=True),
                 Field.fk_field(name="default_prev_task_status_id", nullable=True)
             ], fk_constraints=[
-                FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name),
-                FKConstraint.on_id(fk_field="default_prev_task_status_id", on_table=self.task_status_table_name)
+                FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name, on_update="CASCADE", on_delete="SET NULL"),
+                FKConstraint.on_id(fk_field="default_prev_task_status_id", on_table=self.task_status_table_name, on_update="CASCADE", on_delete="SET NULL")
             ]),
 
             self.task_table_name: Table(self.task_table_name, [
@@ -241,11 +241,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="priority", type="INTEGER", default="0"),
                 Field.created_at_field(),
                 Field.updated_at_field(),
-                Field.fk_field(name="author_id"),
+                Field.fk_field(name="author_id", nullable=True),
                 Field.fk_field(name="task_status_id"),
             ], fk_constraints=[
-                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
-                FKConstraint.on_id(fk_field="task_status_id", on_table=self.task_status_table_name),
+                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name, on_update="CASCADE", on_delete="SET NULL"),
+                FKConstraint.on_id(fk_field="task_status_id", on_table=self.task_status_table_name, on_update="CASCADE", on_delete="RESTRICT"),
             ], with_triggers=Trigger(
                 name=f"{self.task_table_name}_updater_trigger",
                 on_action=f"Update On {self.task_table_name}",
@@ -278,11 +278,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.created_at_field(),
                 Field.updated_at_field(),
                 Field(name="done", type="INTEGER", default="0"),
-                Field.fk_field(name="author_id"),
+                Field.fk_field(name="author_id", nullable=True),
                 Field.fk_field(name="task_id"),
             ], fk_constraints=[
-                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name),
-                FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name),
+                FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name, on_update="CASCADE", on_delete="SET NULL"),
+                FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name, on_update="CASCADE", on_delete="CASCADE"),
             ], with_triggers=Trigger(
                 name=f"{self.task_table_name}_updater_trigger",
                 on_action=f"Update Of {self.todo_item_table_name} On {self.task_table_name}",

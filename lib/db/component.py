@@ -115,10 +115,12 @@ class FKConstraint(ToSqlInterface):
     fk_field: str
     on_table: str
     reference_field: str
+    on_update: Optional[str] = field(default=None)
+    on_delete: Optional[str] = field(default=None)
 
     @classmethod
-    def on_id(cls, fk_field: str, on_table: str) -> 'FKConstraint':
-        return cls(fk_field=fk_field, on_table=on_table, reference_field='id')
+    def on_id(cls, fk_field: str, on_table: str, on_update: Optional[str] = None, on_delete: Optional[str] = None) -> 'FKConstraint':
+        return cls(fk_field=fk_field, on_table=on_table, reference_field='id', on_update=on_update, on_delete=on_delete)
 
     def to_sql(self) -> str:
         """
@@ -128,7 +130,15 @@ class FKConstraint(ToSqlInterface):
         :rtype str:
         """
 
-        return f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
+        query = f"Foreign Key ({self.fk_field}) References {self.on_table}({self.reference_field})"
+
+        if self.on_update is not None:
+            query += f" On Update {self.on_update}"
+
+        if self.on_delete is not None:
+            query += f" On Update {self.on_delete}"
+
+        return query
 
 
 @dataclass

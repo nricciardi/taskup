@@ -126,10 +126,12 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
     this.manager?.deleteById(id).then((response) => {
 
       response.subscribe({
-        next: (value) => {
-          this.entity = undefined;
+        next: (result) => {
 
-          this.submitResult = true;
+          this.submitResult = result;
+
+          if(result)
+            this.entity = undefined;
 
           resetResultFlag();
         },

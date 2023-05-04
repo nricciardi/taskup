@@ -26,7 +26,7 @@ export abstract class EntityApiService<T> {
     return this.eelService.call(this.FIND, id);
   }
 
-  public async deleteById(id: number): Promise<Observable<T>> {
+  public async deleteById(id: number): Promise<Observable<boolean>> {
 
     return this.eelService.call(this.DELETE_BY_ID, id);
   }

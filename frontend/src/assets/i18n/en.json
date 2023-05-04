@@ -72,6 +72,7 @@
   "hex_color": "Color",
   "show-password": "Show password",
   "operation-successful": "Operation completed successfully",
+  "operation-error": "Operation failed: check that the values ​​used are correct or that you are not trying to manipulate values ​​used by other entities",
   "settings": "Settings",
   "logout": "Logout",
   "permission_create": "Permission create",

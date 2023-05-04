@@ -60,7 +60,7 @@
 
             </div>
 
-            <div class="row justify-content-between" *ngIf="submitResult === undefined; else showSubmitResult">
+            <div class="row justify-content-between">
 
               <div class="col-auto">
                 <button type="button" class="btn icon btn-light"
@@ -99,12 +99,12 @@
               </div>
             </div>
 
-            <ng-template #showSubmitResult>
+            <ng-container *ngIf="submitResult !== undefined">
 
-              <app-error-alert *ngIf="!submitResult" [title]="'loading-error'"></app-error-alert>
+              <app-error-alert *ngIf="!submitResult" [title]="'operation-error'"></app-error-alert>
 
               <app-success-alert *ngIf="!!submitResult" [title]="'operation-successful'"></app-success-alert>
-            </ng-template>
+            </ng-container>
 
           </div>
         </form>

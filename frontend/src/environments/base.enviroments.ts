@@ -5,5 +5,5 @@ export const baseEnvironment = {
   timeFormat: 'H:mm',
   warningDateDayBefore: 7,    // day
   dangerDateDayBefore: 3,     // day
-  alertTimeout: 3000          // milliseconds
+  alertTimeout: 5000          // milliseconds
 };
