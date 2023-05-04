@@ -3,6 +3,7 @@
 ### Generals
 - [ ] Remove .vs and .idea directory from Git
 - [ ] Create image diagram for doc
+- [ ] Make _demo script_
 
 ### Frontend
 - [ ] Why some js file aren't tracked?

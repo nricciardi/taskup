@@ -10,7 +10,7 @@ import sqlite3
 import datetime
 
 
-db_path = "/home/ncla/Desktop/project/project-pi/code/fakeproject/work/database.db"
+db_path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject/work/database.db"
 
 if os.path.isfile(db_path):
     os.remove(db_path)
