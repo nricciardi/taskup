@@ -51,7 +51,22 @@
                     [formControlName]="field.name"
                     [class.is-valid]="form.controls[field.name].dirty && form.controls[field.name].valid"
                     [class.is-invalid]="form.controls[field.name].dirty && !form.controls[field.name].valid"
+
+                    #input
                   />
+
+                  <div class="form-check form-switch" *ngIf="field.type == 'password'">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      (change)="input.type == 'password' ? input.type = 'text' : input.type = 'password'"
+                    />
+                    <label
+                      class="form-check-label"
+                      >
+                      {{ "show-password" | translate }}
+                    </label>
+                  </div>
 
                 </ng-container>
 
