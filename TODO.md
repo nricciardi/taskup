@@ -45,7 +45,7 @@
   -  [ ] append relation on bem and not in another foreach
 - [ ] Make sqlite fetch methods asynchronous
 - [ ] Add permission control
-- [ ] Add "done" for deadline
+- [ ] Add "done" for deadline => based on task status
 - [ ] Deploy
 - [ ] Manage Git
 
