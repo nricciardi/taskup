@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
 from typing import Type, Optional, Any
 from lib.db.entity.relation import Relation, OneRelation
-
+from datetime import datetime
 
 @dataclass
 class RoleModel(BaseEntityModel):
@@ -44,6 +44,8 @@ class UserModel(BaseEntityModel):
     name: Optional[str] = field(default=None)
     surname: Optional[str] = field(default=None)
     phone: Optional[str] = field(default=None)
+    last_visit_at: Optional[datetime] = field(default=None)
+
 
     # @property
     # def table_name(self) -> str:

@@ -1,6 +1,6 @@
-<div class="card" *ngIf="task"
+<div class="card" *ngIf="task && loggedUser"
     [ngClass]="{
-      'not-assigned-task': !userAssignedToTask(loggedUser?.id)
+      'not-assigned-task': !userAssignedToTask(loggedUser.id)
     }"
 >
   <div class="card-content">
@@ -13,6 +13,7 @@
 
               {{ task.name }}
 
+              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="task.updated_at > loggedUser.last_visit_at"></app-badge>
             </ng-container>
 
             <ng-template #titleModification>

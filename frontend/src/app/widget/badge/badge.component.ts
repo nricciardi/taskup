@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 export class BadgeComponent {
 
   @Input("text") text?: string;
+  @Input("icon") icon?: string;
   @Input("color") color?: string;
 
 }

@@ -1,3 +1,6 @@
-<span class="badge bg-secondary m-1" *ngIf="text" [style.background-color]="color + ' !important'">
-  {{ text | translate }}
+<span class="badge bg-secondary m-1" *ngIf="text || icon" [style.background-color]="color + ' !important'">
+
+  <i class="bi" [ngClass]="icon" *ngIf="icon"></i>
+
+  {{ text ?? "" | translate }}
 </span>

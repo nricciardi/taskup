@@ -260,8 +260,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             return None
 
-    def where_as_model(self, *conditions: WhereCondition, columns: List[str] | None = None, with_relations: bool = True,
-                       safe: bool = True) -> List[EntityModel]:
+    def where_as_model(self, *conditions: WhereCondition, columns: List[str] | None = None, with_relations: bool = True, safe: bool = True) -> List[EntityModel]:
         """
         Filter entities based on conditions
 
