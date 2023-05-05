@@ -31,6 +31,21 @@ Usually the PM is the users who has created _MyProject_, he is able to create ot
 
 The roles can be modified in a second moment if the user has specific permission.
 
+## Manage Task Status, Task Label, Users and Roles
+Having the specific permissions, an user as PM is able to manage task status, task label,users and roles.
+
+There are the corresponding pages to manage the single things. Each page is shown if only if the corresponding permission is satisfied. UI is the same for all.
+From this pages is possible:
+- Create a new resource
+- Edit resources
+- Delete resources
+
+For example, the _Manage Task Label_ page is the followings:
+
+**TODO**
+
+In addition, if there are a lot of resources, it is possible to use filters.
+
 
 # Documentation for Developers
 This is a base and simple documentation to illustrate this project for old and new developers.
