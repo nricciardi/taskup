@@ -23,11 +23,11 @@ By default the users has one role between the following roles:
 - **Project Manager**, usually an only user who manages _MyProject_
 - **Supervisor**, users named by PM to manage _MyProject_
 - **Teammate**, simple teammates
-- **Base**, usually _guest users_ of same company and they don't develop continuously _MyProject_
+- **Base**, usually _guest users_ of same company, and they don't develop continuously _MyProject_
 - **External**, role for external of company users
 
 Each role has a list of different permissions where PM has all permissions, while External doesn't have any permissions.
-Usually the PM is the users who has created _MyProject_, he is able to create other users and manages them, Task options and so on.
+Usually the PM is the user who has created _MyProject_, he is able to create other users and manages them, Task options and so on.
 
 The roles can be modified in a second moment if the user has specific permission.
 
@@ -40,20 +40,20 @@ From _My Profile_ page is possible to edit user master data (name, surname, user
 
 **TODO IMG MY PROFILE PAGE**
 
-> WARNING: when an user edits email or password, he will have logged out.
+> WARNING: when a user edits email or password, he will have logged out.
 
 ## Manage Task Status, Task Label, Users and Roles
-Having the specific permissions, an user as PM is able to manage task status, task label,users and roles.
+Having the specific permissions, a user as PM is able to manage task status, task label,users and roles.
 
 There are the corresponding pages to manage the single things. Each page is shown if only if the corresponding permission is satisfied. UI is the same for all.
-From this pages is possible:
+From these pages is possible:
 - Create a new resource
 - Edit resources
 - Delete resources
 
 For example, the _Manage Task Label_ page is the followings:
 
-**TODO TASK LABEL PAGE IMG**
+![Manage task labels](./doc/img/usr-doc/manage-task-labels.png)
 
 In addition, if there are a lot of resources, it is possible to use filters.
 
