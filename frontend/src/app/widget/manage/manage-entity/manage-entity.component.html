@@ -15,12 +15,12 @@
 
               <div class="col-md-4">
                 <label>
-                  {{ field.name | translate }}
+                  {{ (field.title ?? field.name) | translate }}
                 </label>
               </div>
               <div class="col-md-8 form-group">
 
-                <ng-container *ngIf="field.type !== 'textarea' && field.type !== 'checkbox'; else otherTypes">
+                <ng-container *ngIf="field.type !== 'textarea' && field.type !== 'checkbox' && field.type !== 'selectbox'; else otherTypes">
                   <input
                     [type]="field.type"
                     class="form-control"
@@ -54,6 +54,29 @@
                       </div>
                     </div>
                   </ng-container>
+
+                  <ng-container *ngIf="field.type == 'selectbox'">
+
+                    <div class="input-group mb-3">
+                      <label
+                        class="input-group-text"
+                        [for]="'selectbox-' + field.name"
+                        >
+                        {{ (field.placeholder ?? field.name) | translate }}
+                      </label>
+                      <select class="form-select" [id]="'selectbox-' + field.name"
+                              [formControlName]="field.name">
+                        <option selected>
+                          {{ "choose" | translate }}
+                        </option>
+
+                        <option [ngValue]="option.value" *ngFor="let option of field.selectOptions">
+                          {{ option.text | translate }}
+                        </option>
+                      </select>
+                    </div>
+                  </ng-container>
+
                 </ng-template>
 
               </div>

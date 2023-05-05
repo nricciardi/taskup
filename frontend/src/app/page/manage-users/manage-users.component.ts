@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { FormField } from 'src/app/model/form-field.model';
+import { FormField, SelectOption } from 'src/app/model/form-field.model';
+import { RoleService } from 'src/app/service/api/entity/role/role.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { UserService } from 'src/app/service/api/entity/user/user.service';
   styleUrls: ['./manage-users.component.scss']
 })
 export class ManageUsersComponent {
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService, private roleSerivice: RoleService) {}
 
   fields: FormField[] = [
     {
@@ -49,4 +50,41 @@ export class ManageUsersComponent {
       blueprintFormControl: new FormControl('')
     },
   ]
+
+  ngOnInit() {
+    this.appendRoleOptions();   // append role options on list of fields
+  }
+
+  appendRoleOptions() {
+
+    this.roleSerivice.all().then((response) => {
+
+      response.subscribe({
+        next: (values) => {
+
+          if(!!values) {
+
+            this.fields.push(
+              {
+                title: "role",
+                name: "role_id",
+                type: "selectbox",
+                placeholder: "role",
+                blueprintFormControl: new FormControl('', [Validators.required]),
+                selectOptions: values.map((role) => {
+                  return {
+                    value: role.id,
+                    text: role.name
+                  }
+                })
+              });
+          }
+
+        }
+      })
+
+    })
+
+  }
+
 }

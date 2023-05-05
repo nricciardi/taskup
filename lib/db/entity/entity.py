@@ -242,9 +242,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         try:
+            Logger.log_info(msg=f"create a new resource in {self.table_name} with data: {data}", is_verbose=self.verbose)
+
             self.db_manager.insert_from_dict(self.table_name, data)
 
-            # call explicitly find to prevent use of override
+            # find entity created to return its
             entity = self.find(self.db_manager.cursor.lastrowid)
 
             return entity
@@ -523,20 +525,31 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             WhereCondition("id", "=", entity_id)
         )
 
-    def update_from_dict(self, entity_id: int, data: Dict) -> EntityModel:
+    def update_from_dict(self, entity_id: int, data: Dict, safe: bool = True) -> EntityModel:
         """
         Update entity by id with key-value data and return updated entity as model
 
+        :param safe: call this method safely
         :param entity_id:
         :param data:
         :return:
         """
 
-        self.db_manager.update(self.table_name,
-                               WhereCondition("id", "=", entity_id),
-                               **data
-                               )
+        try:
+            Logger.log_info(msg=f"updating {self.table_name} with data: {data}", is_verbose=self.verbose)
 
-        Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+            self.db_manager.update(self.table_name,
+                                   WhereCondition("id", "=", entity_id),
+                                   **data
+                                   )
 
-        return self.find(entity_id)
+            Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+
+            return self.find(entity_id)
+
+        except Exception as e:
+
+            Logger.log_error(msg=f"{e} during updating", is_verbose=self.verbose)
+
+            if not safe:
+                raise e

@@ -85,5 +85,11 @@
   "permission_change_role": "Permesso cambiare ruoli",
   "permission_change_assignment": "Permesso cambiare assegnamenti",
   "permission_delete_own": "Permesso elimina proprio",
-  "permission_delete_all": "Permesso elimina tutti"
+  "permission_delete_all": "Permesso elimina tutti",
+  "role": "Ruolo",
+  "choose": "Scegli",
+  "avatar_hex_color": "Colore Avatar",
+  "prev-task-status": "Prev Task Status",
+  "next-task-status": "Next Task Status",
+  "null": "NULL"
 }

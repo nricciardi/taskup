@@ -33,12 +33,9 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
     for (let index = 0; index < this.editableFields.length; index++) {
       const element = this.editableFields[index];
 
-      let value = (this.entity as any)[element.name];
-
-
       // create form controls as copy of blueprint form control
       const blueprint = element.blueprintFormControl;
-      let control = new FormControl(blueprint.value, blueprint.validator, blueprint.asyncValidator);
+      let control = new FormControl<number | string | null>(blueprint.value, blueprint.validator, blueprint.asyncValidator);
 
       this.form.addControl(element.name, control);
 
@@ -90,11 +87,11 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
           if(value) {
             this.entity = value;
 
-            this.submitResult = true;
+          }
+
+          this.submitResult = !!value;
 
             resetResultFlag();
-
-          }
         },
         error: (e) => {
           this.submitResult = false;
