@@ -17,6 +17,7 @@ class RoleModel(BaseEntityModel):
     permission_move: bool
     permission_edit_own: bool
     permission_edit_all: bool
+    permission_edit_deadline: bool
     permission_change_role: bool
     permission_change_assignment: bool
     permission_delete_own: bool

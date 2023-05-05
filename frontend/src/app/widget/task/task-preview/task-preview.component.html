@@ -148,7 +148,7 @@
 
         <!-- DEADLINE BADGE -->
       <app-deadline-badge [deadline]="task.deadline"
-                          [editable]="utilsService.canModify(task.author_id)"
+                          [editable]="(loggedUser && loggedUser.role && loggedUser.role.permission_edit_task_deadline) ?? false"
                           (onDeadlineModified)="modify({
                             deadline: $event
                           })"

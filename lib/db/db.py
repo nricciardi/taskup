@@ -223,6 +223,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="permission_manage_task_status", type="INTEGER", default='0'),
                 Field(name="permission_manage_task_labels", type="INTEGER", default='0'),
                 Field(name="permission_manage_users", type="INTEGER", default='0'),
+                Field(name="permission_edit_task_deadline", type="INTEGER", default='0'),
             ]),
 
             self.task_status_table_name: Table(self.task_status_table_name, [
@@ -323,16 +324,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1),
-                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0),
-                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0),
-                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0),
-                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0)
+                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1),
+                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1),
+                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0),
+                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0),
+                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0)
                                          ], cols=("name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
                                                   "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
                                                   "permission_delete_own", "permission_delete_all", "permission_move", "permission_manage_roles",
-                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users"
+                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users", "permission_edit_task_deadline"
                                                   )
                                          )
         }
