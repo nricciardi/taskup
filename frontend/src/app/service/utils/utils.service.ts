@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from '../api/auth/auth.service';
+import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,28 @@ export class UtilsService {
 
     return false;
 
+  }
+
+  createPasswordStrengthValidator(minLenght: number): ValidatorFn {
+    return (control:AbstractControl) : ValidationErrors | null => {
+
+        const value = control.value;
+
+        if (!value) {
+            return null;
+        }
+
+        const hasUpperCase = /[A-Z]+/.test(value);
+
+        const hasLowerCase = /[a-z]+/.test(value);
+
+        const hasNumeric = /[0-9]+/.test(value);
+
+        const hasLenght = value.length >= minLenght;
+
+        const passwordValid = hasUpperCase && hasLowerCase && hasNumeric && hasLenght;
+
+        return !passwordValid ? {passwordStrength:true}: null;
+    }
   }
 }

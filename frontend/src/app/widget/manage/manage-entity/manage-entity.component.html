@@ -70,11 +70,10 @@
                     <div class="input-group mb-3">
                       <label
                         class="input-group-text"
-                        [for]="'selectbox-' + field.name"
                         >
                         {{ (field.placeholder ?? field.name) | translate }}
                       </label>
-                      <select class="form-select" [id]="'selectbox-' + field.name"
+                      <select class="form-select"
                               [formControlName]="field.name">
                         <option selected>
                           {{ "choose" | translate }}

@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormField, SelectOption } from 'src/app/model/form-field.model';
 import { RoleService } from 'src/app/service/api/entity/role/role.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -10,7 +11,7 @@ import { UserService } from 'src/app/service/api/entity/user/user.service';
   styleUrls: ['./manage-users.component.scss']
 })
 export class ManageUsersComponent {
-  constructor(public userService: UserService, private roleSerivice: RoleService) {}
+  constructor(public userService: UserService, private roleSerivice: RoleService, public utilsService: UtilsService) {}
 
   fields: FormField[] = [
     {
@@ -48,6 +49,15 @@ export class ManageUsersComponent {
       type: "text",
       placeholder: "Phone",
       blueprintFormControl: new FormControl('')
+    },
+  ]
+
+  additionalFieldOnCreation: FormField[] = [
+    {
+      name: "password",
+      type: "password",
+      placeholder: "Password",
+      blueprintFormControl: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)])
     },
   ]
 

@@ -19,6 +19,7 @@ export class ManageEntitiesComponent<M extends EntityApiService<E>, E extends Ba
   @Input("filterFields") filterFields?: string[];
   @Input("entityTitleField") entityTitleField?: string;
   @Input("manager") manager?: M;
+  @Input("additionalFieldOnCreation") additionalFieldOnCreation: FormField[] = [];
 
   filterForm?: FormGroup;
 

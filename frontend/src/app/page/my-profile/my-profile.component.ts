@@ -27,7 +27,7 @@ export class MyProfileComponent {
   });
 
   blueprintPasswordUserForm = new FormGroup({
-    password: new FormControl<string>('', [Validators.required, createPasswordStrengthValidator(8)]),
+    password: new FormControl<string>('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)]),
     repassword: new FormControl<string>('', [Validators.required, matchValidator('password')]),
   });
 
@@ -135,29 +135,6 @@ export class MyProfileComponent {
   }
 }
 
-
-export function createPasswordStrengthValidator(minLenght: number): ValidatorFn {
-  return (control:AbstractControl) : ValidationErrors | null => {
-
-      const value = control.value;
-
-      if (!value) {
-          return null;
-      }
-
-      const hasUpperCase = /[A-Z]+/.test(value);
-
-      const hasLowerCase = /[a-z]+/.test(value);
-
-      const hasNumeric = /[0-9]+/.test(value);
-
-      const hasLenght = value.length >= minLenght;
-
-      const passwordValid = hasUpperCase && hasLowerCase && hasNumeric && hasLenght;
-
-      return !passwordValid ? {passwordStrength:true}: null;
-  }
-}
 
 export function matchValidator(
   matchTo: string,

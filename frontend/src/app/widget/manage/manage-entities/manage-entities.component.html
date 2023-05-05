@@ -91,7 +91,7 @@
 
   <!-- NEW ENTITY -->
   <app-manage-entity
-                    [editableFields]="editableFields"
+                    [editableFields]="editableFields.concat(additionalFieldOnCreation)"
                     [manager]="manager"
                     [title]="'create-new'"
                     (refreshRequest)="loadEntities()">
