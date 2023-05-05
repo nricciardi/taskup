@@ -211,8 +211,8 @@
                         class="form-control"
                         id="color-picker"
                         #colorPicker
-                        [value]="'#' + loggedUser.avatar_hex_color"
-                        (input)="colorPicked = colorPicker.value.substring(1)"
+                        [value]="loggedUser.avatar_hex_color"
+                        (input)="colorPicked = colorPicker.value"
                       />
                     </div>
 
@@ -228,7 +228,7 @@
 
                 <div class="row justify-content-center">
                   <div class="col-auto">
-                    <button class="btn btn-outline-secondary" (click)="colorPicker.value = '#' + colorPicked = loggedUser.avatar_hex_color">
+                    <button class="btn btn-outline-secondary" (click)="colorPicker.value = colorPicked = loggedUser.avatar_hex_color">
                       {{ "reset" | translate }}
                     </button>
                   </div>

@@ -19,7 +19,7 @@ This app is a task manager for small and big projects, in particular for softwar
 From now on we will call the project to manage _MyProject_.
 
 ## Roles Overview
-By default the users has one role between the following roles:
+By default, the users has one role between the following roles:
 - **Project Manager**, usually an only user who manages _MyProject_
 - **Supervisor**, users named by PM to manage _MyProject_
 - **Teammate**, simple teammates
@@ -34,11 +34,11 @@ The roles can be modified in a second moment if the user has specific permission
 ## User Profile
 Each logged user is able to manage own profile using _My Profile_ page. It can be accessed through dropdown menu on header avatar:
 
-**TODO IMG DROPDOWN**
+![Dropdown avatar menu](./doc/img/usr-doc/dropdown-avatar-menu.png)
 
 From _My Profile_ page is possible to edit user master data (name, surname, username, email and so on), avatar color and the password.
 
-**TODO IMG MY PROFILE PAGE**
+![My Profile page](./doc/img/usr-doc/my-profile-page.png)
 
 > WARNING: when a user edits email or password, he will have logged out.
 
