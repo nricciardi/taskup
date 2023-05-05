@@ -18,7 +18,7 @@ This documentation is written for the app's users.
 This app is a task manager for small and big projects, in particular for software projects.
 From now on we will call the project to manage _MyProject_.
 
-## Overview
+## Roles Overview
 By default the users has one role between the following roles:
 - **Project Manager**, usually an only user who manages _MyProject_
 - **Supervisor**, users named by PM to manage _MyProject_
@@ -31,6 +31,17 @@ Usually the PM is the users who has created _MyProject_, he is able to create ot
 
 The roles can be modified in a second moment if the user has specific permission.
 
+## User Profile
+Each logged user is able to manage own profile using _My Profile_ page. It can be accessed through dropdown menu on header avatar:
+
+**TODO IMG DROPDOWN**
+
+From _My Profile_ page is possible to edit user master data (name, surname, username, email and so on), avatar color and the password.
+
+**TODO IMG MY PROFILE PAGE**
+
+> WARNING: when an user edits email or password, he will have logged out.
+
 ## Manage Task Status, Task Label, Users and Roles
 Having the specific permissions, an user as PM is able to manage task status, task label,users and roles.
 
@@ -42,7 +53,7 @@ From this pages is possible:
 
 For example, the _Manage Task Label_ page is the followings:
 
-**TODO**
+**TODO TASK LABEL PAGE IMG**
 
 In addition, if there are a lot of resources, it is possible to use filters.
 
