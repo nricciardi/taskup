@@ -14,12 +14,27 @@ To run this project are required the followings dependencies:
 - [Chromium](https://www.chromium.org/) based software (as Google Chrome or Firefox)
 
 # Documentation for Users
-**TODO**
+This documentation is written for the app's users.
+This app is a task manager for small and big projects, in particular for software projects.
+From now on we will call the project to manage _MyProject_.
+
+## Overview
+By default the users has one role between the following roles:
+- **Project Manager**, usually an only user who manages _MyProject_
+- **Supervisor**, users named by PM to manage _MyProject_
+- **Teammate**, simple teammates
+- **Base**, usually _guest users_ of same company and they don't develop continuously _MyProject_
+- **External**, role for external of company users
+
+Each role has a list of different permissions where PM has all permissions, while External doesn't have any permissions.
+Usually the PM is the users who has created _MyProject_, he is able to create other users and manages them, Task options and so on.
+
+The roles can be modified in a second moment if the user has specific permission.
 
 
 # Documentation for Developers
-This is a base and simple documentation to illustrate this project.
-To watch a full
+This is a base and simple documentation to illustrate this project for old and new developers.
+To watch a full documentation see the _Sphinx documentation_.
 
 ## How to generate Sphinx documentation?
 To run Sphinx doc:
