@@ -21,6 +21,10 @@ class RoleModel(BaseEntityModel):
     permission_change_assignment: bool
     permission_delete_own: bool
     permission_delete_all: bool
+    permission_manage_roles: bool
+    permission_manage_task_status: bool
+    permission_manage_task_labels: bool
+    permission_manage_users: bool
 
     # @property
     # def table_name(self) -> str:

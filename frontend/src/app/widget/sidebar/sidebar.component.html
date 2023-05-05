@@ -98,7 +98,7 @@
         </a>
       </li>
 
-      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-status')">
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-status')" *ngIf="authService.loggedUser && authService.loggedUser.role?.permission_manage_task_status">
         <a [routerLink]="['/manage-task-status']" routerLinkActive="router-link-active" class="sidebar-link">
           <i class="bi bi-kanban-fill"></i>
           <span>
@@ -107,7 +107,7 @@
         </a>
       </li>
 
-      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-labels')">
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-task-labels')" *ngIf="authService.loggedUser && authService.loggedUser.role?.permission_manage_task_labels">
         <a [routerLink]="['/manage-task-labels']" routerLinkActive="router-link-active" class="sidebar-link">
           <i class="bi bi-bookmarks-fill"></i>
           <span>
@@ -116,7 +116,7 @@
         </a>
       </li>
 
-      <li class="sidebar-item" [class.active]="urlIncludes('manage-users')">
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-users')" *ngIf="authService.loggedUser && authService.loggedUser.role?.permission_manage_users">
         <a [routerLink]="['/manage-users']" routerLinkActive="router-link-active" class="sidebar-link">
           <i class="bi bi-people-fill"></i>
           <span>
@@ -125,7 +125,7 @@
         </a>
       </li>
 
-      <li class="sidebar-item" [class.active]="urlIncludes('manage-roles')">
+      <li class="sidebar-item" [class.active]="urlIncludes('manage-roles')" *ngIf="authService.loggedUser && authService.loggedUser.role?.permission_manage_roles">
         <a [routerLink]="['/manage-roles']" routerLinkActive="router-link-active" class="sidebar-link">
           <i class="bi bi-diagram-3-fill"></i>
           <span>

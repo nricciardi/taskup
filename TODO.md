@@ -18,8 +18,8 @@
 - [ ] Create a new task
 - [ ] Modify task
 - [ ] Graphic refactor
-- [ ] Manage label section
-- [ ] Manage task status section
+- [x] Manage label section
+- [x] Manage task status section
 - [x] Profile page
 - [ ] Home page: 
   - [ ] Select project
