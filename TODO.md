@@ -4,6 +4,7 @@
 - [ ] Remove .vs and .idea directory from Git
 - [x] Create image diagram for doc
 - [x] Make _demo script_
+- [ ] Search and set ICON
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
