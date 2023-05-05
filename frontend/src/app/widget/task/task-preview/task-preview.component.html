@@ -148,6 +148,7 @@
 
         <!-- DEADLINE BADGE -->
       <app-deadline-badge [deadline]="task.deadline"
+                          [done]="!!task.task_status?.final"
                           [editable]="(loggedUser && loggedUser.role && loggedUser.role.permission_edit_task_deadline) ?? false"
                           (onDeadlineModified)="modify({
                             deadline: $event

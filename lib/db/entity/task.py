@@ -17,6 +17,7 @@ class TaskStatusModel(BaseEntityModel):
     name: str
     default_next_task_status_id: int
     default_prev_task_status_id: int
+    final: bool
     default_next_task_status: Optional['TaskStatusModel'] = field(default=None)
     default_prev_task_status: Optional['TaskStatusModel'] = field(default=None)
     description: Optional[str] = field(default=None)

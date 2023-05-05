@@ -232,7 +232,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.description_field(),
                 Field.hex_color(name="hex_color", nullable=True),
                 Field.fk_field(name="default_next_task_status_id", nullable=True),
-                Field.fk_field(name="default_prev_task_status_id", nullable=True)
+                Field.fk_field(name="default_prev_task_status_id", nullable=True),
+                Field(name="final", type="INTEGER", default='0'),
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="default_next_task_status_id", on_table=self.task_status_table_name, on_update="CASCADE", on_delete="SET NULL"),
                 FKConstraint.on_id(fk_field="default_prev_task_status_id", on_table=self.task_status_table_name, on_update="CASCADE", on_delete="SET NULL")
@@ -416,16 +417,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             # insert default task status
             query = f"""\
-                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id, hex_color)
+                        Insert Into {self.task_status_table_name} (id, name, description, default_next_task_status_id, default_prev_task_status_id, hex_color, final)
                         Values
-                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "#3eed72"),
-                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "#b4e34f"),
-                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "#e84157"),
-                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "#facdf3"),
-                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "#ffbf7a"),
-                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "#73f5fa"),
-                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "#c9eeff"),
-                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "#f5d442");
+                        ({self.release_task_status_id}, "Release", "Task successful tested and released", NULL, NULL, "#3eed72", 1),
+                        ({self.done_task_status_id}, "Done", "Task done", {self.release_task_status_id}, NULL, "#b4e34f", 1),
+                        ({self.bug_fixing_task_status_id}, "Bug Fixing", "Task with bug to resolve", {self.testing_task_status_id}, NULL, "#e84157", 0),
+                        ({self.testing_task_status_id}, "Testing", "Task done in testing", {self.done_task_status_id}, NULL, "#facdf3", 0),
+                        ({self.doing_task_status_id}, "Doing", "Task work in progress", {self.testing_task_status_id}, NULL, "#ffbf7a", 0),
+                        ({self.todo_task_status_id}, "To-Do", "Task that must be done", {self.doing_task_status_id}, NULL, "#73f5fa", 0),
+                        ({self.backlog_task_status_id}, "Backlog", "Tasks to be performed at the end of the most priority tasks", {self.todo_task_status_id}, NULL, "#c9eeff", 0),
+                        ({self.ideas_task_status_id}, "Ideas", "Tasks yet to be defined, simple ideas and hints for new features", {self.todo_task_status_id}, NULL, "#f5d442", 0);
                     """
 
             self.cursor.execute(query)

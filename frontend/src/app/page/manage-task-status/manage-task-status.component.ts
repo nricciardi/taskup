@@ -32,6 +32,12 @@ export class ManageTaskStatusComponent {
       placeholder: "Color",
       blueprintFormControl: new FormControl('', [Validators.required])
     },
+    {
+      name: "final",
+      type: "checkbox",
+      placeholder: "Final",
+      blueprintFormControl: new FormControl('', [Validators.required])
+    },
   ]
 
   ngOnInit() {

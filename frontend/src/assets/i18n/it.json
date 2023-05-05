@@ -92,5 +92,6 @@
   "prev-task-status": "Prev Task Status",
   "next-task-status": "Next Task Status",
   "null": "NULL",
-  "create-new": "Crea nuovo..."
+  "create-new": "Crea nuovo...",
+  "final": "Finale"
 }
