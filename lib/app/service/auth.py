@@ -43,13 +43,14 @@ class AuthService:
         :return:
         """
 
-        users_matched: List = self.__users_manager.where_as_model(
-            WhereCondition("email", "=", self.__local_vault.email),
-            WhereCondition("password", "=", self.__local_vault.password),
-            with_relations=True
-        )
+        if self.__local_vault is not None:
+            users_matched: List = self.__users_manager.where_as_model(
+                WhereCondition("email", "=", self.__local_vault.email),
+                WhereCondition("password", "=", self.__local_vault.password),
+                with_relations=True
+            )
 
-        self.__me = CollectionsUtils.first(users_matched)
+            self.__me = CollectionsUtils.first(users_matched)
 
     def me(self) -> UserModel | None:
         return self.__me
@@ -117,6 +118,7 @@ class AuthService:
             self.erase_vault_data()
 
             self.__me = None
+            self.__local_vault = None
 
             Logger.log_success(msg="logout correctly", is_verbose=self.verbose)
 

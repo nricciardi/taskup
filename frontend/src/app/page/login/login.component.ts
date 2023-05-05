@@ -22,7 +22,22 @@ export class LoginComponent {
 
   showPsw: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit() {
+
+    this.authService.isLogged().then((response) => {
+      response.subscribe({
+        next: (isLogged: boolean) => {
+          if(isLogged) {
+            this.router.navigate(["/home"]);
+
+          }
+        }
+      })
+    })
+  }
 
   onSubmit() {
 
