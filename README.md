@@ -35,7 +35,7 @@ To run Sphinx doc:
 
 ## App
 
-![structure of the project](./doc/img/structure-diagram.jpg)
+![structure of the project](./doc/img/dev-doc/structure-diagram.jpg)
 
 ### Eel and WebSocket
 This project uses the [Eel library](https://github.com/python-eel/Eel) to send data between client (frontend) and server
@@ -43,7 +43,7 @@ This project uses the [Eel library](https://github.com/python-eel/Eel) to send d
 
 Eel hosts a local webserver, then lets you annotate functions in Python so that they can be called from Javascript, and vice versa.
 
-![websocket schema](./doc/img/websocket-schema1.png)
+![websocket schema](./doc/img/dev-doc/websocket-schema1.png)
 
 The App class in `app.py` implements `__init__` and `start` methods to load and start Eel. It takes the configuration files
 from `settings.json` using the Settings class.
