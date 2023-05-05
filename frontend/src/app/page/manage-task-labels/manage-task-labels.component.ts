@@ -18,7 +18,8 @@ export class ManageTaskLabelsComponent {
       name: "name",
       type: "text",
       placeholder: "Name",
-      blueprintFormControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('', [Validators.required]),
+      unique: true
     },
     {
       name: "description",

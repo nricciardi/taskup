@@ -12,4 +12,5 @@ export interface FormField {
   placeholder?: string;
   blueprintFormControl: FormControl;
   selectOptions?: SelectOption[];
+  unique?: boolean;
 }

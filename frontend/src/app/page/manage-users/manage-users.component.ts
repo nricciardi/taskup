@@ -18,7 +18,8 @@ export class ManageUsersComponent {
       name: "username",
       type: "text",
       placeholder: "Username",
-      blueprintFormControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('', [Validators.required]),
+      unique: true
     },
     {
       name: "name",
@@ -42,7 +43,8 @@ export class ManageUsersComponent {
       name: "email",
       type: "email",
       placeholder: "Email",
-      blueprintFormControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('', [Validators.required, Validators.email]),
+      unique: true
     },
     {
       name: "phone",

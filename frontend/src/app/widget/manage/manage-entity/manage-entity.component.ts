@@ -94,7 +94,7 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
             this.entity = value;
           }
 
-          if(!id) {
+          if(!id && !!value) {
             this.entity = undefined;
             this.form?.reset();
             this.refreshRequest.emit();
