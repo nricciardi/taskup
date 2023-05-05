@@ -525,10 +525,11 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             WhereCondition("id", "=", entity_id)
         )
 
-    def update_from_dict(self, entity_id: int, data: Dict, safe: bool = True) -> EntityModel:
+    def update_from_dict(self, entity_id: int, data: Dict, safe: bool = True, create_if_not_exists: bool = True) -> EntityModel:
         """
         Update entity by id with key-value data and return updated entity as model
 
+        :param create_if_not_exists: if entity_id is None, this method try to call create
         :param safe: call this method safely
         :param entity_id:
         :param data:
@@ -538,14 +539,21 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         try:
             Logger.log_info(msg=f"updating {self.table_name} with data: {data}", is_verbose=self.verbose)
 
-            self.db_manager.update(self.table_name,
-                                   WhereCondition("id", "=", entity_id),
-                                   **data
-                                   )
+            if entity_id is None and create_if_not_exists:
+                Logger.log_warning(msg=f"it doesn't exist, so it will be created")
 
-            Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+                entity_id = self.db_manager.insert_from_dict(self.table_name, data)
 
-            return self.find(entity_id)
+            else:
+
+                self.db_manager.update(self.table_name,
+                                       WhereCondition("id", "=", entity_id),
+                                       **data
+                                       )
+
+                Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+
+            return self.find(entity_id)         # return entity
 
         except Exception as e:
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BaseEntity } from 'src/app/model/entity/base-entity.model';
 import { FormField } from 'src/app/model/form-field.model';
@@ -16,14 +16,19 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
   @Input("title") title?: string;
   @Input("editableFields") editableFields: FormField[] = [];
 
+  @Output() refreshRequest = new EventEmitter<void>();
+
   form?: FormGroup;
 
   submitResult?: boolean;
+
+  collapseStatus: boolean = false;
 
   ngOnInit() {
 
     this.createForm();
 
+    this.collapseStatus = !this.entity;
   }
 
   createForm() {
@@ -46,7 +51,7 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
   setFormDefaultValue() {
 
-    if(!this.form)
+    if(!this.form || !this.entity)
       return;
 
     for (let index = 0; index < this.editableFields.length; index++) {
@@ -69,10 +74,11 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
   modify(values: any) {
 
-    if(!this.entity || !this.manager)
+    if(!this.manager)
       return;
 
-    const id = this.entity.id;
+    const id = this.entity?.id ?? null;
+
 
     const resetResultFlag = () => {
       setTimeout(() => {
@@ -86,12 +92,17 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
         next: (value) => {
           if(value) {
             this.entity = value;
+          }
 
+          if(!id) {
+            this.entity = undefined;
+            this.form?.reset();
+            this.refreshRequest.emit();
           }
 
           this.submitResult = !!value;
 
-            resetResultFlag();
+          resetResultFlag();
         },
         error: (e) => {
           this.submitResult = false;

@@ -91,5 +91,6 @@
   "avatar_hex_color": "Colore Avatar",
   "prev-task-status": "Prev Task Status",
   "next-task-status": "Next Task Status",
-  "null": "NULL"
+  "null": "NULL",
+  "create-new": "Crea nuovo..."
 }

@@ -31,7 +31,8 @@ export abstract class EntityApiService<T> {
     return this.eelService.call(this.DELETE_BY_ID, id);
   }
 
-  public async update(id: number, data: object): Promise<Observable<T>> {
+  public async update(id: number | null, data: object): Promise<Observable<T>> {
+    // if id is null => try to create
 
     return this.eelService.call(this.UPDATE, id, data);
   }

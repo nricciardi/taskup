@@ -1,12 +1,22 @@
-<ng-container *ngIf="!!form && !!editableFields && !!manager && !!entity">
+<ng-container *ngIf="!!form && !!editableFields && !!manager">
   <div class="card">
     <div class="card-header" *ngIf="title">
-      <h4 class="card-title">
-        {{ title | translate }}
-      </h4>
+      <div class="row justify-content-between">
+        <div class="col-auto">
+          <h5 class="card-title">
+            {{ title | translate }}
+          </h5>
+        </div>
+
+        <div class="col-auto">
+          <button class="btn icon btn-light" (click)="collapseStatus = !collapseStatus">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="card-content">
+    <div class="card-content" *ngIf="!collapseStatus">
       <div class="card-body">
         <form class="form form-horizontal" [formGroup]="form">
           <div class="form-body">
@@ -88,7 +98,8 @@
               <div class="col-auto">
                 <button type="button" class="btn icon btn-light"
                         data-bs-toggle="modal"
-                        [attr.data-bs-target]="'#delete-request-' + entity.id">
+                        [attr.data-bs-target]="'#delete-request-' + entity.id"
+                        *ngIf="entity">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -112,6 +123,7 @@
                 </button>
 
                 <app-dialog-modal [target]="'delete-request-' + entity.id"
+                    *ngIf="entity"
                     title="delete-request"
                     [centered]="true"
                     [confirmBtn]="true"
@@ -135,6 +147,3 @@
     </div>
   </div>
 </ng-container>
-
-
-

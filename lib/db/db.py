@@ -552,7 +552,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.connection.commit()
 
     def insert_from_dict(self, table_name: str, values: Dict | List[Dict],
-                         columns: List[str] | Tuple[str] | None = None) -> None:
+                         columns: List[str] | Tuple[str] | None = None) -> int:
         """
         Insert all dict values passed in a table
 
@@ -562,6 +562,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :type values: Dict | List[Dict]
         :param columns: fields to use
         :type columns: List[str] | Tuple[str] | None
+
+        :return: id of inserted record
+        :rtype int:
         """
 
         if type(values) is dict:  # convert single dict in a list
@@ -574,6 +577,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.cursor.execute(query.to_sql(), query.data_bound)
 
         self.connection.commit()
+
+        return self.cursor.lastrowid
 
     def where(self, table_name: str, *conditions: WhereCondition, columns: List[str] | None = None) -> List[Dict]:
         """

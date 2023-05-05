@@ -89,12 +89,23 @@
   </section>
 
 
+  <!-- NEW ENTITY -->
+  <app-manage-entity
+                    [editableFields]="editableFields"
+                    [manager]="manager"
+                    [title]="'create-new'"
+                    (refreshRequest)="loadEntities()">
+  </app-manage-entity>
+
+
+  <!-- MANAGE ENTITIES -->
   <ng-container *ngFor="let entity of entities">
 
     <app-manage-entity
-                    [entity]="entity"
-                    [editableFields]="editableFields"
-                    [manager]="manager">
+                      [entity]="entity"
+                      [editableFields]="editableFields"
+                      [manager]="manager"
+                      (refreshRequest)="loadEntities()">
     </app-manage-entity>
   </ng-container>
 
