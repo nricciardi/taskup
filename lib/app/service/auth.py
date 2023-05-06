@@ -1,4 +1,4 @@
-from lib.db.entity.user import UserModel, UsersManager, RolesManager, RoleModel
+from lib.db.entity.user import UserModel, UsersManager, RolesManager
 from lib.db.component import WhereCondition
 from lib.utils.collections import CollectionsUtils
 from lib.utils.logger import Logger
@@ -6,6 +6,7 @@ from lib.file.file_manager import FileManger
 from typing import List, Callable, Optional
 from lib.utils.error import Errors
 from dataclasses import dataclass
+from lib.utils.utils import Utils
 
 
 @dataclass
@@ -69,7 +70,11 @@ class AuthService:
             vault_data = self.get_vault_data()
 
             if self.EMAIL in vault_data and self.PASSWORD in vault_data:
-                self.login(vault_data.get(self.EMAIL), vault_data.get(self.PASSWORD))
+
+                email: str = vault_data.get(self.EMAIL)
+                password: str = vault_data.get(self.PASSWORD)
+
+                self.login(email, password)
             else:
                 raise AttributeError()
 
@@ -95,6 +100,9 @@ class AuthService:
         :return: logged user
         :rtype: UserModel
         """
+
+        # disguise password
+        password = Utils.disguise(password)
 
         self.__local_vault = VaultData(email=email, password=password)
         self.refresh_me()
@@ -149,7 +157,7 @@ class AuthService:
             self.PASSWORD: password
         })
 
-        Logger.log_success(msg=f"email: ({email}) and password ({'*' * len(password)}) are stored successful in vault",
+        Logger.log_success(msg=f"email: ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
                            is_verbose=self.verbose)
 
     def get_vault_data(self) -> dict | None:

@@ -49,6 +49,7 @@
 - [ ] Add "done" for deadline => based on task status
 - [ ] Deploy
 - [ ] Manage Git
+- [ ] Insert multi-credentials in vault
 
 ### DB
 - [x] Unique on user's username? Add name and surname?

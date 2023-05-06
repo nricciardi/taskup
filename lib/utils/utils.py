@@ -1,6 +1,8 @@
 import sys
 import os
 from random import randint
+from typing import Dict
+import hashlib
 
 
 class Utils:
@@ -34,6 +36,33 @@ class Utils:
         hex_color = "#{:02x}{:02x}{:02x}".format(r, g, b)
 
         return hex_color
+
+    @staticmethod
+    def disguise(value: str) -> str:
+        """
+        Disguise value (sha)
+
+        :return:
+        """
+
+        return hashlib.sha512(value.encode()).hexdigest()
+
+    @staticmethod
+    def disguise_value_of_dict( d: Dict, *keys: str) -> None:
+        """
+        Disguise all dictionary value of keys
+
+        :param d: dictionary
+        :param keys:
+        :return:
+        """
+
+        for key in keys:
+
+            value = d.get(key)
+
+            if value is not None:
+                d[key] = Utils.disguise(value)
 
 
 class SqlUtils:

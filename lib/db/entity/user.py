@@ -2,9 +2,10 @@ from lib.db.db import TableNamesMixin, DBManager
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
-from typing import Type, Optional, Any
+from typing import Type, Optional, Dict
 from lib.db.entity.relation import Relation, OneRelation
 from datetime import datetime
+from lib.utils.utils import Utils
 
 
 @dataclass
@@ -74,6 +75,35 @@ class UsersManager(EntitiesManager, TableNamesMixin):
             # role -< user
             OneRelation(fk_model=RoleModel, of_table=self.role_table_name, fk_field="role_id", to_attr="role")
         ]
+
+    def create_from_dict(self, data: dict, safe: bool = True) -> UserModel | None:
+        """
+        Override to disguise password
+
+        :param data:
+        :param safe:
+        :return:
+        """
+
+        Utils.disguise_value_of_dict(data, "password")
+
+        return super().create_from_dict(data)
+
+    def update_from_dict(self, entity_id: int, data: Dict, safe: bool = True, create_if_not_exists: bool = True) -> UserModel:
+        """
+        Override to disguise password
+
+        :param create_if_not_exists:
+        :param entity_id:
+        :param data:
+        :param safe:
+        :return:
+        """
+
+        Utils.disguise_value_of_dict(data, "password")
+
+        return super().update_from_dict(entity_id, data, safe, create_if_not_exists)
+
 
 
 class RolesManager(EntitiesManager, TableNamesMixin):

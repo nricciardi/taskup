@@ -158,7 +158,16 @@ class Logger:
         msg: str = str(msg)
 
         if isinstance(truncate, int):
-            msg = msg[0:truncate] + "... [message truncates]"
+            append_warning: bool = False
+            if len(msg) > truncate:
+                append_warning = True
+
+            msg = msg[0:truncate]
+
+            if append_warning:
+                msg += "... [message truncates]"
+
+
 
         print(f"{msg}")
 

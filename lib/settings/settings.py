@@ -19,7 +19,10 @@ class SettingsBase:
     VALUE_BASE_VERBOSE = True
 
     KEY_PROJECT_PATH = "project_path"
-    VALUE_BASE_PROJECT_PATH = os.path.join(os.path.curdir, "..")
+    VALUE_BASE_PROJECT_PATH = os.path.expanduser("~/Desktop")
+
+    KEY_VAULT_PATH = "vault_path"
+    VALUE_BASE_VAULT_PATH = os.getcwd()
 
     KEY_DB_LOCALTIME = "localtime"
     VALUE_BASE_DB_LOCALTIME = True
@@ -44,7 +47,8 @@ class SettingsBase:
         KEY_DEBUG_MODE: VALUE_BASE_DEBUG_MODE,
         KEY_FRONTEND_DIRECTORY: VALUE_BASE_FRONTEND_DIRECTORY,
         KEY_FRONTEND_START: VALUE_BASE_FRONTEND_START,
-        KEY_APP_PORT: VALUE_BASE_APP_PORT
+        KEY_APP_PORT: VALUE_BASE_APP_PORT,
+        KEY_VAULT_PATH: VALUE_BASE_VAULT_PATH
     }
 
     @staticmethod
@@ -191,7 +195,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path, SettingsBase.VAULT_FILE_NAME)
+        return os.path.join(self.get(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
 
     @property
     def debug_mode(self) -> bool:
