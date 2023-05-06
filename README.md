@@ -31,6 +31,14 @@ Usually the PM is the user who has created _MyProject_, he is able to create oth
 
 The roles can be modified in a second moment if the user has specific permission.
 
+## Task Dashboard
+The _Dashboard_ is the application core. It is used to manage tasks.
+Based on user's permission, the logged user is able to see all tasks or only assigned task.
+Dashboard is divided in a different section for each task status. For example _To-do_ state, _Doing_ state, _Done_ state and so on.
+Dashboard has a _sticky_ header used to keep in mind the current task status visualized, the number of task for current status and it also has two buttons to go in the default _next_ and _prev_ status. For example, _doing_ status may have _to-do_ as previously status and _done_ as next status.
+In addition, 
+
+
 ## User Profile
 Each logged user is able to manage own profile using _My Profile_ page. It can be accessed through dropdown menu on header avatar:
 
