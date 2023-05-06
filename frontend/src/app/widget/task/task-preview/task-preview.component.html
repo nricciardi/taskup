@@ -1,8 +1,4 @@
-<div class="card" *ngIf="task && authService.loggedUser"
-    [ngClass]="{
-      'not-assigned-task': !userAssignedToTask(authService.loggedUser.id)
-    }"
->
+<div class="card" *ngIf="task && authService.loggedUser">
   <div class="card-content">
     <div class="card-body">
 
@@ -76,6 +72,7 @@
           </div>
 
           <div class="col-md-auto">
+
             <!-- MENU -->
             <div class="btn-group mb-1" *ngIf="!inModify; else confirmModifyBtn">
               <div class="dropdown icon-left">
@@ -112,6 +109,13 @@
                 </div>
               </div>
             </div>
+
+            <!-- NOT ASSIGNED ICON -->
+            <i  class="bi bi-clipboard2-x-fill not-assigned-task" *ngIf="!userAssignedToTask(authService.loggedUser.id) && !inModify"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                attr.title="{{ 'not-assigned' | translate }}">
+            </i>
 
             <ng-template #confirmModifyBtn>
 

@@ -97,5 +97,7 @@
   "news": "Novità",
   "id-code": "Codice Identificativo",
   "created-at": "Creazione",
-  "updated-at": "Aggiornato"
+  "updated-at": "Aggiornato",
+  "not-assigned": "Non sei assegnato a questo task",
+  "unique": "Unico"
 }

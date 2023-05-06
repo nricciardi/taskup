@@ -34,7 +34,7 @@
                       <i  class="bi bi-1-square-fill"
                           data-bs-toggle="tooltip"
                           data-bs-placement="top"
-                          title="Unique"
+                          title="{{ 'unique' | translate }}"
                           *ngIf="field.unique === true">
                       </i>
                   </div>
@@ -47,7 +47,7 @@
                     [type]="field.type"
                     class="form-control"
                     [name]="field.name"
-                    [placeholder]="field.placeholder"
+                    placeholder="{{ 'field.placeholder' | translate }}"
                     [formControlName]="field.name"
                     [class.is-valid]="form.controls[field.name].dirty && form.controls[field.name].valid"
                     [class.is-invalid]="form.controls[field.name].dirty && !form.controls[field.name].valid"

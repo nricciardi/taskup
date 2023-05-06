@@ -97,5 +97,7 @@
   "news": "News",
   "id-code": "ID Code",
   "created-at": "Created at",
-  "updated-at": "Updated at"
+  "updated-at": "Updated at",
+  "not-assigned": "You are NOT assigned on this task",
+  "unique": "Umique"
 }
