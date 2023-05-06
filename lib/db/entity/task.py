@@ -3,11 +3,12 @@ from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
 from datetime import date, datetime
-from typing import Type, Optional, List
+from typing import Type, Optional, List, Dict
 from lib.db.entity.relation import Relation, OneRelation, ManyRelation, ExtendedManyRelation
 from lib.db.entity.user import UserModel
 from lib.db.component import WhereCondition
 from lib.utils.logger import Logger
+from lib.utils.collections import CollectionsUtils
 
 
 # ================== DATACLASS ==========================
@@ -55,6 +56,7 @@ class TaskLabelModel(BaseEntityModel):
 class AssignedUser:
     user: Optional[UserModel] = field(default=None)
     assigned_at: Optional[datetime] = field(default=None)
+    last_watched_at: Optional[datetime] = field(default=None)
 
 
 @dataclass
@@ -82,9 +84,10 @@ class TaskModel(BaseEntityModel):
 @dataclass
 class TaskAssignmentModel(BaseEntityModel):
     id: int
-    assigned_at: datetime
     user_id: int
     task_id: int
+    assigned_at: Optional[datetime] = field(default=None)
+    last_watched_at: Optional[datetime] = field(default=None)
 
     # @property
     # def table_name(self) -> str:
@@ -176,7 +179,7 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
         :param task_id:
         :type task_id: int
         :param user_id:
-        :type user_id: type
+        :type user_id: int
 
         :return: result
         :rtype bool:
@@ -186,6 +189,34 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
             "user_id": user_id,
             "task_id": task_id
         })
+
+    def update_by_task_user_id_from_dict(self, task_id: int, user_id: int, data: Dict) -> bool:
+        """
+        Update last watched by task and user id
+
+        :param data:
+        :type data: dict
+        :param task_id:
+        :type task_id: int
+        :param user_id:
+        :type user_id: int
+        :return:
+        """
+
+        try:
+            task_assignments = self.where_as_model(WhereCondition(col="task_id", operator="=", value=task_id),
+                                                   WhereCondition(col="user_id", operator="=", value=user_id))
+
+            task_assignment = CollectionsUtils.first_or_fail(task_assignments)
+
+            self.update_from_dict(task_assignment.id, data)
+
+            return True
+
+        except Exception as e:
+            Logger.log_error(msg=e, full=True, is_verbose=self.verbose)
+
+            return False
 
 
 class TaskTaskLabelPivotManager(EntitiesManager, TableNamesMixin):
@@ -275,7 +306,7 @@ class TasksManager(EntitiesManager, TableNamesMixin):
             # task >-< user
             ExtendedManyRelation(fk_model=UserModel, of_table=self.user_table_name, pivot_model=TaskAssignmentModel,
                                  pivot_table=self.task_assignment_table_name, to_attr="assigned_users",
-                                 other_cols=['assigned_at'], fk_col="user", wrap_fk_model=AssignedUser)
+                                 other_cols=['assigned_at', 'last_watched_at'], fk_col="user", wrap_fk_model=AssignedUser)
         ]
 
     def remove_assignment(self, task_id: int, user_id: int, safe: bool = True) -> bool:

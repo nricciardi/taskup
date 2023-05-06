@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
 import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
+import { environment } from 'src/environments/environment.development';
 
 
 enum OrderBy {
@@ -28,7 +29,24 @@ interface RGBColor {
 })
 export class DashboardComponent {
 
+  private updateLastVisitInterval?: any;    // timer
+
   constructor(private dashboardService: DashboardService, public authService: AuthService) {
+    this.updateLastVisitInterval = setInterval(() => {
+
+      //this.authService.updateLastVisit();
+
+    }, environment.updateLastVisitInterval);
+  }
+
+  ngOnDestroy() {
+
+    // clear interval for last visit
+    clearInterval(this.updateLastVisitInterval);
+
+    // update last time
+    this.authService.updateLastVisit();
+
   }
 
   blueprintTask?: TaskModel;

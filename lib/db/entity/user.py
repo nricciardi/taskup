@@ -6,6 +6,7 @@ from typing import Type, Optional, Any
 from lib.db.entity.relation import Relation, OneRelation
 from datetime import datetime
 
+
 @dataclass
 class RoleModel(BaseEntityModel):
     id: int

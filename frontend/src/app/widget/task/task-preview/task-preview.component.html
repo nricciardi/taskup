@@ -13,7 +13,8 @@
 
               {{ task.name }}
 
-              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="task.updated_at > loggedUser.last_visit_at"></app-badge>
+              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="hasNews" (click)="hasNews = false; this.updateLastWatched();" class="cursor-pointer">
+              </app-badge>
             </ng-container>
 
             <ng-template #titleModification>

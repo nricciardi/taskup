@@ -22,7 +22,7 @@ class SettingsBase:
     VALUE_BASE_PROJECT_PATH = os.path.join(os.path.curdir, "..")
 
     KEY_DB_LOCALTIME = "localtime"
-    VALUE_BASE_DB_LOCALTIME = False
+    VALUE_BASE_DB_LOCALTIME = True
 
     KEY_DEBUG_MODE = "debug"
     VALUE_BASE_DEBUG_MODE = True

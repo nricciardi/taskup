@@ -63,12 +63,12 @@ class Field(ToSqlInterface):
         return cls(name="description", type="VARCHAR(1000)", nullable=nullable, unique=False)
 
     @classmethod
-    def created_at_field(cls) -> 'Field':
-        return Field.datetime_now("created_at")
+    def created_at_field(cls, use_localtime: bool = True) -> 'Field':
+        return Field.datetime_now("created_at", use_localtime=use_localtime)
 
     @classmethod
-    def updated_at_field(cls) -> 'Field':
-        return Field.datetime_now("updated_at")
+    def updated_at_field(cls, use_localtime: bool = True) -> 'Field':
+        return Field.datetime_now("updated_at", use_localtime=use_localtime)
 
     @classmethod
     def datetime_now(cls, name: str, use_localtime: bool = False) -> 'Field':

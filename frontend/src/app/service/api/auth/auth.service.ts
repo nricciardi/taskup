@@ -163,7 +163,8 @@ export class AuthService {
 
       response.subscribe({
         next: (value: any) => {
-          // nothing
+
+          LoggerService.logInfo("Updated last visit of logged user");
         }
       })
 

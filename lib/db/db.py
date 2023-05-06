@@ -200,7 +200,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="password", type="VARCHAR(256)", unique=False),
                 Field.hex_color(name="avatar_hex_color", default="'cfcfcf'", nullable=False),
                 Field(name="phone", type="VARCHAR(30)", nullable=True),
-                Field.datetime_now("last_visit_at"),
+                Field.nullable_datetime_with_now_check_field("last_visit_at", use_localtime=self.use_localtime, default=None),
                 Field.fk_field(name="role_id"),
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="role_id", on_table=self.role_table_name, on_update="CASCADE", on_delete="RESTRICT")
@@ -246,8 +246,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.description_field(),
                 Field.nullable_datetime_with_now_check_field(name="deadline"),
                 Field(name="priority", type="INTEGER", default="0"),
-                Field.created_at_field(),
-                Field.updated_at_field(),
+                Field.created_at_field(use_localtime=self.use_localtime),
+                Field.updated_at_field(use_localtime=self.use_localtime),
                 Field.fk_field(name="author_id", nullable=True),
                 Field.fk_field(name="task_status_id"),
             ], fk_constraints=[
@@ -270,7 +270,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 self.user_table_name,
                 self.task_table_name
             ], other_fields=[
-                Field.datetime_now("assigned_at"),
+                Field.datetime_now("assigned_at", use_localtime=self.use_localtime),
+                Field.nullable_datetime_with_now_check_field("last_watched_at", use_localtime=self.use_localtime, default=None),
             ], with_triggers=Trigger(
                 name=f"{self.task_table_name}_updater_trigger",
                 on_action=f"Update On {self.task_assignment_table_name}",
@@ -281,8 +282,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field.id_field(),
                 Field.description_field(nullable=False),
                 Field.nullable_datetime_with_now_check_field(name="deadline"),
-                Field.created_at_field(),
-                Field.updated_at_field(),
+                Field.created_at_field(use_localtime=self.use_localtime),
+                Field.updated_at_field(use_localtime=self.use_localtime),
                 Field(name="done", type="INTEGER", default="0"),
                 Field.fk_field(name="author_id", nullable=True),
                 Field.fk_field(name="task_id"),

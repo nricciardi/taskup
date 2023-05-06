@@ -222,6 +222,31 @@ class ExposerService:
         except Exception as excepetion:
             Logger.log_error(msg="task status exposure error", is_verbose=self.verbose, full=True)
 
+    def __expose_task_assignments_methods(self) -> None:
+        """
+        Expose task labels methods
+
+        :return: None
+        """
+
+        try:
+            # expose task status
+            self.expose_all_from_list(to_expose=[
+                self.__task_assignment_manager.create_from_dict,
+                self.__task_assignment_manager.delete_by_id,
+                self.__task_assignment_manager.check_already_used,
+
+            ], prefix="task_assignment_")
+
+            self.expose(to_dict(self.__task_assignment_manager.find, self.verbose), "task_assignment_find")
+
+            self.expose(login_required(to_dict(self.__task_assignment_manager.all_as_dict), self.__auth_service, self.verbose), "task_assignment_all")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.update_from_dict), self.__auth_service, self.verbose), "task_assignment_update")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.update_by_task_user_id_from_dict), self.__auth_service, self.verbose), "task_assignment_update_by_task_user_id_from_dict")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)
+
     def __expose_role_methods(self) -> None:
         """
         Expose task labels methods
@@ -320,6 +345,7 @@ class ExposerService:
             self.__expose_task_label_methods()
             self.__expose_todo_items_methods()
             self.__expose_task_status_methods()
+            self.__expose_task_assignments_methods()
             self.__expose_user_methods()
             self.__expose_role_methods()
             self.__expose_auth_methods()

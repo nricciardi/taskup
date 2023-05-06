@@ -5,6 +5,7 @@ import { BlueprintTaskModel, TaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
+import { TaskAssignmentService } from 'src/app/service/api/entity/task-assignment/task-assignment.service';
 import { TaskStatusService } from 'src/app/service/api/entity/task-status/task-status.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
@@ -36,7 +37,8 @@ export class TaskPreviewComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
-  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService, private taskStatusService: TaskStatusService) {
+  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService,
+     private taskStatusService: TaskStatusService, private taskAssignmentService: TaskAssignmentService) {
   }
 
   nextStatus?: Promise<TaskStatusModel>;
@@ -44,6 +46,16 @@ export class TaskPreviewComponent {
 
   blueprintModificateTask?: BlueprintTaskModel;
 
+  private _hasNews: boolean = false;
+
+  get hasNews() {
+    return this._hasNews;
+  }
+
+  set hasNews(value: boolean) {
+
+    this._hasNews = value;
+  }
 
   ngOnInit() {
 
@@ -60,7 +72,7 @@ export class TaskPreviewComponent {
 
     }
 
-
+    this.refreshHasNews();
   }
 
   private _inModify: boolean = false;
@@ -271,6 +283,68 @@ export class TaskPreviewComponent {
         }
       })
     })
+
+  }
+
+  refreshHasNews(): boolean {
+
+    if(!this.loggedUser || !this.task) {
+      this.hasNews = false;
+      return this.hasNews;
+    }
+
+    if(this.userAssignedToTask(this.loggedUser.id)) {
+      // logged user is assigned
+
+      const assignment = this.task.assigned_users?.find((au) => {
+        return au.user.id == this.loggedUser!.id;
+      });
+
+      if(!assignment || assignment.last_watched_at == null) {
+        this.hasNews = false;
+        return this.hasNews;
+      }
+
+      this.hasNews = this.task.updated_at > assignment.last_watched_at;
+      return this.hasNews;
+
+    } else {
+      // logged user is NOT assigned
+
+      if(this.loggedUser.last_visit_at == null) {
+        this.hasNews =  true;
+        return this.hasNews;
+      }
+
+      this.hasNews = this.task.updated_at > this.loggedUser.last_visit_at;
+      return this.hasNews;
+    }
+
+
+  }
+
+  updateLastWatched(): void {
+
+    if(!this.loggedUser || !this.task)
+      return;
+
+    if(!this.userAssignedToTask(this.loggedUser.id))    // if logged user is not assigned at this task: skip
+      return;
+
+    this.taskAssignmentService.updateByTaskUserId(this.task.id, this.loggedUser.id, {
+      last_watched_at: this.utilsService.datetimeNow()
+    }).then((response) => {
+
+      response.subscribe({
+        next: (value: any) => {
+
+          LoggerService.logInfo("Updated last watched");
+
+        }
+      })
+
+    })
+
 
   }
 }

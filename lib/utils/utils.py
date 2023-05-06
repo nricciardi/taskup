@@ -45,7 +45,7 @@ class SqlUtils:
     TIME_FORMATTER: str = '%H:%M:%S'
 
     @staticmethod
-    def custom_datetime_str_format(formatter: str, datetime: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+    def custom_datetime_str_format(formatter: str, datetime: str, strict_string: bool = False, use_localtime: bool = True) -> str:
         """
         Return sqlite string formatted based on formatter passed
 
@@ -60,10 +60,18 @@ class SqlUtils:
         :return:
         """
 
-        return f"""strftime('{formatter}', {"'" if strict_string else ""}{datetime}{", 'localtime'" if use_localtime else ""}{"'" if strict_string else ""})"""
+        if strict_string:
+            datetime: str = f"'{datetime}'"
+
+        localtime: str = ""
+
+        if use_localtime:
+            localtime = f", 'localtime'"
+
+        return f"""strftime('{formatter}', {datetime}{localtime})"""
 
     @staticmethod
-    def datetime_str_format(value: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+    def datetime_str_format(value: str, strict_string: bool = False, use_localtime: bool = True) -> str:
         """
         Return sqlite string format for datetime passed
 
@@ -79,7 +87,7 @@ class SqlUtils:
         return SqlUtils.custom_datetime_str_format(SqlUtils.DATETIME_FORMATTER, value, strict_string, use_localtime)
 
     @staticmethod
-    def date_str_format(value: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+    def date_str_format(value: str, strict_string: bool = False, use_localtime: bool = True) -> str:
         """
         Return sqlite string format for datetime passed
 
@@ -95,7 +103,7 @@ class SqlUtils:
         return SqlUtils.custom_datetime_str_format(SqlUtils.DATE_FORMATTER, value, strict_string, use_localtime)
 
     @staticmethod
-    def time_str_format(value: str, strict_string: bool = False, use_localtime: bool = False) -> str:
+    def time_str_format(value: str, strict_string: bool = False, use_localtime: bool = True) -> str:
         """
         Return sqlite string format for datetime passed
 
@@ -111,7 +119,7 @@ class SqlUtils:
         return SqlUtils.custom_datetime_str_format(SqlUtils.TIME_FORMATTER, value, strict_string, use_localtime)
 
     @staticmethod
-    def datetime_strf_now(use_localtime: bool = False) -> str:
+    def datetime_strf_now(use_localtime: bool = True) -> str:
         """
         String format to now (datetime)
 
@@ -123,7 +131,7 @@ class SqlUtils:
         return SqlUtils.datetime_str_format('now', strict_string=True, use_localtime=use_localtime)
 
     @staticmethod
-    def date_strf_now(use_localtime: bool = False) -> str:
+    def date_strf_now(use_localtime: bool = True) -> str:
         """
         String format to now (date)
 
@@ -135,7 +143,7 @@ class SqlUtils:
         return SqlUtils.date_str_format('now', strict_string=True, use_localtime=use_localtime)
 
     @staticmethod
-    def time_strf_now(use_localtime: bool = False) -> str:
+    def time_strf_now(use_localtime: bool = True) -> str:
         """
         String format to now (date)
 

@@ -9,7 +9,7 @@ export interface UserModel extends BaseEntity {
   email: string;
   avatar_hex_color: string;
   phone: string | null;
-  last_visit_at: Date;
+  last_visit_at: Date | null;
   // password: string;    hidden
   role_id: number;
   role: RoleModel | null;
