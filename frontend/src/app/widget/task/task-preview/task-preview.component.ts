@@ -300,8 +300,13 @@ export class TaskPreviewComponent {
         return au.user.id == this.loggedUser!.id;
       });
 
-      if(!assignment || assignment.last_watched_at == null) {
+      if(!assignment) {
         this.hasNews = false;
+        return this.hasNews;
+      }
+
+      if(assignment.last_watched_at == null) {
+        this.hasNews = true;
         return this.hasNews;
       }
 
