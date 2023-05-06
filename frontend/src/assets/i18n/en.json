@@ -94,5 +94,8 @@
   "null": "NULL",
   "create-new": "Create new...",
   "final": "Final",
-  "news": "News"
+  "news": "News",
+  "id-code": "ID Code",
+  "created-at": "Created at",
+  "updated-at": "Updated at"
 }

@@ -45,7 +45,7 @@ export class TaskPreviewComponent {
   nextStatus?: Promise<TaskStatusModel>;
   prevStatus?: Promise<TaskStatusModel>;
 
-  blueprintModificateTask?: BlueprintTaskModel;
+  blueprintModificateTask?: BlueprintTaskModel;   // task object used as blueprint for modification (primaly app modifies it, then send update request)
 
   private _hasNews: boolean = false;
 
@@ -87,13 +87,20 @@ export class TaskPreviewComponent {
 
     if(this.task && value) {
 
-      this.blueprintModificateTask = {
-        id: this.task.id,
-        name: this.task.name,
-        description: this.task.description,
-        priority: this.task.priority,
-      }
+      this.initBlueprintTask();
 
+    }
+  }
+
+  initBlueprintTask() {
+    if(!this.task)
+      return;
+
+    this.blueprintModificateTask = {
+      id: this.task.id,
+      name: this.task.name,
+      description: this.task.description,
+      priority: this.task.priority,
     }
   }
 

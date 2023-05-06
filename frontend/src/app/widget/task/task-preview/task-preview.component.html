@@ -5,36 +5,62 @@
 >
   <div class="card-content">
     <div class="card-body">
+
       <h4 class="card-title">
         <div class="row justify-content-between">
-          <div class="col-md-10">
+          <div class="col-md-8">
             <!-- TASK TITLE -->
             <ng-container *ngIf="!inModify; else titleModification">
 
-              {{ task.name }}
+              <div class="d-flex">
+                <!-- PRIORITY -->
+                <app-badge [text]="task.priority.toString()" style="font-size: small;">
+                </app-badge>
 
+
+                {{ task.name }}
+              </div>
+
+              <!-- NEWS BADGE -->
               <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="hasNews" (click)="updateLastWatched()" class="cursor-pointer">
               </app-badge>
             </ng-container>
 
             <ng-template #titleModification>
 
+              <div class="row">
+                <div class="col-md-2">
+                  <input
+                    class="form-control form-control-sm"
+                    type="number"
+                    placeholder="Priority"
+                    [value]="task.priority"
 
-              <div class="form-group">
-                <textarea
-                        class="form-control"
-                        id="task-title"
-                        placeholder="Task Title"
-                        [value]="blueprintModificateTask?.name"
+                    #priorityInput
+                    (input)="blueprintModificateTask!.priority = +priorityInput.value"
+                  />
+                </div>
 
-                        appAutoHeight
-                        [base]="0"
-                        [offset]="10"
+                <div class="col-md-10">
+                  <div class="form-group">
+                    <textarea
+                            class="form-control"
+                            id="task-title"
+                            placeholder="Task Title"
+                            [value]="blueprintModificateTask?.name"
 
-                        #titleTA
-                        (input)="blueprintModificateTask!.name = titleTA.value">
-                </textarea>
+                            appAutoHeight
+                            [base]="0"
+                            [offset]="10"
+
+                            #titleTA
+                            (input)="blueprintModificateTask!.name = titleTA.value">
+                    </textarea>
+                  </div>
+
+                </div>
               </div>
+
             </ng-template>
           </div>
 
@@ -78,6 +104,12 @@
 
             <ng-template #confirmModifyBtn>
 
+              <!-- RESET CHANGES -->
+              <button class="btn icon icon-right btn-light"
+                      (click)="initBlueprintTask()">
+                {{ "reset" | translate }}
+              </button>
+
               <!-- SUBMIT CHANGES -->
               <button class="btn icon icon-right btn-primary"
                       (click)="modify(blueprintModificateTask!)">
@@ -91,8 +123,25 @@
         </div>
       </h4>
 
-      <!-- LABELs -->
+
       <div class="d-flex justify-content-start">
+
+        <!-- DEADLINE BADGE -->
+        <app-deadline-badge [deadline]="task.deadline"
+              [done]="!!task.task_status?.final"
+              [editable]="(authService.loggedUser && authService.loggedUser.role && authService.loggedUser.role.permission_edit_task_deadline) ?? false"
+              (onDeadlineModified)="modify({
+                deadline: $event
+              })"
+              [id]="'deadline-tas-' + task.id">
+        </app-deadline-badge>
+
+        <!-- SEPARATOR -->
+        <span class="separator">
+          |
+        </span>
+
+        <!-- LABELs -->
         <ng-container  *ngFor="let label of task.labels">
           <app-badge  [text]="label.name"
                       [color]="label.hex_color"
@@ -148,23 +197,6 @@
         </div>
       </ng-template>
 
-        <!-- DEADLINE BADGE -->
-      <app-deadline-badge [deadline]="task.deadline"
-                          [done]="!!task.task_status?.final"
-                          [editable]="(authService.loggedUser && authService.loggedUser.role && authService.loggedUser.role.permission_edit_task_deadline) ?? false"
-                          (onDeadlineModified)="modify({
-                            deadline: $event
-                          })"
-                          [id]="'deadline-tas-' + task.id">
-      </app-deadline-badge>
-
-      <ng-container>
-        <div style="background-color: aqua;">
-          id: {{ task.id }} - priority: {{ task.priority }}
-        </div>
-
-      </ng-container>
-
       <!-- MORE DETAILS -->
       <div
         class="accordion accordion-flush mb-1"
@@ -193,7 +225,142 @@
             <!-- MORE DETAILS BODY (hidden default) -->
             <div class="accordion-body">
 
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="card-body">
 
+
+                        <div class="row">
+
+                          <!-- TASK ID CODE -->
+                          <div class="col-md-6">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "id-code" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    [value]="task.id"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-fingerprint"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- TASK AUTHOR -->
+                          <div class="col-md-6">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "author" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+
+                              <div class="row">
+
+                                <div class="col-auto">
+                                  <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                      <input
+                                        type="text"
+                                        class="form-control"
+                                        [value]="task.author?.email"
+                                        readonly
+                                      />
+                                      <div class="form-control-icon">
+                                        <i class="bi bi-person"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-auto">
+
+
+                                <app-text-avatar *ngIf="task.author"
+                                                [color]="task.author.avatar_hex_color"
+                                                [text]="utilsService.getAvatarText(task.author)"
+                                                [tooltip]="task.author.username"
+                                                class="cursor-arrow">
+                                </app-text-avatar>
+                                </div>
+                              </div>
+
+
+                            </div>
+                          </div>
+
+                          <!-- CREATED AT -->
+                          <div class="col-md-6">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "created-at" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    [value]="task.created_at"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-hourglass-top"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- UPDATED AT -->
+                          <div class="col-md-6">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "updated-at" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    [value]="task.updated_at"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
 
             </div>
           </div>

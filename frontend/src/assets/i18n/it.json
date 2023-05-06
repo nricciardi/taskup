@@ -94,5 +94,8 @@
   "null": "NULL",
   "create-new": "Crea nuovo...",
   "final": "Finale",
-  "news": "Novità"
+  "news": "Novità",
+  "id-code": "Codice Identificativo",
+  "created-at": "Creazione",
+  "updated-at": "Aggiornato"
 }
