@@ -520,9 +520,17 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :return:
         """
 
-        return self.delete(
-            WhereCondition("id", "=", entity_id)
-        )
+        try:
+            # Logger.log_info(msg=f"delete from {self.table_name} where id={entity_id}", is_verbose=self.verbose)
+
+            return self.delete(
+                WhereCondition("id", "=", entity_id)
+            )
+
+        except Exception as e:
+            Logger.log_error(msg=f"error occurs during deleting...")
+
+            return False
 
     def update_from_dict(self, entity_id: int, data: Dict, safe: bool = True, create_if_not_exists: bool = True) -> EntityModel:
         """

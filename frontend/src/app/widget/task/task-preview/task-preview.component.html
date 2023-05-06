@@ -1,6 +1,6 @@
-<div class="card" *ngIf="task && loggedUser"
+<div class="card" *ngIf="task && authService.loggedUser"
     [ngClass]="{
-      'not-assigned-task': !userAssignedToTask(loggedUser.id)
+      'not-assigned-task': !userAssignedToTask(authService.loggedUser.id)
     }"
 >
   <div class="card-content">
@@ -13,7 +13,7 @@
 
               {{ task.name }}
 
-              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="hasNews" (click)="hasNews = false; this.updateLastWatched();" class="cursor-pointer">
+              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="hasNews" (click)="updateLastWatched()" class="cursor-pointer">
               </app-badge>
             </ng-container>
 
@@ -151,7 +151,7 @@
         <!-- DEADLINE BADGE -->
       <app-deadline-badge [deadline]="task.deadline"
                           [done]="!!task.task_status?.final"
-                          [editable]="(loggedUser && loggedUser.role && loggedUser.role.permission_edit_task_deadline) ?? false"
+                          [editable]="(authService.loggedUser && authService.loggedUser.role && authService.loggedUser.role.permission_edit_task_deadline) ?? false"
                           (onDeadlineModified)="modify({
                             deadline: $event
                           })"
@@ -228,23 +228,23 @@
                         [color]="assignedUser.user.avatar_hex_color"
                         [text]="utilsService.getAvatarText(assignedUser.user)"
                         [tooltip]="assignedUser.user.username"
-                        (click)="null"
                         data-bs-toggle="modal"
-                        [attr.data-bs-target]="'#' + assignedUser.user.username + '-modal'"
+                        [attr.data-bs-target]="'#manage-assignment-user-' + assignedUser.user.id + '-modal'"
                         class="cursor-pointer me-3">
         </app-text-avatar>
         <app-manage-assigned-user-modal [user]="assignedUser.user"
-                                        [target]="assignedUser.user.username + '-modal'"
+                                        [target]="'manage-assignment-user-' + assignedUser.user.id + '-modal'"
                                         [assignmentDate]="assignedUser.assigned_at"
+                                        [editable]="!!authService.loggedUser.role?.permission_change_assignment"
                                         (onRemoveFromTask)="removeUserFromTask(assignedUser.user.id)">
         </app-manage-assigned-user-modal>
+
       </ng-container>
 
-      <ng-container *ngIf="!!loggedUser?.role?.permission_change_assignment">
-        <app-icon-avatar  color="5b6370"
+      <ng-container *ngIf="!!authService.loggedUser.role?.permission_change_assignment">
+        <app-icon-avatar  color="#5b6370"
                           iconClass="bi bi-plus"
                           tooltip="add-new-user"
-                          (click)="null"
                           data-bs-toggle="modal"
                           [attr.data-bs-target]="'#new-assignment-modal-' + task.id"
                           class="cursor-pointer">
@@ -292,3 +292,5 @@
   </app-dialog-modal>
 
 </div>
+
+

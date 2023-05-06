@@ -34,7 +34,7 @@ export class DashboardComponent {
   constructor(private dashboardService: DashboardService, public authService: AuthService) {
     this.updateLastVisitInterval = setInterval(() => {
 
-      //this.authService.updateLastVisit();
+      this.authService.updateLastVisit();
 
     }, environment.updateLastVisitInterval);
   }

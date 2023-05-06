@@ -136,7 +136,7 @@ class FKConstraint(ToSqlInterface):
             query += f" On Update {self.on_update}"
 
         if self.on_delete is not None:
-            query += f" On Update {self.on_delete}"
+            query += f" On Delete {self.on_delete}"
 
         return query
 
@@ -190,7 +190,7 @@ class Table(ToSqlInterface):
             names.append(name)
 
             fields.append(Field.fk_field(name=name))
-            fk_constraints.append(FKConstraint.on_id(name, t))
+            fk_constraints.append(FKConstraint.on_id(name, t, on_update="CASCADE", on_delete="CASCADE"))
 
         if unique_record:
 

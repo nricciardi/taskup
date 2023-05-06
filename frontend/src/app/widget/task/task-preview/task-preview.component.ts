@@ -27,7 +27,6 @@ enum DeadlineStatus {
 export class TaskPreviewComponent {
 
   @Input('task') task?: TaskModel;
-  @Input("loggedUser") loggedUser?: UserModel;
   @Input("todoCollapseStatus") todoCollapseStatus: boolean = false;
 
   @Output() onDeletion = new EventEmitter<number>();
@@ -37,8 +36,10 @@ export class TaskPreviewComponent {
   @Output() onRemoveLabel = new EventEmitter<UpdateTaskModel>();
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
-  constructor(private taskService: TaskService, private authService: AuthService, public utilsService: UtilsService,
+  constructor(private taskService: TaskService, public authService: AuthService, public utilsService: UtilsService,
      private taskStatusService: TaskStatusService, private taskAssignmentService: TaskAssignmentService) {
+
+      this.authService.refreshMe();
   }
 
   nextStatus?: Promise<TaskStatusModel>;
@@ -130,17 +131,12 @@ export class TaskPreviewComponent {
         next: (value: boolean) => {
 
           // refresh task
-          this.taskService.find(id).then((respose) => {
-            respose.subscribe({
-              next: (t) => {
-                this.task = t;
-                this.onRemoveAssignment.emit({
-                  target: id,
-                  new: t
-                });
-              }
-            })
-          })
+          this.refreshTask(() => {
+            this.onRemoveAssignment.emit({
+              target: id,
+              new: this.task!
+            });
+          });
 
         }
       })
@@ -163,13 +159,7 @@ export class TaskPreviewComponent {
         next: (value: boolean) => {
 
           // refresh task
-          this.taskService.find(id).then((respose) => {
-            respose.subscribe({
-              next: (t) => {
-                this.task = t;
-              }
-            });
-          })
+          this.refreshTask();
 
         }
       })
@@ -209,17 +199,13 @@ export class TaskPreviewComponent {
         next: (value) => {
 
           // refresh task
-          this.taskService.find(id).then((respose) => {
-            respose.subscribe({
-              next: (t) => {
-                this.task = t;
-                this.onRemoveAssignment.emit({
-                  target: id,
-                  new: t
-                });
-              }
-            })
-          })
+          this.refreshTask(() => {
+            this.onRemoveLabel.emit({
+              target: id,
+              new: this.task!
+            });
+          });
+
         }
       })
     });
@@ -237,16 +223,7 @@ export class TaskPreviewComponent {
       response.subscribe({
         next: (value) => {
 
-
-          // refresh task
-          this.taskService.find(id).then((respose) => {
-            respose.subscribe({
-              next: (t) => {
-                this.task = t;
-
-              }
-            })
-          })
+         this.refreshTask();
         }
       })
     });
@@ -266,19 +243,12 @@ export class TaskPreviewComponent {
         next: (value) => {
 
           // refresh task
-          this.taskService.find(id).then((respose) => {
-            respose.subscribe({
-              next: (t) => {
-                this.task = t;
-
-                this.onModify.emit({
-                  target: id,
-                  new: this.task
-                })
-
-              }
-            })
-          })
+          this.refreshTask(() => {
+            this.onModify.emit({
+              target: id,
+              new: this.task!
+            });
+          });
 
         }
       })
@@ -288,16 +258,16 @@ export class TaskPreviewComponent {
 
   refreshHasNews(): boolean {
 
-    if(!this.loggedUser || !this.task) {
+    if(!this.authService.loggedUser || !this.task) {
       this.hasNews = false;
       return this.hasNews;
     }
 
-    if(this.userAssignedToTask(this.loggedUser.id)) {
+    if(this.userAssignedToTask(this.authService.loggedUser.id)) {
       // logged user is assigned
 
       const assignment = this.task.assigned_users?.find((au) => {
-        return au.user.id == this.loggedUser!.id;
+        return au.user.id == this.authService.loggedUser!.id;
       });
 
       if(!assignment) {
@@ -316,12 +286,12 @@ export class TaskPreviewComponent {
     } else {
       // logged user is NOT assigned
 
-      if(this.loggedUser.last_visit_at == null) {
+      if(this.authService.loggedUser.last_visit_at == null) {
         this.hasNews =  true;
         return this.hasNews;
       }
 
-      this.hasNews = this.task.updated_at > this.loggedUser.last_visit_at;
+      this.hasNews = this.task.updated_at > this.authService.loggedUser.last_visit_at;
       return this.hasNews;
     }
 
@@ -330,26 +300,51 @@ export class TaskPreviewComponent {
 
   updateLastWatched(): void {
 
-    if(!this.loggedUser || !this.task)
+    if(!this.authService.loggedUser || !this.task)
       return;
 
-    if(!this.userAssignedToTask(this.loggedUser.id))    // if logged user is not assigned at this task: skip
+    if(!this.userAssignedToTask(this.authService.loggedUser.id)) {
+      // if logged user is not assigned at this task: update last_visit and refresh
+
+      this.hasNews = false;
+      this.authService.updateLastVisit();
+
+    } else {
+      this.taskAssignmentService.updateByTaskUserId(this.task.id, this.authService.loggedUser.id, {
+        last_watched_at: this.utilsService.datetimeNow()
+      }).then((response) => {
+
+        response.subscribe({
+          next: (value: any) => {
+
+            LoggerService.logInfo("Updated last watched");
+
+            this.refreshTask(() => {
+              this.refreshHasNews();
+            });
+
+          }
+        })
+
+      })
+    }
+
+  }
+
+  refreshTask(runAfter: Function = () => {}): void {
+
+    if(!this.task)
       return;
 
-    this.taskAssignmentService.updateByTaskUserId(this.task.id, this.loggedUser.id, {
-      last_watched_at: this.utilsService.datetimeNow()
-    }).then((response) => {
+    // refresh task
+    this.taskService.find(this.task.id).then((respose) => {
+      respose.subscribe({
+        next: (t) => {
+          this.task = t;
 
-      response.subscribe({
-        next: (value: any) => {
-
-          LoggerService.logInfo("Updated last watched");
-
+          runAfter();
         }
       })
-
     })
-
-
   }
 }

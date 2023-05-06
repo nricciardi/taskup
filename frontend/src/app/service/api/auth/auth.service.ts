@@ -165,6 +165,7 @@ export class AuthService {
         next: (value: any) => {
 
           LoggerService.logInfo("Updated last visit of logged user");
+          this.refreshMe();
         }
       })
 

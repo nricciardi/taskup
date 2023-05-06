@@ -11,6 +11,7 @@ export class ManageAssignedUserModalComponent {
   @Input("user") user?: UserModel;
   @Input("target") target?: string;
   @Input("assignmentDate") assignmentDate?: Date;
+  @Input("editable") editable: boolean = false;
 
   @Output() onRemoveFromTask = new EventEmitter<void>();
 

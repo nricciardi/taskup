@@ -40,7 +40,7 @@
           </div>
 
           <div class="col-auto">
-            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit()" data-bs-dismiss="modal">
+            <button class="btn btn-outline-primary" (click)="onRemoveFromTask.emit()" data-bs-dismiss="modal" *ngIf="editable">
               {{ "remove-from-task" | translate }}
             </button>
           </div>
