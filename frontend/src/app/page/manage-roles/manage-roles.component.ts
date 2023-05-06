@@ -15,7 +15,7 @@ export class ManageRolesComponent {
     {
       name: "name",
       type: "text",
-      placeholder: "Name",
+      placeholder: "name",
       blueprintFormControl: new FormControl('', [Validators.required]),
       unique: true
     },

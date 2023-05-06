@@ -47,7 +47,7 @@
                     [type]="field.type"
                     class="form-control"
                     [name]="field.name"
-                    placeholder="{{ 'field.placeholder' | translate }}"
+                    placeholder="{{ field.placeholder ?? '' | translate }}"
                     [formControlName]="field.name"
                     [class.is-valid]="form.controls[field.name].dirty && form.controls[field.name].valid"
                     [class.is-invalid]="form.controls[field.name].dirty && !form.controls[field.name].valid"

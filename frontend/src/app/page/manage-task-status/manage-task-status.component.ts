@@ -16,26 +16,26 @@ export class ManageTaskStatusComponent {
     {
       name: "name",
       type: "text",
-      placeholder: "Name",
+      placeholder: "name",
       blueprintFormControl: new FormControl('', [Validators.required]),
       unique: true
     },
     {
       name: "description",
       type: "textarea",
-      placeholder: "Description",
+      placeholder: "description",
       blueprintFormControl: new FormControl('')
     },
     {
       name: "hex_color",
       type: "color",
-      placeholder: "Color",
+      placeholder: "color",
       blueprintFormControl: new FormControl('', [Validators.required])
     },
     {
       name: "final",
       type: "checkbox",
-      placeholder: "Final",
+      placeholder: "final",
       blueprintFormControl: new FormControl('', [Validators.required])
     },
   ]
