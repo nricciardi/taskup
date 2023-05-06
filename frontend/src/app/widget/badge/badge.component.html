@@ -1,4 +1,6 @@
-<span class="badge bg-secondary m-1" *ngIf="text || icon" [style.background-color]="color + ' !important'">
+<span class="badge bg-secondary m-1" *ngIf="text || icon"
+      [style.background-color]="color + ' !important'"
+      [style.color]="textColor + ' !important'">
 
   <i class="bi" [ngClass]="icon" *ngIf="icon"></i>
 

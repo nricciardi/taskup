@@ -14,16 +14,27 @@
 
               <div class="d-flex">
                 <!-- PRIORITY -->
-                <app-badge [text]="task.priority.toString()" style="font-size: small;">
+                <app-badge  [text]="task.priority.toString()" style="font-size: small;"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Priority"
+                            class="cursor-arrow"
+                            [color]="'#e2d3f2'"
+                            [textColor]="'#181e24'">
                 </app-badge>
 
 
                 {{ task.name }}
-              </div>
 
-              <!-- NEWS BADGE -->
-              <app-badge [icon]="'bi-bell-fill'" [color]="'#db5c5c'" [text]="'news'" *ngIf="hasNews" (click)="updateLastWatched()" class="cursor-pointer">
-              </app-badge>
+                <!-- NEWS BADGE -->
+                <app-badge  [icon]="'bi-bell-fill'"
+                            [color]="'#db5c5c'"
+                            [text]="'news'"
+                            *ngIf="hasNews" (click)="updateLastWatched()"
+                            class="cursor-pointer"
+                            style="font-size: medium;">
+                </app-badge>
+              </div>
             </ng-container>
 
             <ng-template #titleModification>

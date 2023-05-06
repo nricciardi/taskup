@@ -10,5 +10,6 @@ export class BadgeComponent {
   @Input("text") text?: string;
   @Input("icon") icon?: string;
   @Input("color") color?: string;
+  @Input("textColor") textColor?: string;
 
 }
