@@ -6,5 +6,6 @@ export const baseEnvironment = {
   warningDateDayBefore: 7,    // day
   dangerDateDayBefore: 3,     // day
   alertTimeout: 5000,          // milliseconds
-  updateLastVisitInterval: 10000   // milliseconds
+  updateLastVisitInterval: 10000,   // milliseconds
+  authRequiredRedirectRoute: "/login"
 };

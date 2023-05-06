@@ -15,6 +15,7 @@ export class AuthService {
   private readonly ME: string = "auth_me";
   private readonly IS_LOGGED: string = "auth_is_logged";
   private readonly REFRESH_ME: string = "auth_refresh_me";
+  private readonly UPDATE_LAST_VISIT: string = "auth_update_last_visit";
 
   private _loggedUser: UserModel | null = null;
   get loggedUser() {
@@ -155,5 +156,17 @@ export class AuthService {
     });
 
     return promise;
+  }
+
+  public updateLastVisit(): void {
+    this.eelService.call(this.UPDATE_LAST_VISIT).then((response) => {
+
+      response.subscribe({
+        next: (value: any) => {
+          // nothing
+        }
+      })
+
+    })
   }
 }

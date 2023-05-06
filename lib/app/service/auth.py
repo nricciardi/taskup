@@ -15,6 +15,7 @@ class VaultData:
 
 
 class AuthService:
+    REFRESH_INTERVAL: int = 1  # seconds
     __users_manager: UsersManager
     __me: UserModel | None = None
     __local_vault: Optional[VaultData] = None
@@ -171,6 +172,19 @@ class AuthService:
             Logger.log_warning(msg="vault erase error", is_verbose=self.verbose)
 
             return False
+
+    def update_last_visit(self) -> None:
+        """
+        Update last visit of logged user
+
+        :return:
+        """
+
+        logged_user = self.me()
+
+        self.__users_manager.update_from_dict(logged_user.id, {
+            "last_visit_at": "DATE('now')"
+        })
 
 
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:

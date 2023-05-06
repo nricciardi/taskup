@@ -10,6 +10,7 @@ import { ManageTaskStatusComponent } from './page/manage-task-status/manage-task
 import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task-labels.component';
 import { ManageUsersComponent } from './page/manage-users/manage-users.component';
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
+import { AuthGuardService } from './service/api/auth/auth-guard.service';
 
 const routes: Routes = [
 
@@ -24,7 +25,8 @@ const routes: Routes = [
   },
   {
     path: "dashboard",
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "login",
@@ -32,27 +34,33 @@ const routes: Routes = [
   },
   {
     path: "test",
-    component: TestComponent
+    component: TestComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "my-profile",
-    component: MyProfileComponent
+    component: MyProfileComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "manage-task-status",
-    component: ManageTaskStatusComponent
+    component: ManageTaskStatusComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "manage-task-labels",
-    component: ManageTaskLabelsComponent
+    component: ManageTaskLabelsComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "manage-users",
-    component: ManageUsersComponent
+    component: ManageUsersComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: "manage-roles",
-    component: ManageRolesComponent
+    component: ManageRolesComponent,
+    canActivate: [AuthGuardService]
   },
 
   {
@@ -64,6 +72,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuardService]
 })
 export class AppRoutingModule { }

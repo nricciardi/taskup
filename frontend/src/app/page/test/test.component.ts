@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TaskStatusService } from 'src/app/service/api/entity/task-status/task-status.service';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
@@ -10,9 +11,8 @@ import { UserService } from 'src/app/service/api/entity/user/user.service';
 })
 export class TestComponent {
 
-  taskStatus = this.taskStatusService.getTaskById(1)
 
-  constructor(public taskStatusService: TaskStatusService) {}
+  constructor(public taskStatusService: TaskStatusService, private authService: AuthService) {}
 
   ngOnInit() {
 
@@ -20,6 +20,15 @@ export class TestComponent {
 
 
   async test() {
-    return ;
+    this.authService.isLogged().then((response) => {
+
+      response.subscribe({
+        next: (value) => {
+          console.log("value: ", value);
+
+        }
+      })
+
+    })
   }
 }
