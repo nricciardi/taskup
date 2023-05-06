@@ -108,6 +108,9 @@ Since the webserver is implemented with web socket there can only be **one** dat
 
 
 ## Database and Entities
+
+![DB diagram](./doc/img/dev-doc/db-diagram.png)
+
 ### DBManager
 **DBManager** is the class used to provide connect with the database.
 Moreover, it allows to create the base structure of the database: tables and relations between them.
