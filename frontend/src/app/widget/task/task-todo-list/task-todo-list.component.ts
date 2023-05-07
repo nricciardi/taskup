@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { NewTodoItemModel, TodoItemModel } from 'src/app/model/entity/todo-item.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { TodoService } from 'src/app/service/api/entity/todo/todo.service';
@@ -15,6 +15,8 @@ export class TaskTodoListComponent {
 
   @Input("taskId") taskId?: number;
   @Input("todoCollapseStatus") todoCollapseStatus: boolean = false;
+
+  @Output() onRefresh = new EventEmitter<void>();
 
   @ViewChild('showTodoBtn') showTodoBtn?: ElementRef;
 

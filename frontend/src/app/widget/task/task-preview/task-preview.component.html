@@ -408,7 +408,7 @@
 
 
       <!-- TO-DO LIST -->
-      <app-task-todo-list [taskId]="task.id" [todoCollapseStatus]="todoCollapseStatus"></app-task-todo-list>
+      <app-task-todo-list [taskId]="task.id" [todoCollapseStatus]="todoCollapseStatus" (onRefresh)="refreshTask()"></app-task-todo-list>
 
     </div>
   </div>

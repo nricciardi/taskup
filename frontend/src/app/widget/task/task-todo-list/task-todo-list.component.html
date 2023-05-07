@@ -79,7 +79,7 @@
         <ul class="widget-todo-list-wrapper" id="widget-todo-list">
           <app-task-todo-item *ngFor="let item of todoItems"
                               [item]="item"
-                              (refreshRequest)="loadTodoItems()">
+                              (refreshRequest)="loadTodoItems(); onRefresh.emit()">
           </app-task-todo-item>
         </ul>
 
