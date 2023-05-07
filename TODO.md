@@ -4,7 +4,7 @@
 - [ ] Remove .vs and .idea directory from Git
 - [x] Create image diagram for doc
 - [x] Make _demo script_
-- [ ] Search and set ICON
+- [ ] Search and set app ICON
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
@@ -15,17 +15,17 @@
 - [ ] Fix dark mode color
 - [ ] Remove year from deadline if we are in the current year
 - [ ] Fix env file (now is used .dev instead of .prod)
-- [ ] Add "done" button on deadline
+- [x] Add "done" button on deadline => based on task status
 - [ ] Create a new task
-- [ ] Modify task
-- [ ] Graphic refactor
+- [x] Modify task
+- [x] Graphic refactor
 - [x] Manage label section
 - [x] Manage task status section
 - [x] Profile page
 - [ ] Home page: 
   - [ ] Select project
   - [ ] Count of updates
-- [ ] "News" of a task
+- [x] "News" of a task
 - [ ] Manage Git
 - [ ] Task pagination
 - [ ] Dark color if avatar color is light
@@ -40,13 +40,13 @@
 - [x] Create common method to add a table and insert base values
 - [x] Migrate from __insert_base to seeder
 - [ ] Improve QueryBuilder (join, subquery, group by, order by)
-- [ ] Crypt password of users
+- [x] Crypt password of users
 - [ ] Improve common methods of entity (py) as in typescript
   -  [x] all_as_model
   -  [ ] append relation on bem and not in another foreach
 - [ ] Make sqlite fetch methods asynchronous
 - [ ] Add permission control
-- [ ] Add "done" for deadline => based on task status
+- [x] Add "done" for deadline => based on task status
 - [ ] Deploy
 - [ ] Manage Git
 - [ ] Insert multi-credentials in vault
@@ -55,4 +55,4 @@
 - [x] Unique on user's username? Add name and surname?
 - [x] DB schema
 - [x] deadline from date to datetime?
-- [ ] Permission "edit_deadline"
+- [x] Permission "edit_deadline"
