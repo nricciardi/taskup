@@ -34,6 +34,7 @@
 - [ ] Prevent todo-list refresh on task updates
 - [ ] Add custom menu on right click on page
 - [ ] Forgot password
+- [ ] "news" mistakes
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
@@ -57,3 +58,4 @@
 - [x] DB schema
 - [x] deadline from date to datetime?
 - [x] Permission "edit_deadline"
+- [ ] Triggers don't work
