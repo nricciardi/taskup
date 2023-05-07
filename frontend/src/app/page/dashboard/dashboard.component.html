@@ -21,6 +21,7 @@
     </div>
   </div> -->
 
+  <!-- FILTER -->
   <app-filter *ngIf="dashboard && dashboard?.tasks"
               [filterFields]="['name', 'description']"
               [(entities)]="dashboard.tasks">
@@ -135,12 +136,6 @@
 <ng-container *ngIf="dashboard && !loadingError">
   <div class="row justify-content-between">
 
-    <!-- NEW TASK BLUEPRINT -->
-    <app-task-preview
-                      [task]="blueprintTask"
-                      >
-    </app-task-preview>
-
     <!-- TASK LIST -->
     <div class="col-12">
       <app-task-preview-list  [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"
@@ -149,7 +144,7 @@
                               (onAddAssignment)="updateTask($event)"
                               (onRemoveAssignment)="updateTask($event)"
                               (onModify)="updateTask($event)">
-    </app-task-preview-list>
+      </app-task-preview-list>
     </div>
   </div>
 </ng-container>
@@ -167,8 +162,11 @@
 <div class="fab-container pos-fixed">
   <div class="fab shadow">
     <div class="fab-content">
-      <span class="material-icons cursor-pointer" (click)="newTask()">
-        <i class="bi bi-plus"></i>
+      <span class="material-icons cursor-pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#create-new-task">
+
+            <i class="bi bi-plus"></i>
       </span>
     </div>
   </div>
@@ -192,4 +190,97 @@
       <span class="material-icons">help_outline</span>
     </a>
   </div> -->
+</div>
+
+
+<!-- CREATE NEW TASK MODAL -->
+<div
+  class="modal fade"
+  id="create-new-task"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="create-new-task-title"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5
+          class="modal-title"
+          id="create-new-task-title"
+        >
+          {{ "add-task" | translate }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <i data-feather="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <section id="basic-vertical-layouts">
+          <div class="row match-height">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-body">
+                    <div class="form-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <div class="form-floating">
+                              <textarea
+                                class="form-control"
+                                placeholder="Leave a name here"
+                                style="height: 15vh;"
+                                #nameOfTask
+                              ></textarea>
+                              <label for="floatingTextarea">
+                                {{ "name" | translate }}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-light-secondary"
+          data-bs-dismiss="modal"
+        >
+          <i class="bx bx-x d-block d-sm-none"></i>
+          <span class="d-none d-sm-block">
+            {{ "close" | translate }}
+          </span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary ml-1"
+          data-bs-dismiss="modal"
+          (click)="newTask(nameOfTask.value)"
+        >
+          <i class="bx bx-check d-block d-sm-none"></i>
+          <span class="d-none d-sm-block">
+            {{ "confirm" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

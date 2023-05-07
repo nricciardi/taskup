@@ -2,10 +2,11 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
-import { TaskModel } from 'src/app/model/entity/task.model';
+import { TaskModel, BlueprintTaskModel, NewTaskModel } from 'src/app/model/entity/task.model';
 import { UpdateTaskModel } from 'src/app/model/entity/update-task.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { DashboardService } from 'src/app/service/api/dashboard/dashboard.service';
+import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { GitgraphService } from 'src/app/service/git/gitgraph/gitgraph.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
 import { environment } from 'src/environments/environment.development';
@@ -30,9 +31,23 @@ interface RGBColor {
 })
 export class DashboardComponent {
 
+  private _taskStatusIdIndex?: number;   // the index for task_status id
+
   private updateLastVisitInterval?: any;    // timer
 
-  constructor(private dashboardService: DashboardService, public authService: AuthService) {
+  OrderBy = OrderBy
+  private _orderBy: OrderBy = this.OrderBy.PRIORITY;
+
+  loadingError:boolean = false;
+
+  dashboard: DashboardModel | null = null;
+
+  onTopTaskIdList: number[] = [];
+
+  constructor(private dashboardService: DashboardService, public authService: AuthService, private taskService: TaskService) {
+
+    this.authService.refreshMe();
+
     this.updateLastVisitInterval = setInterval(() => {
 
       this.authService.updateLastVisit();
@@ -50,15 +65,6 @@ export class DashboardComponent {
 
   }
 
-  blueprintTask?: TaskModel;
-
-  OrderBy = OrderBy
-
-  loadingError:boolean = false;
-
-  dashboard: DashboardModel | null = null;
-  private _taskStatusIdIndex?: number;   // the index for task_status id
-
   get taskStatusIdIndex() {
     return this._taskStatusIdIndex;
   }
@@ -66,9 +72,6 @@ export class DashboardComponent {
   set taskStatusIdIndex(newIndex) {
     this._taskStatusIdIndex = newIndex;
   }
-
-
-  private _orderBy: OrderBy = this.OrderBy.PRIORITY;
 
   get orderBy() {
     return this._orderBy;
@@ -253,7 +256,31 @@ export class DashboardComponent {
 
   }
 
-  newTask() {
+  newTask(name: string) {
     window.scroll(0, 0);
+
+    if(!this.authService.loggedUser || !this.taskStatusIdIndex)
+      return;
+
+    const baseNewTask: NewTaskModel = {
+      name: name,
+      priority: environment.basePriorityValue,
+      author_id: this.authService.loggedUser.id,
+      task_status_id: this.taskStatusIdIndex
+    }
+
+    this.taskService.create(baseNewTask).then((response) => {
+
+      response.subscribe({
+        next: (task) => {
+
+          this.dashboard?.tasks.push(task);
+
+          this.onTopTaskIdList = [task.id];
+        }
+      })
+
+    })
+
   }
 }

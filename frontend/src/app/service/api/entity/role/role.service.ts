@@ -10,6 +10,6 @@ export class RoleService extends EntityApiService<RoleModel> {
   override FIND: string = "role_find";
   override DELETE_BY_ID: string = "role_delete_by_id";
   override UPDATE: string = "role_update";
-  override CREATE: string = "role_create_from_dict";
+  override CREATE: string = "role_create";
   override CHECK_ALREADY_USED: string = "role_check_already_used";
 }

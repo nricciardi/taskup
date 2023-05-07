@@ -242,12 +242,13 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         try:
-            Logger.log_info(msg=f"create a new resource in {self.table_name} with data: {data}", is_verbose=self.verbose)
 
             self.db_manager.insert_from_dict(self.table_name, data)
 
             # find entity created to return its
             entity = self.find(self.db_manager.cursor.lastrowid)
+
+            Logger.log_info(msg=f"created a new resource in {self.table_name} with data: {data}\nresult: {entity}", is_verbose=self.verbose)
 
             return entity
 

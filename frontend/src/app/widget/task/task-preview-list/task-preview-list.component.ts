@@ -16,6 +16,7 @@ export class TaskPreviewListComponent {
   @Input("taskStatus") taskStatus: TaskStatusModel[] | null = null;
   @Input("nextTaskStatus") nextTaskStatus: TaskStatusModel | null = null;
   @Input("prevTaskStatus") prevTaskStatus: TaskStatusModel | null = null;
+  @Input("onTop") onTop: number[] = [];
 
 
   @Output() onDeletion = new EventEmitter<number>();
@@ -28,6 +29,29 @@ export class TaskPreviewListComponent {
 
   constructor(private authService: AuthService) {
     this.authService.refreshMe();   // so after i can use .loggedUser
+  }
+
+  ngOnInit() {
+    this.setOnTop();
+  }
+
+  setOnTop() {
+    if(!this.tasks)
+      return;
+
+    const onTopTasks: TaskModel[] = [];
+    const remainingTask: TaskModel[] = [];
+
+    for (const task of this.tasks) {
+      if (this.onTop.includes(task.id)) {
+        onTopTasks.push(task);
+      } else {
+        remainingTask.push(task);
+      }
+    }
+
+    // Unire gli oggetti prioritari in cima all'array
+    this.tasks = [...onTopTasks, ...remainingTask];
   }
 
   scrollTop() {

@@ -52,8 +52,6 @@ export class FilterComponent<E> {
 
     this.entitiesBackup = this.entities;
 
-    console.log(this.filterForm);
-
   }
 
   filter(): void {

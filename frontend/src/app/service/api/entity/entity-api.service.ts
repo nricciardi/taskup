@@ -37,7 +37,7 @@ export abstract class EntityApiService<T> {
     return this.eelService.call(this.UPDATE, id, data);
   }
 
-  public async create(data: object): Promise<Observable<T>> {
+  public async create(data: any): Promise<Observable<T>> {
 
     return this.eelService.call(this.CREATE, data);
   }

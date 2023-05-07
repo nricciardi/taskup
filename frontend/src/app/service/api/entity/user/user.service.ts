@@ -10,6 +10,6 @@ export class UserService extends EntityApiService<UserModel> {
   override FIND: string = "user_find";
   override DELETE_BY_ID: string = "user_delete_by_id";
   override UPDATE: string = "user_update";
-  override CREATE: string = "user_create_from_dict";
+  override CREATE: string = "user_create";
   override CHECK_ALREADY_USED: string = "user_check_already_used";
 }

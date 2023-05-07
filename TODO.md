@@ -35,6 +35,7 @@
 - [ ] Add custom menu on right click on page
 - [ ] Forgot password
 - [ ] "news" mistakes
+- [ ] Bug in update task if there isn't description
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods

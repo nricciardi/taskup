@@ -242,7 +242,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.task_table_name: Table(self.task_table_name, [
                 Field.id_field(),
-                Field.name_field(),
+                Field.name_field(unique=False),
                 Field.description_field(),
                 Field.nullable_datetime_with_now_check_field(name="deadline"),
                 Field(name="priority", type="INTEGER", default="0"),

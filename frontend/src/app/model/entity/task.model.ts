@@ -38,3 +38,11 @@ export interface BlueprintTaskModel {
   labels?: TaskLabelModel[] | null;
   assigned_users?: AssignedUserModel[] | null;
 }
+
+export interface NewTaskModel {
+  name: string;
+  description?: string;
+  priority: number;
+  author_id: number;
+  task_status_id: number;
+}

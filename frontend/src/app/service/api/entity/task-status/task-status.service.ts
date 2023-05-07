@@ -12,7 +12,7 @@ export class TaskStatusService extends EntityApiService<TaskStatusModel> {
   override FIND: string = "task_status_find";
   override DELETE_BY_ID: string = "task_status_delete_by_id";
   override UPDATE: string = "task_status_update";
-  override CREATE: string = "task_status_create_from_dict";
+  override CREATE: string = "task_status_create";
   override CHECK_ALREADY_USED: string = "task_status_check_already_used";
 
   public async getTaskById(id: number): Promise<TaskStatusModel> {

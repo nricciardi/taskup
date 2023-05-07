@@ -4,7 +4,7 @@
 
       <h4 class="card-title">
         <div class="row justify-content-between">
-          <div class="col-md-8">
+          <div class="col-md-10">
             <!-- TASK TITLE -->
             <ng-container *ngIf="!inModify; else titleModification">
 
@@ -20,7 +20,9 @@
                 </app-badge>
 
 
-                {{ task.name }}
+                <span class="text-break">
+                  {{ task.name }}
+                </span>
 
                 <!-- NEWS BADGE -->
                 <app-badge  [icon]="'bi-bell-fill'"

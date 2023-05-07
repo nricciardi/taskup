@@ -48,8 +48,6 @@ export class TaskPreviewComponent {
 
   constructor(private taskService: TaskService, public authService: AuthService, public utilsService: UtilsService,
      public taskStatusService: TaskStatusService, private taskAssignmentService: TaskAssignmentService) {
-
-      this.authService.refreshMe();
   }
 
   nextStatus?: Promise<TaskStatusModel>;

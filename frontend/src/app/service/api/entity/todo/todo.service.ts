@@ -13,7 +13,7 @@ export class TodoService extends EntityApiService<TodoItemModel> {
   override DELETE_BY_ID = "todo_delete_by_id";
   readonly ALL_OF = "todo_all_of";
   override UPDATE: string = "todo_update";
-  override CREATE: string = "todo_create_from_dict";
+  override CREATE: string = "todo_create";
   override CHECK_ALREADY_USED: string = "todo_already_used";
 
   public async allOf(taskId: number): Promise<Observable<TodoItemModel[]>> {
