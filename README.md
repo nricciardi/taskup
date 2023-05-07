@@ -72,6 +72,9 @@ The task's labels are shown in top of the task's card.
 Using "+" button at the end of labels list is possible to add a new label.
 Clicking on a label is possible remove that label.
 
+### Create a New Task
+Create a new task is simple, clicking on _FAB_ button on bottom-right a modal will be showing.
+It is used to insert name, description and priority of the new task. Checking the checkbox is possible self-assign to task. 
 
 ## User Profile
 Each logged user is able to manage own profile using _My Profile_ page. It can be accessed through dropdown menu on header avatar:
