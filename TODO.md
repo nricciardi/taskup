@@ -6,6 +6,7 @@
 - [x] Make _demo script_
 - [ ] Search and set app ICON
 - [ ] Table of contents
+- [ ] Change name in front-end tab
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
