@@ -5,6 +5,7 @@
 - [x] Create image diagram for doc
 - [x] Make _demo script_
 - [ ] Search and set app ICON
+- [ ] Table of contents
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
