@@ -45,29 +45,27 @@ In addition, other functionality are present using the button in top-right side.
 
 In the dashboard, each task has its own card which shows all task's information.
 
-**TODO TASK CARD IMG**
-
 > Task can be refreshing using the button on right side.
+
+![Dashboard refresh](./doc/img/usr-doc/dashboard-refresh.png)
 
 ### Order by
 Each section can be ordered by **priority** or **deadline** (ascending or descending) using the specif button.
 
-**TODO ORDER BY BTN IMG**
+![Dashboard order by](./doc/img/usr-doc/dashboard-order-by.png)
 
 ### Priority
 Each task has a priority value which indicates the _priority of task_, the priority increases with the corresponded number value.
 This value is shown in the badge on left of task name.
 
-**TODO IMG PRIORITY**
+![Task priority](./doc/img/usr-doc/task-priority.png)
 
 ### More details
 The _More details_ section is a collapsible section which is used to show secondary information of the task as author, creation date, identitier task code and so on.
 
-**TODO IMG**
-
 ### Labels
 
-**TODO LABELS IMG**
+![Task labels](./doc/img/usr-doc/task-labels.png)
 
 Labels are a fast visible identities. Usually, they are used to group task of common work areas, for example the _Front-end labels_ is assigned to all task which describes _a task to do for front-end of MyProject_.
 The task's labels are shown in top of the task's card.
