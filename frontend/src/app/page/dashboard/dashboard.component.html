@@ -120,6 +120,9 @@
           <button class="dropdown-item" (click)="orderBy = OrderBy.DEADLINE; orderReverse = false">
             {{ "deadline" | translate }}
           </button>
+          <button class="dropdown-item" (click)="orderBy = OrderBy.CREATION; orderReverse = false">
+            {{ "creation" | translate }}
+          </button>
         </div>
       </div>
     </ng-container>
@@ -140,6 +143,7 @@
     <div class="col-12">
       <app-task-preview-list  [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"
                               [taskStatus]="dashboard.task_status"
+                              [onTop]="onTopTaskIdList"
                               (onDeletion)="removeTask($event)"
                               (onAddAssignment)="updateTask($event)"
                               (onRemoveAssignment)="updateTask($event)"
@@ -232,23 +236,40 @@
                 <div class="card-content">
                   <div class="card-body">
                     <div class="form-body">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="form-group">
-                            <div class="form-floating">
-                              <textarea
-                                class="form-control"
-                                placeholder="Leave a name here"
-                                style="height: 15vh;"
-                                #nameOfTask
-                              ></textarea>
-                              <label for="floatingTextarea">
-                                {{ "name" | translate }}
-                              </label>
+                      <form>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="form-group">
+                              <div class="form-floating">
+                                <textarea
+                                  class="form-control"
+                                  placeholder="Leave a name here"
+                                  style="height: 15vh;"
+                                  #nameOfTask
+                                ></textarea>
+                                <label for="floatingTextarea">
+                                  {{ "name" | translate }}
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <input
+                              class="form-control"
+                              type="number"
+                              placeholder="{{ 'priority' | translate }}"
+
+                              #priorityOfTask
+                            />
+                          </div>
+                        </div>
+
+                      </form>
+
                     </div>
                   </div>
                 </div>
@@ -273,7 +294,7 @@
           type="button"
           class="btn btn-primary ml-1"
           data-bs-dismiss="modal"
-          (click)="newTask(nameOfTask.value)"
+          (click)="newTask(nameOfTask.value, +priorityOfTask.value); orderBy = OrderBy.CREATION; orderReverse = true"
         >
           <i class="bx bx-check d-block d-sm-none"></i>
           <span class="d-none d-sm-block">

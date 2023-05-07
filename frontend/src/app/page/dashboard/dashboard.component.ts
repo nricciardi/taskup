@@ -12,9 +12,11 @@ import { LoggerService } from 'src/app/service/logger/logger.service';
 import { environment } from 'src/environments/environment.development';
 
 
+// value is entity's field to sort
 enum OrderBy {
   PRIORITY = "priority",
-  DEADLINE = "deadline"
+  DEADLINE = "deadline",
+  CREATION = "created_at",
 }
 
 interface RGBColor {
@@ -172,6 +174,7 @@ export class DashboardComponent {
     if(!tasksBasedOnStatusId)
       return null;
 
+    // sort task based on dropdown menu choice
     tasksBasedOnStatusId?.sort((a: TaskModel, b: TaskModel): number => {
 
       const aField: any = a[this.orderBy];
@@ -256,7 +259,7 @@ export class DashboardComponent {
 
   }
 
-  newTask(name: string) {
+  newTask(name: string, priority: number = environment.basePriorityValue) {
     window.scroll(0, 0);
 
     if(!this.authService.loggedUser || !this.taskStatusIdIndex)
@@ -264,7 +267,7 @@ export class DashboardComponent {
 
     const baseNewTask: NewTaskModel = {
       name: name,
-      priority: environment.basePriorityValue,
+      priority: priority,
       author_id: this.authService.loggedUser.id,
       task_status_id: this.taskStatusIdIndex
     }
