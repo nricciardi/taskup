@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DashboardModel } from 'src/app/model/entity/dashboard.model';
 import { TaskStatusModel } from 'src/app/model/entity/task-status.model';
 import { TaskModel, BlueprintTaskModel, NewTaskModel } from 'src/app/model/entity/task.model';
@@ -45,6 +45,13 @@ export class DashboardComponent {
   dashboard: DashboardModel | null = null;
 
   onTopTaskIdList: number[] = [];
+
+  creationForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl(''),
+    priority: new FormControl('', [Validators.required]),
+    selfAssigned: new FormControl(false, [Validators.required])
+  });
 
   constructor(private dashboardService: DashboardService, public authService: AuthService, private taskService: TaskService) {
 
@@ -259,15 +266,20 @@ export class DashboardComponent {
 
   }
 
-  newTask(name: string, priority: number = environment.basePriorityValue) {
+  newTask() {
     window.scroll(0, 0);
 
     if(!this.authService.loggedUser || !this.taskStatusIdIndex)
       return;
 
+    if(this.creationForm.invalid)
+      return;
+
+
     const baseNewTask: NewTaskModel = {
-      name: name,
-      priority: priority,
+      name: this.creationForm.controls['name'].value ?? "",
+      description: this.creationForm.controls['description'].value ?? "",
+      priority: +(this.creationForm.controls['priority'].value ?? environment.basePriorityValue),
       author_id: this.authService.loggedUser.id,
       task_status_id: this.taskStatusIdIndex
     }
@@ -280,6 +292,19 @@ export class DashboardComponent {
           this.dashboard?.tasks.push(task);
 
           this.onTopTaskIdList = [task.id];
+
+          // self assign
+          if(!!this.creationForm.controls['selfAssigned'].value) {
+            this.taskService.addAssignment(task.id, this.authService.loggedUser!.id).then((response) => {
+
+              response.subscribe({
+                next: (value) => {
+                  // nothing
+                }
+              })
+
+            })
+          }
         }
       })
 

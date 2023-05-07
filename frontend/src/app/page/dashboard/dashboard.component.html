@@ -236,7 +236,7 @@
                 <div class="card-content">
                   <div class="card-body">
                     <div class="form-body">
-                      <form>
+                      <form [formGroup]="creationForm">
 
                         <div class="row">
                           <div class="col-12">
@@ -246,7 +246,8 @@
                                   class="form-control"
                                   placeholder="Leave a name here"
                                   style="height: 15vh;"
-                                  #nameOfTask
+
+                                  formControlName="name"
                                 ></textarea>
                                 <label for="floatingTextarea">
                                   {{ "name" | translate }}
@@ -256,15 +257,50 @@
                           </div>
                         </div>
 
-                        <div class="row">
-                          <div class="col-12">
+                        <div class="row align-items-center">
+                          <div class="col-md-9">
                             <input
                               class="form-control"
                               type="number"
                               placeholder="{{ 'priority' | translate }}"
 
-                              #priorityOfTask
+                              formControlName="priority"
                             />
+                          </div>
+
+                          <div class="col-md-3">
+                            <div class="form-check">
+                              <div class="checkbox">
+                                <input
+                                  type="checkbox"
+                                  id="self-assigned"
+                                  class="form-check-input"
+                                  [checked]="creationForm.controls['selfAssigned'].value"
+                                />
+                                <label for="self-assigned">
+                                  {{ "assign-yourself" | translate }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mt-2">
+                          <div class="col-12">
+                            <div class="form-group">
+                              <div class="form-floating">
+                                <textarea
+                                  class="form-control"
+                                  placeholder="Leave a description here"
+                                  style="height: 30vh;"
+
+                                  formControlName="description"
+                                ></textarea>
+                                <label for="floatingTextarea">
+                                  {{ "description" | translate }}
+                                </label>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -294,7 +330,8 @@
           type="button"
           class="btn btn-primary ml-1"
           data-bs-dismiss="modal"
-          (click)="newTask(nameOfTask.value, +priorityOfTask.value); orderBy = OrderBy.CREATION; orderReverse = true"
+          [disabled]="creationForm.invalid"
+          (click)="newTask(); orderBy = OrderBy.CREATION; orderReverse = true"
         >
           <i class="bx bx-check d-block d-sm-none"></i>
           <span class="d-none d-sm-block">
