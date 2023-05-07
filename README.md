@@ -32,13 +32,16 @@ Usually the PM is the user who has created _MyProject_, he is able to create oth
 The roles can be modified in a second moment if the user has specific permission.
 
 ## Task Dashboard
+
+![Dashboard](./doc/img/usr-doc/dashboard-page.png)
+
 The _Dashboard_ is the application core. It is used to manage tasks.
 Based on user's permission, the logged user is able to see all tasks or only assigned task.
 Dashboard is divided in a different section for each task status. For example _To-do_ state, _Doing_ state, _Done_ state and so on.
 Dashboard has a _sticky_ header used to keep in mind the current task status visualized, the number of task for current status and it also has two buttons to go in the default _next_ and _prev_ status. For example, _doing_ status may have _to-do_ as previously status and _done_ as next status.
 In addition, other functionality are present using the button in top-right side.
 
-**TODO IMG BUTTON**
+![Other funcs](./doc/img/usr-doc/dashboard-other-funcs.png)
 
 In the dashboard, each task has its own card which shows all task's information.
 
@@ -66,7 +69,7 @@ The _More details_ section is a collapsible section which is used to show second
 
 **TODO LABELS IMG**
 
-Labels are a fast visible identitier. Usually, they are used to group task of common work areas, for example the _Front-end labels_ is assigned to all task which describes _a task to do for front-end of MyProject_.
+Labels are a fast visible identities. Usually, they are used to group task of common work areas, for example the _Front-end labels_ is assigned to all task which describes _a task to do for front-end of MyProject_.
 The task's labels are shown in top of the task's card.
 Using "+" button at the end of labels list is possible to add a new label.
 Clicking on a label is possible remove that label.
