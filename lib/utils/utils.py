@@ -67,7 +67,7 @@ class Utils:
 
 class SqlUtils:
 
-    UPDATER_FIELD_NAME: str = "updated_at"
+    UPDATED_AT_FIELD_NAME: str = "updated_at"
 
     DATETIME_FORMATTER: str = '%Y-%m-%d %H:%M:%S'
     DATE_FORMATTER: str = '%Y-%m-%d'

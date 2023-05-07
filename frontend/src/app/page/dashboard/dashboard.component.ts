@@ -57,6 +57,8 @@ export class DashboardComponent {
 
     this.authService.refreshMe();
 
+    this.authService.updateLastVisit();   // update on init
+
     this.updateLastVisitInterval = setInterval(() => {
 
       this.authService.updateLastVisit();

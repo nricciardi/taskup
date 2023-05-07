@@ -117,7 +117,7 @@ class Demo:
         for n in range(1, n_tasks):
 
             task = self.__tasks_manager.create_from_dict({
-                "name": f"Name of task {n - 1}",
+                "name": f"Name of task {n}",
                 "description": self.LOREM_IPSUM,
                 "author_id": randint(1, n_users),
                 "task_status_id": randint(1, 8),

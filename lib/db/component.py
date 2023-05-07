@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple, Dict, Any, Optional, TypeVar
+from typing import List, Tuple, Any, Optional, TypeVar
 from lib.utils.mixin.dcparser import DCToDictMixin, DCToTupleMixin
 from lib.utils.mixin.sql import ToSqlInterface
 from lib.utils.utils import SqlUtils
+from lib.utils.logger import Logger
 
 
 @dataclass
@@ -201,7 +202,7 @@ class Table(ToSqlInterface):
 
         return cls(table_name, fields, fk_constraints, other_constraints=other_constraints, with_triggers=with_triggers)
 
-    def to_sql(self, if_not_exist: bool = True) -> str:
+    def to_sql(self, if_not_exist: bool = True, verbose: bool = False) -> str:
         """
         Get sql string to create table
 
@@ -211,7 +212,7 @@ class Table(ToSqlInterface):
 
         fields = ',\n'.join(f.to_sql() for f in self.fields)
 
-        table = f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
+        query = f"""Create Table {'If Not Exists' if if_not_exist else ''} {self.name} (
             {fields}
 
             {"," + ','.join(fk.to_sql() for fk in self.fk_constraints) if self.has_fk_constraints() else ""}
@@ -225,9 +226,12 @@ class Table(ToSqlInterface):
             if isinstance(self.with_triggers, Trigger):
                 self.with_triggers = [self.with_triggers]       # cast to list
 
-            table += "\n".join(trigger.to_sql() for trigger in self.with_triggers)
+            query += "\n".join(trigger.to_sql() for trigger in self.with_triggers)
 
-        return table
+        if verbose:
+            Logger.log(msg=query)
+
+        return query
 
     @property
     def fields_name(self) -> Tuple:

@@ -99,8 +99,7 @@ class BaseTaskStatusIdMixin:
 
 class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False,
-                 use_localtime: bool = False):
+    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False, use_localtime: bool = False):
         """
         Create a DBManager
 
@@ -256,7 +255,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], with_triggers=Trigger(
                 name=f"{self.task_table_name}_updater_trigger",
                 on_action=f"Update On {self.task_table_name}",
-                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.id"
+                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.id"
             )),
 
             self.task_label_table_name: Table(self.task_label_table_name, [
@@ -272,11 +271,23 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], other_fields=[
                 Field.datetime_now("assigned_at", use_localtime=self.use_localtime),
                 Field.nullable_datetime_with_now_check_field("last_watched_at", use_localtime=self.use_localtime, default=None),
-            ], with_triggers=Trigger(
-                name=f"{self.task_table_name}_updater_trigger",
-                on_action=f"Update On {self.task_assignment_table_name}",
-                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
-            )),
+            ], with_triggers=[
+                Trigger(
+                    name=f"{self.task_assignment_table_name}_on_insert_updater_trigger",
+                    on_action=f"After Insert On {self.task_assignment_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+                Trigger(
+                    name=f"{self.task_assignment_table_name}_on_delete_updater_trigger",
+                    on_action=f"After Delete On {self.task_assignment_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = old.task_id"
+                ),
+                Trigger(
+                    name=f"{self.task_assignment_table_name}_on_delete_updater_trigger",
+                    on_action=f"After Update On {self.task_assignment_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+            ]),
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [
                 Field.id_field(),
@@ -290,20 +301,44 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             ], fk_constraints=[
                 FKConstraint.on_id(fk_field="author_id", on_table=self.user_table_name, on_update="CASCADE", on_delete="SET NULL"),
                 FKConstraint.on_id(fk_field="task_id", on_table=self.task_table_name, on_update="CASCADE", on_delete="CASCADE"),
-            ], with_triggers=Trigger(
-                name=f"{self.task_table_name}_updater_trigger",
-                on_action=f"Update Of {self.todo_item_table_name} On {self.task_table_name}",
-                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
-            )),
+            ], with_triggers=[
+                Trigger(
+                    name=f"{self.todo_item_table_name}_on_insert_updater_trigger",
+                    on_action=f"After Insert On {self.todo_item_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+                Trigger(
+                    name=f"{self.todo_item_table_name}_on_delete_updater_trigger",
+                    on_action=f"After Delete On {self.todo_item_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = old.task_id"
+                ),
+                Trigger(
+                    name=f"{self.todo_item_table_name}_on_update_updater_trigger",
+                    on_action=f"After Update On {self.todo_item_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+            ]),
 
             self.task_task_label_pivot_table_name: Table.pivot(self.task_task_label_pivot_table_name, [
                 self.task_table_name,
                 self.task_label_table_name
-            ], with_triggers=Trigger(
-                name=f"{self.task_table_name}_updater_trigger",
-                on_action=f"Update On {self.task_task_label_pivot_table_name}",
-                script=f"Update {self.task_table_name} Set {SqlUtils.UPDATER_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where id = new.task_id"
-            ))
+            ], with_triggers=[
+                Trigger(
+                    name=f"{self.task_task_label_pivot_table_name}_on_insert_updater_trigger",
+                    on_action=f"After Insert On {self.task_task_label_pivot_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+                Trigger(
+                    name=f"{self.task_task_label_pivot_table_name}_on_delete_updater_trigger",
+                    on_action=f"After Delete On {self.task_task_label_pivot_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = old.task_id"
+                ),
+                Trigger(
+                    name=f"{self.task_task_label_pivot_table_name}_on_update_updater_trigger",
+                    on_action=f"After Update On {self.task_task_label_pivot_table_name}",
+                    script=f"Update {self.task_table_name} Set {SqlUtils.UPDATED_AT_FIELD_NAME} = {SqlUtils.datetime_strf_now()} Where {self.task_table_name}.id = new.task_id"
+                ),
+            ])
 
         }
 
@@ -358,8 +393,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         except Exception as exception:
 
-            Logger.log_error(msg=f"error occurs during run seeder: {name}", full=True,
-                             is_verbose=self.verbose)
+            Logger.log_error(msg=f"error occurs during run seeder: {name}", full=True, is_verbose=self.verbose)
 
     @property
     def db_path(self):
@@ -478,8 +512,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         except Exception as exception:
 
-            Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True,
-                             is_verbose=self.verbose)
+            Logger.log_error(msg=f"error occurs during fill {self.task_status_table_name}", full=True, is_verbose=self.verbose)
 
     @property
     def task_task_label_pivot_table_name(self) -> str:
@@ -559,8 +592,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         self.connection.commit()
 
-    def insert_from_dict(self, table_name: str, values: Dict | List[Dict],
-                         columns: List[str] | Tuple[str] | None = None) -> int:
+    def insert_from_dict(self, table_name: str, values: Dict | List[Dict], columns: List[str] | Tuple[str] | None = None) -> int:
         """
         Insert all dict values passed in a table
 
