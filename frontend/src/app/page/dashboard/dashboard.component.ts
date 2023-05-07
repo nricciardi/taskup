@@ -267,6 +267,9 @@ export class DashboardComponent {
   }
 
   newTask() {
+
+
+
     window.scroll(0, 0);
 
     if(!this.authService.loggedUser || !this.taskStatusIdIndex)
@@ -280,30 +283,45 @@ export class DashboardComponent {
       name: this.creationForm.controls['name'].value ?? "",
       description: this.creationForm.controls['description'].value ?? "",
       priority: +(this.creationForm.controls['priority'].value ?? environment.basePriorityValue),
-      author_id: this.authService.loggedUser.id,
-      task_status_id: this.taskStatusIdIndex
+      author_id: this.authService.loggedUser!.id,
+      task_status_id: +this.taskStatusIdIndex!
     }
+
+    const selfAssigned = !!this.creationForm.controls['selfAssigned'].value;
 
     this.taskService.create(baseNewTask).then((response) => {
 
       response.subscribe({
         next: (task) => {
 
-          this.dashboard?.tasks.push(task);
-
-          this.onTopTaskIdList = [task.id];
+          this.creationForm.reset();
 
           // self assign
-          if(!!this.creationForm.controls['selfAssigned'].value) {
+          if(selfAssigned) {
             this.taskService.addAssignment(task.id, this.authService.loggedUser!.id).then((response) => {
 
               response.subscribe({
                 next: (value) => {
-                  // nothing
+
+                  // refresh task
+                  this.taskService.find(task.id).then((respose) => {
+                    respose.subscribe({
+                      next: (t) => {
+                        this.dashboard?.tasks.push(t);
+
+                      }
+                    })
+                  })
+
                 }
               })
 
             })
+
+
+          } else {    // append immediatly task
+
+            this.dashboard?.tasks.push(task);
           }
         }
       })

@@ -35,14 +35,16 @@
               </div>
             </ng-container>
 
+            <!-- TITLE MODIFICATION -->
             <ng-template #titleModification>
 
               <div class="row">
                 <div class="col-md-2">
+                  <!-- PRIORITY MODIFICATION -->
                   <input
                     class="form-control form-control-sm"
                     type="number"
-                    placeholder="Priority"
+                    placeholder="{{ 'priority' | translate }}"
                     [value]="task.priority"
 
                     #priorityInput
@@ -52,10 +54,12 @@
 
                 <div class="col-md-10">
                   <div class="form-group">
+                    <!-- NAME MODIFICATION -->
                     <textarea
                             class="form-control"
                             id="task-title"
-                            placeholder="Task Title"
+
+                            placeholder="{{ 'name' | translate }}"
                             [value]="blueprintModificateTask?.name"
 
                             appAutoHeight
@@ -73,7 +77,16 @@
             </ng-template>
           </div>
 
-          <div class="col-md-auto">
+          <div class="col-md-2 d-flex justify-content-end">
+
+            <!-- NOT ASSIGNED ICON -->
+            <div class="mr-3">
+              <i  class="bi bi-clipboard2-x-fill not-assigned-task" *ngIf="!userAssignedToTask(authService.loggedUser.id) && !inModify"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                attr.title="{{ 'not-assigned' | translate }}">
+              </i>
+            </div>
 
             <!-- MENU -->
             <div class="btn-group mb-1" *ngIf="!inModify; else confirmModifyBtn">
@@ -81,7 +94,6 @@
                 <button
                   class="btn icon btn-sm btn-light me-1"
                   type="button"
-                  id="dropdownMenuButtonIconRight"
                   data-bs-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
@@ -90,7 +102,6 @@
                 </button>
                 <div
                   class="dropdown-menu"
-                  aria-labelledby="dropdownMenuButtonIconRight"
                 >
                   <!-- Delete -->
                   <button class="dropdown-item"
@@ -117,31 +128,33 @@
                     <i class="bi bi-trash me-50"></i>
                     {{ "delete" | translate }}
                   </button>
+
+                  <!-- Refresh -->
+                  <button class="dropdown-item" (click)="refreshTask()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    {{ "refresh" | translate }}
+                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- NOT ASSIGNED ICON -->
-            <i  class="bi bi-clipboard2-x-fill not-assigned-task" *ngIf="!userAssignedToTask(authService.loggedUser.id) && !inModify"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                attr.title="{{ 'not-assigned' | translate }}">
-            </i>
-
+            <!-- MODIFICATION BTN -->
             <ng-template #confirmModifyBtn>
 
-              <!-- RESET CHANGES -->
-              <button class="btn icon icon-right btn-light"
-                      (click)="initBlueprintTask()">
-                {{ "reset" | translate }}
-              </button>
+              <div>
+                <!-- RESET CHANGES -->
+                <button class="btn icon icon-right btn-light"
+                (click)="initBlueprintTask()">
+                  {{ "reset" | translate }}
+                </button>
 
-              <!-- SUBMIT CHANGES -->
-              <button class="btn icon icon-right btn-primary"
-                      (click)="modify(blueprintModificateTask!)">
-                {{ "submit" | translate }}
-                <i class="bi bi-check-lg"></i>
-              </button>
+                <!-- SUBMIT CHANGES -->
+                <button class="btn icon icon-right btn-primary"
+                        (click)="modify(blueprintModificateTask!)">
+                  {{ "submit" | translate }}
+                  <i class="bi bi-check-lg"></i>
+                </button>
+              </div>
 
             </ng-template>
 
@@ -198,7 +211,7 @@
       </div>
 
       <!-- DESCRIPTION -->
-      <p class="card-text mt-2" *ngIf="task.description">
+      <p class="card-text mt-2">
         <ng-container *ngIf="!inModify; else descriptionModification">
 
           {{ task.description }}
@@ -212,7 +225,7 @@
           <textarea
                   class="form-control"
                   id="task-description"
-                  rows="auto"
+                  placeholder="{{ 'description' | translate }}"
                   [value]="blueprintModificateTask?.description"
 
                   appAutoHeight
@@ -226,15 +239,15 @@
       <!-- MORE DETAILS -->
       <div
         class="accordion accordion-flush mb-1"
-        id="moreDeatilsAccordion"
+        [id]="'moreDeatilsAccordion-' + task.id"
       >
         <div class="accordion-item rounded">
-          <h2 class="accordion-header" id="flush-headingOne">
+          <h2 class="accordion-header">
             <button
               class="accordion-button collapsed rounded"
               type="button"
               data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseDetails"
+              [attr.data-bs-target]="'#flush-collapseDetails-' + task.id"
               aria-expanded="false"
               aria-controls="flush-collapseOne"
               #openMoreDetailsBtn
@@ -243,10 +256,9 @@
             </button>
           </h2>
           <div
-            id="flush-collapseDetails"
+            [id]="'flush-collapseDetails-' + task.id"
             class="accordion-collapse collapse rounded"
-            aria-labelledby="flush-headingOne"
-            data-bs-parent="#moreDeatilsAccordion"
+            [attr.data-bs-parent]="'#moreDeatilsAccordion-' + task.id"
           >
             <!-- MORE DETAILS BODY (hidden default) -->
             <div class="accordion-body">

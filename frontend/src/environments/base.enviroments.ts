@@ -8,5 +8,5 @@ export const baseEnvironment = {
   alertTimeout: 5000,          // milliseconds
   updateLastVisitInterval: 60 * 1000,   // milliseconds
   authRequiredRedirectRoute: "/login",
-  basePriorityValue: 0
+  basePriorityValue: 10
 };
