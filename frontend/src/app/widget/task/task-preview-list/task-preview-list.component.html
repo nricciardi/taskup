@@ -3,6 +3,7 @@
   <app-task-preview *ngFor="let task of tasks; let i = index"
                     [todoCollapseStatus]="i == 0"
                     [task]="task"
+                    [taskStatus]="taskStatus"
                     (onDeletion)="onDeletion.emit($event)"
                     (onAddAssignment)="onAddAssignment.emit($event)"
                     (onRemoveAssignment)="onRemoveAssignment.emit($event)"

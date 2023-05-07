@@ -90,9 +90,18 @@
                   class="dropdown-menu"
                   aria-labelledby="dropdownMenuButtonIconRight"
                 >
+                  <!-- Delete -->
+                  <button class="dropdown-item"
+                          data-bs-toggle="modal"
+                          [attr.data-bs-target]="'#move-task-' + task.id"
+                          *ngIf="authService.loggedUser.role?.permission_move">
+                    <i class="bi bi-arrow-left-right me-50"></i>
+                    {{ "move-task" | translate }}
+                  </button>
+
                   <!-- Modify -->
                   <button class="dropdown-item"
-                          [disabled]="!utilsService.canModify(task.author_id)"
+                          *ngIf="utilsService.canModify(task.author_id)"
                           (click)="inModify = true; openMoreDetailsBtn.click()">
                     <i class="bi bi-pencil me-50"></i>
                     {{ "modify" | translate }}
@@ -102,7 +111,7 @@
                   <button class="dropdown-item"
                           data-bs-toggle="modal"
                           [attr.data-bs-target]="'#delete-request-' + task.id"
-                          [disabled]="!utilsService.canDelete(task.author_id)">
+                          *ngIf="utilsService.canDelete(task.author_id)">
                     <i class="bi bi-trash me-50"></i>
                     {{ "delete" | translate }}
                   </button>
@@ -464,6 +473,7 @@
 
 
   <!-- MODALs -->
+  <!-- DELETE REQUEST -->
   <app-dialog-modal [target]="'delete-request-' + task.id"
                     title="delete-request"
                     [centered]="true"
@@ -472,6 +482,19 @@
                     [borderless]="true"
                     (onConfirm)="delete()">
   </app-dialog-modal>
+
+  <!-- MOVE TASK -->
+  <app-dropdown-modal [target]="'move-task-' + task.id"
+                      [title]="'move-task'"
+                      [currentValue]="task.task_status"
+                      [options]="taskStatus ?? []"
+                      [confirmBtnText]="'move'"
+                      [showMaskFn]="taskStatusMaskFn"
+                      [comparatorFn]="compareTaskStatusFn"
+                      [showCurrentInList]="true"
+                      [disableCurrent]="true"
+                      (onSelect)="changeStatus($event)">
+  </app-dropdown-modal>
 
 </div>
 

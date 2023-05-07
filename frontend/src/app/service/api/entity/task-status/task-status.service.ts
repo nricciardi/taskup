@@ -8,7 +8,7 @@ import { first, firstValueFrom, lastValueFrom } from 'rxjs';
 })
 export class TaskStatusService extends EntityApiService<TaskStatusModel> {
 
-  readonly ALL = "task_status_all";
+  override ALL = "task_status_all";
   override FIND: string = "task_status_find";
   override DELETE_BY_ID: string = "task_status_delete_by_id";
   override UPDATE: string = "task_status_update";
@@ -22,5 +22,24 @@ export class TaskStatusService extends EntityApiService<TaskStatusModel> {
     let task: TaskStatusModel = await firstValueFrom(obs);
 
     return task;
+  }
+
+  public async getAll(): Promise<TaskStatusModel[]> {
+    return new Promise<TaskStatusModel[]>((resolve, reject) => {
+
+      this.all().then((response) => {
+
+        response.subscribe({
+          next: (value) => {
+            resolve(value);
+          },
+          error: (e) => {
+            reject(e)
+          }
+        })
+
+      });
+
+    })
   }
 }

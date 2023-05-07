@@ -7,7 +7,7 @@ import { TaskLabelModel } from 'src/app/model/entity/task-label.model';
 })
 export class TaskLabelService extends EntityApiService<TaskLabelModel> {
 
-  readonly ALL = "task_label_all";
+  override ALL = "task_label_all";
   override FIND: string = "task_label_find";
   override DELETE_BY_ID: string = "task_label_delete_by_id";
   override UPDATE: string = "task_label_update";

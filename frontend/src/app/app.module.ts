@@ -46,6 +46,7 @@ import { ManageEntitiesComponent } from './widget/manage/manage-entities/manage-
 import { ManageEntityComponent } from './widget/manage/manage-entity/manage-entity.component';
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 import { SuccessAlertComponent } from './widget/alert/success-alert/success-alert.component';
+import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-modal.component';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { SuccessAlertComponent } from './widget/alert/success-alert/success-aler
     ManageEntityComponent,
     ManageRolesComponent,
     SuccessAlertComponent,
+    DropdownModalComponent,
   ],
   imports: [
     BrowserModule,

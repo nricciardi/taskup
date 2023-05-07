@@ -26,8 +26,18 @@ enum DeadlineStatus {
 })
 export class TaskPreviewComponent {
 
+  taskStatusMaskFn(taskStatus: TaskStatusModel) {
+    return taskStatus.name;
+  }
+
+  compareTaskStatusFn(a: TaskStatusModel, b: TaskStatusModel) {
+    return a.id == b.id;
+  }
+
+
   @Input('task') task?: TaskModel;
   @Input("todoCollapseStatus") todoCollapseStatus: boolean = false;
+  @Input("taskStatus") taskStatus: TaskStatusModel[] | null = null;
 
   @Output() onDeletion = new EventEmitter<number>();
   @Output() onModify = new EventEmitter<UpdateTaskModel>();
@@ -37,7 +47,7 @@ export class TaskPreviewComponent {
   @Output() onAddLabel = new EventEmitter<UpdateTaskModel>();
 
   constructor(private taskService: TaskService, public authService: AuthService, public utilsService: UtilsService,
-     private taskStatusService: TaskStatusService, private taskAssignmentService: TaskAssignmentService) {
+     public taskStatusService: TaskStatusService, private taskAssignmentService: TaskAssignmentService) {
 
       this.authService.refreshMe();
   }
@@ -353,5 +363,15 @@ export class TaskPreviewComponent {
         }
       })
     })
+  }
+
+  changeStatus(taskStatus: TaskStatusModel | null) {
+
+    if(!this.task || !taskStatus)
+      return;
+
+    this.modify({
+      "task_status_id": taskStatus.id
+    });
   }
 }

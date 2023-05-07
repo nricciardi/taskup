@@ -99,5 +99,9 @@
   "created-at": "Created at",
   "updated-at": "Updated at",
   "not-assigned": "You are NOT assigned on this task",
-  "unique": "Umique"
+  "unique": "Umique",
+  "move-task": "Move...",
+  "no-items": "No item",
+  "move": "Move"
+
 }

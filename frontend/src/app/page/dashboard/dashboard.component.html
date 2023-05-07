@@ -138,6 +138,7 @@
     <!-- TASK LIST -->
     <div class="col-12">
       <app-task-preview-list  [tasks]="getAllTaskBasedOnStatusId(getCurrentTaskStatus()?.id)"
+                              [taskStatus]="dashboard.task_status"
                               (onDeletion)="removeTask($event)"
                               (onAddAssignment)="updateTask($event)"
                               (onRemoveAssignment)="updateTask($event)"

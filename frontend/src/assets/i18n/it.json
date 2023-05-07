@@ -99,5 +99,8 @@
   "created-at": "Creazione",
   "updated-at": "Aggiornato",
   "not-assigned": "Non sei assegnato a questo task",
-  "unique": "Unico"
+  "unique": "Unico",
+  "move-task": "Sposta...",
+  "no-items": "Nessun item",
+  "move": "Sposta"
 }

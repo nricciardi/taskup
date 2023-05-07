@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 export class TaskPreviewListComponent {
 
   @Input("tasks") tasks: TaskModel[] | null = null;
+  @Input("taskStatus") taskStatus: TaskStatusModel[] | null = null;
   @Input("nextTaskStatus") nextTaskStatus: TaskStatusModel | null = null;
   @Input("prevTaskStatus") prevTaskStatus: TaskStatusModel | null = null;
 
