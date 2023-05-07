@@ -14,3 +14,8 @@ export interface FormField {
   selectOptions?: SelectOption[];
   unique?: boolean;
 }
+
+export interface FilterValue {
+  name: string;
+  value: any;
+}

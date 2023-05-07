@@ -47,6 +47,7 @@ import { ManageEntityComponent } from './widget/manage/manage-entity/manage-enti
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 import { SuccessAlertComponent } from './widget/alert/success-alert/success-alert.component';
 import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-modal.component';
+import { FilterComponent } from './widget/filter/filter.component';
 
 
 @NgModule({
@@ -92,6 +93,7 @@ import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-m
     ManageRolesComponent,
     SuccessAlertComponent,
     DropdownModalComponent,
+    FilterComponent,
   ],
   imports: [
     BrowserModule,

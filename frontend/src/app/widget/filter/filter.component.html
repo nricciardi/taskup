@@ -1,0 +1,88 @@
+<section id="basic-horizontal-layouts" *ngIf="!!entities">
+  <div class="row match-height">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header" *ngIf="title">
+          <h4 class="card-title">
+             {{ title | translate }}
+          </h4>
+        </div>
+
+        <div class="card-content">
+          <div class="card-body">
+
+            <form [formGroup]="filterForm" *ngIf="filterForm">
+
+              <div class="row justify-content-between">
+                <div class="col-auto">
+                  <h5 class="mb-2">
+                    {{ "filters" | translate }}
+                  </h5>
+                </div>
+
+                <div class="col-auto">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="filterMode"
+
+                      #filterModeSwitch
+                      [checked]="filterMode"
+                      (change)="filterMode = filterModeSwitch.checked; filter()"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="filterMode"
+                    >
+                      <i class="bi bi-intersect"></i> / <i class="bi bi-union"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6" *ngFor="let field of filterFields">
+                  <div class="form-group">
+                    <label for="first-name-vertical">
+                      {{ field | translate }}
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [name]="field"
+                      [placeholder]="field"
+                      [formControlName]="field"
+                      (input)="filter()"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 d-flex justify-content-end">
+
+                <button
+                  type="reset"
+                  class="btn btn-light-secondary me-1 mb-1"
+                  (click)="reset()"
+                >
+                  {{ "reset" | translate }}
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-primary me-1 mb-1"
+                  (click)="filter()"
+                >
+                  {{ "submit" | translate }}
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
