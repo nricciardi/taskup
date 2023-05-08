@@ -105,5 +105,12 @@
   "move": "Sposta",
   "creation": "Creazione",
   "assign-yourself": "Assegnati",
-  "refresh": "Ricarica"
+  "refresh": "Ricarica",
+  "select-project": "Seleziona un progetto",
+  "open-project": "Apri un progetto",
+  "projects": "Progetti",
+  "insert-path": "Inserisci percorso",
+  "path": "Percorso",
+  "open": "Apri",
+  "opening-error": "Errore durante l'apertura: assicurati che il percorso sia corretto e che si abbiano i permessi necessari"
 }

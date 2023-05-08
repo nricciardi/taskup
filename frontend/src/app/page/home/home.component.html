@@ -1,1 +1,89 @@
-<p>home works!</p>
+<div class="row justify-content-between">
+  <div class="col-auto">
+    <app-page-heading [title]="'home'" #heading></app-page-heading>
+  </div>
+</div>
+
+<section class="input-group-select">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">
+            {{ "open-project" | translate }}
+          </h4>
+        </div>
+        <div class="card-content">
+          <div class="card-body">
+            <form [formGroup]="openProjectForm">
+              <div class="row">
+
+                <div class="col-md-6 mb-4">
+                  <h6>
+                    {{ "select-project" | translate }}
+                  </h6>
+                  <div class="input-group mb-3">
+                    <label
+                      class="input-group-text"
+                      for="inputGroupSelect01"
+                      >
+                      {{ "projects" | translate }}
+                      </label>
+                    <select class="form-select" id="inputGroupSelect01" (change)="!path.value ? updatePath(select.value) : ''" #select>
+                      <option value="" selected>
+                        {{ "select" | translate }}
+                      </option>
+                      <option [value]="path" *ngFor="let path of projectsPaths">
+                        {{ path }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <h6>
+                    {{ "insert-path" | translate }}
+                  </h6>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="{{ 'path' | translate }}"
+                    formControlName="path"
+
+                    #path
+                  />
+                </div>
+
+              </div>
+
+              <div class="row justify-content-end">
+
+                <div class="col-auto">
+                  <button class="btn icon btn-light" (click)="loadProjectsPaths()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                </div>
+
+                <div class="col-auto">
+                  <button class="btn icon icon-right btn-primary" [disabled]="openProjectForm.invalid" (click)="open()">
+                    {{ "open" | translate }}
+                    <i class="bi bi-box-arrow-up-right"></i>
+                  </button>
+                </div>
+
+              </div>
+
+              <div class="row justify-content-center mt-2" *ngIf="showError">
+                <div class="col-auto">
+                  <app-error-alert [dismissable]="true"
+                                   [title]="'opening-error'"></app-error-alert>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

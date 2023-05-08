@@ -27,7 +27,7 @@ class App:
         eel.init(self.project_manager.settings.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
         # expose methods
-        exposer = ExposerService(self.project_manager.db_manager, self.project_manager.settings.vault_path, verbose=self.verbose)
+        exposer = ExposerService(self.project_manager, verbose=self.verbose)
         exposer.expose_methods()
 
     def start(self) -> None:

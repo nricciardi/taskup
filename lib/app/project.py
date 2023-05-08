@@ -3,7 +3,8 @@ from lib.settings.settings import SettingsManager
 from lib.db.db import DBManager
 from lib.utils.utils import Utils
 from lib.utils.logger import Logger
-from typing import Tuple
+from typing import List
+import os
 
 
 class ProjectManager:
@@ -97,3 +98,36 @@ class ProjectManager:
         except Exception as e:
             Logger.log_error(msg=f"error during creation of work directory in project ({work_directory_path})")
             Utils.exit()
+
+    def get_projects_paths_stored(self) -> List[str]:
+        """
+        Get all projects paths stored
+
+        :return: projects paths
+        """
+
+        paths_stored: List[str] = self.__settings_manager.projects_paths_stored
+
+        return paths_stored
+
+    def set_project_path(self, path: str, refresh_current: bool = True) -> bool:
+        """
+        Set current project path based on path passed (and can refresh)
+
+        :return:
+        """
+
+        try:
+            if not os.path.isdir(path):
+                Logger.log_warning(msg=f"path: '{path}' not found", is_verbose=self.verbose)
+                return False
+
+            self.__settings_manager.set(self.__settings_manager.KEY_PROJECT_PATH, path)  # set path in settings
+
+            if refresh_current:
+                self.__init__()
+
+        except Exception as e:
+
+            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
+

@@ -48,6 +48,7 @@ import { ManageRolesComponent } from './page/manage-roles/manage-roles.component
 import { SuccessAlertComponent } from './widget/alert/success-alert/success-alert.component';
 import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-modal.component';
 import { FilterComponent } from './widget/filter/filter.component';
+import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
 
 
 @NgModule({
@@ -94,6 +95,7 @@ import { FilterComponent } from './widget/filter/filter.component';
     SuccessAlertComponent,
     DropdownModalComponent,
     FilterComponent,
+    StatsBoxComponent,
   ],
   imports: [
     BrowserModule,

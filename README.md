@@ -55,6 +55,7 @@ Other possible settings are:
 - `port`, an integer value which represents the port of Eel webserver
 - `db_name`, a string which represents the app database name
 - `verbose`, a boolean value to make verbose running
+- `projects_paths_stored`, a list of strings that contains all project paths to fast-open them
 
 # Documentation for Users
 

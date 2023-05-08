@@ -1,5 +1,15 @@
 {
-  "project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
-  "vault_path": "/home/ncla/Desktop/project/project-pi/code",
-  "debug": true
+    "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
+    "db_name": "database.db",
+    "debug": true,
+    "frontend": "./../frontend/dist/frontend",
+    "frontend_debug_port": 4200,
+    "frontend_start": "index.html",
+    "port": 8000,
+    "projects_paths_stored": [
+        "/ciao"
+    ],
+    "use_localtime": true,
+    "vault_path": "/home/ncla/Desktop/project/project-pi/code",
+    "verbose": true
 }

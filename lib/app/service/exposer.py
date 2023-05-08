@@ -8,6 +8,7 @@ from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
 import json
 from lib.db.db import DBManager
+from lib.app.project import ProjectManager
 
 
 def jsonify(func: Callable):
@@ -32,8 +33,13 @@ class ExposerService:
 
     """
 
-    def __init__(self, db_manager: DBManager, vault_path: str, verbose: bool = False):
+    def __init__(self, project_manager: ProjectManager, verbose: bool = False):
         self.verbose = verbose
+
+        db_manager = project_manager.db_manager
+        vault_path = project_manager.settings.vault_path
+
+        self.__project_manager = project_manager
 
         self.__task_status_manager = TaskStatusManager(db_manager=db_manager,
                                                        verbose=self.verbose)
@@ -291,6 +297,21 @@ class ExposerService:
         except Exception as excepetion:
             Logger.log_error(msg="auth exposure error", is_verbose=self.verbose, full=True)
 
+    def __expose_project_manager_methods(self) -> None:
+        """
+        Expose project manager methods
+
+        :return: None
+        """
+
+        try:
+
+            self.expose(self.__project_manager.get_projects_paths_stored, "project_projects_paths_stored")
+            self.expose(self.__project_manager.set_project_path, "project_set_project_path")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="project manager exposure error", is_verbose=self.verbose, full=True)
+
     def __expose_dashboard_methods(self) -> None:
         """
         Expose auth methods
@@ -348,6 +369,7 @@ class ExposerService:
             self.__expose_role_methods()
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
+            self.__expose_project_manager_methods()
 
             Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
 

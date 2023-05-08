@@ -9,6 +9,7 @@
 - [ ] Change name in front-end tab
 - [ ] Improve main help
 - [ ] Add "add new project" in main modalities
+- [ ] Add "clear settings" in main modalities
 
 ### Frontend
 - [ ] Why some js file aren't tracked?

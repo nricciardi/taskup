@@ -2,7 +2,7 @@ from lib.utils.logger import Logger
 import json
 from lib.file.file_manager import FileManger
 import os
-from typing import Any
+from typing import Any, List
 from lib.utils.base import Base
 from lib.utils.utils import Utils
 
@@ -18,8 +18,8 @@ class SettingsBase:
     KEY_VERBOSE = "verbose"
     VALUE_BASE_VERBOSE = True
 
-    KEY_PROJECT_PATH = "project_path"
-    VALUE_BASE_PROJECT_PATH = os.path.expanduser("~/Desktop")
+    KEY_PROJECT_PATH = "current_project_path"
+    VALUE_BASE_PROJECT_PATH = ""
 
     KEY_VAULT_PATH = "vault_path"
     VALUE_BASE_VAULT_PATH = os.getcwd()
@@ -42,6 +42,9 @@ class SettingsBase:
     KEY_FRONTEND_DEBUG_PORT = "frontend_debug_port"
     VALUE_BASE_FRONTEND_DEBUG_PORT = 4200
 
+    KEY_PROJECT_PATHS_STORED = "projects_paths_stored"
+    VALUE_BASE_PROJECT_PATHS_STORED = []
+
     BASE_SETTINGS = {
         KEY_DB_NAME: VALUE_BASE_DB_NAME,
         KEY_VERBOSE: VALUE_BASE_VERBOSE,
@@ -52,7 +55,8 @@ class SettingsBase:
         KEY_FRONTEND_START: VALUE_BASE_FRONTEND_START,
         KEY_APP_PORT: VALUE_BASE_APP_PORT,
         KEY_VAULT_PATH: VALUE_BASE_VAULT_PATH,
-        KEY_FRONTEND_DEBUG_PORT: VALUE_BASE_FRONTEND_DEBUG_PORT
+        KEY_FRONTEND_DEBUG_PORT: VALUE_BASE_FRONTEND_DEBUG_PORT,
+        KEY_PROJECT_PATHS_STORED: VALUE_BASE_PROJECT_PATHS_STORED
     }
 
     @staticmethod
@@ -90,6 +94,9 @@ class SettingsManager(SettingsBase):
         finally:
             self.verify_mandatory_settings()
 
+            # write settings in file
+            FileManger.write_json(self.settings_path(), self.settings)
+
     def verify_mandatory_settings(self) -> None:
         """
         Verify mandatory settings and throw exceptions
@@ -114,9 +121,9 @@ class SettingsManager(SettingsBase):
         Create settings file if it does not exist with base settings
         """
 
-        FileManger.write_json(self.settings_path(), self.settings_path())
+        FileManger.write_json(self.settings_path(), self.BASE_SETTINGS)
 
-    def set(self, key: str, value: str) -> None:
+    def set(self, key: str, value: Any) -> None:
         """
         Modify settings
 
@@ -125,7 +132,10 @@ class SettingsManager(SettingsBase):
 
         :rtype: None
         """
+
         self.settings[key] = value
+
+        FileManger.write_json(self.settings_path(), self.settings)
 
     def get_setting_by_key(self, key: str) -> Any:
         """
@@ -153,12 +163,31 @@ class SettingsManager(SettingsBase):
     @property
     def project_directory_path(self) -> str:
         """
-        Return the app directory
+        Return the project directory
 
         :rtype: str
         """
 
         return os.path.abspath(self.get_setting_by_key(self.KEY_PROJECT_PATH))
+
+    @property
+    def projects_paths_stored(self):
+        """
+        Return list of projects paths stored, erasing invalid paths
+
+        :return:
+        """
+
+        paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
+
+        paths_checked = []
+        for path in paths_stored:
+            if os.path.isdir(path):
+                paths_checked.append(path)
+
+        # self.set(self.KEY_PROJECT_PATHS_STORED, paths_stored)     # uncomment to remove invalid path from settings
+
+        return paths_checked
 
     @property
     def work_directory_path(self) -> str:

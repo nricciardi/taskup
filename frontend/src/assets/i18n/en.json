@@ -105,6 +105,13 @@
   "move": "Move",
   "creation": "Creation",
   "assign-yourself": "Assign yourself",
-  "refresh": "Refresh"
+  "refresh": "Refresh",
+  "select-project": "Select project",
+  "open-project": "Open project",
+  "projects": "Projects",
+  "insert-path": "Insert path",
+  "path": "Path",
+  "open": "Open",
+  "opening-error": "Error opening: make sure the path is correct and you have the necessary permissions"
 
 }
