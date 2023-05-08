@@ -1,4 +1,5 @@
 {
   "project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
-  "vault_path": "/home/ncla/Desktop/project/project-pi/code"
+  "vault_path": "/home/ncla/Desktop/project/project-pi/code",
+  "debug": true
 }

@@ -63,7 +63,7 @@ class ProjectManager:
         try:
             # get app settings
             db_name = self.__settings_manager.db_name
-            use_localtime = self.__settings_manager.get(self.__settings_manager.KEY_DB_LOCALTIME)
+            use_localtime = self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME)
             work_directory_path = self.__settings_manager.work_directory_path
 
             if isinstance(self.__db_manager, DBManager):

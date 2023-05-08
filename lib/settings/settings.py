@@ -39,6 +39,9 @@ class SettingsBase:
     KEY_APP_PORT = "port"
     VALUE_BASE_APP_PORT = 8000
 
+    KEY_FRONTEND_DEBUG_PORT = "frontend_debug_port"
+    VALUE_BASE_FRONTEND_DEBUG_PORT = 4200
+
     BASE_SETTINGS = {
         KEY_DB_NAME: VALUE_BASE_DB_NAME,
         KEY_VERBOSE: VALUE_BASE_VERBOSE,
@@ -48,7 +51,8 @@ class SettingsBase:
         KEY_FRONTEND_DIRECTORY: VALUE_BASE_FRONTEND_DIRECTORY,
         KEY_FRONTEND_START: VALUE_BASE_FRONTEND_START,
         KEY_APP_PORT: VALUE_BASE_APP_PORT,
-        KEY_VAULT_PATH: VALUE_BASE_VAULT_PATH
+        KEY_VAULT_PATH: VALUE_BASE_VAULT_PATH,
+        KEY_FRONTEND_DEBUG_PORT: VALUE_BASE_FRONTEND_DEBUG_PORT
     }
 
     @staticmethod
@@ -92,7 +96,7 @@ class SettingsManager(SettingsBase):
         """
 
         try:
-            self.get(self.KEY_PROJECT_PATH)
+            self.get_setting_by_key(self.KEY_PROJECT_PATH)
 
         except KeyError as key_error:
             print(f"'{self.KEY_PROJECT_PATH}' is mandatory setting")
@@ -123,7 +127,7 @@ class SettingsManager(SettingsBase):
         """
         self.settings[key] = value
 
-    def get(self, key: str) -> Any:
+    def get_setting_by_key(self, key: str) -> Any:
         """
         Return the value of key passed
 
@@ -144,7 +148,7 @@ class SettingsManager(SettingsBase):
         :rtype bool:
         """
 
-        return self.get(SettingsBase.KEY_VERBOSE)
+        return self.get_setting_by_key(SettingsBase.KEY_VERBOSE)
 
     @property
     def project_directory_path(self) -> str:
@@ -154,7 +158,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.abspath(self.get(self.KEY_PROJECT_PATH))
+        return os.path.abspath(self.get_setting_by_key(self.KEY_PROJECT_PATH))
 
     @property
     def work_directory_path(self) -> str:
@@ -174,7 +178,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return self.get(self.KEY_DB_NAME)
+        return self.get_setting_by_key(self.KEY_DB_NAME)
 
     @property
     def db_path(self) -> str:
@@ -184,7 +188,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path, self.get(self.KEY_DB_NAME))
+        return os.path.join(self.work_directory_path, self.get_setting_by_key(self.KEY_DB_NAME))
 
     @property
     def vault_path(self) -> str:
@@ -195,7 +199,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.get(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
+        return os.path.join(self.get_setting_by_key(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
 
     @property
     def debug_mode(self) -> bool:
@@ -206,7 +210,7 @@ class SettingsManager(SettingsBase):
         :rtype bool:
         """
 
-        return self.get(SettingsBase.KEY_DEBUG_MODE)
+        return self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE)
 
     @property
     def frontend_directory(self) -> str:
@@ -217,7 +221,7 @@ class SettingsManager(SettingsBase):
         :rtype str:
         """
 
-        return self.get(SettingsBase.KEY_FRONTEND_DIRECTORY)
+        return self.get_setting_by_key(SettingsBase.KEY_FRONTEND_DIRECTORY)
 
     @property
     def frontend_start(self) -> str:
@@ -229,9 +233,10 @@ class SettingsManager(SettingsBase):
         """
 
         if self.debug_mode:
-            return { 'port': 4200 }
 
-        return self.get(SettingsBase.KEY_FRONTEND_START)
+            return { 'port': int(self.get_setting_by_key(SettingsBase.KEY_FRONTEND_DEBUG_PORT))}
+
+        return self.get_setting_by_key(SettingsBase.KEY_FRONTEND_START)
 
     @property
     def port(self) -> int:
@@ -241,5 +246,5 @@ class SettingsManager(SettingsBase):
         :rtype int:
         """
 
-        return self.get(SettingsBase.KEY_APP_PORT)
+        return self.get_setting_by_key(SettingsBase.KEY_APP_PORT)
 
