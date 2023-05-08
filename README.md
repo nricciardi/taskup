@@ -30,6 +30,8 @@ After dependencies installation, open this app is possible using `main.py`.
   - `-f`: force erase if there is already a database
 - `init`, `i`: initialize this app in users projects
   - `-f`: force reinitialization
+- `help`, `h`: print help 
+- `version`, `v`: print version
 
 ### Settings
 
