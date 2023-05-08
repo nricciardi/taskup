@@ -24,16 +24,16 @@ class SettingsBase:
     KEY_VAULT_PATH = "vault_path"
     VALUE_BASE_VAULT_PATH = os.getcwd()
 
-    KEY_DB_LOCALTIME = "localtime"
+    KEY_DB_LOCALTIME = "use_localtime"
     VALUE_BASE_DB_LOCALTIME = True
 
     KEY_DEBUG_MODE = "debug"
-    VALUE_BASE_DEBUG_MODE = True
+    VALUE_BASE_DEBUG_MODE = False
 
     KEY_FRONTEND_DIRECTORY = "frontend"
     VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(os.path.curdir, "../frontend/dist/frontend")
 
-    KEY_FRONTEND_START = "start"
+    KEY_FRONTEND_START = "frontend_start"
     VALUE_BASE_FRONTEND_START = "index.html"
 
     KEY_APP_PORT = "port"
