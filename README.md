@@ -33,10 +33,12 @@ Inserting custom settings in it, they override base default settings (managed by
 
 There are a set of **required** settings. Without them is impossible launch app.
 They are:
-- `vault_path`, 
+- `vault_path`, a string which contains the path of directory in which the file to store user credentials will be saved
 
-Possible settings are:
-- 
+**TODO**
+
+Other possible settings are:
+**TODO**
 
 
 
