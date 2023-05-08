@@ -6,12 +6,27 @@ This is a university project for teaching object-oriented programming at UniMoRe
 
 ## Get Started
 
+To get started this app is necessary install the required dependencies.
+
 ### Dependencies
 To run this project are required the followings dependencies:
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Eel](https://pypi.org/project/Eel/) (Python module to create frontend)
 - [Colorama](https://pypi.org/project/colorama/) (Python module for Logger)
 - [Chromium](https://www.chromium.org/) based software (as Google Chrome or Firefox)
+
+### Run
+After dependencies installation, open this app is possible using `main.py`.
+
+`main.py` accepts some parameters based on execution modality.
+
+#### Modality
+- `run`, `r`: launch the application
+- `demo`, `d`: launch application with a demo database
+   - `-f`: force erase if there is already a database
+- `init`, `i`: initialize this app in users projects
+   - `-f`: force reinitialization
+
 
 # Documentation for Users
 This documentation is written for the app's users.
