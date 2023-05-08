@@ -38,23 +38,24 @@ class Demo:
     quasi aliquam eligendi, placeat qui corporis!
     """
 
-    def __init__(self, verbose: bool = True):
+    def __init__(self):
 
         try:
-            self.verbose = verbose
-            Logger.log_info(msg="Demo init...", is_verbose=verbose)
+            Logger.log_info(msg="Demo init...", is_verbose=True)
 
             self.__pm = ProjectManager()  # load Project Manager
 
+            self.verbose = self.__pm.verbose
+
             # load all managers
-            self.__users_manager = UsersManager(self.__pm.db_manager, verbose=verbose)
-            self.__task_assignment_manager = TaskAssignmentsManager(self.__pm.db_manager, verbose=verbose)
-            self.__task_labels_manager = TaskLabelsManager(self.__pm.db_manager, verbose=verbose)
-            self.__task_task_labels_manager = TaskTaskLabelPivotManager(self.__pm.db_manager, verbose=verbose)
-            self.__todo_item_manager = TodoItemsManager(self.__pm.db_manager, verbose=verbose)
+            self.__users_manager = UsersManager(self.__pm.db_manager, verbose=self.verbose)
+            self.__task_assignment_manager = TaskAssignmentsManager(self.__pm.db_manager, verbose=self.verbose)
+            self.__task_labels_manager = TaskLabelsManager(self.__pm.db_manager, verbose=self.verbose)
+            self.__task_task_labels_manager = TaskTaskLabelPivotManager(self.__pm.db_manager, verbose=self.verbose)
+            self.__todo_item_manager = TodoItemsManager(self.__pm.db_manager, verbose=self.verbose)
             self.__tasks_manager = TasksManager(self.__pm.db_manager, self.__task_assignment_manager,
                                                 task_task_label_pivot_manager=self.__task_task_labels_manager,
-                                                verbose=verbose)
+                                                verbose=self.verbose)
 
         except Exception as e:
             Logger.log_error(msg=f"error is occurred during the demo init", is_verbose=self.verbose)

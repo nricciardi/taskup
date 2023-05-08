@@ -10,6 +10,8 @@ from lib.utils.demo import Demo
 
 class App:
 
+    VERSION: str = "1.0.0"
+
     def __init__(self):
         Logger.log_info(msg="App init...", is_verbose=True)
 
