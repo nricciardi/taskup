@@ -25,7 +25,7 @@ After dependencies installation, open this app is possible using `main.py`.
 
 #### Modality
 
-- `run`, `r`: launch the application
+- `run`, `r` or _nothing_: launch the application
 - `demo`, `d`: launch application with a demo database
   - `-f`: force erase if there is already a database
 - `init`, `i`: initialize this app in users projects
