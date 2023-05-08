@@ -174,6 +174,13 @@ Each of them has the base shared methods and some specific methods. For example,
 **QueryBuilder** is a custom _query builder_ based on Python `sqlite3` that implements the common utilities to build a query with Python code instead of SQL.
 It supports binding with specific method as `enable_binding`.
 
+### Trigger
+During the table creation (using db component named _Table_, which accepts a list of _Field_ and other parameters as _FKConstraint_ and _Trigger_) in base structure creation are configured a set of **triggers**.
+The triggers are used to update the **updated_at** field of task table each time that a component linked with task is modified.
+
+There are 3 triggers (_on update, on create and on delete_) for the following tables: **todo_item**, **pivot assignment** and **pivot labels**. While for the task table there is only the trigger _on update_ (because if a task is deleted or created is pointless updating the field).
+
+
 ## Frontend
 The frontend of this application uses the _Angular framework_.
 Angular is a TypeScript-based, free and open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
