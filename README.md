@@ -27,6 +27,18 @@ After dependencies installation, open this app is possible using `main.py`.
 - `init`, `i`: initialize this app in users projects
    - `-f`: force reinitialization
 
+### Settings
+It is possible to manage application settings using `settings.json`, this file have to create in _root directory_ (same level of `main.py`).
+Inserting custom settings in it, they override base default settings (managed by `SettingsManager`).
+
+There are a set of **required** settings. Without them is impossible launch app.
+They are:
+- `vault_path`, 
+
+Possible settings are:
+- 
+
+
 
 # Documentation for Users
 This documentation is written for the app's users.
