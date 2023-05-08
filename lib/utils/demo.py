@@ -151,7 +151,3 @@ class Demo:
                 self.__tasks_manager.add_label(task.id, i)
 
 
-if __name__ == '__main__':
-    demo = Demo()
-
-    demo.launch(force_demo=True)

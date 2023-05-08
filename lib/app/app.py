@@ -5,6 +5,7 @@ from lib.app.project import ProjectManager
 from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
 from lib.app.service.exposer import ExposerService
+from lib.utils.demo import Demo
 
 
 class App:
@@ -27,8 +28,26 @@ class App:
         exposer = ExposerService(self.project_manager.db_manager, self.project_manager.settings.vault_path, verbose=self.verbose)
         exposer.expose_methods()
 
-    def start(self):
+    def start(self) -> None:
+
+        Logger.log_info(msg="Start app...", is_verbose=True)
 
         eel.start(self.frontend_start, port=self.frontend_port, shutdown_delay=600)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
+
+    @classmethod
+    def demo(cls, force_demo: bool = False, verbose: bool = False) -> None:
+        """
+        Launch demo of app
+
+        :param force_demo:
+        :param verbose:
+        :return:
+        """
+
+        demo = Demo(verbose)
+
+        demo.launch(force_demo=force_demo)
+
+        cls().start()   # launch app
