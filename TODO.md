@@ -7,6 +7,8 @@
 - [ ] Search and set app ICON
 - [ ] Table of contents
 - [ ] Change name in front-end tab
+- [ ] Improve main help
+- [ ] Add "add new project" in main modalities
 
 ### Frontend
 - [ ] Why some js file aren't tracked?
@@ -35,8 +37,8 @@
 - [ ] Prevent todo-list refresh on task updates
 - [ ] Add custom menu on right click on page
 - [ ] Forgot password
-- [ ] "news" mistakes
-- [ ] Bug in update task if there isn't description
+- [x] "news" mistakes
+- [x] Bug in update task if there isn't description
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods
@@ -60,4 +62,4 @@
 - [x] DB schema
 - [x] deadline from date to datetime?
 - [x] Permission "edit_deadline"
-- [ ] Triggers don't work
+- [x] Triggers don't work
