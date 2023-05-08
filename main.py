@@ -28,6 +28,7 @@ def print_help() -> None:
 
     print(msg)
 
+
 def print_version() -> None:
     print(App.VERSION)
 
