@@ -46,14 +46,13 @@ They are:
 Other possible settings are:
 
 - `use_localtime`, boolean value which indicates if database must use *localtime*
-
 - `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i. e. use 4200 port for front-end)
-
 - `frontend`, a string which represents path of *front-end directory*
-
--  `frontend_start`, a string which represents the *entry point of front-end*
-
+- `frontend_start`, a string which represents the *entry point of front-end*
+- `frontend_debug_port`, an integer value which represents the port of frontend in debug mode
 - `port`, an integer value which represents the port of Eel webserver
+- `db_name`, a string which represents the app database name
+- `verbose`, a boolean value to make verbose running
 
 # Documentation for Users
 
