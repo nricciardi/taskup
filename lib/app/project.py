@@ -3,7 +3,7 @@ from lib.settings.settings import SettingsManager
 from lib.db.db import DBManager
 from lib.utils.utils import Utils
 from lib.utils.logger import Logger
-from typing import List
+from typing import List, Dict, Optional
 import os
 
 
@@ -25,7 +25,7 @@ class ProjectManager:
         self.create_work_directory()
 
         # load db manager
-        self.__db_manager = None        # it's going to override by next method
+        self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
         self.load_db_manager()
 
     @property
@@ -71,10 +71,10 @@ class ProjectManager:
                 self.__db_manager.close_connection()        # close prev connection
 
             # this generates db base structure if db doesn't exist
-            self.__db_manager = DBManager(db_name=db_name,
-                                          work_directory_path=work_directory_path,
-                                          verbose=self.verbose,
-                                          use_localtime=use_localtime)
+            self.__db_manager: DBManager = DBManager(db_name=db_name,
+                                                     work_directory_path=work_directory_path,
+                                                     verbose=self.verbose,
+                                                     use_localtime=use_localtime)
 
         except Exception as exception:
             Logger.log_error(msg="error while retrieving app settings", is_verbose=self.verbose)
@@ -134,3 +134,14 @@ class ProjectManager:
 
             return False
 
+    def project_information(self) -> Dict:
+        """
+        Return key-value project information
+
+        :return:
+        """
+
+        return {
+            "path": self.__settings_manager.project_directory_path,
+            "database_path": self.__db_manager.db_path
+        }

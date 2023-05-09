@@ -112,6 +112,10 @@
   "insert-path": "Insert path",
   "path": "Path",
   "open": "Open",
-  "opening-error": "Error opening: make sure the path is correct and you have the necessary permissions"
+  "opening-error": "Error opening: make sure the path is correct and you have the necessary permissions",
+  "current-project": "Current Project",
+  "project-information": "Project Information",
+  "database-path": "Database Path",
+  "exit": "Exit"
 
 }

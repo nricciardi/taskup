@@ -4,6 +4,81 @@
   </div>
 </div>
 
+<section id="basic-horizontal-layouts">
+  <div class="row match-height">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">
+            {{ "project-information" | translate }}
+          </h4>
+        </div>
+        <div class="card-content" *ngIf="!!projectInformation">
+          <div class="card-body">
+            <form class="form form-horizontal">
+              <div class="form-body">
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>
+                      {{ "path" | translate }}
+                    </label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group has-icon-left">
+                      <div class="position-relative">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Path"
+                          id="path"
+                          [value]="projectInformation.path"
+                          readonly
+                        />
+                        <div class="form-control-icon">
+                          <i class="bi bi-folder-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>
+                      {{ "database-path" | translate }}
+                    </label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group has-icon-left">
+                      <div class="position-relative">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Path"
+                          id="path"
+                          [value]="projectInformation.database_path"
+                          readonly
+                        />
+                        <div class="form-control-icon">
+                          <i class="bi bi-folder-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="input-group-select">
   <div class="row">
     <div class="col-12">

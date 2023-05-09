@@ -74,7 +74,7 @@ class AuthService:
                 email: str = vault_data.get(self.EMAIL)
                 password: str = vault_data.get(self.PASSWORD)
 
-                self.login(email, password)
+                self.login(email=email, password=password, disguise_psw=False)      # disguise_psw=False because psw is already disguised if it is in vault
             else:
                 raise AttributeError()
 
@@ -87,10 +87,11 @@ class AuthService:
     def is_logged(self) -> bool:
         return self.__me is not None
 
-    def login(self, email: str, password: str, keep: bool = False) -> UserModel:
+    def login(self, email: str, password: str, keep: bool = False, disguise_psw: bool = True) -> UserModel:
         """
         Login user by email and password
 
+        :param disguise_psw: flag which indicates if password must be disguised
         :param keep: keep data on login
         :type keep: bool
         :param email:
@@ -101,14 +102,15 @@ class AuthService:
         :rtype: UserModel
         """
 
-        # disguise password
-        password = Utils.disguise(password)
+        # disguise password if required
+        if disguise_psw:
+            password = Utils.disguise(password)
 
         self.__local_vault = VaultData(email=email, password=password)
-        self.refresh_me()
+        self.refresh_me()       # try to refresh me with local vault data
 
-        if self.__me is None:
-            msg: str = f"no match with {email} + {password}"
+        if self.__me is None:   # if me is None => login error (nobody users is found with email + password)
+            msg: str = f"no match with email ({email}) and password ({password})"
 
             Logger.log_error(msg=msg, is_verbose=self.verbose)
 
@@ -157,7 +159,7 @@ class AuthService:
             self.PASSWORD: password
         })
 
-        Logger.log_success(msg=f"email: ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
+        Logger.log_success(msg=f"email ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
                            is_verbose=self.verbose)
 
     def get_vault_data(self) -> dict | None:

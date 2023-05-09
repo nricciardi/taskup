@@ -3,14 +3,33 @@ import os
 from random import randint
 from typing import Dict
 import hashlib
+import webbrowser
+from lib.utils.logger import Logger
 
 
 class Utils:
 
     @staticmethod
     def exit():
-        print("Forced Exit...")
+        """
+        Force exit
+
+        :return:
+        """
+        Logger.log_warning(msg="force exit...")
+
         sys.exit()
+
+    @staticmethod
+    def open_in_webbrowser(path: str) -> None:
+        """
+        Open path in web browser with webbrowser
+
+        :param path:
+        :return:
+        """
+
+        webbrowser.open(path)
 
     @staticmethod
     def exist_dir(dir_path: str) -> bool:

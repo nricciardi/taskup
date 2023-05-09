@@ -7,8 +7,7 @@ from lib.app.service.dashboard import DashboardService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
 import json
-from lib.db.db import DBManager
-from lib.app.project import ProjectManager
+from lib.utils.utils import Utils
 
 
 def jsonify(func: Callable):
@@ -33,13 +32,15 @@ class ExposerService:
 
     """
 
-    def __init__(self, project_manager: ProjectManager, verbose: bool = False):
+    def __init__(self, app_manager, verbose: bool = False):
         self.verbose = verbose
 
-        db_manager = project_manager.db_manager
-        vault_path = project_manager.settings.vault_path
+        self.__app_manager = app_manager
 
-        self.__project_manager = project_manager
+        db_manager = self.__app_manager.project_manager.db_manager
+        vault_path = self.__app_manager.project_manager.settings.vault_path
+
+        self.__project_manager = self.__app_manager.project_manager
 
         self.__task_status_manager = TaskStatusManager(db_manager=db_manager,
                                                        verbose=self.verbose)
@@ -306,11 +307,47 @@ class ExposerService:
 
         try:
 
-            self.expose(self.__project_manager.get_projects_paths_stored, "project_projects_paths_stored")
-            self.expose(self.__project_manager.set_project_path, "project_set_project_path")
+            self.expose_all_from_list(to_expose=[
+                self.__project_manager.get_projects_paths_stored,
+                self.__project_manager.set_project_path,
+                self.__project_manager.project_information,
+            ], prefix="project_")
 
         except Exception as excepetion:
             Logger.log_error(msg="project manager exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_app_methods(self) -> None:
+        """
+        Expose app methods
+
+        :return: None
+        """
+
+        try:
+
+            self.expose_all_from_list(to_expose=[
+                self.__app_manager.open_settings
+            ], prefix="app_")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="app exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_utils_methods(self) -> None:
+        """
+        Expose utils methods
+
+        :return: None
+        """
+
+        try:
+
+            self.expose_all_from_list(to_expose=[
+                Utils.exit,
+                Utils.open_in_webbrowser,
+            ], prefix="utils_")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="utils exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_dashboard_methods(self) -> None:
         """
@@ -370,6 +407,8 @@ class ExposerService:
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
             self.__expose_project_manager_methods()
+            self.__expose_app_methods()
+            self.__expose_utils_methods()
 
             Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
 

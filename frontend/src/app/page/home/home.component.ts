@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProjectInformation } from 'src/app/model/project-information.model';
 import { ProjectService } from 'src/app/service/api/project/project.service';
+import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +15,8 @@ export class HomeComponent {
 
   projectsPaths: string[] = [];
 
+  projectInformation?: ProjectInformation;
+
   showError: boolean = false;
 
   openProjectForm: FormGroup = new FormGroup({
@@ -21,6 +25,7 @@ export class HomeComponent {
 
   ngOnInit() {
     this.loadProjectsPaths();
+    this.loadProjectInformation();
   }
 
   loadProjectsPaths(): void {
@@ -30,6 +35,21 @@ export class HomeComponent {
         next: (paths) => {
           if(!!paths) {
             this.projectsPaths = paths;
+          }
+        }
+      })
+
+    })
+  }
+
+  loadProjectInformation(): void {
+    this.projectService.getProjectInformation().then((response) => {
+
+      response.subscribe({
+        next: (value) => {
+
+          if(!!value) {
+            this.projectInformation = value;
           }
         }
       })

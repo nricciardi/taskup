@@ -1,4 +1,4 @@
-from lib.app.app import App
+from lib.app.app import AppManager
 import sys
 import colorama
 from colorama import Fore, Back, Style
@@ -30,7 +30,7 @@ def print_help() -> None:
 
 
 def print_version() -> None:
-    print(App.VERSION)
+    print(AppManager.VERSION)
 
 
 def main(args: list) -> None:
@@ -57,7 +57,7 @@ def main(args: list) -> None:
 
         return
 
-    app = App()
+    app = AppManager()
 
     app.start()
 
