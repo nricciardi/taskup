@@ -105,6 +105,18 @@ class ProjectManager:
             Logger.log_error(msg=f"error during creation of work directory in project ({work_directory_path})")
             Utils.exit()
 
+    def already_init(self, path: str) -> bool:
+        """
+        Return True if in path there is the work directory
+
+        :param path:
+        :return:
+        """
+
+        work_directory_name: str = self.settings.WORK_DIRECTORY_NAME
+
+        return work_directory_name in os.listdir(path) and os.path.isdir(os.path.join(path, work_directory_name))
+
     def get_projects_paths_stored(self) -> List[str]:
         """
         Get all projects paths stored

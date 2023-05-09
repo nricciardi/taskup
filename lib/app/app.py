@@ -73,7 +73,7 @@ class AppManager:
 
         return self.VERSION
 
-    def open_project(self, path: str, refresh_current: bool = True) -> bool:
+    def open_project(self, path: str, force_init: bool = False, refresh_current: bool = True) -> bool:
         """
         Set current project path based on path passed (and can refresh)
 
@@ -81,6 +81,11 @@ class AppManager:
         """
 
         try:
+
+            if not self.project_manager.already_init(path) and not force_init:
+                Logger.log_info(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
+                return False
+
             res = self.project_manager.settings.set_project_path(path)      # set path of project which must be opened
 
             if res is False:
@@ -89,6 +94,7 @@ class AppManager:
             if refresh_current:
                 self.project_manager.refresh()      # refresh project managed by ProjectManager instance
 
+            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True
 
         except Exception as e:
