@@ -138,16 +138,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         # log if verbose
         if db_exists:
-            Logger.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
+            Logger.log_info(msg=f"found database: '{self.__db_path}'", is_verbose=self.verbose)
         else:
-            Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"database '{self.__db_path}' not found, will be generate...", is_verbose=self.verbose)
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)  # connect to db
             self.__db_connection.row_factory = dict_factory  # set row factory to get dict instead of tuple
             self.__db_cursor = self.__db_connection.cursor()  # set cursor as attr
 
-            Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=self.verbose)
+            Logger.log_success(msg=f"Connection successful with db: '{self.__db_path}'", is_verbose=self.verbose)
 
             # add FK checks
             self.__db_connection.execute('PRAGMA foreign_keys = ON;')
@@ -641,8 +641,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         if columns is None:
             columns = []
 
-        query_built = QueryBuilder.from_table(table_name).enable_binding().select(*columns)\
-            .apply_conditions(*conditions)
+        query_built = QueryBuilder.from_table(table_name).enable_binding().select(*columns).apply_conditions(*conditions)
 
         query: str = query_built.to_sql()
         data: list = query_built.data_bound
