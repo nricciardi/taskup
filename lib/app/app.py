@@ -73,7 +73,7 @@ class AppManager:
 
         return self.VERSION
 
-    def open_project(self, path: str, force_init: bool = False, refresh_current: bool = True) -> bool:
+    def open_project(self, path: str, refresh_current: bool = True, force_init: bool = False) -> bool:
         """
         Set current project path based on path passed (and can refresh)
 
