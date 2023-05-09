@@ -63,3 +63,12 @@ class AppManager:
         """
 
         Utils.open_in_webbrowser(self.project_manager.settings.settings_path())
+
+    def version(self) -> str:
+        """
+        Return version
+
+        :return:
+        """
+
+        return self.VERSION

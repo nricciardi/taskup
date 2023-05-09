@@ -40,6 +40,7 @@
 - [ ] Forgot password
 - [x] "news" mistakes
 - [x] Bug in update task if there isn't description
+- [ ] Footer with app name and version
 
 ### Python
 - [ ] (!) Implement try-except in exposed methods

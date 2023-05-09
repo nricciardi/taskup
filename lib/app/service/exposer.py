@@ -326,7 +326,8 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__app_manager.open_settings
+                self.__app_manager.open_settings,
+                self.__app_manager.version
             ], prefix="app_")
 
         except Exception as excepetion:

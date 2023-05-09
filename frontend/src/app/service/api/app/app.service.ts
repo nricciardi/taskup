@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 export class AppService extends EelService {
 
   readonly OPEN_SETTINGS = "app_open_settings"
+  readonly VERSION = "app_version";
 
   public openSettings(): void {
 
@@ -21,5 +22,9 @@ export class AppService extends EelService {
 
     });
 
+  }
+
+  public version(): Promise<Observable<string>> {
+    return this.call(this.VERSION);
   }
 }
