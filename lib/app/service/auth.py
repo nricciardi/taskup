@@ -55,6 +55,9 @@ class AuthService:
             self.__me = CollectionsUtils.first(users_matched)
 
     def me(self) -> UserModel | None:
+
+        print(self.__users_manager.db_manager.db_path)
+
         return self.__me
 
     def try_autologin(self) -> None:
@@ -87,7 +90,7 @@ class AuthService:
     def is_logged(self) -> bool:
         return self.__me is not None
 
-    def login(self, email: str, password: str, keep: bool = False, disguise_psw: bool = True) -> UserModel:
+    def login(self, email: str, password: str, keep: bool = False, disguise_psw: bool = True) -> UserModel | None:
         """
         Login user by email and password
 
@@ -114,7 +117,7 @@ class AuthService:
 
             Logger.log_error(msg=msg, is_verbose=self.verbose)
 
-            raise ValueError(msg)
+            return None
 
         Logger.log_success(msg="logged in correctly", is_verbose=self.verbose)
 

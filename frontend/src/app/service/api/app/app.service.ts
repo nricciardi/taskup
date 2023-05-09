@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class AppService extends EelService {
 
-  readonly OPEN_SETTINGS = "app_open_settings"
+  readonly OPEN_SETTINGS = "app_open_settings";
+  readonly OPEN_PROJECT = "app_open_project";
   readonly VERSION = "app_version";
 
   public openSettings(): void {
@@ -27,4 +28,11 @@ export class AppService extends EelService {
   public version(): Promise<Observable<string>> {
     return this.call(this.VERSION);
   }
+
+  public openProject(path: string, refresh: boolean = true): Promise<Observable<boolean>> {
+
+    return this.call(this.OPEN_PROJECT, path, refresh);
+
+  }
+
 }

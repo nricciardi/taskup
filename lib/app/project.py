@@ -8,7 +8,12 @@ import os
 
 
 class ProjectManager:
-    def __init__(self):
+    def __init__(self, load_db: bool = True):
+        """
+        Init project manager
+
+        :param load_db: flag which indicates if PM have to load a new db or not (it is used to prevent lost reference of DBManager in entities if project is reloaded, so DBManager can be reloaded)
+        """
 
         Logger.log_info(msg="project manager init...", is_verbose=True)
 
@@ -25,8 +30,9 @@ class ProjectManager:
         self.create_work_directory()
 
         # load db manager
-        self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
-        self.load_db_manager()
+        if load_db:
+            self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
+            self.load_new_db_manager()
 
     @property
     def settings(self) -> SettingsManager:
@@ -54,7 +60,7 @@ class ProjectManager:
 
             Utils.exit()
 
-    def load_db_manager(self) -> None:
+    def load_new_db_manager(self) -> None:
         """
         Load database manager for project
 
@@ -110,30 +116,6 @@ class ProjectManager:
 
         return paths_stored
 
-    def set_project_path(self, path: str, refresh_current: bool = True) -> bool:
-        """
-        Set current project path based on path passed (and can refresh)
-
-        :return:
-        """
-
-        try:
-            res = self.settings.set_project_path(path)
-
-            if res is False:
-                return False
-
-            if refresh_current:
-                self.__init__()
-
-            return True
-
-        except Exception as e:
-
-            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
-
-            return False
-
     def project_information(self) -> Dict:
         """
         Return key-value project information
@@ -145,3 +127,11 @@ class ProjectManager:
             "path": self.__settings_manager.project_directory_path,
             "database_path": self.__db_manager.db_path
         }
+
+    def refresh(self) -> None:
+        self.__init__(load_db=False)
+
+        self.__db_manager.refresh_connection(db_name=self.settings.db_name,
+                                             work_directory_path=self.settings.work_directory_path,
+                                             verbose=self.verbose,
+                                             use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))

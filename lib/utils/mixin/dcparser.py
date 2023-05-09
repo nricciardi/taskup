@@ -32,7 +32,7 @@ def to_dict(method: Callable, verbose: bool = False):
         else:
             data_to_dict = apply(res)
 
-        Logger.log(msg=f"convert data to_dict: {data_to_dict}", is_verbose=verbose, truncate=500)
+        Logger.log(msg=f"convert data to_dict: {data_to_dict}", is_verbose=verbose, truncate=250)
 
         return data_to_dict
 

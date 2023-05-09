@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectInformation } from 'src/app/model/project-information.model';
+import { AppService } from 'src/app/service/api/app/app.service';
 import { ProjectService } from 'src/app/service/api/project/project.service';
 import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
 
@@ -11,7 +12,7 @@ import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
 })
 export class HomeComponent {
 
-  constructor(private projectService: ProjectService) {}
+  constructor(private projectService: ProjectService, private appService: AppService) {}
 
   projectsPaths: string[] = [];
 
@@ -68,7 +69,7 @@ export class HomeComponent {
 
     if(this.openProjectForm.valid) {
 
-      this.projectService.setProjectPath(this.openProjectForm.controls['path'].value, true).then((response) => {
+      this.appService.openProject(this.openProjectForm.controls['path'].value, true).then((response) => {
         response.subscribe({
           next: (result) => {
 

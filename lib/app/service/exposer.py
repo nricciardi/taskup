@@ -309,7 +309,6 @@ class ExposerService:
 
             self.expose_all_from_list(to_expose=[
                 self.__project_manager.get_projects_paths_stored,
-                self.__project_manager.set_project_path,
                 self.__project_manager.project_information,
             ], prefix="project_")
 
@@ -327,7 +326,8 @@ class ExposerService:
 
             self.expose_all_from_list(to_expose=[
                 self.__app_manager.open_settings,
-                self.__app_manager.version
+                self.__app_manager.version,
+                self.__app_manager.open_project
             ], prefix="app_")
 
         except Exception as excepetion:

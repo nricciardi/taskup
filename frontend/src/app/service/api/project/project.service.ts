@@ -9,19 +9,12 @@ import { ProjectInformation } from 'src/app/model/project-information.model';
 export class ProjectService extends EelService {
 
   readonly PATHS_STORED = "project_get_projects_paths_stored";
-  readonly SET_PROJECT_PATH = "project_set_project_path";
   readonly PROJECT_INFORMATION = "project_project_information";
 
 
   public projectsPathsStored(): Promise<Observable<string[]>> {
 
     return this.call(this.PATHS_STORED);
-
-  }
-
-  public setProjectPath(path: string, refresh: boolean = true): Promise<Observable<boolean>> {
-
-    return this.call(this.SET_PROJECT_PATH, path, refresh);
 
   }
 

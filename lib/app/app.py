@@ -72,3 +72,27 @@ class AppManager:
         """
 
         return self.VERSION
+
+    def open_project(self, path: str, refresh_current: bool = True) -> bool:
+        """
+        Set current project path based on path passed (and can refresh)
+
+        :return:
+        """
+
+        try:
+            res = self.project_manager.settings.set_project_path(path)
+
+            if res is False:
+                return False
+
+            if refresh_current:
+                self.project_manager.refresh()
+
+            return True
+
+        except Exception as e:
+
+            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
+
+            return False

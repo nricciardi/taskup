@@ -162,14 +162,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             Utils.exit()
 
-    def refresh_connection(self) -> None:
+    def refresh_connection(self, **kwargs) -> None:
         """
         Refresh DB connection
 
         :return:
         """
 
-        self.open_connection()
+        self.close_connection()
+
+        self.__init__(**kwargs)
 
     def close_connection(self) -> None:
         """

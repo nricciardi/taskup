@@ -26,7 +26,7 @@ tasks_manager = TasksManager(pm.db_manager, task_assignment_manager,
 if os.path.isfile(db_path):
     os.remove(db_path)
 
-pm.load_db_manager()
+pm.load_new_db_manager()
 
 def create_demo_db():
     def random_hex() -> str:
