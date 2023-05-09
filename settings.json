@@ -7,7 +7,9 @@
     "frontend_start": "index.html",
     "port": 8000,
     "projects_paths_stored": [
-        "/ciao"
+        "/ciao",
+        "/home/ncla/Desktop/project/project-pi/code/fakeproject",
+        "/home/ncla/Desktop/project/project-pi/code/fakeproject2"
     ],
     "use_localtime": true,
     "vault_path": "/home/ncla/Desktop/project/project-pi/code",

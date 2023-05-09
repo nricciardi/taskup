@@ -118,16 +118,19 @@ class ProjectManager:
         """
 
         try:
-            if not os.path.isdir(path):
-                Logger.log_warning(msg=f"path: '{path}' not found", is_verbose=self.verbose)
-                return False
+            res = self.settings.set_project_path(path)
 
-            self.__settings_manager.set(self.__settings_manager.KEY_PROJECT_PATH, path)  # set path in settings
+            if res is False:
+                return False
 
             if refresh_current:
                 self.__init__()
 
+            return True
+
         except Exception as e:
 
             Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
+
+            return False
 

@@ -81,21 +81,22 @@ class SettingsManager(SettingsBase):
             self.override_settings()
 
         except IOError as io_error:
-            print(f"Configuration file {self.SETTINGS_FILE_NAME} not found")
+            Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} not found", is_verbose=self.verbose)
 
             if SettingsManager.create_settings_file_if_not_exist:
                 self.create_settings_file()
                 self.override_settings()
 
         except json.JSONDecodeError as json_decode_error:
-            print(f"Configuration file {self.SETTINGS_FILE_NAME} JSON syntax error")
+            Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} JSON syntax error", is_verbose=self.verbose)
+
             Utils.exit()
 
         finally:
             self.verify_mandatory_settings()
 
             # write settings in file
-            FileManger.write_json(self.settings_path(), self.settings)
+            self.dumps_settings()
 
     def verify_mandatory_settings(self) -> None:
         """
@@ -106,7 +107,8 @@ class SettingsManager(SettingsBase):
             self.get_setting_by_key(self.KEY_PROJECT_PATH)
 
         except KeyError as key_error:
-            print(f"'{self.KEY_PROJECT_PATH}' is mandatory setting")
+            Logger.log_error(msg=f"'{self.KEY_PROJECT_PATH}' is mandatory setting", is_verbose=self.verbose)
+
             Utils.exit()
 
     def override_settings(self) -> None:
@@ -134,6 +136,14 @@ class SettingsManager(SettingsBase):
         """
 
         self.settings[key] = value
+        self.dumps_settings()
+
+    def dumps_settings(self) -> None:
+        """
+        Dumps settings in file
+
+        :return:
+        """
 
         FileManger.write_json(self.settings_path(), self.settings)
 
@@ -168,7 +178,11 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.abspath(self.get_setting_by_key(self.KEY_PROJECT_PATH))
+        path = os.path.abspath(self.get_setting_by_key(self.KEY_PROJECT_PATH))
+
+        self.add_path_to_stored(path)
+
+        return path
 
     @property
     def projects_paths_stored(self):
@@ -184,8 +198,6 @@ class SettingsManager(SettingsBase):
         for path in paths_stored:
             if os.path.isdir(path):
                 paths_checked.append(path)
-
-        # self.set(self.KEY_PROJECT_PATHS_STORED, paths_stored)     # uncomment to remove invalid path from settings
 
         return paths_checked
 
@@ -277,3 +289,51 @@ class SettingsManager(SettingsBase):
 
         return self.get_setting_by_key(SettingsBase.KEY_APP_PORT)
 
+    def add_path_to_stored(self, path: str) -> None:
+        """
+        Add the passed path to projects paths stored
+
+        :param path: path
+        :type path: str
+        :return:
+        """
+
+        if path not in self.projects_paths_stored:
+            paths_stored = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
+
+            paths_stored.append(path)
+            self.dumps_settings()
+
+    def set_project_path(self, path) -> bool:
+        """
+        Set project path
+
+        :param path:
+        :return:
+        """
+
+        if not os.path.isdir(path):
+            Logger.log_warning(msg=f"path: '{path}' not found", is_verbose=self.verbose)
+            return False
+
+        self.set(self.KEY_PROJECT_PATH, path)  # set path in settings.
+        self.add_path_to_stored(path)
+        self.dumps_settings()
+
+        return True
+
+    def clear_paths_stored(self) -> None:
+        """
+        Remove invalid paths from paths stored
+
+        :return:
+        """
+
+        paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
+
+        paths_checked = []
+        for path in paths_stored:
+            if os.path.isdir(path):
+                paths_checked.append(path)
+
+        self.set(self.KEY_PROJECT_PATHS_STORED, paths_checked)
