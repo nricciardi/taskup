@@ -6,9 +6,10 @@ from lib.db.entity.task import TasksManager
 from lib.db.entity.user import UsersManager
 from lib.app.service.exposer import ExposerService
 from lib.utils.demo import Demo
+from lib.utils.utils import Utils
 
 
-class App:
+class AppManager:
 
     VERSION: str = "1.0.0"
 
@@ -27,7 +28,7 @@ class App:
         eel.init(self.project_manager.settings.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
         # expose methods
-        exposer = ExposerService(self.project_manager, verbose=self.verbose)
+        exposer = ExposerService(self, verbose=self.verbose)
         exposer.expose_methods()
 
     def start(self) -> None:
@@ -48,8 +49,17 @@ class App:
         :return:
         """
 
-        demo = Demo(verbose)
+        demo = Demo()
 
         demo.launch(force_demo=force_demo)
 
         cls().start()   # launch app
+
+    def open_settings(self) -> None:
+        """
+        Open settings file
+
+        :return:
+        """
+
+        Utils.open_in_webbrowser(self.project_manager.settings.settings_path())
