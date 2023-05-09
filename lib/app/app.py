@@ -81,13 +81,13 @@ class AppManager:
         """
 
         try:
-            res = self.project_manager.settings.set_project_path(path)
+            res = self.project_manager.settings.set_project_path(path)      # set path of project which must be opened
 
             if res is False:
                 return False
 
             if refresh_current:
-                self.project_manager.refresh()
+                self.project_manager.refresh()      # refresh project managed by ProjectManager instance
 
             return True
 

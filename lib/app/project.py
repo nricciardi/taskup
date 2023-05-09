@@ -8,11 +8,11 @@ import os
 
 
 class ProjectManager:
-    def __init__(self, load_db: bool = True):
+    def __init__(self, load_new_db: bool = True):
         """
         Init project manager
 
-        :param load_db: flag which indicates if PM have to load a new db or not (it is used to prevent lost reference of DBManager in entities if project is reloaded, so DBManager can be reloaded)
+        :param load_new_db: flag which indicates if PM have to load a new db or not (it is used to prevent lost reference of DBManager in entities if project is reloaded, so DBManager can be reloaded)
         """
 
         Logger.log_info(msg="project manager init...", is_verbose=True)
@@ -30,7 +30,7 @@ class ProjectManager:
         self.create_work_directory()
 
         # load db manager
-        if load_db:
+        if load_new_db:
             self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
             self.load_new_db_manager()
 
@@ -129,8 +129,15 @@ class ProjectManager:
         }
 
     def refresh(self) -> None:
-        self.__init__(load_db=False)
+        """
+        Refresh project managed
 
+        :return:
+        """
+
+        self.__init__(load_new_db=False)        # init without load a new DBManager
+
+        # refresh db manager connection with (new) settings
         self.__db_manager.refresh_connection(db_name=self.settings.db_name,
                                              work_directory_path=self.settings.work_directory_path,
                                              verbose=self.verbose,
