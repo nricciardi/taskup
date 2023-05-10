@@ -112,7 +112,7 @@
   "insert-path": "Inserisci percorso",
   "path": "Percorso",
   "open": "Apri",
-  "opening-error": "Errore durante l'apertura: assicurati che il percorso sia corretto e che si abbiano i permessi necessari",
+  "opening-error": "Errore durante l'apertura: assicurati che il percorso si riferisca ad un progetto inizializzato o che si abbiano i permessi necessari",
   "current-project": "Progetto corrente",
   "project-information": "Informazioni Progetto",
   "database-path": "Percorso Database",

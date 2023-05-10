@@ -194,12 +194,12 @@ class SettingsManager(SettingsBase):
 
         paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
 
-        paths_checked = []
+        paths_checked = set()
         for path in paths_stored:
             if os.path.isdir(path):
-                paths_checked.append(path)
+                paths_checked.add(path)
 
-        return paths_checked
+        return list(paths_checked)
 
     @property
     def work_directory_path(self) -> str:
@@ -336,9 +336,11 @@ class SettingsManager(SettingsBase):
 
         paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
 
-        paths_checked = []
+        paths_checked = set()
         for path in paths_stored:
             if os.path.isdir(path):
-                paths_checked.append(path)
+                paths_checked.add(path)
+
+        paths_checked = list(paths_checked)
 
         self.set(self.KEY_PROJECT_PATHS_STORED, paths_checked)
