@@ -19,8 +19,7 @@ export class HeaderComponent {
 
   userLogged: UserModel | null = null;
 
-  constructor(private authService: AuthService, private router: Router, public utilsService: UtilsService,
-     public backendUtilsService: BackEndUtilsService, public appService: AppService) {
+  constructor(private authService: AuthService, private router: Router, public utilsService: UtilsService, public appService: AppService) {
   }
 
   ngOnInit() {

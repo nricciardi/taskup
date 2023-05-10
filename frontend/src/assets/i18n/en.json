@@ -99,7 +99,7 @@
   "created-at": "Created at",
   "updated-at": "Updated at",
   "not-assigned": "You are NOT assigned on this task",
-  "unique": "Umique",
+  "unique": "Unique",
   "move-task": "Move...",
   "no-items": "No item",
   "move": "Move",
@@ -116,6 +116,13 @@
   "current-project": "Current Project",
   "project-information": "Project Information",
   "database-path": "Database Path",
-  "exit": "Exit"
+  "exit": "Exit",
+  "init-project": "Initialize Project",
+  "init": "Initialize",
+  "init-project-error": "Unable to initialize the indicated project: check that the path indicated is correct and that you have the necessary permissions",
+  "close-app-request": "Are you sure you want to close the app?",
+  "use-self": "Use this user as project manager",
+  "open-at-end": "Open initialized project at last",
+  "validate": "validate"
 
 }

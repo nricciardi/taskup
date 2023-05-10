@@ -15,20 +15,19 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
   @Input("entity") entity?: E;
   @Input("title") title?: string;
   @Input("editableFields") editableFields: FormField[] = [];
+  @Input("confirmBtnTxt") confirmBtnTxt: string = "modify";
+  @Input("collapseStatus") collapseStatus: boolean = false;
 
   @Output() refreshRequest = new EventEmitter<void>();
+  @Output() onConfirm = new EventEmitter<E>();
 
   form?: FormGroup;
 
   submitResult?: boolean;
 
-  collapseStatus: boolean = false;
-
   ngOnInit() {
 
     this.createForm();
-
-    this.collapseStatus = !this.entity;
   }
 
   createForm() {
@@ -40,6 +39,7 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
       // create form controls as copy of blueprint form control
       const blueprint = element.blueprintFormControl;
+
       let control = new FormControl<number | string | null>(blueprint.value, blueprint.validator, blueprint.asyncValidator);
 
       this.form.addControl(element.name, control);
@@ -66,19 +66,16 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
   }
 
   submit() {
-    if(this.form?.valid) {
 
+
+    if(this.form?.valid) {
       this.modify(this.form.value);
     }
   }
 
   modify(values: any) {
 
-    if(!this.manager)
-      return;
-
     const id = this.entity?.id ?? null;
-
 
     const resetResultFlag = () => {
       setTimeout(() => {
@@ -86,41 +83,46 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
       }, environment.alertTimeout);
     }
 
-    this.manager?.update(id, values).then((response) => {
 
-      response.subscribe({
-        next: (value) => {
-          if(value) {
-            this.entity = value;
+    this.onConfirm.emit(values);
+
+    if(!!this.manager) {
+      this.manager.update(id, values).then((response) => {
+
+        response.subscribe({
+          next: (value) => {
+            if(value) {
+              this.entity = value;
+            }
+
+            if(!id && !!value) {
+              this.entity = undefined;
+              this.form?.reset();
+              this.refreshRequest.emit();
+            }
+
+            this.submitResult = !!value;
+
+            resetResultFlag();
+          },
+          error: (e) => {
+            this.submitResult = false;
+
+            resetResultFlag();
           }
+        })
 
-          if(!id && !!value) {
-            this.entity = undefined;
-            this.form?.reset();
-            this.refreshRequest.emit();
-          }
+      }).catch((reason) => {
+        this.submitResult = false;
 
-          this.submitResult = !!value;
-
-          resetResultFlag();
-        },
-        error: (e) => {
-          this.submitResult = false;
-
-          resetResultFlag();
-        }
+        resetResultFlag();
       })
-
-    }).catch((reason) => {
-      this.submitResult = false;
-
-      resetResultFlag();
-    })
+    }
 
   }
 
   delete() {
-    if(!this.entity || !this.manager)
+    if(!this.entity)
       return;
 
     const id = this.entity.id;
@@ -131,29 +133,32 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
       }, environment.alertTimeout);
     }
 
-    this.manager?.deleteById(id).then((response) => {
+    if(!!this.manager) {
 
-      response.subscribe({
-        next: (result) => {
+      this.manager?.deleteById(id).then((response) => {
 
-          this.submitResult = result;
+        response.subscribe({
+          next: (result) => {
 
-          if(result)
-            this.entity = undefined;
+            this.submitResult = result;
 
-          resetResultFlag();
-        },
-        error: (e) => {
-          this.submitResult = false;
+            if(result)
+              this.entity = undefined;
 
-          resetResultFlag();
-        }
+            resetResultFlag();
+          },
+          error: (e) => {
+            this.submitResult = false;
+
+            resetResultFlag();
+          }
+        })
+
+      }).catch((reason) => {
+        this.submitResult = false;
+
+        resetResultFlag();
       })
-
-    }).catch((reason) => {
-      this.submitResult = false;
-
-      resetResultFlag();
-    })
+    }
   }
 }

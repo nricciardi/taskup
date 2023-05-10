@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!form && !!editableFields && !!manager">
+<ng-container *ngIf="!!form && !!editableFields">
   <div class="card">
     <div class="card-header" *ngIf="title">
       <div class="row justify-content-between">
@@ -150,7 +150,7 @@
                   (click)="submit()"
                   [disabled]="form.invalid"
                 >
-                  {{ "modify" | translate }}
+                  {{ confirmBtnTxt | translate }}
                 </button>
 
                 <app-dialog-modal [target]="'delete-request-' + entity.id"

@@ -111,3 +111,14 @@ class AppManager:
             Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
 
             return False
+
+    def close(self) -> None:
+        """
+        Close app
+
+        :return:
+        """
+
+        Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
+
+        Utils.exit()

@@ -116,5 +116,12 @@
   "current-project": "Progetto corrente",
   "project-information": "Informazioni Progetto",
   "database-path": "Percorso Database",
-  "exit": "Esci"
+  "exit": "Esci",
+  "init-project": "Inizializza Progetto",
+  "init": "Inizializza",
+  "init-project-error": "Impossibile inizializzare il progetto indicato: verifica che il percorso indicato sia corretto e che si abbiano i permessi necessari",
+  "close-app-request": "Sei sicuro di voler chiudere l'app?",
+  "use-self": "Usa questo utente come project manager",
+  "open-at-end": "Apri progetto inizializzato alla fine",
+  "validate": "Valida"
 }

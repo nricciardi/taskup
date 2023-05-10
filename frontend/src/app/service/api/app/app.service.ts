@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EelService } from '../../eel/eel.service';
 import { Observable } from 'rxjs';
+import { LoggerService } from '../../logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class AppService extends EelService {
   readonly OPEN_SETTINGS = "app_open_settings";
   readonly OPEN_PROJECT = "app_open_project";
   readonly VERSION = "app_version";
+  readonly CLOSE = "app_close";
 
   public openSettings(): void {
 
@@ -35,4 +37,22 @@ export class AppService extends EelService {
 
   }
 
+  public close(): void {
+
+    this.call(this.CLOSE).then((response) => {
+
+      response.subscribe({
+        next: () => {
+          // nothing
+        }
+      })
+
+    });
+
+    setTimeout(() => {
+      LoggerService.logInfo("Close app");
+      window.close();
+    }, 500);
+
+  }
 }
