@@ -24,10 +24,10 @@ class ProjectManager:
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
-        check_res = self.check_project_path()
+        check_result = self.check_project_path()
 
         # load db manager
-        if check_res:
+        if check_result:
             self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
             self.load_new_db_manager()
 
