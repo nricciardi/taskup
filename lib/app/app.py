@@ -10,6 +10,7 @@ from lib.settings.settings import SettingsManager
 class AppManager:
 
     VERSION: str = "1.0.0"
+    SHUTDOWN_DELAY = 600
 
     def __init__(self):
         Logger.log_info(msg="App init...", is_verbose=True)
@@ -18,16 +19,16 @@ class AppManager:
         Logger.log_info(msg="Take settings...", is_verbose=True)
         self.__settings_manager = SettingsManager()     # only one SettingsManager for each App
 
+        self.verbose = self.settings_manager.verbose
+
         # each AppManager has only one ProjectManager
         self.project_manager = ProjectManager(settings_manager=self.settings_manager)
 
-        self.verbose = self.project_manager.settings.verbose
-        self.frontend_start = self.project_manager.settings.frontend_start
-        self.frontend_port = self.project_manager.settings.port
+        self.open_project(self.settings_manager.project_directory_path)
 
         # init Eel
         Logger.log_info(msg="Init frontend with Eel", is_verbose=self.verbose)
-        eel.init(self.project_manager.settings.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
+        eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
         # expose methods
         exposer = ExposerService(self, verbose=self.verbose)
@@ -41,7 +42,10 @@ class AppManager:
 
         Logger.log_info(msg="Start app...", is_verbose=True)
 
-        eel.start(self.frontend_start, port=self.frontend_port, shutdown_delay=600)  # start eel: this generates a loop
+        frontend_start = self.settings_manager.frontend_start
+        frontend_port = self.settings_manager.port
+
+        eel.start(frontend_start, port=frontend_port, shutdown_delay=self.SHUTDOWN_DELAY)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
 
@@ -68,7 +72,7 @@ class AppManager:
         :return:
         """
 
-        Utils.open_in_webbrowser(self.project_manager.settings.settings_path())
+        Utils.open_in_webbrowser(self.settings_manager.settings_path())
 
     def version(self) -> str:
         """
@@ -81,14 +85,14 @@ class AppManager:
 
     def open_project(self, path: str) -> bool:
         """
-        Set current project path based on path passed (and can refresh)
+        Open project by path. Set current project path based on path passed (and can refresh)
 
         :return:
         """
 
         try:
 
-            if not self.project_manager.already_init(path):
+            if not self.project_manager.check_project_path(path=path, force_exit=False):
                 Logger.log_error(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
                 return False
 

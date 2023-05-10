@@ -24,11 +24,12 @@ class ProjectManager:
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
-        self.check_project_path()
+        check_res = self.check_project_path()
 
         # load db manager
-        self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
-        self.load_new_db_manager()
+        if check_res:
+            self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
+            self.load_new_db_manager()
 
     @property
     def settings(self) -> SettingsManager:
@@ -46,7 +47,7 @@ class ProjectManager:
     def db_manager(self) -> DBManager:
         return self.__db_manager
 
-    def check_project_path(self) -> None:
+    def check_project_path(self, path: Optional[str] = None, force_exit: bool = True) -> bool:
         """
         Check project path to prevent future errors
 
@@ -55,10 +56,18 @@ class ProjectManager:
 
         project_path = self.settings.project_directory_path
 
+        if isinstance(path, str):
+            project_path = path
+
         if not Utils.exist_dir(project_path) or not self.already_init(project_path):
             Logger.log_error(msg=f"selected project path '{project_path}' NOT found", is_verbose=self.verbose)
 
-            Utils.exit()
+            if force_exit:
+                Utils.exit()
+
+            return False
+
+        return True
 
     def load_new_db_manager(self) -> None:
         """
