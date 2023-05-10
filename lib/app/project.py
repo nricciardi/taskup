@@ -5,6 +5,7 @@ from lib.utils.utils import Utils
 from lib.utils.logger import Logger
 from typing import List, Dict, Optional
 import os
+from lib.db.entity.user import UserModel
 
 
 class ProjectManager:
@@ -154,3 +155,61 @@ class ProjectManager:
                                              work_directory_path=self.settings.work_directory_path,
                                              verbose=self.verbose,
                                              use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))
+
+    def remove(self, path: str) -> bool:
+        """
+        Remove project
+
+        :param path:
+        :return:
+        """
+
+        try:
+
+            if not self.already_init(path):
+                Logger.log_error(msg=f"project not found in path: '{path}'", is_verbose=self.verbose)
+                return False
+
+            work_directory_path = os.path.join(path, self.settings.WORK_DIRECTORY_NAME)
+
+            import shutil
+
+            shutil.rmtree(work_directory_path)
+
+        except Exception as e:
+            Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
+
+            return False
+
+    def init_new(self, path: str, pm: UserModel, force_init: bool = False) -> bool:
+        """
+        Initialized a new project in path with pm as project manager
+
+        :param force_init: flag which indicates if overwrite previously init
+        :param path:
+        :param pm:
+        :return:
+        """
+
+        try:
+            if self.already_init(path) and not force_init:
+                Logger.log_error(msg=f"project '{path}' already initialized", is_verbose=self.verbose)
+                return False
+            else:
+                self.remove(path)       # remove project installation, so re-init it
+
+            res = self.settings.set_project_path(path)  # set path of project which must be initialized
+
+            if res is False:
+                return False
+
+            self.refresh()      # refresh project managed by ProjectManager instance
+
+            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
+            return True
+
+        except Exception as e:
+
+            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
+
+            return False
