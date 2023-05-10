@@ -9,38 +9,37 @@ from lib.db.entity.user import UserModel
 
 
 class ProjectManager:
-    def __init__(self, load_new_db: bool = True):
+    def __init__(self, settings_manager: SettingsManager):
         """
-        Init project manager
+        Init project manager, a ProjectManager manages the initialized projects that can be opened
 
         :param load_new_db: flag which indicates if PM have to load a new db or not (it is used to prevent lost reference of DBManager in entities if project is reloaded, so DBManager can be reloaded)
         """
 
         Logger.log_info(msg="project manager init...", is_verbose=True)
 
-        # instance settings manager to take project configuration settings
-        Logger.log_info(msg="Read settings...", is_verbose=True)
-        self.__settings_manager = SettingsManager()
+        # AppManager conceded settings manager to ProjectManager, so it can be used to each entity
+        self.settings = settings_manager
 
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
         self.check_project_path()
 
-        # create work directory inside app if it does NOT exist
-        self.create_work_directory()
-
         # load db manager
-        if load_new_db:
-            self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
-            self.load_new_db_manager()
+        self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
+        self.load_new_db_manager()
 
     @property
     def settings(self) -> SettingsManager:
         return self.__settings_manager
 
+    @settings.setter
+    def settings(self, settings_manager) -> None:
+        self.__settings_manager = settings_manager
+
     @property
-    def project_path(self):
+    def project_path(self) -> str:
         return self.settings.project_directory_path
 
     @property
@@ -56,7 +55,7 @@ class ProjectManager:
 
         project_path = self.settings.project_directory_path
 
-        if not Utils.exist_dir(project_path):
+        if not Utils.exist_dir(project_path) or not self.already_init(project_path):
             Logger.log_error(msg=f"selected project path '{project_path}' NOT found", is_verbose=self.verbose)
 
             Utils.exit()
@@ -143,12 +142,12 @@ class ProjectManager:
 
     def refresh(self) -> None:
         """
-        Refresh project managed
+        Refresh project managed refreshing database manager
 
         :return:
         """
 
-        self.__init__(load_new_db=False)        # init without load a new DBManager
+        self.check_project_path()
 
         # refresh db manager connection with (new) settings
         self.__db_manager.refresh_connection(db_name=self.settings.db_name,
@@ -199,6 +198,9 @@ class ProjectManager:
                 self.remove(path)       # remove project installation, so re-init it
 
             res = self.settings.set_project_path(path)  # set path of project which must be initialized
+
+            # create work directory inside app if it does NOT exist
+            self.create_work_directory()
 
             if res is False:
                 return False

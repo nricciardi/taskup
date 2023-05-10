@@ -4,6 +4,7 @@ from lib.app.project import ProjectManager
 from lib.app.service.exposer import ExposerService
 from lib.utils.demo import Demo
 from lib.utils.utils import Utils
+from lib.settings.settings import SettingsManager
 
 
 class AppManager:
@@ -13,8 +14,12 @@ class AppManager:
     def __init__(self):
         Logger.log_info(msg="App init...", is_verbose=True)
 
-        # run project manager
-        self.project_manager = ProjectManager()
+        # instance settings manager to take project configuration settings
+        Logger.log_info(msg="Take settings...", is_verbose=True)
+        self.__settings_manager = SettingsManager()     # only one SettingsManager for each App
+
+        # each AppManager has only one ProjectManager
+        self.project_manager = ProjectManager(settings_manager=self.settings_manager)
 
         self.verbose = self.project_manager.settings.verbose
         self.frontend_start = self.project_manager.settings.frontend_start
@@ -27,6 +32,10 @@ class AppManager:
         # expose methods
         exposer = ExposerService(self, verbose=self.verbose)
         exposer.expose_methods()
+
+    @property
+    def settings_manager(self) -> SettingsManager:
+        return self.__settings_manager
 
     def start(self) -> None:
 
@@ -70,7 +79,7 @@ class AppManager:
 
         return self.VERSION
 
-    def open_project(self, path: str, refresh_current: bool = True) -> bool:
+    def open_project(self, path: str) -> bool:
         """
         Set current project path based on path passed (and can refresh)
 
@@ -83,13 +92,12 @@ class AppManager:
                 Logger.log_error(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
                 return False
 
-            res = self.project_manager.settings.set_project_path(path)      # set path of project which must be opened
+            res = self.settings_manager.set_project_path(path)      # set path of project which must be opened
 
             if res is False:
                 return False
 
-            if refresh_current:
-                self.project_manager.refresh()      # refresh project managed by ProjectManager instance
+            self.project_manager.refresh()      # refresh project managed by ProjectManager instance
 
             Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True
