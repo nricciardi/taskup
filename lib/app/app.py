@@ -24,6 +24,7 @@ class AppManager:
         # each AppManager has only one ProjectManager
         self.project_manager = ProjectManager(settings_manager=self.settings_manager)
 
+        # open project which is indicated in settings
         self.open_project(self.settings_manager.project_directory_path)
 
         # init Eel
