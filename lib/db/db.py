@@ -195,6 +195,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         self.set_connection_params(**kwargs)
 
+        self.open_connection()
+
     def close_connection(self) -> None:
         """
         Close DB connection

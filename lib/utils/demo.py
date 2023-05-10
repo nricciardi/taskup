@@ -62,6 +62,8 @@ class Demo:
 
     def launch(self, n_users: int = 10, n_tasks: int = 50, force_demo: bool = False) -> None:
         try:
+            Logger.log_info(msg="launch demo...", is_verbose=self.verbose)
+
             # prevent pre-existed db overwrite
             db_path = self.__pm.settings.db_path
             if os.path.isfile(db_path):

@@ -94,7 +94,6 @@ class AppManager:
         try:
 
             if not self.project_manager.check_project_path(path=path, force_exit=False):
-                Logger.log_error(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
                 return False
 
             res = self.settings_manager.set_project_path(path)      # set path of project which must be opened

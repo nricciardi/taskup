@@ -69,7 +69,7 @@ export class HomeComponent {
 
     if(this.openProjectForm.valid) {
 
-      this.appService.openProject(this.openProjectForm.controls['path'].value, true).then((response) => {
+      this.appService.openProject(this.openProjectForm.controls['path'].value).then((response) => {
         response.subscribe({
           next: (result) => {
 

@@ -59,8 +59,16 @@ class ProjectManager:
         if isinstance(path, str):
             project_path = path
 
-        if not Utils.exist_dir(project_path) or not self.already_init(project_path):
+        if not Utils.exist_dir(project_path):
             Logger.log_error(msg=f"selected project path '{project_path}' NOT found", is_verbose=self.verbose)
+
+            if force_exit:
+                Utils.exit()
+
+            return False
+
+        if not self.already_init(project_path):
+            Logger.log_error(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
 
             if force_exit:
                 Utils.exit()

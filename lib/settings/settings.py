@@ -71,7 +71,7 @@ class SettingsBase:
 
 
 class SettingsManager(SettingsBase):
-    create_settings_file_if_not_exist = True
+    CREATE_SETTINGS_FILE_IF_NOT_EXIST = True
 
     def __init__(self):
 
@@ -83,7 +83,7 @@ class SettingsManager(SettingsBase):
         except IOError as io_error:
             Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} not found", is_verbose=self.verbose)
 
-            if SettingsManager.create_settings_file_if_not_exist:
+            if SettingsManager.CREATE_SETTINGS_FILE_IF_NOT_EXIST:
                 self.create_settings_file()
                 self.override_settings()
 
@@ -240,7 +240,12 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.get_setting_by_key(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
+        vault_path_generator = lambda: os.path.join(self.get_setting_by_key(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
+
+        if not os.path.isfile(vault_path_generator()):
+            self.set(self.KEY_VAULT_PATH, self.VALUE_BASE_VAULT_PATH)
+
+        return vault_path_generator()
 
     @property
     def debug_mode(self) -> bool:

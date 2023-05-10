@@ -29,9 +29,9 @@ export class AppService extends EelService {
     return this.call(this.VERSION);
   }
 
-  public openProject(path: string, refresh: boolean = true): Promise<Observable<boolean>> {
+  public openProject(path: string): Promise<Observable<boolean>> {
 
-    return this.call(this.OPEN_PROJECT, path, refresh);
+    return this.call(this.OPEN_PROJECT, path);
 
   }
 
