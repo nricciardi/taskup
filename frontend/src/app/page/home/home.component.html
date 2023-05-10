@@ -104,7 +104,7 @@
                       >
                       {{ "projects" | translate }}
                       </label>
-                    <select class="form-select" id="inputGroupSelect01" (change)="!path.value ? updatePath(select.value) : ''" #select>
+                    <select class="form-select" id="inputGroupSelect01" (change)="select.value ? updatePath(select.value) : ''" #select>
                       <option value="" selected>
                         {{ "select" | translate }}
                       </option>
