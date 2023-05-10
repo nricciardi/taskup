@@ -1,13 +1,13 @@
 import os
 import datetime
 from lib.app.project import ProjectManager
-from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager, \
-    TodoItemsManager
+from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager, TodoItemsManager
 from lib.db.entity.user import UsersManager
 from lib.utils.logger import Logger
 from lib.utils.utils import Utils
 from random import randint
 from typing import Tuple
+from lib.settings.settings import SettingsManager
 
 
 class Demo:
@@ -38,12 +38,12 @@ class Demo:
     quasi aliquam eligendi, placeat qui corporis!
     """
 
-    def __init__(self):
+    def __init__(self, settings_manager: SettingsManager):
 
         try:
             Logger.log_info(msg="Demo init...", is_verbose=True)
 
-            self.__pm = ProjectManager()  # load Project Manager
+            self.__pm = ProjectManager(settings_manager=settings_manager)  # load Project Manager
 
             self.verbose = self.__pm.verbose
 

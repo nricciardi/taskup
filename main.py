@@ -51,9 +51,7 @@ def main(args: list) -> None:
     if "demo" in args or "d" in args:
         forced = "-f" in args
 
-        demo = Demo()
-
-        demo.launch(force_demo=forced)
+        AppManager.demo(force_demo=forced)
 
         return
 

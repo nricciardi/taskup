@@ -24,7 +24,7 @@ class ProjectManager:
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
-        check_result = self.check_project_path()
+        check_result = self.check_project_path(force_exit=True)
 
         # load db manager
         if check_result:
@@ -156,12 +156,13 @@ class ProjectManager:
         :return:
         """
 
+        Logger.log_info(msg="refresh project...", is_verbose=self.verbose)
+
         self.check_project_path()
 
         # refresh db manager connection with (new) settings
         self.__db_manager.refresh_connection(db_name=self.settings.db_name,
                                              work_directory_path=self.settings.work_directory_path,
-                                             verbose=self.verbose,
                                              use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))
 
     def remove(self, path: str) -> bool:

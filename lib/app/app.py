@@ -60,7 +60,7 @@ class AppManager:
         :return:
         """
 
-        demo = Demo()
+        demo = Demo(settings_manager=SettingsManager())
 
         demo.launch(force_demo=force_demo)
 

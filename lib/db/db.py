@@ -2,7 +2,7 @@ import sqlite3
 from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Optional
 from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
 from lib.utils.utils import Utils, SqlUtils
@@ -112,16 +112,38 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         # get and set locally variables
         self.verbose = verbose
-        self.use_localtime = use_localtime
 
-        self.__db_name: str = db_name
-        self.__work_directory_path: str = work_directory_path
-        self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
+        self.use_localtime = None
+        self.__db_name = None
+        self.__work_directory_path = None
+        self.__db_path = None
+        self.set_connection_params(db_name=db_name, work_directory_path=work_directory_path, use_localtime=use_localtime)
 
         # open a new connection
         self.__db_connection = None     # initialized in __init__ to use it in open_connection()
         self.__db_cursor = None         # initialized in __init__ to use it in open_connection()
         self.open_connection()
+
+    def set_connection_params(self, db_name: Optional[str] = None, work_directory_path: Optional[str] = None, use_localtime: Optional[bool] = None):
+        """
+        Set params to open connections
+
+        :param db_name:
+        :param work_directory_path:
+        :param use_localtime:
+        :return:
+        """
+
+        if use_localtime is not None:
+            self.use_localtime = use_localtime
+
+        if db_name is not None:
+            self.__db_name: str = db_name
+
+        if work_directory_path is not None:
+            self.__work_directory_path: str = work_directory_path
+
+        self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
 
     def __del__(self):
         self.close_connection()
@@ -171,7 +193,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         self.close_connection()
 
-        self.__init__(**kwargs)
+        self.set_connection_params(**kwargs)
 
     def close_connection(self) -> None:
         """
@@ -436,7 +458,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         self.cursor.executescript(query)
 
-        Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
+        # Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
         self.connection.commit()
 
