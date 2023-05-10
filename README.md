@@ -38,17 +38,12 @@ After dependencies installation, open this app is possible using `main.py`.
 It is possible to manage application settings using `settings.json`, this file have to create in _root directory_ (same level of `main.py`).
 Inserting custom settings in it, they override base default settings (managed by `SettingsManager`).
 
-There are a set of **required** settings. Without them is impossible launch app.
-They are:
-
+The settings available are:
 - `vault_path`, a string which contains the path of directory in which the file to store user credentials will be saved
-
-**TODO**
-
-Other possible settings are:
-
+- `current_project_path`, a string which contains the project path which will be loaded at startup
+- `projects_stored_paths`, a list of strings which contains the paths of already opened projects
 - `use_localtime`, boolean value which indicates if database must use *localtime*
-- `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i. e. use 4200 port for front-end)
+- `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i.e. use 4200 port for front-end)
 - `frontend`, a string which represents path of *front-end directory*
 - `frontend_start`, a string which represents the *entry point of front-end*
 - `frontend_debug_port`, an integer value which represents the port of frontend in debug mode
