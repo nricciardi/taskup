@@ -1,5 +1,5 @@
 {
-    "current_project_path": "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject",
+    "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
     "db_name": "database.db",
     "debug": true,
     "frontend": "./../frontend/dist/frontend",
@@ -16,9 +16,11 @@
         "/home/ncla/Desktop/project/project-pi/code/fakeproject3",
         "/home/ncla/Desktop/project/project-pi/code/fakeproject3",
         "/home/ncla/Desktop/project/project-pi/code/fakeproject3",
-        "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject"
+        "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject",
+        "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/fakeproject",
+        "/home/ncla/Desktop/project/project-pi/code/fakeproject3/work"
     ],
     "use_localtime": true,
-    "vault_path": "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/pi-project",
+    "vault_path": "/home/ncla/Desktop/project/project-pi/code/pi-project",
     "verbose": true
 }

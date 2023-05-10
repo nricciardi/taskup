@@ -34,6 +34,9 @@ export class AuthService {
         response.subscribe({
           next: (value: UserModel) => {
 
+            if(!value)
+              reject();
+
             if(refresh)
               this.refreshMe();
 
