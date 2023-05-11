@@ -31,6 +31,13 @@ class RepoManager:
         self.repo = git.Repo(self.repo_path)
 
     def generate_tree(self):
+
+        tree = self.repo.tree().tra
+
+        print(tree)
+
+        return
+
         commits = list(self.repo.iter_commits(reverse=True))
 
         for commit in commits:
@@ -41,7 +48,7 @@ class RepoManager:
 
 
 if __name__ == '__main__':
-    path = "/home/ncla/Desktop/project/project-pi/code/fakerepo"
+    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/test/repo-test"
     repo_manager = RepoManager(path, True)
 
     repo_manager.generate_tree()
