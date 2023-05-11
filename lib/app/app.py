@@ -5,6 +5,7 @@ from lib.app.service.exposer import ExposerService
 from lib.utils.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
+from lib.db.entity.user import UserModel
 
 
 class AppManager:
@@ -111,6 +112,18 @@ class AppManager:
             Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
 
             return False
+
+    def init_project(self, path: str, pm: UserModel, force_init: bool = False) -> bool:
+        """
+        Initialized a new project in path with pm as project manager
+
+        :param force_init: flag which indicates if overwrite previously init
+        :param path:
+        :param pm:
+        :return:
+        """
+
+        return self.project_manager.init_new(path, pm, force_init)
 
     def close(self) -> None:
         """

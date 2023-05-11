@@ -1,14 +1,19 @@
 import os
+
+from lib.app.service.auth import AuthService
+from lib.app.service.dashboard import DashboardService
 from lib.settings.settings import SettingsManager
 from lib.db.db import DBManager
 from lib.utils.utils import Utils
 from lib.utils.logger import Logger
 from typing import List, Dict, Optional
 import os
-from lib.db.entity.user import UserModel
+from lib.db.entity.user import UserModel, UsersManager, RolesManager
+from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
 
 
 class ProjectManager:
+
     def __init__(self, settings_manager: SettingsManager):
         """
         Init project manager, a ProjectManager manages the initialized projects that can be opened
@@ -30,6 +35,41 @@ class ProjectManager:
         if check_result:
             self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
             self.load_new_db_manager()
+
+            self.task_status_manager = TaskStatusManager(db_manager=self.__db_manager,
+                                                         verbose=self.verbose)
+
+            self.todo_items_manager = TodoItemsManager(db_manager=self.__db_manager,
+                                                       verbose=self.verbose)
+
+            self.task_assignment_manager = TaskAssignmentsManager(db_manager=self.__db_manager,
+                                                                  verbose=self.verbose)
+
+            self.task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=self.__db_manager,
+                                                                           verbose=self.verbose)
+
+            self.task_labels_manager = TaskLabelsManager(db_manager=self.__db_manager,
+                                                         verbose=self.verbose)
+
+            self.tasks_manager = TasksManager(db_manager=self.__db_manager,
+                                              task_assignment_manager=self.task_assignment_manager,
+                                              task_task_label_pivot_manager=self.task_task_label_pivot_manager,
+                                              verbose=self.verbose)
+
+            self.users_manager = UsersManager(db_manager=self.__db_manager,
+                                              verbose=self.verbose)
+
+            self.roles_manager = RolesManager(db_manager=self.__db_manager,
+                                              verbose=self.verbose)
+
+            self.auth_service = AuthService(users_manager=self.users_manager, vault_path=self.settings.vault_path,
+                                            verbose=self.verbose)
+
+            self.dashboard_service = DashboardService(tasks_manager=self.tasks_manager,
+                                                      task_status_manager=self.task_status_manager,
+                                                      auth_service=self.auth_service,
+                                                      roles_manager=self.roles_manager,
+                                                      verbose=self.verbose)
 
     @property
     def settings(self) -> SettingsManager:
@@ -198,7 +238,7 @@ class ProjectManager:
 
             return False
 
-    def init_new(self, path: str, pm: UserModel, force_init: bool = False) -> bool:
+    def init_new(self, path: str, pm: Dict = None, force_init: bool = False) -> bool:
         """
         Initialized a new project in path with pm as project manager
 
@@ -217,13 +257,16 @@ class ProjectManager:
 
             res = self.settings.set_project_path(path)  # set path of project which must be initialized
 
-            # create work directory inside app if it does NOT exist
-            self.create_work_directory()
-
             if res is False:
                 return False
 
-            self.refresh()      # refresh project managed by ProjectManager instance
+            # create work directory inside app if it does NOT exist
+            self.create_work_directory()
+
+            self.refresh()      # refresh project managed by ProjectManager instance => after this, ProjectManager points to initialized project
+
+            # create project manager of initialized project
+            self.users_manager.create_from_dict(pm)
 
             Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True

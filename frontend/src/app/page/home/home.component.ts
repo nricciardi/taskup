@@ -30,7 +30,8 @@ export class HomeComponent {
 
   initProjectForm: FormGroup = new FormGroup({
     path: new FormControl('/home/ncla/Desktop/project/project-pi/code/fakeproject3', [Validators.required]),
-    openOnInit: new FormControl(true, [Validators.required])
+    openOnInit: new FormControl(true, [Validators.required]),
+    forceInit: new FormControl(false, [Validators.required])
   })
 
   private _initPM?: UserModel;
@@ -156,6 +157,10 @@ export class HomeComponent {
   init() {
     if(this.initProjectForm.valid) {
 
+      const path = this.initProjectForm.controls["path"].value;
+      const openOnInit = !!this.initProjectForm.controls["openOnInit"].value;
+      const forceInit = !!this.initProjectForm.controls["forceInit"].value;
+
       if(!this.initPM) {
 
         if(!!this.authService.loggedUser) {
@@ -164,8 +169,19 @@ export class HomeComponent {
 
       }
 
+      this.appService.initProject(path, this.initPM, forceInit).then((response) => {
 
-      if(!!this.initProjectForm.controls["openOnInit"].value) {
+        response.subscribe({
+          next: (value) => {
+            console.log(value);
+
+          }
+        })
+
+      })
+
+
+      if(openOnInit) {
         // do
       }
 

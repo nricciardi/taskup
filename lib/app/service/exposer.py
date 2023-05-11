@@ -42,40 +42,25 @@ class ExposerService:
 
         self.__project_manager = self.__app_manager.project_manager
 
-        self.__task_status_manager = TaskStatusManager(db_manager=db_manager,
-                                                       verbose=self.verbose)
+        self.__task_status_manager = self.__project_manager.task_status_manager
 
-        self.__todo_items_manager = TodoItemsManager(db_manager=db_manager,
-                                                     verbose=self.verbose)
+        self.__todo_items_manager = self.__project_manager.todo_items_manager
 
-        self.__task_assignment_manager = TaskAssignmentsManager(db_manager=db_manager,
-                                                                verbose=self.verbose)
+        self.__task_assignment_manager = self.__project_manager.task_assignment_manager
 
-        self.__task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=db_manager,
-                                                                         verbose=self.verbose)
+        self.__task_task_label_pivot_manager = self.__project_manager.task_task_label_pivot_manager
 
-        self.__task_labels_manager = TaskLabelsManager(db_manager=db_manager,
-                                                       verbose=self.verbose)
+        self.__task_labels_manager = self.__project_manager.task_labels_manager
 
-        self.__tasks_manager = TasksManager(db_manager=db_manager,
-                                            task_assignment_manager=self.__task_assignment_manager,
-                                            task_task_label_pivot_manager=self.__task_task_label_pivot_manager,
-                                            verbose=self.verbose)
+        self.__tasks_manager = self.__project_manager.tasks_manager
 
-        self.__users_manager = UsersManager(db_manager=db_manager,
-                                            verbose=self.verbose)
+        self.__users_manager = self.__project_manager.users_manager
 
-        self.__roles_manager = RolesManager(db_manager=db_manager,
-                                            verbose=self.verbose)
+        self.__roles_manager = self.__project_manager.roles_manager
 
-        self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path,
-                                          verbose=self.verbose)
+        self.__auth_service = self.__project_manager.auth_service
 
-        self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager,
-                                                    task_status_manager=self.__task_status_manager,
-                                                    auth_service=self.__auth_service,
-                                                    roles_manager=self.__roles_manager,
-                                                    verbose=self.verbose)
+        self.__dashboard_service = self.__project_manager.dashboard_service
 
     def test(self, *args, **kwargs):
         """
@@ -328,7 +313,8 @@ class ExposerService:
                 self.__app_manager.open_settings,
                 self.__app_manager.version,
                 self.__app_manager.open_project,
-                self.__app_manager.close
+                self.__app_manager.close,
+                self.__app_manager.init_project,
             ], prefix="app_")
 
         except Exception as excepetion:
