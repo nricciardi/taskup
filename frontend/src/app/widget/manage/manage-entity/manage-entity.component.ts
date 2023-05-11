@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BaseEntity } from 'src/app/model/entity/base-entity.model';
 import { FormField } from 'src/app/model/form-field.model';

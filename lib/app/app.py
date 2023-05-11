@@ -1,11 +1,13 @@
 import eel
+
+from lib.db.entity.user import FuturePMData
 from lib.utils.logger import Logger
 from lib.app.project import ProjectManager
 from lib.app.service.exposer import ExposerService
 from lib.utils.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
-from lib.db.entity.user import UserModel
+from typing import Dict
 
 
 class AppManager:
@@ -113,17 +115,26 @@ class AppManager:
 
             return False
 
-    def init_project(self, path: str, pm: UserModel, force_init: bool = False) -> bool:
+    def init_project(self, path: str, future_pm_data: FuturePMData, open_on_init: bool = False, force_init: bool = False) -> bool:
         """
         Initialized a new project in path with pm as project manager
 
+        :param open_on_init:
         :param force_init: flag which indicates if overwrite previously init
         :param path:
-        :param pm:
+        :param future_pm_data:
         :return:
         """
 
-        return self.project_manager.init_new(path, pm, force_init)
+        # verify if there are all required values
+        required_values = ["email", "username", "password"]
+        for required in required_values:
+            if required not in future_pm_data.keys():
+                Logger.log_error(msg=f"invalid pm data ({future_pm_data}): {required} is required", is_verbose=self.verbose)
+
+                return False
+
+        return self.project_manager.init_new(path, future_pm_data, force_init=force_init)
 
     def close(self) -> None:
         """

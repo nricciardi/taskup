@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { EelService } from '../../eel/eel.service';
 import { Observable } from 'rxjs';
 import { LoggerService } from '../../logger/logger.service';
-import { UserModel } from 'src/app/model/entity/user.model';
+import { PM, UserModel } from 'src/app/model/entity/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +58,9 @@ export class AppService extends EelService {
 
   }
 
-  public initProject(path: string, pm: UserModel | undefined, forceInit: boolean = false): Promise<Observable<boolean>> {
+  public initProject(path: string, pm: PM, openOnInit: boolean, forceInit: boolean): Promise<Observable<boolean>> {
 
-    return this.call(this.INIT_PROJECT, path, pm, forceInit);
+    return this.call(this.INIT_PROJECT, path, pm, openOnInit, forceInit);
 
   }
 }

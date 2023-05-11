@@ -199,8 +199,8 @@
 
                         </div>
 
-                        <div class="row justify-content-start">
-                          <div class="col-aut">
+                        <!-- <div class="row justify-content-start">
+                          <div class="col-auto">
                             <div class="form-check form-switch">
                               <input
                                 class="form-check-input"
@@ -218,14 +218,110 @@
                               </label>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
 
-                        <app-manage-entity *ngIf="differentUser"
-                                          [editableFields]="editableFields"
-                                          [confirmBtnTxt]="'validate'"
-                                          (refreshRequest)="null"
-                                          (onConfirm)="initPM = $event">
-                        </app-manage-entity>
+                        <h6 class="mt-2">
+                          {{ "insert-pm-data" | translate }}
+                        </h6>
+
+                        <section id="basic-horizontal-layouts">
+                          <div class="row match-height">
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-content">
+                                  <div class="card-body">
+                                    <form class="form form-horizontal">
+                                      <div class="form-body">
+                                        <div class="row">
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ "username" | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="username"
+                                              placeholder="{{ 'username' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['username'].dirty && initProjectForm.controls['username'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['username'].dirty && !initProjectForm.controls['username'].valid"
+
+                                              formControlName="username"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'email' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="email"
+                                              class="form-control"
+                                              placeholder="{{ 'email' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['email'].dirty && initProjectForm.controls['email'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['email'].dirty && !initProjectForm.controls['email'].valid"
+
+                                              formControlName="email"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'password' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              placeholder="{{ 'password' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['password'].dirty && initProjectForm.controls['password'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['password'].dirty && !initProjectForm.controls['password'].valid"
+
+                                              formControlName="password"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'repassword' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              placeholder="{{ 'repassword' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['repassword'].dirty && initProjectForm.controls['repassword'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['repassword'].dirty && !initProjectForm.controls['repassword'].valid"
+
+
+                                              formControlName="repassword"
+                                            />
+                                          </div>
+
+                                          <div class="col-sm-12 d-flex justify-content-between">
+
+                                            <button class="btn icon btn-light" (click)="fillInitForm()" type="button">
+                                              <i class="bi bi-box-arrow-down"></i>
+                                            </button>
+
+                                            <button
+                                              type="reset"
+                                              class="btn btn-light-secondary me-1 mb-1"
+                                            >
+                                              {{ "reset" | translate }}
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
 
                         <div class="row justify-content-between mt-2">
 

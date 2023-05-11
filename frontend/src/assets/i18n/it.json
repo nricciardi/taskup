@@ -119,10 +119,11 @@
   "exit": "Esci",
   "init-project": "Inizializza Progetto",
   "init": "Inizializza",
-  "init-project-error": "Impossibile inizializzare il progetto indicato: verifica che il percorso indicato sia corretto, non già inizializzato e che si abbiano i permessi necessari",
+  "init-project-error": "Impossibile inizializzare il progetto indicato: verifica che il percorso indicato sia corretto, non già inizializzato, che si abbiano i permessi necessari e che i dati inseriti siano corretti",
   "close-app-request": "Sei sicuro di voler chiudere l'app?",
   "use-self": "Usa questo utente come project manager",
   "open-at-end": "Apri progetto inizializzato",
   "validate": "Valida",
-  "force-init": "Forza inizializzazione"
+  "force-init": "Forza inizializzazione",
+  "insert-pm-data": "Inserisci i dati del Project Manager"
 }

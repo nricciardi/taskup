@@ -67,7 +67,7 @@ class Utils:
         return hashlib.sha512(value.encode()).hexdigest()
 
     @staticmethod
-    def disguise_value_of_dict( d: Dict, *keys: str) -> None:
+    def disguise_value_of_dict(d: Dict, *keys: str) -> None:
         """
         Disguise all dictionary value of keys
 

@@ -199,7 +199,7 @@ class SettingsManager(SettingsBase):
             if os.path.isdir(path):
                 paths_checked.add(path)
 
-        return list(paths_checked)
+        return sorted(list(paths_checked))
 
     @property
     def work_directory_path(self) -> str:

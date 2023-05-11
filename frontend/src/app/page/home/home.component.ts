@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserModel } from 'src/app/model/entity/user.model';
+import { PM, UserModel } from 'src/app/model/entity/user.model';
 import { FormField } from 'src/app/model/form-field.model';
 import { ProjectInformation } from 'src/app/model/project-information.model';
 import { AppService } from 'src/app/service/api/app/app.service';
@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { ProjectService } from 'src/app/service/api/project/project.service';
 import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
-import { UtilsService } from 'src/app/service/utils/utils.service';
+import { UtilsService, matchValidator } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +17,7 @@ import { UtilsService } from 'src/app/service/utils/utils.service';
 })
 export class HomeComponent {
 
-  constructor(private projectService: ProjectService, public appService: AppService, private userService: UserService, private authService: AuthService,
+  constructor(private projectService: ProjectService, public appService: AppService, private userService: UserService, public authService: AuthService,
               private utilsService: UtilsService) {
     this.authService.refreshMe();
   }
@@ -33,66 +33,13 @@ export class HomeComponent {
 
   initProjectForm: FormGroup = new FormGroup({
     path: new FormControl('/home/ncla/Desktop/project/project-pi/code/fakeproject3', [Validators.required]),
-    openOnInit: new FormControl(true, [Validators.required]),
-    forceInit: new FormControl(false, [Validators.required])
+    openOnInit: new FormControl(false, [Validators.required]),
+    forceInit: new FormControl(false, [Validators.required]),
+    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('Asdf1234', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)]),
+    repassword: new FormControl('Asdf1234', [Validators.required, matchValidator('password')]),
   })
-
-  private _initPM?: UserModel;
-
-  get initPM() {
-    return this._initPM;
-  }
-
-  set initPM(value) {
-    this._initPM = value;
-  }
-
-  editableFields: FormField[] = [
-    {
-      name: "username",
-      type: "text",
-      placeholder: "Username",
-      blueprintFormControl: new FormControl('', [Validators.required]),
-      unique: true
-    },
-    {
-      name: "name",
-      type: "text",
-      placeholder: "Name",
-      blueprintFormControl: new FormControl<string | null>(null)
-    },
-    {
-      name: "surname",
-      type: "text",
-      placeholder: "Surname",
-      blueprintFormControl: new FormControl<string | null>(null)
-    },
-    {
-      name: "avatar_hex_color",
-      type: "color",
-      placeholder: "Color",
-      blueprintFormControl: new FormControl('', [Validators.required])
-    },
-    {
-      name: "email",
-      type: "email",
-      placeholder: "Email",
-      blueprintFormControl: new FormControl('', [Validators.required, Validators.email]),
-      unique: true
-    },
-    {
-      name: "phone",
-      type: "text",
-      placeholder: "Phone",
-      blueprintFormControl: new FormControl('')
-    },
-    {
-      name: "password",
-      type: "password",
-      placeholder: "Password",
-      blueprintFormControl: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)])
-    },
-  ]
 
   openProjectForm: FormGroup = new FormGroup({
     path: new FormControl('', [Validators.required])
@@ -163,24 +110,28 @@ export class HomeComponent {
     }
   }
 
+  fillInitForm() {
+    this.initProjectForm.controls["username"].setValue(this.authService.loggedUser?.username);
+
+    this.initProjectForm.controls["email"].setValue(this.authService.loggedUser?.email);
+  }
+
   init() {
     if(this.initProjectForm.valid) {
 
       this.showInitError = false;
 
+      const openOnInit = this.initProjectForm.controls["openOnInit"].value;
       const path = this.initProjectForm.controls["path"].value;
-      const openOnInit = !!this.initProjectForm.controls["openOnInit"].value;
       const forceInit = !!this.initProjectForm.controls["forceInit"].value;
 
-      if(!this.initPM) {
-
-        if(!!this.authService.loggedUser) {
-          this.initPM = this.authService.loggedUser;
-        }
-
+      const pm: PM = {
+        email: this.initProjectForm.controls["email"].value,
+        username: this.initProjectForm.controls["username"].value,
+        password: this.initProjectForm.controls["password"].value,
       }
 
-      this.appService.initProject(path, this.initPM, forceInit).then((response) => {
+      this.appService.initProject(path, pm, openOnInit, forceInit).then((response) => {
 
         response.subscribe({
           next: (value) => {
@@ -191,11 +142,6 @@ export class HomeComponent {
         })
 
       })
-
-
-      if(openOnInit) {
-        // do
-      }
 
     }
   }

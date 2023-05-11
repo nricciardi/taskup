@@ -8,7 +8,7 @@ from lib.db.entity.relation import Relation, OneRelation, ManyRelation, Extended
 from lib.db.entity.user import UserModel
 from lib.db.component import WhereCondition
 from lib.utils.logger import Logger
-from lib.utils.collections import CollectionsUtils
+from lib.utils.collections import ListUtils
 
 
 # ================== DATACLASS ==========================
@@ -207,7 +207,7 @@ class TaskAssignmentsManager(EntitiesManager, TableNamesMixin):
             task_assignments = self.where_as_model(WhereCondition(col="task_id", operator="=", value=task_id),
                                                    WhereCondition(col="user_id", operator="=", value=user_id))
 
-            task_assignment = CollectionsUtils.first_or_fail(task_assignments)
+            task_assignment = ListUtils.first_or_fail(task_assignments)
 
             self.update_from_dict(task_assignment.id, data)
 

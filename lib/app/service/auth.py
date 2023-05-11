@@ -1,6 +1,6 @@
 from lib.db.entity.user import UserModel, UsersManager, RolesManager
 from lib.db.component import WhereCondition
-from lib.utils.collections import CollectionsUtils
+from lib.utils.collections import ListUtils
 from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
 from typing import List, Callable, Optional
@@ -53,7 +53,7 @@ class AuthService:
                 with_relations=True
             )
 
-            self.__me = CollectionsUtils.first(users_matched)
+            self.__me = ListUtils.first(users_matched)
 
     def me(self) -> UserModel | None:
 

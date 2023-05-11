@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
+import { RoleModel } from 'src/app/model/entity/role.model';
 import { UserModel } from 'src/app/model/entity/user.model';
+import { RoleService } from 'src/app/service/api/entity/role/role.service';
 
 @Component({
   selector: 'app-manage-assigned-user-modal',
@@ -15,7 +17,25 @@ export class ManageAssignedUserModalComponent {
 
   @Output() onRemoveFromTask = new EventEmitter<void>();
 
-  ngOnDestroy() {
+  role?: RoleModel;
 
-  }
+  constructor(private roleService: RoleService) {}
+
+  ngOnInit() {
+
+    const userId = this.user?.role_id;
+    if(userId) {
+      this.roleService.find(userId).then((response) => {
+
+        response.subscribe({
+          next: (role) => {
+            this.role = role;
+          }
+        })
+
+      })
+    }
+
+    }
+
 }

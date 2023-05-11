@@ -6,6 +6,7 @@ from typing import List, Tuple, Dict, Optional, Any
 from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
 from lib.utils.utils import Utils, SqlUtils
+from lib.utils.collections import DictUtils
 
 
 def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
@@ -97,7 +98,13 @@ class BaseTaskStatusIdMixin:
         return 8
 
 
-class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
+class BaseRoleIdMixin:
+    @property
+    def project_manager_role_id(self) -> int:
+        return 1
+
+
+class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
     def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False, use_localtime: bool = False):
         """
@@ -223,7 +230,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="surname", type="VARCHAR(256)", nullable=True),
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
-                Field.hex_color(name="avatar_hex_color", default="'cfcfcf'", nullable=False),
+                Field.hex_color(name="avatar_hex_color", default="'#cfcfcf'", nullable=False),
                 Field(name="phone", type="VARCHAR(30)", nullable=True),
                 Field.nullable_datetime_with_now_check_field("last_visit_at", use_localtime=self.use_localtime, default=None),
                 Field.fk_field(name="role_id"),
@@ -387,12 +394,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1),
-                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1),
-                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0),
-                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0),
-                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0)
-                                         ], cols=("name",
+                                           (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1),
+                                           (2, "Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1),
+                                           (3, "Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0),
+                                           (4, "Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0),
+                                           (5, "External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0),
+                                         ], cols=("id", "name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
                                                   "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
                                                   "permission_delete_own", "permission_delete_all", "permission_move", "permission_manage_roles",
@@ -638,9 +645,17 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             values = list()
             values.append(d)
 
+        # remove items which doesn't have a key in used table header
+        checked_values: List[Dict] = []
+        for value in values:
+            checked_values.append(DictUtils.filter_dict_by_key(dict(value), self.tables[table_name].header))
+
+        values = checked_values
+
+        # create query
         query = QueryBuilder.from_table(table_name).enable_binding().insert_from_dict(columns=columns, *values)
 
-        self.cursor.execute(query.to_sql(), query.data_bound)
+        self.cursor.execute(query.to_sql(), query.data_bound)   # execute insert query
 
         self.connection.commit()
 
@@ -709,12 +724,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :return:
         """
 
-        if isinstance(conditions, WhereCondition):
+        if isinstance(conditions, WhereCondition):      # cast to list to use it as iterable
             conditions = [conditions]
 
-        # append updated_at to data with "now" if not exist and if table name has updated_at
-        # if "updated_at" in self.tables[table_name]:
-        #     data = dict(updated_at=).update(data)
+        # remove items which doesn't have a key in used table header
+        data: Dict = DictUtils.filter_dict_by_key(dict(data), self.tables[table_name].header)
 
         query_built = QueryBuilder.from_table(table_name)\
                                   .enable_binding()\

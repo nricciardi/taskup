@@ -8,7 +8,7 @@ from lib.utils.utils import Utils
 from lib.utils.logger import Logger
 from typing import List, Dict, Optional
 import os
-from lib.db.entity.user import UserModel, UsersManager, RolesManager
+from lib.db.entity.user import UsersManager, RolesManager, FuturePMData
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
 
 
@@ -142,14 +142,15 @@ class ProjectManager:
         except Exception as exception:
             Logger.log_error(msg="error while retrieving app settings", is_verbose=self.verbose)
 
-    def create_work_directory(self) -> None:
+    def create_work_directory(self, work_directory_path: Optional[str] = None) -> None:
         """
         Create work directory in the app if it doesn't exist
 
         :rtype None:
         """
 
-        work_directory_path: str = self.__settings_manager.work_directory_path
+        if work_directory_path is None:
+            work_directory_path: str = self.__settings_manager.work_directory_path
 
         try:
 
@@ -238,13 +239,13 @@ class ProjectManager:
 
             return False
 
-    def init_new(self, path: str, pm: Dict = None, force_init: bool = False) -> bool:
+    def init_new(self, path: str, future_pm_data: FuturePMData, force_init: bool = False) -> bool:
         """
         Initialized a new project in path with pm as project manager
 
+        :param future_pm_data:
         :param force_init: flag which indicates if overwrite previously init
         :param path:
-        :param pm:
         :return:
         """
 
@@ -266,7 +267,7 @@ class ProjectManager:
             self.refresh()      # refresh project managed by ProjectManager instance => after this, ProjectManager points to initialized project
 
             # create project manager of initialized project
-            self.users_manager.create_from_dict(pm)
+            self.users_manager.create_from_dict(dict(**future_pm_data, role_id=self.__db_manager.project_manager_role_id))
 
             Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True
