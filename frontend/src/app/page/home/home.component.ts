@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { ProjectService } from 'src/app/service/api/project/project.service';
 import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,8 @@ import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
 })
 export class HomeComponent {
 
-  constructor(private projectService: ProjectService, public appService: AppService, private userService: UserService, private authService: AuthService) {
+  constructor(private projectService: ProjectService, public appService: AppService, private userService: UserService, private authService: AuthService,
+              private utilsService: UtilsService) {
     this.authService.refreshMe();
   }
 
@@ -26,7 +28,8 @@ export class HomeComponent {
 
   projectInformation?: ProjectInformation;
 
-  showError: boolean = false;
+  showInitError: boolean = false;
+  showOpenError: boolean = false;
 
   initProjectForm: FormGroup = new FormGroup({
     path: new FormControl('/home/ncla/Desktop/project/project-pi/code/fakeproject3', [Validators.required]),
@@ -83,6 +86,12 @@ export class HomeComponent {
       placeholder: "Phone",
       blueprintFormControl: new FormControl('')
     },
+    {
+      name: "password",
+      type: "password",
+      placeholder: "Password",
+      blueprintFormControl: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)])
+    },
   ]
 
   openProjectForm: FormGroup = new FormGroup({
@@ -130,7 +139,7 @@ export class HomeComponent {
 
   open() {
 
-    this.showError = false;
+    this.showOpenError = false;
 
     if(this.openProjectForm.valid) {
 
@@ -143,11 +152,11 @@ export class HomeComponent {
               window.location.reload();   // reload app
 
             } else {
-              this.showError = true;
+              this.showOpenError = true;
             }
 
           },
-          error: (e) => this.showError = true
+          error: (e) => this.showOpenError = true
         })
       })
 
@@ -156,6 +165,8 @@ export class HomeComponent {
 
   init() {
     if(this.initProjectForm.valid) {
+
+      this.showInitError = false;
 
       const path = this.initProjectForm.controls["path"].value;
       const openOnInit = !!this.initProjectForm.controls["openOnInit"].value;
@@ -173,9 +184,10 @@ export class HomeComponent {
 
         response.subscribe({
           next: (value) => {
-            console.log(value);
+            this.showInitError = !value;
 
-          }
+          },
+          error: (e) => this.showInitError = true
         })
 
       })

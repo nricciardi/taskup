@@ -7,6 +7,7 @@ from typing import List, Callable, Optional
 from lib.utils.error import Errors
 from dataclasses import dataclass
 from lib.utils.utils import Utils
+from lib.db.query import QueryBuilder
 
 
 @dataclass
@@ -55,8 +56,6 @@ class AuthService:
             self.__me = CollectionsUtils.first(users_matched)
 
     def me(self) -> UserModel | None:
-
-        print(self.__users_manager.db_manager.db_path)
 
         return self.__me
 
@@ -194,10 +193,13 @@ class AuthService:
         """
 
         logged_user = self.me()
+        table_name: str = self.__users_manager.table_name
 
-        self.__users_manager.update_from_dict(logged_user.id, {
-            "last_visit_at": "DATE('now')"
-        })
+        update_last_visit_query: str = QueryBuilder.from_table(table_name).update_from_dict({
+            "last_visit_at": "DATETIME('now')"
+        }).apply_conditions(WhereCondition("id", "=", logged_user.id)).to_sql()
+
+        self.__users_manager.db_manager.execute(update_last_visit_query)
 
 
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:

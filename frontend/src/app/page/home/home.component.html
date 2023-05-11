@@ -254,7 +254,7 @@
 
                         </div>
 
-                        <div class="row justify-content-center mt-2" *ngIf="showError">
+                        <div class="row justify-content-center mt-2" *ngIf="showInitError">
                           <div class="col-auto">
                             <app-error-alert [dismissable]="true"
                                              [title]="'init-project-error'">
@@ -343,7 +343,7 @@
 
                         </div>
 
-                        <div class="row justify-content-center mt-2" *ngIf="showError">
+                        <div class="row justify-content-center mt-2" *ngIf="showOpenError">
                           <div class="col-auto">
                             <app-error-alert [dismissable]="true"
                                              [title]="'opening-error'">

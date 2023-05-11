@@ -2,7 +2,7 @@ import sqlite3
 from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
 import os
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Any
 from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
 from lib.utils.utils import Utils, SqlUtils
@@ -729,3 +729,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.connection.commit()
 
         return res
+
+    def execute(self, raw_query: str) -> Any:
+        """
+        Execute passed raw query
+
+        :param raw_query: the raw query to execute
+        :type raw_query: str
+        :return: execution result
+        """
+
+        return self.cursor.executescript(raw_query)

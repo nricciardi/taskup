@@ -554,10 +554,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             else:
 
-                self.db_manager.update(self.table_name,
-                                       WhereCondition("id", "=", entity_id),
-                                       **data
-                                       )
+                self.db_manager.update(self.table_name, WhereCondition("id", "=", entity_id), **data)
 
                 Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
 

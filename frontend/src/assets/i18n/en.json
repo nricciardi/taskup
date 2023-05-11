@@ -119,7 +119,7 @@
   "exit": "Exit",
   "init-project": "Initialize Project",
   "init": "Initialize",
-  "init-project-error": "Unable to initialize the indicated project: check that the path indicated is correct and that you have the necessary permissions",
+  "init-project-error": "Unable to initialize the indicated project: check that the path indicated is correct, not already initialized and that you have the necessary permissions",
   "close-app-request": "Are you sure you want to close the app?",
   "use-self": "Use this user as project manager",
   "open-at-end": "Open initialized project",
