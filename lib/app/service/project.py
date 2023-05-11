@@ -2,7 +2,7 @@ import os
 
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
-from lib.settings.settings import SettingsManager
+from lib.settings.settings import SettingsManager, SettingsBase
 from lib.db.db import DBManager
 from lib.utils.utils import Utils
 from lib.utils.logger import Logger
@@ -17,8 +17,6 @@ class ProjectManager:
     def __init__(self, settings_manager: SettingsManager):
         """
         Init project manager, a ProjectManager manages the initialized projects that can be opened
-
-        :param load_new_db: flag which indicates if PM have to load a new db or not (it is used to prevent lost reference of DBManager in entities if project is reloaded, so DBManager can be reloaded)
         """
 
         Logger.log_info(msg="project manager init...", is_verbose=True)
@@ -29,47 +27,20 @@ class ProjectManager:
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
-        check_result = self.check_project_path(force_exit=True)
-
-        # load db manager
-        if check_result:
+        # load db manager and entities managers
+        if ProjectManager.already_initialized(self.settings.project_directory_path, verbose=self.verbose):
             self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
             self.load_new_db_manager()
 
-            self.task_status_manager = TaskStatusManager(db_manager=self.__db_manager,
-                                                         verbose=self.verbose)
-
-            self.todo_items_manager = TodoItemsManager(db_manager=self.__db_manager,
-                                                       verbose=self.verbose)
-
-            self.task_assignment_manager = TaskAssignmentsManager(db_manager=self.__db_manager,
-                                                                  verbose=self.verbose)
-
-            self.task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=self.__db_manager,
-                                                                           verbose=self.verbose)
-
-            self.task_labels_manager = TaskLabelsManager(db_manager=self.__db_manager,
-                                                         verbose=self.verbose)
-
-            self.tasks_manager = TasksManager(db_manager=self.__db_manager,
-                                              task_assignment_manager=self.task_assignment_manager,
-                                              task_task_label_pivot_manager=self.task_task_label_pivot_manager,
-                                              verbose=self.verbose)
-
-            self.users_manager = UsersManager(db_manager=self.__db_manager,
-                                              verbose=self.verbose)
-
-            self.roles_manager = RolesManager(db_manager=self.__db_manager,
-                                              verbose=self.verbose)
-
-            self.auth_service = AuthService(users_manager=self.users_manager, vault_path=self.settings.vault_path,
-                                            verbose=self.verbose)
-
-            self.dashboard_service = DashboardService(tasks_manager=self.tasks_manager,
-                                                      task_status_manager=self.task_status_manager,
-                                                      auth_service=self.auth_service,
-                                                      roles_manager=self.roles_manager,
-                                                      verbose=self.verbose)
+            self.task_status_manager = None
+            self.roles_manager = None
+            self.users_manager = None
+            self.tasks_manager = None
+            self.task_labels_manager = None
+            self.task_task_label_pivot_manager = None
+            self.task_assignment_manager = None
+            self.todo_items_manager = None
+            self.load_entities_managers()
 
     @property
     def settings(self) -> SettingsManager:
@@ -86,36 +57,6 @@ class ProjectManager:
     @property
     def db_manager(self) -> DBManager:
         return self.__db_manager
-
-    def check_project_path(self, path: Optional[str] = None, force_exit: bool = True) -> bool:
-        """
-        Check project path to prevent future errors
-
-        :return:
-        """
-
-        project_path = self.settings.project_directory_path
-
-        if isinstance(path, str):
-            project_path = path
-
-        if not Utils.exist_dir(project_path):
-            Logger.log_error(msg=f"selected project path '{project_path}' NOT found", is_verbose=self.verbose)
-
-            if force_exit:
-                Utils.exit()
-
-            return False
-
-        if not self.already_init(project_path):
-            Logger.log_error(msg=f"project '{path}' not initialized", is_verbose=self.verbose)
-
-            if force_exit:
-                Utils.exit()
-
-            return False
-
-        return True
 
     def load_new_db_manager(self) -> None:
         """
@@ -142,6 +83,39 @@ class ProjectManager:
         except Exception as exception:
             Logger.log_error(msg="error while retrieving app settings", is_verbose=self.verbose)
 
+    def load_entities_managers(self) -> None:
+        """
+        Load entities managers
+
+        :return:
+        """
+
+        self.task_status_manager = TaskStatusManager(db_manager=self.__db_manager,
+                                                     verbose=self.verbose)
+
+        self.todo_items_manager = TodoItemsManager(db_manager=self.__db_manager,
+                                                   verbose=self.verbose)
+
+        self.task_assignment_manager = TaskAssignmentsManager(db_manager=self.__db_manager,
+                                                              verbose=self.verbose)
+
+        self.task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=self.__db_manager,
+                                                                       verbose=self.verbose)
+
+        self.task_labels_manager = TaskLabelsManager(db_manager=self.__db_manager,
+                                                     verbose=self.verbose)
+
+        self.tasks_manager = TasksManager(db_manager=self.__db_manager,
+                                          task_assignment_manager=self.task_assignment_manager,
+                                          task_task_label_pivot_manager=self.task_task_label_pivot_manager,
+                                          verbose=self.verbose)
+
+        self.users_manager = UsersManager(db_manager=self.__db_manager,
+                                          verbose=self.verbose)
+
+        self.roles_manager = RolesManager(db_manager=self.__db_manager,
+                                          verbose=self.verbose)
+
     def create_work_directory(self, work_directory_path: Optional[str] = None) -> None:
         """
         Create work directory in the app if it doesn't exist
@@ -163,28 +137,28 @@ class ProjectManager:
             Logger.log_error(msg=f"error during creation of work directory in project ({work_directory_path})")
             Utils.exit()
 
-    def already_init(self, path: str) -> bool:
+    @staticmethod
+    def already_initialized(path: str, verbose: bool = False) -> bool:
         """
         Return True if in path there is the work directory
 
-        :param path:
+        :param verbose:
+        :param path: project path which will be checked
         :return:
         """
 
-        work_directory_name: str = self.settings.WORK_DIRECTORY_NAME
+        if not Utils.exist_dir(path):
+            Logger.log_warning(msg=f"selected project path '{path}' NOT found", is_verbose=verbose)
+            return False
 
-        return work_directory_name in os.listdir(path) and os.path.isdir(os.path.join(path, work_directory_name))
+        work_directory_name: str = SettingsBase.WORK_DIRECTORY_NAME
 
-    def get_projects_paths_stored(self) -> List[str]:
-        """
-        Get all projects paths stored
+        is_init: bool = work_directory_name in os.listdir(path) and os.path.isdir(os.path.join(path, work_directory_name))
 
-        :return: projects paths
-        """
+        if is_init is False:
+            Logger.log_warning(msg=f"project '{path}' not initialized", is_verbose=verbose)
 
-        paths_stored: List[str] = self.__settings_manager.projects_paths_stored
-
-        return paths_stored
+        return is_init
 
     def project_information(self) -> Dict:
         """
@@ -207,7 +181,8 @@ class ProjectManager:
 
         Logger.log_info(msg="refresh project...", is_verbose=self.verbose)
 
-        self.check_project_path()
+        if ProjectManager.already_initialized(self.settings.project_directory_path):
+            return
 
         # refresh db manager connection with (new) settings
         self.__db_manager.refresh_connection(db_name=self.settings.db_name,
@@ -224,7 +199,7 @@ class ProjectManager:
 
         try:
 
-            if not self.already_init(path):
+            if not ProjectManager.already_initialized(path):
                 Logger.log_error(msg=f"project not found in path: '{path}'", is_verbose=self.verbose)
                 return False
 
@@ -250,7 +225,7 @@ class ProjectManager:
         """
 
         try:
-            if self.already_init(path) and not force_init:
+            if ProjectManager.already_initialized(path) and not force_init:
                 Logger.log_error(msg=f"project '{path}' already initialized", is_verbose=self.verbose)
                 return False
             else:
@@ -268,6 +243,35 @@ class ProjectManager:
 
             # create project manager of initialized project
             self.users_manager.create_from_dict(dict(**future_pm_data, role_id=self.__db_manager.project_manager_role_id))
+
+            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
+            return True
+
+        except Exception as e:
+
+            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
+
+            return False
+
+    def open(self, path: str) -> bool:
+        """
+        Open a project
+
+        :param path:
+        :return:
+        """
+
+        try:
+
+            if not ProjectManager.already_initialized(path=path):
+                return False
+
+            res = self.settings.set_project_path(path)      # set path of project which must be opened
+
+            if res is False:
+                return False
+
+            self.refresh()      # refresh project managed by ProjectManager instance
 
             Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True

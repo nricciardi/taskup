@@ -1,6 +1,6 @@
 import os
 import datetime
-from lib.app.project import ProjectManager
+from lib.app.service.project import ProjectManager
 from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager, TodoItemsManager
 from lib.db.entity.user import UsersManager
 from lib.utils.logger import Logger

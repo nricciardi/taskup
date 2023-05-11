@@ -51,7 +51,7 @@ export class HomeComponent {
   }
 
   loadProjectsPaths(): void {
-    this.projectService.projectsPathsStored().then((response) => {
+    this.appService.projectsPathsStored().then((response) => {
 
       response.subscribe({
         next: (paths) => {

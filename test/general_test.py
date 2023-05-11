@@ -1,12 +1,8 @@
 import os
-from lib.db.query import QueryBuilder
 from lib.db.entity.user import UsersManager
-from lib.app.project import ProjectManager
+from lib.app.service.project import ProjectManager
 from lib.db.entity.task import TasksManager, TaskAssignmentsManager, TaskLabelsManager, TaskTaskLabelPivotManager, TodoItemsManager
-from lib.db.component import WhereCondition
-from lib.app.service.auth import AuthService
 from random import randint
-import sqlite3
 import datetime
 
 

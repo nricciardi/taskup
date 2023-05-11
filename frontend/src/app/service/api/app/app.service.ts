@@ -14,6 +14,7 @@ export class AppService extends EelService {
   readonly VERSION = "app_version";
   readonly CLOSE = "app_close";
   readonly INIT_PROJECT = "app_init_project";
+  readonly PATHS_STORED = "app_get_projects_paths_stored";
 
   public openSettings(): void {
 
@@ -61,6 +62,12 @@ export class AppService extends EelService {
   public initProject(path: string, pm: PM, openOnInit: boolean, forceInit: boolean): Promise<Observable<boolean>> {
 
     return this.call(this.INIT_PROJECT, path, pm, openOnInit, forceInit);
+
+  }
+
+  public projectsPathsStored(): Promise<Observable<string[]>> {
+
+    return this.call(this.PATHS_STORED);
 
   }
 }

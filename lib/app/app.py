@@ -1,13 +1,14 @@
 import eel
-
+from typing import List
+from lib.app.service.auth import AuthService
+from lib.app.service.dashboard import DashboardService
 from lib.db.entity.user import FuturePMData
 from lib.utils.logger import Logger
-from lib.app.project import ProjectManager
+from lib.app.service.project import ProjectManager
 from lib.app.service.exposer import ExposerService
 from lib.utils.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
-from typing import Dict
 
 
 class AppManager:
@@ -24,23 +25,63 @@ class AppManager:
 
         self.verbose = self.settings_manager.verbose
 
-        # each AppManager has only one ProjectManager
-        self.project_manager = ProjectManager(settings_manager=self.settings_manager)
+        self.__expose_app_methods()
 
         # open project which is indicated in settings
-        self.open_project(self.settings_manager.project_directory_path)
+        if ProjectManager.already_initialized(self.settings_manager.project_directory_path):
+            # each AppManager has only one ProjectManager
+            self.project_manager = ProjectManager(settings_manager=self.settings_manager)
+
+            self.auth_service = AuthService(users_manager=self.project_manager.users_manager, vault_path=self.settings_manager.vault_path,
+                                            verbose=self.verbose)
+
+            self.dashboard_service = DashboardService(tasks_manager=self.project_manager.tasks_manager,
+                                                      task_status_manager=self.project_manager.task_status_manager,
+                                                      auth_service=self.auth_service,
+                                                      roles_manager=self.project_manager.roles_manager,
+                                                      verbose=self.verbose)
+
+            self.open_project(self.settings_manager.project_directory_path)
 
         # init Eel
-        Logger.log_info(msg="Init frontend with Eel", is_verbose=self.verbose)
+        Logger.log_info(msg="Init frontend with Eel...", is_verbose=self.verbose)
         eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
-
-        # expose methods
-        exposer = ExposerService(self, verbose=self.verbose)
-        exposer.expose_methods()
 
     @property
     def settings_manager(self) -> SettingsManager:
         return self.__settings_manager
+
+    def __expose_app_methods(self) -> None:
+        """
+        Expose app methods
+
+        :return: None
+        """
+
+        try:
+
+            ExposerService.expose_all_from_list(to_expose=[
+                self.open_settings,
+                self.version,
+                self.open_project,
+                self.close,
+                self.init_project,
+                self.get_projects_paths_stored
+            ], prefix="app_")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="app exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_others(self) -> None:
+        """
+        Expose others methods using Eel
+
+        :return:
+        """
+
+        # expose methods
+        exposer = ExposerService(self.project_manager, auth_service=self.auth_service, dashboard_service=self.dashboard_service, verbose=self.verbose)
+        exposer.expose_methods()
 
     def start(self) -> None:
 
@@ -94,26 +135,7 @@ class AppManager:
         :return:
         """
 
-        try:
-
-            if not self.project_manager.check_project_path(path=path, force_exit=False):
-                return False
-
-            res = self.settings_manager.set_project_path(path)      # set path of project which must be opened
-
-            if res is False:
-                return False
-
-            self.project_manager.refresh()      # refresh project managed by ProjectManager instance
-
-            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
-            return True
-
-        except Exception as e:
-
-            Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
-
-            return False
+        return self.project_manager.open(path)
 
     def init_project(self, path: str, future_pm_data: FuturePMData, open_on_init: bool = False, force_init: bool = False) -> bool:
         """
@@ -134,7 +156,12 @@ class AppManager:
 
                 return False
 
-        return self.project_manager.init_new(path, future_pm_data, force_init=force_init)
+        res: bool = self.project_manager.init_new(path, future_pm_data, force_init=force_init)
+
+        if open_on_init:
+            self.open_project(path)
+
+        return res
 
     def close(self) -> None:
         """
@@ -146,3 +173,14 @@ class AppManager:
         Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
 
         Utils.exit()
+
+    def get_projects_paths_stored(self) -> List[str]:
+        """
+        Get all projects paths stored
+
+        :return: projects paths
+        """
+
+        paths_stored: List[str] = self.__settings_manager.projects_paths_stored
+
+        return paths_stored

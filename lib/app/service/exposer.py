@@ -1,13 +1,12 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
-from lib.db.entity.user import UsersManager, RolesManager
-from lib.app.service.auth import AuthService, login_required, permission_required
-from lib.app.service.dashboard import DashboardService
+from lib.app.service.auth import login_required, AuthService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
 import json
 from lib.utils.utils import Utils
+from lib.app.service.project import ProjectManager
+from lib.app.service.dashboard import DashboardService
 
 
 def jsonify(func: Callable):
@@ -32,15 +31,10 @@ class ExposerService:
 
     """
 
-    def __init__(self, app_manager, verbose: bool = False):
+    def __init__(self, project_manager: ProjectManager, auth_service: AuthService, dashboard_service: DashboardService, verbose: bool = False):
         self.verbose = verbose
 
-        self.__app_manager = app_manager
-
-        db_manager = self.__app_manager.project_manager.db_manager
-        vault_path = self.__app_manager.project_manager.settings.vault_path
-
-        self.__project_manager = self.__app_manager.project_manager
+        self.__project_manager = project_manager
 
         self.__task_status_manager = self.__project_manager.task_status_manager
 
@@ -58,9 +52,9 @@ class ExposerService:
 
         self.__roles_manager = self.__project_manager.roles_manager
 
-        self.__auth_service = self.__project_manager.auth_service
+        self.__auth_service = auth_service
 
-        self.__dashboard_service = self.__project_manager.dashboard_service
+        self.__dashboard_service = dashboard_service
 
     def test(self, *args, **kwargs):
         """
@@ -293,32 +287,11 @@ class ExposerService:
         try:
 
             self.expose_all_from_list(to_expose=[
-                self.__project_manager.get_projects_paths_stored,
                 self.__project_manager.project_information,
             ], prefix="project_")
 
         except Exception as excepetion:
             Logger.log_error(msg="project manager exposure error", is_verbose=self.verbose, full=True)
-
-    def __expose_app_methods(self) -> None:
-        """
-        Expose app methods
-
-        :return: None
-        """
-
-        try:
-
-            self.expose_all_from_list(to_expose=[
-                self.__app_manager.open_settings,
-                self.__app_manager.version,
-                self.__app_manager.open_project,
-                self.__app_manager.close,
-                self.__app_manager.init_project,
-            ], prefix="app_")
-
-        except Exception as excepetion:
-            Logger.log_error(msg="app exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_utils_methods(self) -> None:
         """
@@ -395,7 +368,6 @@ class ExposerService:
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
             self.__expose_project_manager_methods()
-            self.__expose_app_methods()
             self.__expose_utils_methods()
 
             Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
