@@ -9,4 +9,5 @@ export const baseEnvironment = {
   updateLastVisitInterval: 60 * 1000,   // milliseconds
   authRequiredRedirectRoute: "/login",
   basePriorityValue: 10,
+  appName: "Taskup"
 };
