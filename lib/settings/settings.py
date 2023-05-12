@@ -204,15 +204,15 @@ class SettingsManager(SettingsBase):
         return SettingsManager.assemble_work_directory_path(self.project_directory_path)
 
     @staticmethod
-    def assemble_work_directory_path(path: str) -> str:
+    def assemble_work_directory_path(project_path: str) -> str:
         """
         Assemble and return work directory path from passed path
 
-        :param path:
+        :param project_path:
         :return:
         """
 
-        return os.path.join(path, SettingsBase.WORK_DIRECTORY_NAME)
+        return os.path.join(project_path, SettingsBase.WORK_DIRECTORY_NAME)
 
     @property
     def db_name(self) -> str:

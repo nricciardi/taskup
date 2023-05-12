@@ -38,7 +38,7 @@ class AppManager:
                                                   roles_manager=self.project_manager.roles_manager,
                                                   verbose=self.verbose)
 
-        # open project which is indicated in settings if it is an initialized project
+        # open project if already initialized
         if ProjectManager.already_initialized(self.settings_manager.project_directory_path):
             self.open_project(self.settings_manager.project_directory_path)
 

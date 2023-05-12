@@ -20,7 +20,6 @@ class ProjectManager:
         # AppManager conceded settings manager to ProjectManager, so it can be used to each entity
         self.settings = settings_manager
 
-        # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
         # instance (only one) DBManager
@@ -155,7 +154,7 @@ class ProjectManager:
 
     def remove(self, project_path: str) -> bool:
         """
-        Remove project
+        Remove app from project
 
         :param project_path:
         :return:
@@ -167,11 +166,11 @@ class ProjectManager:
                 Logger.log_error(msg=f"project not found in path: '{project_path}'", is_verbose=self.verbose)
                 return False
 
-            work_directory_path = os.path.join(project_path, self.settings.WORK_DIRECTORY_NAME)
+            work_directory_path = SettingsManager.assemble_work_directory_path(project_path)
 
             import shutil
 
-            shutil.rmtree(work_directory_path)
+            shutil.rmtree(work_directory_path)      # remove all files in work directory recursively
 
         except Exception as e:
             Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
@@ -189,6 +188,7 @@ class ProjectManager:
         """
 
         try:
+            # list of controls to check if dir exists and the project is already initialized
             if Utils.exist_dir(project_path) is False:
                 Logger.log_error(msg=f"directory '{project_path}' not found", is_verbose=self.verbose)
 
@@ -204,7 +204,9 @@ class ProjectManager:
                 Logger.log_warning(msg=f"project '{project_path}' will be initialized again", is_verbose=self.verbose)
                 self.remove(project_path=project_path)       # remove project installation, so re-init it
 
-            # create work directory inside app if it does NOT exist
+            # end of controls list...
+
+            # create work directory inside project if it does NOT exist
             work_dir = self.create_work_directory(project_path)
 
             # instance specific DBManager to create new db
@@ -240,16 +242,17 @@ class ProjectManager:
 
         try:
 
+            # a project which is NOT initialized cannot be opened
             if not ProjectManager.already_initialized(project_path=path, verbose=self.verbose):
                 return False
 
             res = self.settings.set_project_path(path)      # set path of project which must be opened
 
-            if res is False:
+            if res is False:        # log if settings' set have failed
                 Logger.log_error(msg=f"invalid path: {path}")
                 return False
 
-            self.refresh()      # refresh project managed by ProjectManager instance
+            self.refresh()      # refresh project managed by the current ProjectManager instance
 
             Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True
