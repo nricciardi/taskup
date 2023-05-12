@@ -1,7 +1,6 @@
 import sqlite3
 from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
-import os
 from typing import List, Tuple, Dict, Optional, Any
 from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
@@ -106,12 +105,11 @@ class BaseRoleIdMixin:
 
 class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
-    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False, use_localtime: bool = False):
+    def __init__(self, db_path: str, verbose: bool = False, use_localtime: bool = False):
         """
         Create a DBManager
 
-        :param db_name: db name
-        :param work_directory_path: work directory path
+        :param db_path: db path
         :param verbose: verbose
         :param use_localtime: if db must use local in date
         """
@@ -120,11 +118,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         # get and set locally variables
         self.verbose = verbose
 
-        self.use_localtime = None
-        self.__db_name = None
-        self.__work_directory_path = None
-        self.__db_path = None
-        self.set_connection_params(db_name=db_name, work_directory_path=work_directory_path, use_localtime=use_localtime)
+        self.use_localtime = use_localtime
+        self.__db_path = db_path
 
         # open a new connection
         self.__db_connection = None     # initialized in __init__ to use it in open_connection()
@@ -134,12 +129,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
     def __del__(self):
         self.close_connection()
 
-    def set_connection_params(self, db_name: Optional[str] = None, work_directory_path: Optional[str] = None, use_localtime: Optional[bool] = None):
+    def set_connection_params(self, db_path: Optional[str] = None, use_localtime: Optional[bool] = None):
         """
         Set params to open connections
 
-        :param db_name:
-        :param work_directory_path:
+        :param db_path:
         :param use_localtime:
         :return:
         """
@@ -147,13 +141,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         if use_localtime is not None:
             self.use_localtime = use_localtime
 
-        if db_name is not None:
-            self.__db_name: str = db_name
-
-        if work_directory_path is not None:
-            self.__work_directory_path: str = work_directory_path
-
-        self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
+        if db_path is not None:
+            self.__db_path = db_path
 
     def is_open(self) -> bool:
         """
@@ -163,6 +152,30 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         """
 
         return isinstance(self.__db_connection, sqlite3.Connection)
+
+    @classmethod
+    def creating_database(cls, db_path: str, verbose: bool = False, use_localtime: bool = True) -> Optional['DBManager']:
+        """
+        Create a new database in path
+
+        :param use_localtime:
+        :param verbose:
+        :param db_path:
+        :return:
+        """
+
+        try:
+
+            with sqlite3.connect(db_path) as conn:       # with auto-close connection resource
+
+                Logger.log_success(msg=f"database created in path: '{db_path}'", is_verbose=verbose)
+
+            return cls(db_path=db_path, verbose=verbose, use_localtime=use_localtime)
+
+        except Exception as e:
+            Logger.log_warning(msg=f"error during database creation in path: '{db_path}'", is_verbose=verbose)
+
+            return None
 
     def open_connection(self) -> None:
         """
@@ -174,7 +187,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         self.__db_connection = None
         self.__db_cursor = None
 
-        # log if verbose
+        # open connection if and only if database already exists
         if Utils.exist(self.__db_path):
             Logger.log_info(msg=f"found database: '{self.__db_path}'", is_verbose=self.verbose)
         else:
@@ -446,18 +459,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         return self.__db_path
 
     @property
-    def db_name(self) -> str:
-        return self.__db_name
-
-    @db_name.setter
-    def db_name(self, name: str) -> None:
-        self.__db_name = name
-
-    @db_name.deleter
-    def db_name(self):
-        raise Exception("db_name cannot be deleted")
-
-    @property
     def connection(self):
         return self.__db_connection
 
@@ -564,12 +565,10 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
     def task_task_label_pivot_table_name(self) -> str:
         return "task_task_label_pivot"
 
-    def generate_base_db_structure(self, force: bool = False, strict: bool = False) -> None:
+    def generate_base_db_structure(self, strict: bool = False) -> None:
         """
-        Generate the base db of app
+        Generate the base db of project
 
-        :param force: force regeneration
-        :type force: bool
         :param strict: flag to interrupt application if there is an exception
         :type strict: bool
 
@@ -579,13 +578,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         try:
 
-            if Utils.exist(self.__db_path):
-                Logger.log_warning(msg=f"database '{self.__db_path}' already exists", is_verbose=self.verbose)
-
-                if force:
-                    Logger.log_info(msg="forced generation request, database will be override", is_verbose=self.verbose)
-
-                    Utils.remove(self.__db_path)
+            # drop all tables
+            for table_name in self.tables.keys():
+                self.drop_table(table_name)
 
             Logger.log_info("start to generate base database", is_verbose=self.verbose)
 
@@ -620,9 +615,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
             Logger.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             if strict:
-                Utils.exit()
-
-            raise exception
+                raise exception
 
     def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple],
                           columns: List[str] | Tuple[str] | None = None) -> None:
@@ -777,3 +770,17 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         """
 
         return self.cursor.executescript(raw_query)
+
+    def drop_table(self, table_name: str) -> bool:
+        """
+        Drop table by name
+
+        :param table_name:
+        :return:
+        """
+
+        res = self.cursor.execute(f"Drop Table If Exists {table_name};")
+
+        self.connection.commit()
+
+        return bool(res)

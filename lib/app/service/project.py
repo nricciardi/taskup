@@ -26,12 +26,9 @@ class ProjectManager:
         # instance (only one) DBManager
         try:
             # get app settings
-            db_name = self.settings.db_name
             use_localtime = self.settings.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME)
-            work_directory_path = self.settings.work_directory_path
 
-            self.__db_manager: DBManager = DBManager(db_name=db_name,
-                                                     work_directory_path=work_directory_path,
+            self.__db_manager: DBManager = DBManager(db_path=self.settings.db_path,
                                                      verbose=self.verbose,
                                                      use_localtime=use_localtime)
 
@@ -81,47 +78,50 @@ class ProjectManager:
     def db_manager(self) -> DBManager:
         return self.__db_manager
 
-    def create_work_directory(self, work_directory_path: Optional[str] = None) -> None:
+    def create_work_directory(self, path: Optional[str] = None) -> str:
         """
-        Create work directory in the app if it doesn't exist
+        Create work directory in the project if it doesn't exist
 
         :rtype None:
         """
 
-        if work_directory_path is None:
-            work_directory_path: str = self.__settings_manager.work_directory_path
+        if path is not None:
+            work_directory_path: str = os.path.join(path, SettingsBase.WORK_DIRECTORY_NAME)
+        else:
+            work_directory_path: str = self.settings.work_directory_path
 
         try:
 
             if not Utils.exist_dir(work_directory_path):
-                Logger.log_info(msg="create work directory", is_verbose=self.verbose)
+                Logger.log_info(msg=f"create work directory '{work_directory_path}'", is_verbose=self.verbose)
 
                 os.mkdir(work_directory_path)
 
         except Exception as e:
             Logger.log_error(msg=f"error during creation of work directory in project ({work_directory_path})")
-            Utils.exit()
+
+        return work_directory_path
 
     @staticmethod
-    def already_initialized(path: str, verbose: bool = False) -> bool:
+    def already_initialized(project_path: str, verbose: bool = False) -> bool:
         """
         Return True if in path there is the work directory
 
         :param verbose:
-        :param path: project path which will be checked
+        :param project_path: project path which will be checked
         :return:
         """
 
-        if not Utils.exist_dir(path):
-            Logger.log_warning(msg=f"selected project path '{path}' NOT found", is_verbose=verbose)
+        if not Utils.exist_dir(project_path):
+            Logger.log_warning(msg=f"selected project path '{project_path}' NOT found", is_verbose=verbose)
             return False
 
-        work_directory_name: str = SettingsBase.WORK_DIRECTORY_NAME
+        is_init: bool = SettingsBase.WORK_DIRECTORY_NAME in os.listdir(project_path)
 
-        is_init: bool = work_directory_name in os.listdir(path) and os.path.isdir(os.path.join(path, work_directory_name))
-
-        if is_init is False:
-            Logger.log_warning(msg=f"project '{path}' not initialized", is_verbose=verbose)
+        if is_init:
+            Logger.log_info(msg=f"project '{project_path}' initialized", is_verbose=verbose)
+        else:
+            Logger.log_warning(msg=f"project '{project_path}' not initialized", is_verbose=verbose)
 
         return is_init
 
@@ -149,12 +149,8 @@ class ProjectManager:
 
         Logger.log_info(msg="refreshing project...", is_verbose=self.verbose)
 
-        if not ProjectManager.already_initialized(self.settings.project_directory_path, verbose=self.verbose):
-            return
-
         # refresh db manager connection with (new) settings
-        self.__db_manager.refresh_connection(db_name=self.settings.db_name,
-                                             work_directory_path=self.settings.work_directory_path,
+        self.__db_manager.refresh_connection(db_path=self.settings.db_path,
                                              use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))
 
     def remove(self, path: str) -> bool:
@@ -182,37 +178,45 @@ class ProjectManager:
 
             return False
 
-    def init_new(self, path: str, future_pm_data: FuturePMData, force_init: bool = False) -> bool:
+    def init_new(self, project_path: str, future_pm_data: FuturePMData, force_init: bool = False) -> bool:
         """
         Initialized a new project in path with pm as project manager
 
         :param future_pm_data:
         :param force_init: flag which indicates if overwrite previously init
-        :param path:
+        :param project_path:
         :return:
         """
 
         try:
-            if ProjectManager.already_initialized(path) and not force_init:
-                Logger.log_error(msg=f"project '{path}' already initialized", is_verbose=self.verbose)
+            if Utils.exist_dir(project_path) is False:
+                Logger.log_error(msg=f"Directory '{project_path}' not found", is_verbose=self.verbose)
+                return False
+
+            if ProjectManager.already_initialized(project_path, verbose=False) and not force_init:
+                Logger.log_error(msg=f"Project '{project_path}' already initialized", is_verbose=self.verbose)
                 return False
             else:
-                self.remove(path)       # remove project installation, so re-init it
-
-            res = self.settings.set_project_path(path)  # set path of project which must be initialized
-
-            if res is False:
-                return False
+                self.remove(SettingsManager.assemble_work_directory_path(project_path))       # remove project installation, so re-init it
 
             # create work directory inside app if it does NOT exist
-            self.create_work_directory()
+            work_dir = self.create_work_directory(project_path)
 
-            self.refresh()      # refresh project managed by ProjectManager instance => after this, ProjectManager points to initialized project
+            # instance specific DBManager to create new db
+            db_manager = DBManager.creating_database(db_path=SettingsManager.assemble_db_path(work_dir),
+                                                     verbose=self.verbose,
+                                                     use_localtime=self.settings.get_setting_by_key(SettingsManager.KEY_DB_LOCALTIME))
+
+            if db_manager is None:      # check error
+                return False
+
+            db_manager.generate_base_db_structure(strict=False)       # generate base structure
 
             # create project manager of initialized project
-            self.users_manager.create_from_dict(dict(**future_pm_data, role_id=self.__db_manager.project_manager_role_id))
+            users_manager = UsersManager(db_manager=db_manager)
+            users_manager.create_from_dict(dict(**future_pm_data, role_id=db_manager.project_manager_role_id))
 
-            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
+            Logger.log_info(msg=f"'{project_path}' project opened", is_verbose=self.verbose)
             return True
 
         except Exception as e:
@@ -231,7 +235,7 @@ class ProjectManager:
 
         try:
 
-            if not ProjectManager.already_initialized(path=path, verbose=self.verbose):
+            if not ProjectManager.already_initialized(project_path=path, verbose=self.verbose):
                 return False
 
             res = self.settings.set_project_path(path)      # set path of project which must be opened

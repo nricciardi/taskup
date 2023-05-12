@@ -11,9 +11,7 @@ class SettingsBase:
     WORK_DIRECTORY_NAME = "work"
     SETTINGS_FILE_NAME = "settings.json"
     VAULT_FILE_NAME = "vault.json"
-
-    KEY_DB_NAME = "db_name"
-    VALUE_BASE_DB_NAME = "database.db"
+    DB_NAME = "database.db"
 
     KEY_VERBOSE = "verbose"
     VALUE_BASE_VERBOSE = True
@@ -46,7 +44,6 @@ class SettingsBase:
     VALUE_BASE_PROJECT_PATHS_STORED = []
 
     BASE_SETTINGS = {
-        KEY_DB_NAME: VALUE_BASE_DB_NAME,
         KEY_VERBOSE: VALUE_BASE_VERBOSE,
         KEY_PROJECT_PATH: VALUE_BASE_PROJECT_PATH,
         KEY_DB_LOCALTIME: VALUE_BASE_DB_LOCALTIME,
@@ -204,7 +201,18 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        return os.path.join(self.project_directory_path, self.WORK_DIRECTORY_NAME)
+        return SettingsManager.assemble_work_directory_path(self.project_directory_path)
+
+    @staticmethod
+    def assemble_work_directory_path(path: str) -> str:
+        """
+        Assemble and return work directory path from passed path
+
+        :param path:
+        :return:
+        """
+
+        return os.path.join(path, SettingsBase.WORK_DIRECTORY_NAME)
 
     @property
     def db_name(self) -> str:
@@ -214,7 +222,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return self.get_setting_by_key(self.KEY_DB_NAME)
+        return SettingsBase.DB_NAME
 
     @property
     def db_path(self) -> str:
@@ -224,7 +232,18 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path, self.get_setting_by_key(self.KEY_DB_NAME))
+        return SettingsManager.assemble_db_path(self.work_directory_path)
+
+    @staticmethod
+    def assemble_db_path(work_dir: str) -> str:
+        """
+        Assemble database path
+
+        :param work_dir:
+        :return:
+        """
+
+        return os.path.join(work_dir, SettingsBase.DB_NAME)
 
     @property
     def vault_path(self) -> str:
