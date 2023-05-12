@@ -351,7 +351,7 @@ class SettingsManager(SettingsBase):
 
         paths_checked = set()
         for path in paths_stored:
-            if os.path.isdir(path):
+            if Utils.exist_dir(path):
                 paths_checked.add(path)
 
         paths_checked = sorted(list(paths_checked))

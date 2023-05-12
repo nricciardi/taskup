@@ -172,6 +172,8 @@ class ProjectManager:
 
             shutil.rmtree(work_directory_path)      # remove all files in work directory recursively
 
+            Logger.log_success(msg=f"project '{project_path}' removed", is_verbose=self.verbose)
+
             return True
 
         except Exception as e:
