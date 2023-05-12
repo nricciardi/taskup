@@ -32,7 +32,7 @@ export class HomeComponent {
   showOpenError: boolean = false;
 
   initProjectForm: FormGroup = new FormGroup({
-    path: new FormControl('/home/ncla/Desktop/project/project-pi/code/fakeproject3', [Validators.required]),
+    path: new FormControl('', [Validators.required]),
     openOnInit: new FormControl(false, [Validators.required]),
     forceInit: new FormControl(false, [Validators.required]),
     username: new FormControl('', [Validators.required]),
@@ -134,7 +134,7 @@ export class HomeComponent {
           next: (value) => {
             this.showInitResult = !!value;
 
-            if(!!value) {
+            if(!!value && openOnInit) {
               setTimeout(() => {
                 window.location.reload();
               }, 500);
