@@ -125,12 +125,15 @@ class ProjectManager:
 
         return is_init
 
-    def project_information(self) -> Dict:
+    def project_information(self) -> Dict | None:
         """
         Return key-value project information
 
         :return:
         """
+
+        if not ProjectManager.already_initialized(self.__settings_manager.project_directory_path):
+            return None
 
         return {
             "path": self.__settings_manager.project_directory_path,

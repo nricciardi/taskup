@@ -11,7 +11,7 @@ export class ProjectService extends EelService {
   readonly PROJECT_INFORMATION = "project_project_information";
 
 
-  public getProjectInformation(): Promise<Observable<ProjectInformation>> {
+  public getProjectInformation(): Promise<Observable<ProjectInformation | null>> {
 
     return this.call(this.PROJECT_INFORMATION);
 

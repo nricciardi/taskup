@@ -49,6 +49,7 @@ import { SuccessAlertComponent } from './widget/alert/success-alert/success-aler
 import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-modal.component';
 import { FilterComponent } from './widget/filter/filter.component';
 import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
+import { WarningAlertComponent } from './widget/alert/warning-alert/warning-alert.component';
 
 
 @NgModule({
@@ -96,6 +97,7 @@ import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
     DropdownModalComponent,
     FilterComponent,
     StatsBoxComponent,
+    WarningAlertComponent,
   ],
   imports: [
     BrowserModule,

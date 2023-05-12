@@ -1,5 +1,5 @@
 {
-    "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
+    "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject4",
     "db_name": "database.db",
     "debug": true,
     "frontend": "./../frontend/dist/frontend",
@@ -9,7 +9,8 @@
     "projects_paths_stored": [
         "/home/ncla/Desktop/project/project-pi/code/fakeproject",
         "/home/ncla/Desktop/project/project-pi/code/fakeproject2",
-        "/home/ncla/Desktop/project/project-pi/code/fakeproject3"
+        "/home/ncla/Desktop/project/project-pi/code/fakeproject3",
+        "/home/ncla/Desktop/project/project-pi/code/fakeproject4"
     ],
     "use_localtime": true,
     "vault_path": "/home/ncla/Desktop/project/project-pi/code/pi-project",

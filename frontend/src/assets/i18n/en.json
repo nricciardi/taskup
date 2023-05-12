@@ -125,6 +125,7 @@
   "open-at-end": "Open initialized project",
   "validate": "validate",
   "force-init": "Force initialize",
-  "insert-pm-data": "Insert Project Manager data"
+  "insert-pm-data": "Insert Project Manager data",
+  "no-project": "No project opened"
 
 }

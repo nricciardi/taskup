@@ -26,7 +26,7 @@ export class HomeComponent {
 
   projectsPaths: string[] = [];
 
-  projectInformation?: ProjectInformation;
+  projectInformation?: ProjectInformation | null;
 
   showInitError: boolean = false;
   showOpenError: boolean = false;
@@ -69,10 +69,7 @@ export class HomeComponent {
 
       response.subscribe({
         next: (value) => {
-
-          if(!!value) {
             this.projectInformation = value;
-          }
         }
       })
 

@@ -65,62 +65,68 @@
                     {{ "project-information" | translate }}
                   </h4>
                 </div>
-                <div class="card-content" *ngIf="!!projectInformation">
+                <div class="card-content" *ngIf="projectInformation !== undefined">
                   <div class="card-body">
                     <form class="form form-horizontal">
                       <div class="form-body">
 
-                        <div class="row">
-                          <div class="col-md-4">
-                            <label>
-                              {{ "path" | translate }}
-                            </label>
-                          </div>
-                          <div class="col-md-8">
-                            <div class="form-group has-icon-left">
-                              <div class="position-relative">
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  placeholder="Path"
-                                  id="path"
-                                  [value]="projectInformation.path"
-                                  readonly
-                                />
-                                <div class="form-control-icon">
-                                  <i class="bi bi-folder-fill"></i>
+                        <ng-container *ngIf="projectInformation !== null; else noProject">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label>
+                                {{ "path" | translate }}
+                              </label>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Path"
+                                    id="path"
+                                    [value]="projectInformation.path"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-folder-fill"></i>
+                                  </div>
                                 </div>
                               </div>
                             </div>
+
                           </div>
 
-                        </div>
-
-                        <div class="row">
-                          <div class="col-md-4">
-                            <label>
-                              {{ "database-path" | translate }}
-                            </label>
-                          </div>
-                          <div class="col-md-8">
-                            <div class="form-group has-icon-left">
-                              <div class="position-relative">
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  placeholder="Database"
-                                  id="database"
-                                  [value]="projectInformation.database_path"
-                                  readonly
-                                />
-                                <div class="form-control-icon">
-                                  <i class="bi bi-database-fill"></i>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label>
+                                {{ "database-path" | translate }}
+                              </label>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Database"
+                                    id="database"
+                                    [value]="projectInformation.database_path"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-database-fill"></i>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
 
-                        </div>
+                          </div>
+                        </ng-container>
+
+                        <ng-template #noProject>
+                          <app-warning-alert title="no-project" [dismissable]="false"></app-warning-alert>
+                        </ng-template>
 
                       </div>
 
