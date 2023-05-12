@@ -11,6 +11,8 @@ export class AuthGuardService {
   constructor(private authService: AuthService, private router: Router) { }
 
   async canActivate(){
+
+
     return new Promise((resolve, reject) => {
 
       this.authService.isLogged().then((response) => {
@@ -20,6 +22,7 @@ export class AuthGuardService {
 
             if(!value) {
               this.router.navigate([environment.authRequiredRedirectRoute]);
+              reject();
             }
 
             resolve(value);

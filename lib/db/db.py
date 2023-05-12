@@ -283,6 +283,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
                 Field(name="permission_manage_task_labels", type="INTEGER", default='0'),
                 Field(name="permission_manage_users", type="INTEGER", default='0'),
                 Field(name="permission_edit_task_deadline", type="INTEGER", default='0'),
+                Field(name="permission_remove_work", type="INTEGER", default='0'),
             ]),
 
             self.task_status_table_name: Table(self.task_status_table_name, [
@@ -420,16 +421,17 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1),
-                                           (2, "Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1),
-                                           (3, "Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0),
-                                           (4, "Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0),
-                                           (5, "External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0),
+                                           (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,   1),
+                                           (2, "Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1,  0),
+                                           (3, "Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0,  0),
+                                           (4, "Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0,  0),
+                                           (5, "External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,  0),
                                          ], cols=("id", "name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
                                                   "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
                                                   "permission_delete_own", "permission_delete_all", "permission_move", "permission_manage_roles",
-                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users", "permission_edit_task_deadline"
+                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users", "permission_edit_task_deadline",
+                                                  "permission_remove_work"
                                                   )
                                          )
         }

@@ -115,5 +115,11 @@ export class ManageRolesComponent {
       placeholder: "permission_manage_roles",
       blueprintFormControl: new FormControl('', [Validators.required])
     },
+    {
+      name: "permission_remove_work",
+      type: "checkbox",
+      placeholder: "permission_remove_work",
+      blueprintFormControl: new FormControl('', [Validators.required])
+    },
   ]
 }

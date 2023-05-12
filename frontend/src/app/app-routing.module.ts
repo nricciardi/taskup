@@ -11,6 +11,7 @@ import { ManageTaskLabelsComponent } from './page/manage-task-labels/manage-task
 import { ManageUsersComponent } from './page/manage-users/manage-users.component';
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 import { AuthGuardService } from './service/api/auth/auth-guard.service';
+import { RoleGuardService } from './service/api/auth/role-guard.service';
 
 const routes: Routes = [
 
@@ -45,22 +46,26 @@ const routes: Routes = [
   {
     path: "manage-task-status",
     component: ManageTaskStatusComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: { roleRequired: "permission_manage_task_status" }
   },
   {
     path: "manage-task-labels",
     component: ManageTaskLabelsComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: { roleRequired: "permission_manage_task_labels" }
   },
   {
     path: "manage-users",
     component: ManageUsersComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: { roleRequired: "permission_manage_users" }
   },
   {
     path: "manage-roles",
     component: ManageRolesComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: { roleRequired: "permission_manage_roles" }
   },
 
   {
@@ -73,6 +78,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuardService]
+  providers: [AuthGuardService, RoleGuardService]
 })
 export class AppRoutingModule { }

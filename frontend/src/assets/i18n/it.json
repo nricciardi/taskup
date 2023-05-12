@@ -91,6 +91,7 @@
   "permission_manage_task_labels": "Permesso gestione labels",
   "permission_manage_users": "Permesso gestione utenti",
   "permission_edit_task_deadline": "Permesso modifica scadenza",
+  "permission_remove_work": "Permesso rimuovi cartella di lavoro",
   "role": "Ruolo",
   "choose": "Scegli",
   "avatar_hex_color": "Colore Avatar",

@@ -19,4 +19,5 @@ export interface RoleModel extends BaseEntity {
   permission_manage_task_status: boolean;
   permission_manage_task_labels: boolean;
   permission_manage_users: boolean;
+  permission_remove_work: boolean;
 }

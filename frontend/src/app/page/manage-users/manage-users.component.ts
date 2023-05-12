@@ -60,15 +60,6 @@ export class ManageUsersComponent {
     },
   ]
 
-  /*additionalFieldOnCreation: FormField[] = [
-    {
-      name: "password",
-      type: "password",
-      placeholder: "Password",
-      blueprintFormControl: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)])
-    },
-  ]*/
-
   ngOnInit() {
     this.appendRoleOptions();   // append role options on list of fields
   }

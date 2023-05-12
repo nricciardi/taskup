@@ -34,6 +34,7 @@ class RoleModel(BaseEntityModel):
     permission_manage_task_status: bool
     permission_manage_task_labels: bool
     permission_manage_users: bool
+    permission_remove_work: bool
 
     # @property
     # def table_name(self) -> str:

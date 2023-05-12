@@ -91,6 +91,7 @@
   "permission_manage_task_labels": "Permission manage labels",
   "permission_manage_users": "Permission manage users",
   "permission_edit_task_deadline": "Permission manage deadline",
+  "permission_remove_work": "Permission remove work directory",
   "role": "Role",
   "choose": "Choose",
   "avatar_hex_color": "Avatar Color",
