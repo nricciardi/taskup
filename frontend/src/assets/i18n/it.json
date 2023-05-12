@@ -131,5 +131,6 @@
   "validate": "Valida",
   "force-init": "Forza inizializzazione",
   "insert-pm-data": "Inserisci i dati del Project Manager",
-  "no-project": "Nessun progetto aperto"
+  "no-project": "Nessun progetto aperto",
+  "init-project-success": "Inizializzazione completata con successo"
 }

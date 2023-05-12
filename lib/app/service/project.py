@@ -153,21 +153,21 @@ class ProjectManager:
         self.__db_manager.refresh_connection(db_path=self.settings.db_path,
                                              use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))
 
-    def remove(self, path: str) -> bool:
+    def remove(self, project_path: str) -> bool:
         """
         Remove project
 
-        :param path:
+        :param project_path:
         :return:
         """
 
         try:
 
-            if not ProjectManager.already_initialized(path):
-                Logger.log_error(msg=f"project not found in path: '{path}'", is_verbose=self.verbose)
+            if not ProjectManager.already_initialized(project_path):
+                Logger.log_error(msg=f"project not found in path: '{project_path}'", is_verbose=self.verbose)
                 return False
 
-            work_directory_path = os.path.join(path, self.settings.WORK_DIRECTORY_NAME)
+            work_directory_path = os.path.join(project_path, self.settings.WORK_DIRECTORY_NAME)
 
             import shutil
 
@@ -190,14 +190,19 @@ class ProjectManager:
 
         try:
             if Utils.exist_dir(project_path) is False:
-                Logger.log_error(msg=f"Directory '{project_path}' not found", is_verbose=self.verbose)
-                return False
+                Logger.log_error(msg=f"directory '{project_path}' not found", is_verbose=self.verbose)
+
+                if force_init:
+                    os.makedirs(project_path)
+                else:
+                    return False
 
             if ProjectManager.already_initialized(project_path, verbose=False) and not force_init:
-                Logger.log_error(msg=f"Project '{project_path}' already initialized", is_verbose=self.verbose)
+                Logger.log_error(msg=f"project '{project_path}' already initialized", is_verbose=self.verbose)
                 return False
             else:
-                self.remove(SettingsManager.assemble_work_directory_path(project_path))       # remove project installation, so re-init it
+                Logger.log_warning(msg=f"project '{project_path}' will be initialized again", is_verbose=self.verbose)
+                self.remove(project_path=project_path)       # remove project installation, so re-init it
 
             # create work directory inside app if it does NOT exist
             work_dir = self.create_work_directory(project_path)
@@ -216,7 +221,7 @@ class ProjectManager:
             users_manager = UsersManager(db_manager=db_manager)
             users_manager.create_from_dict(dict(**future_pm_data, role_id=db_manager.project_manager_role_id))
 
-            Logger.log_info(msg=f"'{project_path}' project opened", is_verbose=self.verbose)
+            Logger.log_info(msg=f"'{project_path}' project have been initialized", is_verbose=self.verbose)
             return True
 
         except Exception as e:

@@ -28,7 +28,7 @@ export class HomeComponent {
 
   projectInformation?: ProjectInformation | null;
 
-  showInitError: boolean = false;
+  showInitResult?: boolean;
   showOpenError: boolean = false;
 
   initProjectForm: FormGroup = new FormGroup({
@@ -116,7 +116,7 @@ export class HomeComponent {
   init() {
     if(this.initProjectForm.valid) {
 
-      this.showInitError = false;
+      this.showInitResult = undefined;
 
       const openOnInit = this.initProjectForm.controls["openOnInit"].value;
       const path = this.initProjectForm.controls["path"].value;
@@ -132,10 +132,16 @@ export class HomeComponent {
 
         response.subscribe({
           next: (value) => {
-            this.showInitError = !value;
+            this.showInitResult = !!value;
+
+            if(!!value) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
 
           },
-          error: (e) => this.showInitError = true
+          error: (e) => this.showInitResult = true
         })
 
       })

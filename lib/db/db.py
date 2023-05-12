@@ -448,7 +448,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.cursor.execute(self.seeders[name].to_sql())
 
-            Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)
+            # Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)         # too verbose
 
         except Exception as exception:
 
@@ -481,7 +481,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         self.cursor.executescript(query)
 
-        # Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
+        Logger.log_info(f"created if not exists {table_name}", is_verbose=self.verbose)
 
         self.connection.commit()
 
@@ -779,8 +779,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         :return:
         """
 
-        res = self.cursor.execute(f"Drop Table If Exists {table_name};")
+        try:
+            self.cursor.execute(f"Drop Table If Exists {table_name};")
 
-        self.connection.commit()
+            self.connection.commit()
 
-        return bool(res)
+            return True
+
+        except Exception:
+            return False

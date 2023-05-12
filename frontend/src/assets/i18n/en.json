@@ -131,6 +131,7 @@
   "validate": "validate",
   "force-init": "Force initialize",
   "insert-pm-data": "Insert Project Manager data",
-  "no-project": "No project is opened"
+  "no-project": "No project is opened",
+  "init-project-success": "Initialization completed successfully"
 
 }
