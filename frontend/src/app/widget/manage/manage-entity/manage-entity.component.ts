@@ -60,7 +60,8 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
       let value = (this.entity as any)[element.name];
       const control = (this.form.controls as any)[element.name];
 
-      control.setValue(value);
+      if(element.type != 'password')
+        control.setValue(value);
 
     }
   }
