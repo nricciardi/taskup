@@ -22,7 +22,6 @@ export class ManageEntitiesComponent<M extends EntityApiService<E>, E extends Ba
   @Input("additionalFieldOnCreation") additionalFieldOnCreation: FormField[] = [];
 
   entities?: E[];
-  private entitiesBackup?: E[];
 
   constructor(public utilsService: UtilsService) {}
 
@@ -39,7 +38,6 @@ export class ManageEntitiesComponent<M extends EntityApiService<E>, E extends Ba
         next: (values: E[]) => {
           if(!!values) {
             this.entities = values;
-            this.entitiesBackup = this.entities;
           }
         }
       })

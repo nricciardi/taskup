@@ -35,10 +35,10 @@ export class HomeComponent {
     path: new FormControl('/home/ncla/Desktop/project/project-pi/code/fakeproject3', [Validators.required]),
     openOnInit: new FormControl(false, [Validators.required]),
     forceInit: new FormControl(false, [Validators.required]),
-    username: new FormControl('franco', [Validators.required]),
-    email: new FormControl('pm@email.com', [Validators.required, Validators.email]),
-    password: new FormControl('Asdf1234', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)]),
-    repassword: new FormControl('Asdf1234', [Validators.required, matchValidator('password')]),
+    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)]),
+    repassword: new FormControl('', [Validators.required, matchValidator('password')]),
   })
 
   openProjectForm: FormGroup = new FormGroup({

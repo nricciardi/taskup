@@ -54,6 +54,11 @@ export class FilterComponent<E> {
 
   }
 
+  ngOnChanges() {
+    this.entitiesBackup = this.entities;
+
+  }
+
   filter(): void {
     if(!this.entitiesBackup || !this.filterFields)
       return;
