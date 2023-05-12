@@ -8,7 +8,7 @@ from lib.utils.utils import Utils
 
 
 class SettingsBase:
-    WORK_DIRECTORY_NAME = "work"
+    WORK_DIRECTORY_NAME = ".taskup"
     SETTINGS_FILE_NAME = "settings.json"
     VAULT_FILE_NAME = "vault.json"
     DB_NAME = "database.db"
