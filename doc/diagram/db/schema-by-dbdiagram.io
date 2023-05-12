@@ -16,6 +16,7 @@ Table role {    // all not null
   permission_manage_task_labels integer
   permission_manage_users integer
   permission_edit_task_deadline integer
+  permission_remove_work integer
 }
 
 Table user {
