@@ -491,7 +491,9 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         try:
             Logger.log_info(msg=f"delete from {self.table_name} where {conditions}", is_verbose=self.verbose)
 
-            return self.__delete(self.table_name, *conditions)
+            self.__delete(self.table_name, *conditions)
+
+            return True
 
         except Exception as exception:
 

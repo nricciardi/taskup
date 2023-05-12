@@ -93,6 +93,7 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
           next: (value) => {
             if(value) {
               this.entity = value;
+              this.form?.markAsPristine();
             }
 
             if(!id && !!value) {
@@ -140,10 +141,14 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
         response.subscribe({
           next: (result) => {
 
+            result = !!result;
+
             this.submitResult = result;
 
-            if(result)
+            if(result) {
               this.entity = undefined;
+              this.refreshRequest.emit();
+            }
 
             resetResultFlag();
           },
