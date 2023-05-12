@@ -131,6 +131,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         self.__db_cursor = None         # initialized in __init__ to use it in open_connection()
         self.open_connection()
 
+    def __del__(self):
+        self.close_connection()
+
     def set_connection_params(self, db_name: Optional[str] = None, work_directory_path: Optional[str] = None, use_localtime: Optional[bool] = None):
         """
         Set params to open connections
@@ -152,8 +155,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
 
-    def __del__(self):
-        self.close_connection()
+    def is_open(self) -> bool:
+        """
+        Return the state of connection
+
+        :return:
+        """
+
+        return isinstance(self.__db_connection, sqlite3.Connection)
 
     def open_connection(self) -> None:
         """
@@ -162,14 +171,16 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         :return:
         """
 
-        # check if db already exists
-        db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
+        self.__db_connection = None
+        self.__db_cursor = None
 
         # log if verbose
-        if db_exists:
+        if Utils.exist(self.__db_path):
             Logger.log_info(msg=f"found database: '{self.__db_path}'", is_verbose=self.verbose)
         else:
-            Logger.log_warning(msg=f"database '{self.__db_path}' not found, will be generate...", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"database '{self.__db_path}' not found", is_verbose=self.verbose)
+
+            return None
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)  # connect to db
@@ -181,15 +192,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
             # add FK checks
             self.__db_connection.execute('PRAGMA foreign_keys = ON;')
 
-            if not db_exists:
-                self.generate_base_db_structure(strict=True)
-
         except Exception as exception:
-            print("Connection with database failed...")
 
             Logger.log_error(exception, is_verbose=self.verbose)
-
-            Utils.exit()
 
     def refresh_connection(self, **kwargs) -> None:
         """
@@ -197,6 +202,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         :return:
         """
+
+        Logger.log_info(msg=f"database connection will be refreshing...", is_verbose=self.verbose)
 
         self.close_connection()
 
@@ -210,8 +217,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         :return:
         """
-        Logger.log_info(msg="closing db connection...", is_verbose=self.verbose)
-        self.__db_connection.close()
+
+        try:
+            self.__db_connection.close()
+
+            Logger.log_info(msg="database connection closed", is_verbose=self.verbose)
+
+        except Exception as e:
+            Logger.log_warning(msg="database connection can't be closed", is_verbose=self.verbose)
 
     @property
     def tables(self) -> Dict[str, Table]:
@@ -551,10 +564,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
     def task_task_label_pivot_table_name(self) -> str:
         return "task_task_label_pivot"
 
-    def generate_base_db_structure(self, strict: bool = False) -> None:
+    def generate_base_db_structure(self, force: bool = False, strict: bool = False) -> None:
         """
         Generate the base db of app
 
+        :param force: force regeneration
+        :type force: bool
         :param strict: flag to interrupt application if there is an exception
         :type strict: bool
 
@@ -564,7 +579,15 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
         try:
 
-            Logger.log_info("start to generate base db", is_verbose=self.verbose)
+            if Utils.exist(self.__db_path):
+                Logger.log_warning(msg=f"database '{self.__db_path}' already exists", is_verbose=self.verbose)
+
+                if force:
+                    Logger.log_info(msg="forced generation request, database will be override", is_verbose=self.verbose)
+
+                    Utils.remove(self.__db_path)
+
+            Logger.log_info("start to generate base database", is_verbose=self.verbose)
 
             self.create_table(self.role_table_name)
 

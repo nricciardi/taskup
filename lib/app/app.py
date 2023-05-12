@@ -25,23 +25,24 @@ class AppManager:
 
         self.verbose = self.settings_manager.verbose
 
-        self.__expose_app_methods()
+        # each AppManager has only one ProjectManager
+        self.project_manager = ProjectManager(settings_manager=self.settings_manager)
 
-        # open project which is indicated in settings
+        self.auth_service = AuthService(users_manager=self.project_manager.users_manager,
+                                        vault_path=self.settings_manager.vault_path,
+                                        verbose=self.verbose)
+
+        self.dashboard_service = DashboardService(tasks_manager=self.project_manager.tasks_manager,
+                                                  task_status_manager=self.project_manager.task_status_manager,
+                                                  auth_service=self.auth_service,
+                                                  roles_manager=self.project_manager.roles_manager,
+                                                  verbose=self.verbose)
+
+        # open project which is indicated in settings if it is an initialized project
         if ProjectManager.already_initialized(self.settings_manager.project_directory_path):
-            # each AppManager has only one ProjectManager
-            self.project_manager = ProjectManager(settings_manager=self.settings_manager)
-
-            self.auth_service = AuthService(users_manager=self.project_manager.users_manager, vault_path=self.settings_manager.vault_path,
-                                            verbose=self.verbose)
-
-            self.dashboard_service = DashboardService(tasks_manager=self.project_manager.tasks_manager,
-                                                      task_status_manager=self.project_manager.task_status_manager,
-                                                      auth_service=self.auth_service,
-                                                      roles_manager=self.project_manager.roles_manager,
-                                                      verbose=self.verbose)
-
             self.open_project(self.settings_manager.project_directory_path)
+
+        self.__expose()
 
         # init Eel
         Logger.log_info(msg="Init frontend with Eel...", is_verbose=self.verbose)
@@ -51,11 +52,11 @@ class AppManager:
     def settings_manager(self) -> SettingsManager:
         return self.__settings_manager
 
-    def __expose_app_methods(self) -> None:
+    def __expose(self) -> None:
         """
-        Expose app methods
+        Expose methods using Eel
 
-        :return: None
+        :return:
         """
 
         try:
@@ -71,13 +72,6 @@ class AppManager:
 
         except Exception as excepetion:
             Logger.log_error(msg="app exposure error", is_verbose=self.verbose, full=True)
-
-    def __expose_others(self) -> None:
-        """
-        Expose others methods using Eel
-
-        :return:
-        """
 
         # expose methods
         exposer = ExposerService(self.project_manager, auth_service=self.auth_service, dashboard_service=self.dashboard_service, verbose=self.verbose)

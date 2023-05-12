@@ -46,6 +46,51 @@ class Utils:
         return os.path.isdir(dir_path)
 
     @staticmethod
+    def exist_file(file_path: str) -> bool:
+        """
+        Check if file passed exists or not
+
+        :param file_path: directory's path
+        :type file_path: str
+        :return:
+        :rtype: bool
+        """
+
+        # check if exist
+        return os.path.isfile(file_path)
+
+    @staticmethod
+    def exist(path: str) -> bool:
+        """
+        Check if path passed exists or not
+
+        :param path: directory's path
+        :type path: str
+        :return:
+        :rtype: bool
+        """
+
+        # check if exist
+        return Utils.exist_file(path) or Utils.exist_dir(path)
+
+    @staticmethod
+    def remove(path: str):
+        """
+        Check if path passed exists or not
+
+        :param path: directory's path
+        :type path: str
+        :return:
+        :rtype: bool
+        """
+
+        if Utils.exist_file(path):
+            os.remove(path)
+
+        elif Utils.exist_dir(path):
+            os.rmdir(path)
+
+    @staticmethod
     def random_hex() -> str:
         r = randint(0, 255)
         g = randint(0, 255)

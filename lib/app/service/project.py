@@ -1,12 +1,8 @@
-import os
-
-from lib.app.service.auth import AuthService
-from lib.app.service.dashboard import DashboardService
 from lib.settings.settings import SettingsManager, SettingsBase
 from lib.db.db import DBManager
 from lib.utils.utils import Utils
 from lib.utils.logger import Logger
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 import os
 from lib.db.entity.user import UsersManager, RolesManager, FuturePMData
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
@@ -27,69 +23,22 @@ class ProjectManager:
         # take and set settings
         self.verbose = self.settings.verbose  # set verbose
 
-        # load db manager and entities managers
-        if ProjectManager.already_initialized(self.settings.project_directory_path, verbose=self.verbose):
-            self.__db_manager: Optional[DBManager] = None        # it's going to override by next method
-            self.load_new_db_manager()
-
-            self.task_status_manager = None
-            self.roles_manager = None
-            self.users_manager = None
-            self.tasks_manager = None
-            self.task_labels_manager = None
-            self.task_task_label_pivot_manager = None
-            self.task_assignment_manager = None
-            self.todo_items_manager = None
-            self.load_entities_managers()
-
-    @property
-    def settings(self) -> SettingsManager:
-        return self.__settings_manager
-
-    @settings.setter
-    def settings(self, settings_manager) -> None:
-        self.__settings_manager = settings_manager
-
-    @property
-    def project_path(self) -> str:
-        return self.settings.project_directory_path
-
-    @property
-    def db_manager(self) -> DBManager:
-        return self.__db_manager
-
-    def load_new_db_manager(self) -> None:
-        """
-        Load database manager for project
-
-        :return:
-        """
-
+        # instance (only one) DBManager
         try:
             # get app settings
-            db_name = self.__settings_manager.db_name
-            use_localtime = self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME)
-            work_directory_path = self.__settings_manager.work_directory_path
+            db_name = self.settings.db_name
+            use_localtime = self.settings.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME)
+            work_directory_path = self.settings.work_directory_path
 
-            if isinstance(self.__db_manager, DBManager):
-                self.__db_manager.close_connection()        # close prev connection
-
-            # this generates db base structure if db doesn't exist
             self.__db_manager: DBManager = DBManager(db_name=db_name,
                                                      work_directory_path=work_directory_path,
                                                      verbose=self.verbose,
                                                      use_localtime=use_localtime)
 
         except Exception as exception:
-            Logger.log_error(msg="error while retrieving app settings", is_verbose=self.verbose)
+            Logger.log_error(msg="error while instance dbmanager", is_verbose=self.verbose)
 
-    def load_entities_managers(self) -> None:
-        """
-        Load entities managers
-
-        :return:
-        """
-
+        # load entities
         self.task_status_manager = TaskStatusManager(db_manager=self.__db_manager,
                                                      verbose=self.verbose)
 
@@ -115,6 +64,22 @@ class ProjectManager:
 
         self.roles_manager = RolesManager(db_manager=self.__db_manager,
                                           verbose=self.verbose)
+
+    @property
+    def settings(self) -> SettingsManager:
+        return self.__settings_manager
+
+    @settings.setter
+    def settings(self, settings_manager) -> None:
+        self.__settings_manager = settings_manager
+
+    @property
+    def project_path(self) -> str:
+        return self.settings.project_directory_path
+
+    @property
+    def db_manager(self) -> DBManager:
+        return self.__db_manager
 
     def create_work_directory(self, work_directory_path: Optional[str] = None) -> None:
         """
@@ -179,9 +144,9 @@ class ProjectManager:
         :return:
         """
 
-        Logger.log_info(msg="refresh project...", is_verbose=self.verbose)
+        Logger.log_info(msg="refreshing project...", is_verbose=self.verbose)
 
-        if ProjectManager.already_initialized(self.settings.project_directory_path):
+        if not ProjectManager.already_initialized(self.settings.project_directory_path, verbose=self.verbose):
             return
 
         # refresh db manager connection with (new) settings
@@ -263,12 +228,13 @@ class ProjectManager:
 
         try:
 
-            if not ProjectManager.already_initialized(path=path):
+            if not ProjectManager.already_initialized(path=path, verbose=self.verbose):
                 return False
 
             res = self.settings.set_project_path(path)      # set path of project which must be opened
 
             if res is False:
+                Logger.log_error(msg=f"invalid path: {path}")
                 return False
 
             self.refresh()      # refresh project managed by ProjectManager instance

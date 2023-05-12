@@ -41,19 +41,26 @@ class AuthService:
 
     def refresh_me(self) -> None:
         """
-        Refresh logged user data using local vault data
+        Refresh logged user data using local vault data.
+        This method is used in login to check if there is a match with email and password
 
         :return:
         """
 
-        if self.__local_vault is not None:
-            users_matched: List = self.__users_manager.where_as_model(
-                WhereCondition("email", "=", self.__local_vault.email),
-                WhereCondition("password", "=", self.__local_vault.password),
-                with_relations=True
-            )
+        try:
+            if self.__local_vault is not None:
+                users_matched: List = self.__users_manager.where_as_model(
+                    WhereCondition("email", "=", self.__local_vault.email),
+                    WhereCondition("password", "=", self.__local_vault.password),
+                    with_relations=True
+                )
 
-            self.__me = ListUtils.first(users_matched)
+                self.__me = ListUtils.first(users_matched)
+
+        except Exception as e:
+            # ignore exception
+            pass
+            # Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
 
     def me(self) -> UserModel | None:
 
@@ -177,7 +184,10 @@ class AuthService:
     def erase_vault_data(self) -> bool:
 
         try:
-            FileManger.write_json(self.vault_path, "")
+
+            Logger.log_info(msg="erase vault", is_verbose=self.verbose)
+
+            FileManger.write_json(self.vault_path, {})
 
             return True
         except Exception:
@@ -192,6 +202,9 @@ class AuthService:
         :return:
         """
 
+        if not self.is_logged():
+            return None
+
         logged_user = self.me()
         table_name: str = self.__users_manager.table_name
 
@@ -200,6 +213,8 @@ class AuthService:
         }).apply_conditions(WhereCondition("id", "=", logged_user.id)).to_sql()
 
         self.__users_manager.db_manager.execute(update_last_visit_query)
+
+        Logger.log_info(msg=f"last visit of user {logged_user.email} has been updated", is_verbose=self.verbose)
 
 
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:

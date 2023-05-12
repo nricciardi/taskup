@@ -185,21 +185,16 @@ class SettingsManager(SettingsBase):
         return path
 
     @property
-    def projects_paths_stored(self):
+    def projects_paths_stored(self) -> List[str]:
         """
         Return list of projects paths stored, erasing invalid paths
 
         :return:
         """
 
-        paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
+        self.clear_paths_stored()
 
-        paths_checked = set()
-        for path in paths_stored:
-            if os.path.isdir(path):
-                paths_checked.add(path)
-
-        return sorted(list(paths_checked))
+        return self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
 
     @property
     def work_directory_path(self) -> str:
@@ -317,13 +312,12 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        if not os.path.isdir(path):
-            Logger.log_warning(msg=f"path: '{path}' not found", is_verbose=self.verbose)
+        if not Utils.exist_dir(path):
+            Logger.log_warning(msg=f"project: '{path}' not found", is_verbose=self.verbose)
             return False
 
         self.set(self.KEY_PROJECT_PATH, path)  # set path in settings.
         self.add_path_to_stored(path)
-        self.dumps_settings()
 
         return True
 
@@ -341,6 +335,6 @@ class SettingsManager(SettingsBase):
             if os.path.isdir(path):
                 paths_checked.add(path)
 
-        paths_checked = list(paths_checked)
+        paths_checked = sorted(list(paths_checked))
 
         self.set(self.KEY_PROJECT_PATHS_STORED, paths_checked)
