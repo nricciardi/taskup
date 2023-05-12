@@ -58,8 +58,7 @@ class AuthService:
                 self.__me = ListUtils.first(users_matched)
 
         except Exception as e:
-            # ignore exception
-            pass
+            self.__me = None
             # Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
 
     def me(self) -> UserModel | None:

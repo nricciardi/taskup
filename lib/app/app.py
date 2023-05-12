@@ -67,7 +67,8 @@ class AppManager:
                 self.open_project,
                 self.close,
                 self.init_project,
-                self.get_projects_paths_stored
+                self.get_projects_paths_stored,
+                self.remove_work_dir
             ], prefix="app_")
 
         except Exception as excepetion:
@@ -178,3 +179,16 @@ class AppManager:
         paths_stored: List[str] = self.__settings_manager.projects_paths_stored
 
         return paths_stored
+
+    def remove_work_dir(self) -> bool:
+        """
+        Remove work directory from current project opened
+
+        :return:
+        """
+
+        res = self.project_manager.remove(self.settings_manager.project_directory_path)
+
+        self.auth_service.refresh_me()
+
+        return res

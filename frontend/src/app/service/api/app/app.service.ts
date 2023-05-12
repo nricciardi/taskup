@@ -15,6 +15,7 @@ export class AppService extends EelService {
   readonly CLOSE = "app_close";
   readonly INIT_PROJECT = "app_init_project";
   readonly PATHS_STORED = "app_get_projects_paths_stored";
+  readonly REMOVE_WORK_DIR = "app_remove_work_dir";
 
   public openSettings(): void {
 
@@ -23,6 +24,20 @@ export class AppService extends EelService {
       response.subscribe({
         next: () => {
           // nothing
+        }
+      })
+
+    });
+
+  }
+
+  public removeWorkDir(): void {
+
+    this.call(this.REMOVE_WORK_DIR).then((response) => {
+
+      response.subscribe({
+        next: () => {
+          window.location.reload();
         }
       })
 
