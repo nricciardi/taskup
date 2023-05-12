@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AppService } from 'src/app/service/api/app/app.service';
+import { UtilsService } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-footer',
@@ -7,4 +9,5 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
 
+  constructor(public appService: AppService, public utilsService: UtilsService) {}
 }

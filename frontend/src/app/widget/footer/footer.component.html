@@ -1,14 +1,30 @@
-<footer style="margin-left: 10px;">
+<footer style="margin-left: 10px; margin-right: 10px;">
   <div class="footer clearfix mb-0 text-muted">
     <div class="float-start">
-      <!-- <p>2021 &copy; Mazer</p> -->
+      <p>2023 &copy; Nicola Ricciardi</p>
     </div>
     <div class="float-end">
-      <!-- <p>
-        Crafted with
-        <span class="text-danger"><i class="bi bi-heart"></i></span> by
-        <a href="https://saugi.me">Saugi</a>
-      </p> -->
+      <button class="btn icon btn-light"
+          type="button"
+          (click)="utilsService.reload()">
+          <i class="bi bi-arrow-clockwise"></i>
+    </button>
+
+    <button class="btn icon btn-light"
+            data-bs-toggle="modal"
+            data-bs-target="#close-app-modal"
+            type="button">
+      <i class="bi bi-power"></i>
+    </button>
+
+    <app-dialog-modal [centered]="true"
+                      [target]="'close-app-modal'"
+                      [title]="'close-app-request'"
+                      [confirmBtn]="true"
+                      [confirmBtnTxt]="'confirm'"
+                      [borderless]="true"
+                      (onConfirm)="appService.close()">
+    </app-dialog-modal>
     </div>
   </div>
 </footer>

@@ -18,7 +18,7 @@ import { UtilsService, matchValidator } from 'src/app/service/utils/utils.servic
 export class HomeComponent {
 
   constructor(private projectService: ProjectService, public appService: AppService, private userService: UserService, public authService: AuthService,
-              private utilsService: UtilsService) {
+              public utilsService: UtilsService) {
     this.authService.refreshMe();
   }
 

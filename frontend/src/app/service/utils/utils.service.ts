@@ -103,6 +103,10 @@ export class UtilsService {
 
     return formattedDate;
   }
+
+  reload() {
+    window.location.reload();
+  }
 }
 
 
