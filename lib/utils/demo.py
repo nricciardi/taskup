@@ -48,14 +48,16 @@ class Demo:
     quasi aliquam eligendi, placeat qui corporis!
     """
 
-    def __init__(self, project_path: str, settings_manager: SettingsManager):
+    def __init__(self, project_path: str, settings_manager: SettingsManager, verbose: bool = False):
 
         try:
-            Logger.log_info(msg="Demo init...", is_verbose=True)
+            self.verbose = verbose
+
+            Logger.log_info(msg="Demo init...", is_verbose=self.verbose)
 
             self.__pm = ProjectManager(settings_manager=settings_manager)  # load Project Manager
 
-            self.verbose = self.__pm.verbose
+            self.verbose = self.verbose
             self.project_path = project_path
 
         except Exception as e:

@@ -75,7 +75,8 @@ class AppManager:
             Logger.log_error(msg="app exposure error", is_verbose=self.verbose, full=True)
 
         # expose methods
-        exposer = ExposerService(self.project_manager, auth_service=self.auth_service, dashboard_service=self.dashboard_service, verbose=self.verbose)
+        exposer = ExposerService(self.project_manager, auth_service=self.auth_service, dashboard_service=self.dashboard_service,
+                                 verbose=self.verbose, debug_mode=self.settings_manager.debug_mode)
         exposer.expose_methods()
 
     def start(self) -> None:
@@ -104,21 +105,23 @@ class AppManager:
                 Logger.log_success(msg="backup done successfully", is_verbose=self.verbose)
 
     @classmethod
-    def demo(cls, project_path: str, force_demo: bool = False, verbose: bool = False) -> None:
+    def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
         """
         Launch demo of app
 
+        :param open_app_at_end:
         :param project_path:
         :param force_demo:
         :param verbose:
         :return:
         """
 
-        demo = Demo(project_path=project_path, settings_manager=SettingsManager())
+        demo = Demo(project_path=project_path, settings_manager=SettingsManager(), verbose=verbose)
 
         demo.launch(force_demo=force_demo)
 
-        cls().start()   # launch app
+        if open_app_at_end:
+            cls().start()   # launch app
 
     def open_settings(self) -> None:
         """

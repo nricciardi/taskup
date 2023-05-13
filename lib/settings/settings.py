@@ -285,7 +285,7 @@ class SettingsManager(SettingsBase):
         :rtype bool:
         """
 
-        return self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE)
+        return bool(self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE))
 
     @property
     def icon_path(self) -> str:
