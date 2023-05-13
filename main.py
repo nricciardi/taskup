@@ -51,15 +51,16 @@ def print_help() -> None:
 
     print(app_name)
 
-    msg: str = """\
-    - run, r or nothing: launch the application
-    - demo, d: launch application with a demo database
-      - -f: force erase if there is already a database
-    - init, i: initialize this app in users projects
-      - -f: force reinitialization
-    - help, h: print help 
-    - version, v: print version
-    """
+    msg: str = """
+run, r or nothing: launch the application
+demo, d: launch application with a demo database in path specified, path has to the last parameter
+  -f: force erase if there is already a database
+  -o: open app at end
+init, i: initialize this app in users projects
+  -f: force reinitialization
+help, h: print help 
+version, v: print version
+"""
 
     print(msg)
 
