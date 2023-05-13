@@ -2,12 +2,15 @@ import sys
 import os
 from random import randint
 from typing import Dict
+import shutil
 import hashlib
 import webbrowser
 from lib.utils.logger import Logger
 
 
 class Utils:
+
+    BACKUP_EXT = "backup"
 
     @staticmethod
     def exit():
@@ -91,7 +94,50 @@ class Utils:
             os.rmdir(path)
 
     @staticmethod
-    def random_hex() -> str:
+    def backup_dir_content(dir_path: str) -> bool:
+        """
+        Make a backup of all files in the directory
+
+        :param dir_path: path of dir
+        :return:
+        """
+
+        try:
+            for file_name in os.listdir(dir_path):
+
+                path = os.path.join(dir_path, file_name)
+
+                if not file_name.endswith("." + Utils.BACKUP_EXT):
+                    Utils.backup(path)
+
+            return True
+
+        except Exception as e:
+            return False
+
+    @staticmethod
+    def backup(path: str) -> None:
+        """
+        Make backup
+
+        :param path:
+        :return:
+        """
+
+        if not Utils.exist(path):       # check if it exists
+            return
+
+        backup_path = path + "." + Utils.BACKUP_EXT
+
+        shutil.copy2(path, backup_path)
+
+    @staticmethod
+    def random_hex_color() -> str:
+        """
+        Return random hex color
+
+        :return:
+        """
         r = randint(0, 255)
         g = randint(0, 255)
         b = randint(0, 255)

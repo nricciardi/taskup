@@ -97,7 +97,7 @@ class Demo:
                                                "name": self.NAMES[randint(0, len(self.NAMES) - 1)],
                                                "surname": self.SURNAMES[randint(0, len(self.SURNAMES) - 1)],
                                                "password": "asd123",
-                                               "avatar_hex_color": Utils.random_hex(),
+                                               "avatar_hex_color": Utils.random_hex_color(),
                                                "role_id": 1
                                                })
 
@@ -110,7 +110,7 @@ class Demo:
                                                    "name": name,
                                                    "surname": surname,
                                                    "password": "asd123",
-                                                   "avatar_hex_color": Utils.random_hex(),
+                                                   "avatar_hex_color": Utils.random_hex_color(),
                                                    "role_id": randint(2, 4)})
 
     def add_tasks(self, n_tasks: int, n_users: int) -> None:

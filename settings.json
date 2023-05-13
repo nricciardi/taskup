@@ -1,4 +1,5 @@
 {
+    "backup": true,
     "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
     "db_name": "database.db",
     "debug": true,
