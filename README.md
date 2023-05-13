@@ -2,7 +2,9 @@
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
 
-- [Pi Project](#pi-project)
+Taskup helps to manage task of your projects.
+
+- [Taskup](#taskup)
   * [Get Started](#get-started)
     + [Dependencies](#dependencies)
     + [Run](#run)
