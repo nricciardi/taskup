@@ -48,7 +48,7 @@ class AppManager:
 
         # init Eel
         Logger.log_info(msg=f"Init frontend '{self.settings_manager.frontend_directory}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
-        eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
+        eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel
 
     @property
     def settings_manager(self) -> SettingsManager:

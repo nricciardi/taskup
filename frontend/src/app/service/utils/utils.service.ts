@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from '../api/auth/auth.service';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable({
   providedIn: 'root'

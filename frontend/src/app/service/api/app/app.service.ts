@@ -3,6 +3,7 @@ import { EelService } from '../../eel/eel.service';
 import { Observable } from 'rxjs';
 import { LoggerService } from '../../logger/logger.service';
 import { PM, UserModel } from 'src/app/model/entity/user.model';
+import { UtilsService } from '../../utils/utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -55,22 +56,23 @@ export class AppService extends EelService {
 
   }
 
-  public close(): void {
+  public close(): Promise<void> {
 
-    this.call(this.CLOSE).then((response) => {
+    return new Promise<void>((resolve, reject) => {
+      this.call(this.CLOSE).then((response) => {
 
-      response.subscribe({
-        next: () => {
-          // nothing
-        }
-      })
+        response.subscribe({
+          next: () => {
+            // nothing
+          }
+        })
 
-    });
+        resolve();
 
-    setTimeout(() => {
-      LoggerService.logInfo("Close app");
-      window.close();
-    }, 1000);
+      });
+    })
+
+
 
   }
 
@@ -86,3 +88,8 @@ export class AppService extends EelService {
 
   }
 }
+
+window.addEventListener('beforeunload', function (event) {
+  new AppService().close().then(() => {});
+  event.preventDefault();
+});

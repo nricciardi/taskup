@@ -1,4 +1,4 @@
-<footer style="margin: 0 5vw 5vh 5vw;">
+<footer style="margin: 0 10vw 5vh 10vw;">
   <div class="footer clearfix mb-0 text-muted">
     <div class="float-start">
       <p>2023 &copy; <strong>{{ appName }}</strong> developed by Nicola Ricciardi</p>
@@ -23,7 +23,7 @@
                       [confirmBtn]="true"
                       [confirmBtnTxt]="'confirm'"
                       [borderless]="true"
-                      (onConfirm)="appService.close()">
+                      (onConfirm)="close()">
     </app-dialog-modal>
     </div>
   </div>

@@ -547,6 +547,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         try:
+
             Logger.log_info(msg=f"updating {self.table_name} with data: {data}", is_verbose=self.verbose)
 
             if entity_id is None and create_if_not_exists:
