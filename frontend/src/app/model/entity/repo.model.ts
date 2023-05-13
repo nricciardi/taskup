@@ -5,9 +5,11 @@ export interface RepoNode {
   committed_at: Date;
   parents: RepoNode[] | null;
   children: RepoNode[] | null;
+  of_branch: string;
 }
 
 export interface Author {
   email: string;
   name: string;
 }
+

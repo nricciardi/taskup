@@ -7,6 +7,7 @@ from lib.db.entity.user import UserModel
 from typing import List, Union, Optional
 import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
+from lib.utils.utils import Utils
 
 
 @dataclass
@@ -22,8 +23,10 @@ class RepoNode(DCToDictMixin):
     author: Author
     message: str
     committed_at: str
+    of_branch: str
     parents: Optional[List['RepoNode']] = field(default=None)     # if None => no information, but it is said that there are no fathers
     children: Optional[List['RepoNode']] = field(default=None)
+
 
     # tag: str
 
@@ -80,7 +83,8 @@ class RepoNode(DCToDictMixin):
                    message=commit.message,
                    committed_at=commit.committed_datetime.isoformat(),
                    parents=parents,
-                   children=[]
+                   children=[],
+                   of_branch=commit.name_rev.split()[1]
                    )
 
         return node
@@ -123,7 +127,7 @@ class RepoManager:
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
 
-        self.repo = None
+        self.repo: Optional[git.Repo] = None
 
     def open_repo(self, project_path: str) -> None:
         """
@@ -165,7 +169,7 @@ class RepoManager:
 
         Logger.log_info(msg=f"Generate repo tree...", is_verbose=self.verbose)
 
-        commits = list(self.repo.iter_commits(reverse=True))
+        commits: List[git.Commit] = list(self.repo.iter_commits(reverse=True))
 
         # take root commit: always the first of the list
         root_commit = commits.pop(0)
@@ -186,10 +190,12 @@ class RepoManager:
 
 if __name__ == '__main__':
     path = "/home/ncla/Desktop/project/project-pi/code/fakerepo"
-    repo_manager = RepoManager(path, True)
+    repo_manager = RepoManager(True)
+
+    repo_manager.open_repo(path)
 
     root_node = repo_manager.generate_tree()
 
     j = json.dumps(root_node.to_dict(), indent=4)
 
-    print(j)
+    # print(j)
