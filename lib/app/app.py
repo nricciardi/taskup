@@ -1,3 +1,5 @@
+import os
+
 import eel
 from typing import List
 from lib.app.service.auth import AuthService
@@ -45,7 +47,7 @@ class AppManager:
         self.__expose()
 
         # init Eel
-        Logger.log_info(msg="Init frontend with Eel...", is_verbose=self.verbose)
+        Logger.log_info(msg=f"Init frontend '{self.settings_manager.frontend_directory}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'])  # init eel
 
     @property
@@ -89,9 +91,9 @@ class AppManager:
         Logger.log_info(msg="Start app...", is_verbose=True)
 
         frontend_start = self.settings_manager.frontend_start
-        frontend_port = self.settings_manager.port
+        port = self.settings_manager.port
 
-        eel.start(frontend_start, port=frontend_port, shutdown_delay=self.SHUTDOWN_DELAY)  # start eel: this generates a loop
+        eel.start(frontend_start, port=port, shutdown_delay=self.SHUTDOWN_DELAY)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
 

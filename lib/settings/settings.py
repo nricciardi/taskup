@@ -29,7 +29,7 @@ class SettingsBase:
     VALUE_BASE_DEBUG_MODE = False
 
     KEY_FRONTEND_DIRECTORY = "frontend"
-    VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(os.path.curdir, "../frontend/dist/frontend")
+    VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(Base.base_directory(), "frontend", "dist", "frontend")
 
     KEY_FRONTEND_START = "frontend_start"
     VALUE_BASE_FRONTEND_START = "index.html"
@@ -295,7 +295,7 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        return os.path.join(Base.base_directory(), ICON_FILE_NAME)
+        return os.path.join(Base.base_directory(), self.ICON_FILE_NAME)
 
     @property
     def frontend_directory(self) -> str:

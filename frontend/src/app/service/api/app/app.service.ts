@@ -70,7 +70,7 @@ export class AppService extends EelService {
     setTimeout(() => {
       LoggerService.logInfo("Close app");
       window.close();
-    }, 500);
+    }, 1000);
 
   }
 
