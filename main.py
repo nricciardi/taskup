@@ -3,9 +3,29 @@ import sys
 import colorama
 from lib.utils.logger import Logger
 from lib.utils.utils import Utils
+from typing import Dict, List
 
 # Initialising Colorama (Important)
 colorama.init(autoreset=True)
+
+
+def flags_management(min_params: int, flags: Dict, args: List):
+    """
+    Manage flags
+
+    :param args:
+    :param min_params:
+    :param flags:
+    :return:
+    """
+
+    for key in flags.keys():
+        if flags.get(key, False):
+            min_params += 1
+
+    if len(args) < min_params:
+        Logger.log_error(msg="too few arguments", is_verbose=True)
+        Utils.exit(verbose=False)
 
 
 def print_help() -> None:
@@ -14,6 +34,22 @@ def print_help() -> None:
 
     :return:
     """
+
+    app_name = """\
+ ███████████                   █████                          
+░█░░░███░░░█                  ░░███                           
+░   ░███  ░   ██████    █████  ░███ █████ █████ ████ ████████ 
+    ░███     ░░░░░███  ███░░   ░███░░███ ░░███ ░███ ░░███░░███
+    ░███      ███████ ░░█████  ░██████░   ░███ ░███  ░███ ░███
+    ░███     ███░░███  ░░░░███ ░███░░███  ░███ ░███  ░███ ░███
+    █████   ░░████████ ██████  ████ █████ ░░████████ ░███████ 
+   ░░░░░     ░░░░░░░░ ░░░░░░  ░░░░ ░░░░░   ░░░░░░░░  ░███░░░  
+                                                     ░███     
+                                                     █████    
+                                                    ░░░░░      
+"""
+
+    print(app_name)
 
     msg: str = """\
     - run, r or nothing: launch the application
@@ -50,21 +86,20 @@ def main(args: list) -> None:
         Utils.exit(verbose=False)
 
     if "demo" in args or "d" in args:
-        forced: bool = "-f" in args
+        flags: Dict = {
+                "forced": "-f" in args,
+                "open_app_at_end": "-o" in args,
+            }
 
-        if (forced and len(args) < 4) or (not forced and len(args) < 3):
-            Logger.log_error(msg="too few arguments", is_verbose=True)
-            Utils.exit(verbose=False)
+        flags_management(min_params=3, flags=flags, args=args)
 
         project_path: str = args[-1]
 
-        AppManager.demo(project_path=project_path, force_demo=forced)
+        AppManager.demo(project_path=project_path, force_demo=flags["forced"], open_app_at_end=flags["open_app_at_end"])
 
         Utils.exit(verbose=False)
 
-    app = AppManager()
-
-    app.start()
+    AppManager.starter()
 
 
 if __name__ == '__main__':

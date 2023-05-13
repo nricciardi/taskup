@@ -79,6 +79,11 @@ class AppManager:
                                  verbose=self.verbose, debug_mode=self.settings_manager.debug_mode)
         exposer.expose_methods()
 
+    @classmethod
+    def starter(cls):
+        app = AppManager()
+        app.start()
+
     def start(self) -> None:
 
         Logger.log_info(msg="Start app...", is_verbose=True)
@@ -121,7 +126,7 @@ class AppManager:
         demo.launch(force_demo=force_demo)
 
         if open_app_at_end:
-            cls().start()   # launch app
+            AppManager.starter()    # launch app
 
     def open_settings(self) -> None:
         """
