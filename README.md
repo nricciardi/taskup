@@ -192,6 +192,40 @@ For example, the _Manage Task Label_ page is the followings:
 
 In addition, if there are a lot of resources, it is possible to use filters.
 
+## Home
+**Home page** provides a set of sections where is possible:
+- Watch _project information_
+- _Initialize_ new project
+- _Open_ projects
+
+### Project Information
+In this section is possible to see the project's path, its app's database and if the logged user
+has the specific permission this app can be removed from project.
+
+### Initialize Project
+
+![Home init](./doc/img/usr-doc/home-init.png)
+
+In this section is possible to initialize a project.
+
+To initialize a project is necessary to indicate the project's path and the basic information of
+the project's **project manager**, he is the figure who manages project.
+
+> **WARNING**: Avoid to lose project manager's password, because the nature of this application makes it impossible
+to recover password without previously login.
+
+If the indicated project is already initialized, checking _force initialize_ is possible to
+re-initialize project.
+
+### Open Project
+
+![Home open](./doc/img/usr-doc/home-open.png)
+
+Open project is possible in two-way:
+- Inserting path manually
+- Selecting path from a set of already opened projects
+
+
 # Documentation for Developers
 
 This is a base and simple documentation to illustrate this project for old and new developers.
@@ -215,6 +249,23 @@ To run Sphinx doc:
 ## App
 
 ![structure of the project](./doc/img/dev-doc/structure-diagram.jpg)
+
+### AppManager and its Services
+**AppManager** is the class which provides some methods to manage this app.
+In particular, AppManager has a set of _services_, this is a set of classes where each of them provides a specific
+functionality. For example `AuthService` provides _authentication system_.
+
+AppManager **has only one** service reference for each type, because it will be exposed by Eel library and
+the same function mustn't be exposed twice time.
+So each service has to be refreshed instead of re-instanced.
+
+#### ProjectManager
+**ProjectManager** manage the _projects_, usually only one project at time.
+Using ProjectManager is possible to init new project or open an existing project.
+
+#### AuthService
+**AuthService** provides _authentication system_.
+AuthService also manages _vault_ (`vault.json`), where are stored "remember me" user credentials.
 
 ### Eel and WebSocket
 
