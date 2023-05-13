@@ -44,15 +44,37 @@ class AppManager:
         if ProjectManager.already_initialized(self.settings_manager.project_directory_path):
             self.open_project(self.settings_manager.project_directory_path)
 
-        self.__expose()
+        self.__expose()     # expose py methods
 
         # init Eel
-        Logger.log_info(msg=f"Init frontend '{self.settings_manager.frontend_directory}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
-        eel.init(self.settings_manager.frontend_directory, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel
+        frontend_dir = f"{self.settings_manager.frontend_directory}"
+        if self.settings_manager.debug_mode:
+            frontend_dir += ".block"        # arbitrary string ".block" at the end of path prevents files scanning by eel.init
+            self.__ng_serve()
+
+        Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
+        eel.init(frontend_dir, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel
 
     @property
     def settings_manager(self) -> SettingsManager:
         return self.__settings_manager
+
+    def __ng_serve(self) -> None:
+        """
+        Run ng serve in frontend
+
+        :return:
+        """
+
+        try:
+            import subprocess
+
+            command = "ng serve"
+
+            subprocess.Popen(command, shell=True, cwd=self.settings_manager.frontend_directory)
+
+        except Exception as e:
+            pass
 
     def __expose(self) -> None:
         """

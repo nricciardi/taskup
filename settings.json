@@ -2,7 +2,7 @@
     "backup": true,
     "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
     "db_name": "database.db",
-    "debug": false,
+    "debug": true,
     "frontend": "/home/ncla/Desktop/project/project-pi/code/pi-project/frontend/dist/frontend",
     "frontend_debug_port": 4200,
     "frontend_start": "index.html",
