@@ -155,7 +155,10 @@ class Utils:
         :return:
         """
 
-        return hashlib.sha512(value.encode()).hexdigest()
+        first_disguised = hashlib.sha512(value.encode()).hexdigest()
+        second_disguised = hashlib.sha512(str(first_disguised).encode()).hexdigest()
+
+        return second_disguised
 
     @staticmethod
     def disguise_value_of_dict(d: Dict, *keys: str) -> None:
