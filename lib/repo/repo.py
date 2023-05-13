@@ -1,6 +1,6 @@
 import git
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from lib.utils.logger import Logger
 from datetime import datetime
 from lib.db.entity.user import UserModel
@@ -120,12 +120,48 @@ class RepoNode(DCToDictMixin):
 
 
 class RepoManager:
-    def __init__(self, repo_path: str, verbose: bool = False):
-        self.repo_path = repo_path
+    def __init__(self, verbose: bool = False):
         self.verbose = verbose
-        self.repo = git.Repo(self.repo_path)
 
-    def generate_tree(self):
+        self.repo = None
+
+    def open_repo(self, project_path: str) -> None:
+        """
+        Open repo
+
+        :param project_path:
+        :return:
+        """
+
+        try:
+            self.repo = git.Repo(project_path)
+
+        except git.exc.InvalidGitRepositoryError:
+            Logger.log_warning(msg=f"invalid repository in '{project_path}'", is_verbose=self.verbose)
+            self.repo = None
+
+        except Exception:
+            Logger.log_warning(msg=f"unable to open repository '{project_path}'", is_verbose=self.verbose)
+            self.repo = None
+
+    def valid_opened_repo(self) -> bool:
+        """
+        Return True if a valid repository is opened
+
+        :return:
+        """
+
+        return self.repo is not None
+
+    def generate_tree(self) -> Optional[RepoNode]:
+        """
+        Generate repo tree
+
+        :return:
+        """
+
+        if not self.valid_opened_repo():
+            return None
 
         Logger.log_info(msg=f"Generate repo tree...", is_verbose=self.verbose)
 

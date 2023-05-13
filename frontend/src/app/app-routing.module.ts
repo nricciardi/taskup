@@ -12,6 +12,7 @@ import { ManageUsersComponent } from './page/manage-users/manage-users.component
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 import { AuthGuardService } from './service/api/auth/auth-guard.service';
 import { RoleGuardService } from './service/api/auth/role-guard.service';
+import { RepoComponent } from './page/repo/repo.component';
 
 const routes: Routes = [
 
@@ -66,6 +67,10 @@ const routes: Routes = [
     component: ManageRolesComponent,
     canActivate: [AuthGuardService, RoleGuardService],
     data: { roleRequired: "permission_manage_roles" }
+  },
+  {
+    path: "repo",
+    component: RepoComponent
   },
 
   {

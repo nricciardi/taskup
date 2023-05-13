@@ -6,6 +6,7 @@ from typing import Dict, Optional
 import os
 from lib.db.entity.user import UsersManager, RolesManager, FuturePMData
 from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
+from lib.repo.repo import RepoManager
 
 
 class ProjectManager:
@@ -60,6 +61,9 @@ class ProjectManager:
 
         self.roles_manager = RolesManager(db_manager=self.__db_manager,
                                           verbose=self.verbose)
+
+        # load repo manager
+        self.repo_manager = RepoManager(verbose=self.verbose)
 
     @property
     def settings(self) -> SettingsManager:
@@ -151,6 +155,8 @@ class ProjectManager:
         # refresh db manager connection with (new) settings
         self.__db_manager.refresh_connection(db_path=self.settings.db_path,
                                              use_localtime=self.__settings_manager.get_setting_by_key(self.__settings_manager.KEY_DB_LOCALTIME))
+
+        self.repo_manager.open_repo(self.settings.project_directory_path)
 
     def remove(self, project_path: str) -> bool:
         """

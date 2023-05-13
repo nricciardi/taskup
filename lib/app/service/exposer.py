@@ -278,6 +278,19 @@ class ExposerService:
         except Exception as excepetion:
             Logger.log_error(msg="auth exposure error", is_verbose=self.verbose, full=True)
 
+    def __expose_repo_methods(self) -> None:
+        """
+        Expose repo methods
+
+        :return: None
+        """
+
+        try:
+            self.expose(to_dict(self.__project_manager.repo_manager.generate_tree, self.debug_mode), "repo_tree")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="repo exposure error", is_verbose=self.verbose, full=True)
+
     def __expose_project_manager_methods(self) -> None:
         """
         Expose project manager methods
@@ -370,6 +383,7 @@ class ExposerService:
             self.__expose_dashboard_methods()
             self.__expose_project_manager_methods()
             self.__expose_utils_methods()
+            self.__expose_repo_methods()
 
             Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
 

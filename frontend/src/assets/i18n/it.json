@@ -134,5 +134,7 @@
   "insert-pm-data": "Inserisci i dati del Project Manager",
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
-  "remove-work": "Rimuovi la cartella di lavoro dal progetto"
+  "remove-work": "Rimuovi la cartella di lavoro dal progetto",
+  "repo": "Repo",
+  "invalid-repo": "Repo non valido"
 }

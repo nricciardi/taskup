@@ -134,6 +134,8 @@
   "insert-pm-data": "Insert Project Manager data",
   "no-project": "No project is opened",
   "init-project-success": "Initialization completed successfully",
-  "remove-work": "Remove work directory from project"
+  "remove-work": "Remove work directory from project",
+  "repo": "Repo",
+  "invalid-repo": "Invalid repo"
 
 }

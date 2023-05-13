@@ -50,6 +50,7 @@ import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-m
 import { FilterComponent } from './widget/filter/filter.component';
 import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
 import { WarningAlertComponent } from './widget/alert/warning-alert/warning-alert.component';
+import { RepoComponent } from './page/repo/repo.component';
 
 
 @NgModule({
@@ -98,6 +99,7 @@ import { WarningAlertComponent } from './widget/alert/warning-alert/warning-aler
     FilterComponent,
     StatsBoxComponent,
     WarningAlertComponent,
+    RepoComponent,
   ],
   imports: [
     BrowserModule,
