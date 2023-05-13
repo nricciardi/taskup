@@ -2,7 +2,7 @@ from lib.utils.logger import Logger
 import json
 from lib.file.file_manager import FileManger
 import os
-from typing import Any, List
+from typing import Any, List, Optional
 from lib.utils.base import Base
 from lib.utils.utils import Utils
 
@@ -73,6 +73,7 @@ class SettingsBase:
 
 class SettingsManager(SettingsBase):
     CREATE_SETTINGS_FILE_IF_NOT_EXIST = True
+    ICON_FILE_NAME = "icon.ico"
 
     def __init__(self):
 
@@ -118,6 +119,7 @@ class SettingsManager(SettingsBase):
         """
 
         self.settings.update(FileManger.read_json(self.settings_path()))
+        self.dumps_settings()
 
     def create_settings_file(self) -> None:
         """
@@ -236,18 +238,27 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return SettingsManager.assemble_db_path(self.work_directory_path)
+        return SettingsManager.assemble_db_path(work_dir_path=self.work_directory_path)
 
     @staticmethod
-    def assemble_db_path(work_dir: str) -> str:
+    def assemble_db_path(work_dir_path: Optional[str] = None, project_path: Optional[str] = None) -> str:
         """
         Assemble database path
 
-        :param work_dir:
+        :param project_path:
+        :param work_dir_path:
         :return:
         """
 
-        return os.path.join(work_dir, SettingsBase.DB_NAME)
+        if isinstance(work_dir_path, str):
+            return os.path.join(work_dir_path, SettingsBase.DB_NAME)
+
+        if isinstance(project_path, str):
+            work_dir_path = SettingsManager.assemble_work_directory_path(project_path)
+
+            return os.path.join(work_dir_path, SettingsBase.DB_NAME)
+
+        raise ValueError()
 
     @property
     def vault_path(self) -> str:
@@ -275,6 +286,16 @@ class SettingsManager(SettingsBase):
         """
 
         return self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE)
+
+    @property
+    def icon_path(self) -> str:
+        """
+        Return the icon's path
+
+        :return:
+        """
+
+        return os.path.join(Base.base_directory(), ICON_FILE_NAME)
 
     @property
     def frontend_directory(self) -> str:

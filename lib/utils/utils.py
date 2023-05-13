@@ -13,13 +13,13 @@ class Utils:
     BACKUP_EXT = "backup"
 
     @staticmethod
-    def exit():
+    def exit(verbose: bool = True):
         """
         Force exit
 
         :return:
         """
-        Logger.log_warning(msg="force exit...")
+        Logger.log_warning(msg="force exit...", is_verbose=verbose)
 
         sys.exit()
 

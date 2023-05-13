@@ -1,6 +1,8 @@
 from lib.app.app import AppManager
 import sys
 import colorama
+from lib.utils.logger import Logger
+from lib.utils.utils import Utils
 from colorama import Fore, Back, Style
 
 from lib.utils.demo import Demo
@@ -42,18 +44,26 @@ def main(args: list) -> None:
 
     if "help" in args or "h" in args:
         print_help()
-        return
+
+        Utils.exit(verbose=False)
 
     if "version" in args or "v" in args:
         print_version()
-        return
+
+        Utils.exit(verbose=False)
 
     if "demo" in args or "d" in args:
-        forced = "-f" in args
+        forced: bool = "-f" in args
 
-        AppManager.demo(force_demo=forced)
+        if (forced and len(args) < 4) or (not forced and len(args) < 3):
+            Logger.log_error(msg="too few arguments", is_verbose=True)
+            Utils.exit(verbose=False)
 
-        return
+        project_path: str = args[-1]
+
+        AppManager.demo(project_path=project_path, force_demo=forced)
+
+        Utils.exit(verbose=False)
 
     app = AppManager()
 

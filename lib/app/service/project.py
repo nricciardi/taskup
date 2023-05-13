@@ -214,7 +214,7 @@ class ProjectManager:
             work_dir = self.create_work_directory(project_path)
 
             # instance specific DBManager to create new db
-            db_manager = DBManager.creating_database(db_path=SettingsManager.assemble_db_path(work_dir),
+            db_manager = DBManager.creating_database(db_path=SettingsManager.assemble_db_path(work_dir_path=work_dir),
                                                      verbose=self.verbose,
                                                      use_localtime=self.settings.get_setting_by_key(SettingsManager.KEY_DB_LOCALTIME))
 

@@ -104,16 +104,17 @@ class AppManager:
                 Logger.log_success(msg="backup done successfully", is_verbose=self.verbose)
 
     @classmethod
-    def demo(cls, force_demo: bool = False, verbose: bool = False) -> None:
+    def demo(cls, project_path: str, force_demo: bool = False, verbose: bool = False) -> None:
         """
         Launch demo of app
 
+        :param project_path:
         :param force_demo:
         :param verbose:
         :return:
         """
 
-        demo = Demo(settings_manager=SettingsManager())
+        demo = Demo(project_path=project_path, settings_manager=SettingsManager())
 
         demo.launch(force_demo=force_demo)
 
