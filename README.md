@@ -1,6 +1,6 @@
 # Taskup
 
-Taskup helps to manage task of your projects.
+**Taskup** helps to manage task of your projects.
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
 
