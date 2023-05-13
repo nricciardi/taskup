@@ -1,6 +1,7 @@
 # Taskup
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
+
 Taskup helps to manage task of your projects.
 
 - [Taskup](#taskup)
