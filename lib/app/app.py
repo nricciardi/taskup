@@ -205,6 +205,6 @@ class AppManager:
 
         res = self.project_manager.remove(self.settings_manager.project_directory_path)
 
-        self.auth_service.refresh_me()
+        self.auth_service.logout()
 
         return res
