@@ -2,18 +2,16 @@ from lib.utils.logger import Logger
 import json
 from lib.file.file_manager import FileManger
 import os
-from typing import Any, List
+from typing import Any, List, Optional
 from lib.utils.base import Base
 from lib.utils.utils import Utils
 
 
 class SettingsBase:
-    WORK_DIRECTORY_NAME = "work"
+    WORK_DIRECTORY_NAME = ".taskup"
     SETTINGS_FILE_NAME = "settings.json"
     VAULT_FILE_NAME = "vault.json"
-
-    KEY_DB_NAME = "db_name"
-    VALUE_BASE_DB_NAME = "database.db"
+    DB_NAME = "database.db"
 
     KEY_VERBOSE = "verbose"
     VALUE_BASE_VERBOSE = True
@@ -31,7 +29,7 @@ class SettingsBase:
     VALUE_BASE_DEBUG_MODE = False
 
     KEY_FRONTEND_DIRECTORY = "frontend"
-    VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(os.path.curdir, "../frontend/dist/frontend")
+    VALUE_BASE_FRONTEND_DIRECTORY = os.path.join(Base.base_directory(), "frontend", "dist", "frontend")
 
     KEY_FRONTEND_START = "frontend_start"
     VALUE_BASE_FRONTEND_START = "index.html"
@@ -45,8 +43,10 @@ class SettingsBase:
     KEY_PROJECT_PATHS_STORED = "projects_paths_stored"
     VALUE_BASE_PROJECT_PATHS_STORED = []
 
+    KEY_BACKUP = "backup"
+    VALUE_BASE_BACKUP = True
+
     BASE_SETTINGS = {
-        KEY_DB_NAME: VALUE_BASE_DB_NAME,
         KEY_VERBOSE: VALUE_BASE_VERBOSE,
         KEY_PROJECT_PATH: VALUE_BASE_PROJECT_PATH,
         KEY_DB_LOCALTIME: VALUE_BASE_DB_LOCALTIME,
@@ -56,7 +56,8 @@ class SettingsBase:
         KEY_APP_PORT: VALUE_BASE_APP_PORT,
         KEY_VAULT_PATH: VALUE_BASE_VAULT_PATH,
         KEY_FRONTEND_DEBUG_PORT: VALUE_BASE_FRONTEND_DEBUG_PORT,
-        KEY_PROJECT_PATHS_STORED: VALUE_BASE_PROJECT_PATHS_STORED
+        KEY_PROJECT_PATHS_STORED: VALUE_BASE_PROJECT_PATHS_STORED,
+        KEY_BACKUP: VALUE_BASE_BACKUP,
     }
 
     @staticmethod
@@ -71,7 +72,8 @@ class SettingsBase:
 
 
 class SettingsManager(SettingsBase):
-    create_settings_file_if_not_exist = True
+    CREATE_SETTINGS_FILE_IF_NOT_EXIST = True
+    ICON_FILE_NAME = "icon.ico"
 
     def __init__(self):
 
@@ -83,7 +85,7 @@ class SettingsManager(SettingsBase):
         except IOError as io_error:
             Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} not found", is_verbose=self.verbose)
 
-            if SettingsManager.create_settings_file_if_not_exist:
+            if SettingsManager.CREATE_SETTINGS_FILE_IF_NOT_EXIST:
                 self.create_settings_file()
                 self.override_settings()
 
@@ -117,6 +119,7 @@ class SettingsManager(SettingsBase):
         """
 
         self.settings.update(FileManger.read_json(self.settings_path()))
+        self.dumps_settings()
 
     def create_settings_file(self) -> None:
         """
@@ -185,21 +188,16 @@ class SettingsManager(SettingsBase):
         return path
 
     @property
-    def projects_paths_stored(self):
+    def projects_paths_stored(self) -> List[str]:
         """
         Return list of projects paths stored, erasing invalid paths
 
         :return:
         """
 
-        paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
+        self.clear_paths_stored()
 
-        paths_checked = []
-        for path in paths_stored:
-            if os.path.isdir(path):
-                paths_checked.append(path)
-
-        return paths_checked
+        return self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
 
     @property
     def work_directory_path(self) -> str:
@@ -209,7 +207,18 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        return os.path.join(self.project_directory_path, self.WORK_DIRECTORY_NAME)
+        return SettingsManager.assemble_work_directory_path(self.project_directory_path)
+
+    @staticmethod
+    def assemble_work_directory_path(project_path: str) -> str:
+        """
+        Assemble and return work directory path from passed path
+
+        :param project_path:
+        :return:
+        """
+
+        return os.path.join(project_path, SettingsBase.WORK_DIRECTORY_NAME)
 
     @property
     def db_name(self) -> str:
@@ -219,7 +228,7 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return self.get_setting_by_key(self.KEY_DB_NAME)
+        return SettingsBase.DB_NAME
 
     @property
     def db_path(self) -> str:
@@ -229,7 +238,27 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.work_directory_path, self.get_setting_by_key(self.KEY_DB_NAME))
+        return SettingsManager.assemble_db_path(work_dir_path=self.work_directory_path)
+
+    @staticmethod
+    def assemble_db_path(work_dir_path: Optional[str] = None, project_path: Optional[str] = None) -> str:
+        """
+        Assemble database path
+
+        :param project_path:
+        :param work_dir_path:
+        :return:
+        """
+
+        if isinstance(work_dir_path, str):
+            return os.path.join(work_dir_path, SettingsBase.DB_NAME)
+
+        if isinstance(project_path, str):
+            work_dir_path = SettingsManager.assemble_work_directory_path(project_path)
+
+            return os.path.join(work_dir_path, SettingsBase.DB_NAME)
+
+        raise ValueError()
 
     @property
     def vault_path(self) -> str:
@@ -240,7 +269,12 @@ class SettingsManager(SettingsBase):
         :rtype: str
         """
 
-        return os.path.join(self.get_setting_by_key(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
+        vault_path_generator = lambda: os.path.join(self.get_setting_by_key(self.KEY_VAULT_PATH), SettingsBase.VAULT_FILE_NAME)
+
+        if not os.path.isfile(vault_path_generator()):
+            self.set(self.KEY_VAULT_PATH, self.VALUE_BASE_VAULT_PATH)
+
+        return vault_path_generator()
 
     @property
     def debug_mode(self) -> bool:
@@ -251,7 +285,17 @@ class SettingsManager(SettingsBase):
         :rtype bool:
         """
 
-        return self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE)
+        return bool(self.get_setting_by_key(SettingsBase.KEY_DEBUG_MODE))
+
+    @property
+    def icon_path(self) -> str:
+        """
+        Return the icon's path
+
+        :return:
+        """
+
+        return os.path.join(Base.base_directory(), self.ICON_FILE_NAME)
 
     @property
     def frontend_directory(self) -> str:
@@ -312,13 +356,12 @@ class SettingsManager(SettingsBase):
         :return:
         """
 
-        if not os.path.isdir(path):
-            Logger.log_warning(msg=f"path: '{path}' not found", is_verbose=self.verbose)
+        if not Utils.exist_dir(path):
+            Logger.log_warning(msg=f"project: '{path}' not found", is_verbose=self.verbose)
             return False
 
         self.set(self.KEY_PROJECT_PATH, path)  # set path in settings.
         self.add_path_to_stored(path)
-        self.dumps_settings()
 
         return True
 
@@ -331,9 +374,11 @@ class SettingsManager(SettingsBase):
 
         paths_stored: List[str] = self.get_setting_by_key(self.KEY_PROJECT_PATHS_STORED)
 
-        paths_checked = []
+        paths_checked = set()
         for path in paths_stored:
-            if os.path.isdir(path):
-                paths_checked.append(path)
+            if Utils.exist_dir(path):
+                paths_checked.add(path)
+
+        paths_checked = sorted(list(paths_checked))
 
         self.set(self.KEY_PROJECT_PATHS_STORED, paths_checked)

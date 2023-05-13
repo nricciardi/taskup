@@ -1,11 +1,11 @@
 import sqlite3
 from lib.db.query import QueryBuilder
 from lib.utils.logger import Logger
-import os
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Optional, Any
 from lib.db.component import Table, Field, FKConstraint, WhereCondition, Trigger
 from lib.db.seeder import Seeder
 from lib.utils.utils import Utils, SqlUtils
+from lib.utils.collections import DictUtils
 
 
 def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> Dict:
@@ -97,14 +97,19 @@ class BaseTaskStatusIdMixin:
         return 8
 
 
-class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
+class BaseRoleIdMixin:
+    @property
+    def project_manager_role_id(self) -> int:
+        return 1
 
-    def __init__(self, db_name: str, work_directory_path: str = ".", verbose: bool = False, use_localtime: bool = False):
+
+class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
+
+    def __init__(self, db_path: str, verbose: bool = False, use_localtime: bool = False):
         """
         Create a DBManager
 
-        :param db_name: db name
-        :param work_directory_path: work directory path
+        :param db_path: db path
         :param verbose: verbose
         :param use_localtime: if db must use local in date
         """
@@ -112,11 +117,9 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         # get and set locally variables
         self.verbose = verbose
-        self.use_localtime = use_localtime
 
-        self.__db_name: str = db_name
-        self.__work_directory_path: str = work_directory_path
-        self.__db_path = os.path.join(self.__work_directory_path, self.__db_name)
+        self.use_localtime = use_localtime
+        self.__db_path = db_path
 
         # open a new connection
         self.__db_connection = None     # initialized in __init__ to use it in open_connection()
@@ -126,6 +129,54 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
     def __del__(self):
         self.close_connection()
 
+    def set_connection_params(self, db_path: Optional[str] = None, use_localtime: Optional[bool] = None):
+        """
+        Set params to open connections
+
+        :param db_path:
+        :param use_localtime:
+        :return:
+        """
+
+        if use_localtime is not None:
+            self.use_localtime = use_localtime
+
+        if db_path is not None:
+            self.__db_path = db_path
+
+    def is_open(self) -> bool:
+        """
+        Return the state of connection
+
+        :return:
+        """
+
+        return isinstance(self.__db_connection, sqlite3.Connection)
+
+    @classmethod
+    def creating_database(cls, db_path: str, verbose: bool = False, use_localtime: bool = True) -> Optional['DBManager']:
+        """
+        Create a new database in path
+
+        :param use_localtime:
+        :param verbose:
+        :param db_path:
+        :return:
+        """
+
+        try:
+
+            with sqlite3.connect(db_path) as conn:       # with auto-close connection resource
+
+                Logger.log_success(msg=f"database created in path: '{db_path}'", is_verbose=verbose)
+
+            return cls(db_path=db_path, verbose=verbose, use_localtime=use_localtime)
+
+        except Exception as e:
+            Logger.log_warning(msg=f"error during database creation in path: '{db_path}'", is_verbose=verbose)
+
+            return None
+
     def open_connection(self) -> None:
         """
         Open a new connection with DB
@@ -133,41 +184,43 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :return:
         """
 
-        # check if db already exists
-        db_exists = os.path.exists(self.__db_path)  # if False => database structure must be created
+        self.__db_connection = None
+        self.__db_cursor = None
 
-        # log if verbose
-        if db_exists:
-            Logger.log_info(msg=f"database {self.__db_path} found", is_verbose=self.verbose)
+        # open connection if and only if database already exists
+        if Utils.exist(self.__db_path):
+            Logger.log_info(msg=f"found database: '{self.__db_path}'", is_verbose=self.verbose)
         else:
-            Logger.log_warning(msg=f"database {self.__db_path} not found, will be generate...", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"database '{self.__db_path}' not found", is_verbose=self.verbose)
+
+            return None
 
         try:
             self.__db_connection = sqlite3.connect(self.__db_path)  # connect to db
             self.__db_connection.row_factory = dict_factory  # set row factory to get dict instead of tuple
             self.__db_cursor = self.__db_connection.cursor()  # set cursor as attr
 
-            Logger.log_success(msg=f"Connection successful with db: {self.__db_path}", is_verbose=self.verbose)
+            Logger.log_success(msg=f"Connection successful with db: '{self.__db_path}'", is_verbose=self.verbose)
 
             # add FK checks
             self.__db_connection.execute('PRAGMA foreign_keys = ON;')
 
-            if not db_exists:
-                self.generate_base_db_structure(strict=True)
-
         except Exception as exception:
-            print("Connection with database failed...")
 
             Logger.log_error(exception, is_verbose=self.verbose)
 
-            Utils.exit()
-
-    def refresh_connection(self) -> None:
+    def refresh_connection(self, **kwargs) -> None:
         """
         Refresh DB connection
 
         :return:
         """
+
+        Logger.log_info(msg=f"database connection will be refreshing...", is_verbose=self.verbose)
+
+        self.close_connection()
+
+        self.set_connection_params(**kwargs)
 
         self.open_connection()
 
@@ -177,8 +230,14 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         :return:
         """
-        Logger.log_info(msg="closing db connection...", is_verbose=self.verbose)
-        self.__db_connection.close()
+
+        try:
+            self.__db_connection.close()
+
+            Logger.log_info(msg="database connection closed", is_verbose=self.verbose)
+
+        except Exception as e:
+            Logger.log_warning(msg="database connection can't be closed", is_verbose=self.verbose)
 
     @property
     def tables(self) -> Dict[str, Table]:
@@ -197,7 +256,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="surname", type="VARCHAR(256)", nullable=True),
                 Field(name="email", type="VARCHAR(256)", unique=True),
                 Field(name="password", type="VARCHAR(256)", unique=False),
-                Field.hex_color(name="avatar_hex_color", default="'cfcfcf'", nullable=False),
+                Field.hex_color(name="avatar_hex_color", default="'#cfcfcf'", nullable=False),
                 Field(name="phone", type="VARCHAR(30)", nullable=True),
                 Field.nullable_datetime_with_now_check_field("last_visit_at", use_localtime=self.use_localtime, default=None),
                 Field.fk_field(name="role_id"),
@@ -224,6 +283,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
                 Field(name="permission_manage_task_labels", type="INTEGER", default='0'),
                 Field(name="permission_manage_users", type="INTEGER", default='0'),
                 Field(name="permission_edit_task_deadline", type="INTEGER", default='0'),
+                Field(name="permission_remove_work", type="INTEGER", default='0'),
             ]),
 
             self.task_status_table_name: Table(self.task_status_table_name, [
@@ -361,16 +421,17 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           ("Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1),
-                                           ("Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1),
-                                           ("Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0),
-                                           ("Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0),
-                                           ("External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0)
-                                         ], cols=("name",
+                                           (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,   1),
+                                           (2, "Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1,  0),
+                                           (3, "Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0,  0),
+                                           (4, "Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0,  0),
+                                           (5, "External",         0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,     0, 0, 0, 0,  0),
+                                         ], cols=("id", "name",
                                                   "permission_create", "permission_read_all", "permission_move_backward", "permission_move_forward",
                                                   "permission_edit_own", "permission_edit_all", "permission_change_role", "permission_change_assignment",
                                                   "permission_delete_own", "permission_delete_all", "permission_move", "permission_manage_roles",
-                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users", "permission_edit_task_deadline"
+                                                  "permission_manage_task_status", "permission_manage_task_labels", "permission_manage_users", "permission_edit_task_deadline",
+                                                  "permission_remove_work"
                                                   )
                                          )
         }
@@ -389,7 +450,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
             self.cursor.execute(self.seeders[name].to_sql())
 
-            Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)
+            # Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)         # too verbose
 
         except Exception as exception:
 
@@ -398,18 +459,6 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
     @property
     def db_path(self):
         return self.__db_path
-
-    @property
-    def db_name(self) -> str:
-        return self.__db_name
-
-    @db_name.setter
-    def db_name(self, name: str) -> None:
-        self.__db_name = name
-
-    @db_name.deleter
-    def db_name(self):
-        raise Exception("db_name cannot be deleted")
 
     @property
     def connection(self):
@@ -520,7 +569,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
     def generate_base_db_structure(self, strict: bool = False) -> None:
         """
-        Generate the base db of app
+        Generate the base db of project
 
         :param strict: flag to interrupt application if there is an exception
         :type strict: bool
@@ -531,7 +580,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
 
         try:
 
-            Logger.log_info("start to generate base db", is_verbose=self.verbose)
+            # drop all tables
+            for table_name in self.tables.keys():
+                self.drop_table(table_name)
+
+            Logger.log_info("start to generate base database", is_verbose=self.verbose)
 
             self.create_table(self.role_table_name)
 
@@ -564,9 +617,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             Logger.log_error(msg="error occurs during generate db", full=True, is_verbose=self.verbose)
 
             if strict:
-                Utils.exit()
-
-            raise exception
+                raise exception
 
     def insert_from_tuple(self, table_name: str, values: Tuple | List[Tuple],
                           columns: List[str] | Tuple[str] | None = None) -> None:
@@ -612,9 +663,17 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
             values = list()
             values.append(d)
 
+        # remove items which doesn't have a key in used table header
+        checked_values: List[Dict] = []
+        for value in values:
+            checked_values.append(DictUtils.filter_dict_by_key(dict(value), self.tables[table_name].header))
+
+        values = checked_values
+
+        # create query
         query = QueryBuilder.from_table(table_name).enable_binding().insert_from_dict(columns=columns, *values)
 
-        self.cursor.execute(query.to_sql(), query.data_bound)
+        self.cursor.execute(query.to_sql(), query.data_bound)   # execute insert query
 
         self.connection.commit()
 
@@ -641,8 +700,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         if columns is None:
             columns = []
 
-        query_built = QueryBuilder.from_table(table_name).enable_binding().select(*columns)\
-            .apply_conditions(*conditions)
+        query_built = QueryBuilder.from_table(table_name).enable_binding().select(*columns).apply_conditions(*conditions)
 
         query: str = query_built.to_sql()
         data: list = query_built.data_bound
@@ -684,12 +742,11 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         :return:
         """
 
-        if isinstance(conditions, WhereCondition):
+        if isinstance(conditions, WhereCondition):      # cast to list to use it as iterable
             conditions = [conditions]
 
-        # append updated_at to data with "now" if not exist and if table name has updated_at
-        # if "updated_at" in self.tables[table_name]:
-        #     data = dict(updated_at=).update(data)
+        # remove items which doesn't have a key in used table header
+        data: Dict = DictUtils.filter_dict_by_key(dict(data), self.tables[table_name].header)
 
         query_built = QueryBuilder.from_table(table_name)\
                                   .enable_binding()\
@@ -704,3 +761,32 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin):
         self.connection.commit()
 
         return res
+
+    def execute(self, raw_query: str) -> Any:
+        """
+        Execute passed raw query
+
+        :param raw_query: the raw query to execute
+        :type raw_query: str
+        :return: execution result
+        """
+
+        return self.cursor.executescript(raw_query)
+
+    def drop_table(self, table_name: str) -> bool:
+        """
+        Drop table by name
+
+        :param table_name:
+        :return:
+        """
+
+        try:
+            self.cursor.execute(f"Drop Table If Exists {table_name};")
+
+            self.connection.commit()
+
+            return True
+
+        except Exception:
+            return False

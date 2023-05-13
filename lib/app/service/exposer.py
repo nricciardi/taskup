@@ -1,14 +1,12 @@
 import eel
 from lib.utils.logger import Logger
-from lib.db.entity.task import TasksManager, TaskStatusManager, TaskAssignmentsManager, TaskTaskLabelPivotManager, TaskLabelsManager, TodoItemsManager
-from lib.db.entity.user import UsersManager, RolesManager
-from lib.app.service.auth import AuthService, login_required, permission_required
-from lib.app.service.dashboard import DashboardService
+from lib.app.service.auth import login_required, AuthService
 from typing import Callable
 from lib.utils.mixin.dcparser import to_dict
 import json
-from lib.db.db import DBManager
-from lib.app.project import ProjectManager
+from lib.utils.utils import Utils
+from lib.app.service.project import ProjectManager
+from lib.app.service.dashboard import DashboardService
 
 
 def jsonify(func: Callable):
@@ -33,48 +31,31 @@ class ExposerService:
 
     """
 
-    def __init__(self, project_manager: ProjectManager, verbose: bool = False):
+    def __init__(self, project_manager: ProjectManager, auth_service: AuthService, dashboard_service: DashboardService, verbose: bool = False, debug_mode: bool = False):
         self.verbose = verbose
-
-        db_manager = project_manager.db_manager
-        vault_path = project_manager.settings.vault_path
+        self.debug_mode = debug_mode
 
         self.__project_manager = project_manager
 
-        self.__task_status_manager = TaskStatusManager(db_manager=db_manager,
-                                                       verbose=self.verbose)
+        self.__task_status_manager = self.__project_manager.task_status_manager
 
-        self.__todo_items_manager = TodoItemsManager(db_manager=db_manager,
-                                                     verbose=self.verbose)
+        self.__todo_items_manager = self.__project_manager.todo_items_manager
 
-        self.__task_assignment_manager = TaskAssignmentsManager(db_manager=db_manager,
-                                                                verbose=self.verbose)
+        self.__task_assignment_manager = self.__project_manager.task_assignment_manager
 
-        self.__task_task_label_pivot_manager = TaskTaskLabelPivotManager(db_manager=db_manager,
-                                                                         verbose=self.verbose)
+        self.__task_task_label_pivot_manager = self.__project_manager.task_task_label_pivot_manager
 
-        self.__task_labels_manager = TaskLabelsManager(db_manager=db_manager,
-                                                       verbose=self.verbose)
+        self.__task_labels_manager = self.__project_manager.task_labels_manager
 
-        self.__tasks_manager = TasksManager(db_manager=db_manager,
-                                            task_assignment_manager=self.__task_assignment_manager,
-                                            task_task_label_pivot_manager=self.__task_task_label_pivot_manager,
-                                            verbose=self.verbose)
+        self.__tasks_manager = self.__project_manager.tasks_manager
 
-        self.__users_manager = UsersManager(db_manager=db_manager,
-                                            verbose=self.verbose)
+        self.__users_manager = self.__project_manager.users_manager
 
-        self.__roles_manager = RolesManager(db_manager=db_manager,
-                                            verbose=self.verbose)
+        self.__roles_manager = self.__project_manager.roles_manager
 
-        self.__auth_service = AuthService(users_manager=self.__users_manager, vault_path=vault_path,
-                                          verbose=self.verbose)
+        self.__auth_service = auth_service
 
-        self.__dashboard_service = DashboardService(tasks_manager=self.__tasks_manager,
-                                                    task_status_manager=self.__task_status_manager,
-                                                    auth_service=self.__auth_service,
-                                                    roles_manager=self.__roles_manager,
-                                                    verbose=self.verbose)
+        self.__dashboard_service = dashboard_service
 
     def test(self, *args, **kwargs):
         """
@@ -151,10 +132,10 @@ class ExposerService:
                 self.__tasks_manager.check_already_used,
             ], prefix="task_")
 
-            self.expose(to_dict(self.__tasks_manager.create_from_dict, self.verbose), "task_create")
-            self.expose(to_dict(self.__tasks_manager.find, self.verbose), "task_find")
-            self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.verbose), "task_all")
-            self.expose(login_required(to_dict(self.__tasks_manager.update_from_dict), self.__auth_service, self.verbose), "task_update")
+            self.expose(to_dict(self.__tasks_manager.create_from_dict, self.debug_mode), "task_create")
+            self.expose(to_dict(self.__tasks_manager.find, self.debug_mode), "task_find")
+            self.expose(login_required(self.__tasks_manager.all_as_dict, self.__auth_service, self.debug_mode), "task_all")
+            self.expose(login_required(to_dict(self.__tasks_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -173,11 +154,11 @@ class ExposerService:
                 self.__todo_items_manager.check_already_used,
             ], prefix="todo_")
 
-            self.expose(to_dict(self.__todo_items_manager.create_from_dict, self.verbose), "todo_create")
-            self.expose(to_dict(self.__todo_items_manager.find, self.verbose), "todo_find")
-            self.expose(login_required(to_dict(self.__todo_items_manager.all_as_dict), self.__auth_service, self.verbose), "todo_all")
-            self.expose(login_required(to_dict(self.__todo_items_manager.all_of), self.__auth_service, self.verbose), "todo_all_of")
-            self.expose(login_required(to_dict(self.__todo_items_manager.update_from_dict), self.__auth_service, self.verbose), "todo_update")
+            self.expose(to_dict(self.__todo_items_manager.create_from_dict, self.debug_mode), "todo_create")
+            self.expose(to_dict(self.__todo_items_manager.find, self.debug_mode), "todo_find")
+            self.expose(login_required(to_dict(self.__todo_items_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "todo_all")
+            self.expose(login_required(to_dict(self.__todo_items_manager.all_of, self.debug_mode), self.__auth_service, self.verbose), "todo_all_of")
+            self.expose(login_required(to_dict(self.__todo_items_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "todo_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
@@ -196,10 +177,10 @@ class ExposerService:
                 self.__task_labels_manager.check_already_used,
             ], prefix="task_label_")
 
-            self.expose(to_dict(self.__task_labels_manager.create_from_dict, self.verbose), "task_label_create")
-            self.expose(to_dict(self.__task_labels_manager.find, self.verbose), "task_label_find")
-            self.expose(login_required(to_dict(self.__task_labels_manager.all_as_dict), self.__auth_service, self.verbose), "task_label_all")
-            self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict), self.__auth_service, self.verbose), "task_label_update")
+            self.expose(to_dict(self.__task_labels_manager.create_from_dict, self.debug_mode), "task_label_create")
+            self.expose(to_dict(self.__task_labels_manager.find, self.debug_mode), "task_label_find")
+            self.expose(login_required(to_dict(self.__task_labels_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_label_all")
+            self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_label_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="task labels exposure error", is_verbose=self.verbose, full=True)
@@ -220,10 +201,10 @@ class ExposerService:
 
             ], prefix="task_status_")
 
-            self.expose(to_dict(self.__task_status_manager.create_from_dict, self.verbose), "task_status_create")
-            self.expose(to_dict(self.__task_status_manager.find, self.verbose), "task_status_find")
-            self.expose(login_required(to_dict(self.__task_status_manager.all_as_dict), self.__auth_service, self.verbose), "task_status_all")
-            self.expose(login_required(to_dict(self.__task_status_manager.update_from_dict), self.__auth_service, self.verbose), "task_status_update")
+            self.expose(to_dict(self.__task_status_manager.create_from_dict, self.debug_mode), "task_status_create")
+            self.expose(to_dict(self.__task_status_manager.find, self.debug_mode), "task_status_find")
+            self.expose(login_required(to_dict(self.__task_status_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_status_all")
+            self.expose(login_required(to_dict(self.__task_status_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_status_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="task status exposure error", is_verbose=self.verbose, full=True)
@@ -243,11 +224,11 @@ class ExposerService:
 
             ], prefix="task_assignment_")
 
-            self.expose(to_dict(self.__task_assignment_manager.create_from_dict, self.verbose), "task_assignment_create")
-            self.expose(to_dict(self.__task_assignment_manager.find, self.verbose), "task_assignment_find")
-            self.expose(login_required(to_dict(self.__task_assignment_manager.all_as_dict), self.__auth_service, self.verbose), "task_assignment_all")
-            self.expose(login_required(to_dict(self.__task_assignment_manager.update_from_dict), self.__auth_service, self.verbose), "task_assignment_update")
-            self.expose(login_required(to_dict(self.__task_assignment_manager.update_by_task_user_id_from_dict), self.__auth_service, self.verbose), "task_assignment_update_by_task_user_id_from_dict")
+            self.expose(to_dict(self.__task_assignment_manager.create_from_dict, self.debug_mode), "task_assignment_create")
+            self.expose(to_dict(self.__task_assignment_manager.find, self.debug_mode), "task_assignment_find")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_all")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_update")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.update_by_task_user_id_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_update_by_task_user_id_from_dict")
 
         except Exception as excepetion:
             Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)
@@ -267,10 +248,10 @@ class ExposerService:
 
             ], prefix="role_")
 
-            self.expose(to_dict(self.__roles_manager.create_from_dict, self.verbose), "role_create")
-            self.expose(to_dict(self.__roles_manager.find, self.verbose), "role_find")
-            self.expose(login_required(to_dict(self.__roles_manager.all_as_dict), self.__auth_service, self.verbose), "role_all")
-            self.expose(login_required(to_dict(self.__roles_manager.update_from_dict), self.__auth_service, self.verbose), "role_update")
+            self.expose(to_dict(self.__roles_manager.create_from_dict, self.debug_mode), "role_create")
+            self.expose(to_dict(self.__roles_manager.find, self.debug_mode), "role_find")
+            self.expose(login_required(to_dict(self.__roles_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "role_all")
+            self.expose(login_required(to_dict(self.__roles_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "role_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)
@@ -291,8 +272,8 @@ class ExposerService:
                 self.__auth_service.update_last_visit
             ], prefix="auth_")
 
-            self.expose(to_dict(self.__auth_service.login, self.verbose), "auth_login")
-            self.expose(to_dict(self.__auth_service.me, self.verbose), "auth_me")
+            self.expose(to_dict(self.__auth_service.login, self.debug_mode), "auth_login")
+            self.expose(to_dict(self.__auth_service.me, self.debug_mode), "auth_me")
 
         except Exception as excepetion:
             Logger.log_error(msg="auth exposure error", is_verbose=self.verbose, full=True)
@@ -306,11 +287,29 @@ class ExposerService:
 
         try:
 
-            self.expose(self.__project_manager.get_projects_paths_stored, "project_projects_paths_stored")
-            self.expose(self.__project_manager.set_project_path, "project_set_project_path")
+            self.expose_all_from_list(to_expose=[
+                self.__project_manager.project_information,
+            ], prefix="project_")
 
         except Exception as excepetion:
             Logger.log_error(msg="project manager exposure error", is_verbose=self.verbose, full=True)
+
+    def __expose_utils_methods(self) -> None:
+        """
+        Expose utils methods
+
+        :return: None
+        """
+
+        try:
+
+            self.expose_all_from_list(to_expose=[
+                Utils.exit,
+                Utils.open_in_webbrowser,
+            ], prefix="utils_")
+
+        except Exception as excepetion:
+            Logger.log_error(msg="utils exposure error", is_verbose=self.verbose, full=True)
 
     def __expose_dashboard_methods(self) -> None:
         """
@@ -321,7 +320,7 @@ class ExposerService:
 
         try:
 
-            self.expose(to_dict(self.__dashboard_service.get_data, self.verbose), "dashboard_get_data")
+            self.expose(to_dict(self.__dashboard_service.get_data, self.debug_mode), "dashboard_get_data")
 
         except Exception as excepetion:
             Logger.log_error(msg="dashboard exposure error", is_verbose=self.verbose, full=True)
@@ -340,10 +339,10 @@ class ExposerService:
                 self.__users_manager.check_already_used,
             ], prefix="user_")
 
-            self.expose(to_dict(self.__users_manager.find, self.verbose), "user_find")
-            self.expose(to_dict(self.__users_manager.create_from_dict, self.verbose), "user_create")
+            self.expose(to_dict(self.__users_manager.find, self.debug_mode), "user_find")
+            self.expose(to_dict(self.__users_manager.create_from_dict, self.debug_mode), "user_create")
             self.expose(login_required(self.__users_manager.all_as_dict, self.__auth_service, self.verbose), "user_all")
-            self.expose(login_required(to_dict(self.__users_manager.update_from_dict), self.__auth_service, self.verbose), "user_update")
+            self.expose(login_required(to_dict(self.__users_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "user_update")
 
         except Exception as excepetion:
             Logger.log_error(msg="user exposure error", is_verbose=self.verbose, full=True)
@@ -370,6 +369,7 @@ class ExposerService:
             self.__expose_auth_methods()
             self.__expose_dashboard_methods()
             self.__expose_project_manager_methods()
+            self.__expose_utils_methods()
 
             Logger.log_success(msg="methods exposed", is_verbose=self.verbose)
 

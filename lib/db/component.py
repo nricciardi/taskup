@@ -234,7 +234,7 @@ class Table(ToSqlInterface):
         return query
 
     @property
-    def fields_name(self) -> Tuple:
+    def header(self) -> Tuple:
         """
         Return the tuple of fields names
 

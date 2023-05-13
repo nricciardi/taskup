@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EelService, CallOptions } from '../../eel/eel.service';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { environment } from 'src/environments/environment.development';
 import { LoggerService } from '../../logger/logger.service';
@@ -22,7 +22,7 @@ export class AuthService {
     return this._loggedUser
   }
 
-  private emitMeChangeSource = new Subject<UserModel | null>();
+  public emitMeChangeSource = new BehaviorSubject<UserModel | null>(null);
 
   constructor(private eelService: EelService) { }
 
@@ -33,6 +33,9 @@ export class AuthService {
       this.eelService.call(this.LOGIN, email, password, keep).then((response) => {
         response.subscribe({
           next: (value: UserModel) => {
+
+            if(!value)
+              reject();
 
             if(refresh)
               this.refreshMe();

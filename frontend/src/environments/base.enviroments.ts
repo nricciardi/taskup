@@ -8,5 +8,7 @@ export const baseEnvironment = {
   alertTimeout: 5000,          // milliseconds
   updateLastVisitInterval: 60 * 1000,   // milliseconds
   authRequiredRedirectRoute: "/login",
-  basePriorityValue: 10
+  basePriorityValue: 10,
+  appName: "Taskup",
+  timeBeforeClose: 750,      // milliseconds
 };

@@ -167,8 +167,6 @@ class Logger:
             if append_warning:
                 msg += "... [message truncates]"
 
-
-
         print(f"{msg}")
 
     @staticmethod

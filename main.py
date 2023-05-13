@@ -1,12 +1,32 @@
-from lib.app.app import App
+from lib.app.app import AppManager
 import sys
 import colorama
-from colorama import Fore, Back, Style
-
-from lib.utils.demo import Demo
+from colorama import Fore
+from lib.utils.logger import Logger
+from lib.utils.utils import Utils
+from typing import Dict, List
 
 # Initialising Colorama (Important)
 colorama.init(autoreset=True)
+
+
+def flags_management(min_params: int, flags: Dict, args: List):
+    """
+    Manage flags
+
+    :param args:
+    :param min_params:
+    :param flags:
+    :return:
+    """
+
+    for key in flags.keys():
+        if flags.get(key, False):
+            min_params += 1
+
+    if len(args) < min_params:
+        Logger.log_error(msg="too few arguments", is_verbose=True)
+        Utils.exit(verbose=False)
 
 
 def print_help() -> None:
@@ -16,21 +36,38 @@ def print_help() -> None:
     :return:
     """
 
-    msg: str = """\
-    - run, r or nothing: launch the application
-    - demo, d: launch application with a demo database
-      - -f: force erase if there is already a database
-    - init, i: initialize this app in users projects
-      - -f: force reinitialization
-    - help, h: print help 
-    - version, v: print version
-    """
+    app_name = f"""{Fore.BLUE}\
+ ███████████                   █████                          
+░█░░░███░░░█                  ░░███                           
+░   ░███  ░   ██████    █████  ░███ █████ █████ ████ ████████ 
+    ░███     ░░░░░███  ███░░   ░███░░███ ░░███ ░███ ░░███░░███
+    ░███      ███████ ░░█████  ░██████░   ░███ ░███  ░███ ░███
+    ░███     ███░░███  ░░░░███ ░███░░███  ░███ ░███  ░███ ░███
+    █████   ░░████████ ██████  ████ █████ ░░████████ ░███████ 
+   ░░░░░     ░░░░░░░░ ░░░░░░  ░░░░ ░░░░░   ░░░░░░░░  ░███░░░  
+                                                     ░███     
+                                                     █████    
+                                                    ░░░░░      
+{Fore.RESET}"""
+
+    print(app_name)
+
+    msg: str = f"""\
+{Fore.GREEN}run{Fore.RESET}, {Fore.GREEN}r{Fore.RESET} or {Fore.CYAN}nothing{Fore.RESET}: launch the application
+{Fore.GREEN}demo{Fore.RESET}, {Fore.GREEN}d{Fore.RESET} [FLAGs] <path>: launch application with a demo database in path specified, path has to the last parameter
+  {Fore.MAGENTA}-f{Fore.RESET}: force erase if there is already a database
+  {Fore.MAGENTA}-o{Fore.RESET}: open app at end
+{Fore.GREEN}init, {Fore.GREEN}i{Fore.RESET}: initialize this app in users projects
+  {Fore.MAGENTA}-f{Fore.RESET}: force reinitialization
+{Fore.GREEN}help{Fore.RESET}, {Fore.GREEN}h{Fore.RESET}: print help 
+{Fore.GREEN}version{Fore.RESET}, {Fore.GREEN}v{Fore.RESET}: print version
+"""
 
     print(msg)
 
 
 def print_version() -> None:
-    print(App.VERSION)
+    print(AppManager.VERSION)
 
 
 def main(args: list) -> None:
@@ -42,24 +79,29 @@ def main(args: list) -> None:
 
     if "help" in args or "h" in args:
         print_help()
-        return
+
+        Utils.exit(verbose=False)
 
     if "version" in args or "v" in args:
         print_version()
-        return
+
+        Utils.exit(verbose=False)
 
     if "demo" in args or "d" in args:
-        forced = "-f" in args
+        flags: Dict = {
+                "forced": "-f" in args,
+                "open_app_at_end": "-o" in args,
+            }
 
-        demo = Demo()
+        flags_management(min_params=3, flags=flags, args=args)
 
-        demo.launch(force_demo=forced)
+        project_path: str = args[-1]
 
-        return
+        AppManager.demo(project_path=project_path, force_demo=flags["forced"], open_app_at_end=flags["open_app_at_end"])
 
-    app = App()
+        Utils.exit(verbose=False)
 
-    app.start()
+    AppManager.starter()
 
 
 if __name__ == '__main__':

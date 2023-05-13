@@ -14,3 +14,9 @@ export interface UserModel extends BaseEntity {
   role_id: number;
   role: RoleModel | null;
 }
+
+export interface PM {
+  username: string;
+  email: string;
+  password: string;
+}

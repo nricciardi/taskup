@@ -30,7 +30,7 @@ export class LoginComponent {
     this.authService.isLogged().then((response) => {
       response.subscribe({
         next: (isLogged: boolean) => {
-          if(isLogged) {
+          if(!!isLogged) {
             this.router.navigate(["/home"]);
 
           }

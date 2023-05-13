@@ -1,4 +1,4 @@
-<ng-container *ngIf="!!form && !!editableFields && !!manager">
+<ng-container *ngIf="!!form && !!editableFields">
   <div class="card">
     <div class="card-header" *ngIf="title">
       <div class="row justify-content-between">
@@ -88,7 +88,7 @@
                       <div class="checkbox">
                         <input
                           type="checkbox"
-                          class="form-check-input"
+                          class="form-check-input cursor-pointer"
                           [name]="field.name"
                           [placeholder]="field.placeholder"
                           [formControlName]="field.name"
@@ -107,7 +107,7 @@
                       </label>
                       <select class="form-select"
                               [formControlName]="field.name">
-                        <option selected>
+                        <option selected value="">
                           {{ "choose" | translate }}
                         </option>
 
@@ -150,7 +150,7 @@
                   (click)="submit()"
                   [disabled]="form.invalid"
                 >
-                  {{ "modify" | translate }}
+                  {{ confirmBtnTxt | translate }}
                 </button>
 
                 <app-dialog-modal [target]="'delete-request-' + entity.id"

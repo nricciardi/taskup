@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from '../api/auth/auth.service';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -103,4 +104,30 @@ export class UtilsService {
 
     return formattedDate;
   }
+
+  reload() {
+    window.location.reload();
+  }
+}
+
+
+export function matchValidator(
+  matchTo: string,
+  reverse?: boolean
+): ValidatorFn {
+
+  return (control: AbstractControl): ValidationErrors | null => {
+
+    if (control.parent && reverse) {
+      const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
+      if (c) {
+        c.updateValueAndValidity();
+      }
+      return null;
+    }
+
+    return !!control.parent &&
+      !!control.parent.value &&
+      control.value === (control.parent?.controls as any)[matchTo].value ? null : { matching: true };
+  };
 }

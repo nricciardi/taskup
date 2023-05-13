@@ -1,9 +1,12 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserModel } from 'src/app/model/entity/user.model';
+import { AppService } from 'src/app/service/api/app/app.service';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
+import { BackEndUtilsService } from 'src/app/service/api/utils/utils.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
 import { UtilsService } from 'src/app/service/utils/utils.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +19,7 @@ export class HeaderComponent {
 
   userLogged: UserModel | null = null;
 
-  constructor(private authService: AuthService, private router: Router, public utilsService: UtilsService) {
+  constructor(private authService: AuthService, private router: Router, public utilsService: UtilsService, public appService: AppService) {
   }
 
   ngOnInit() {
@@ -46,6 +49,8 @@ export class HeaderComponent {
   }
 
 }
+
+
 
 
 /*

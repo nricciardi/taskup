@@ -1,12 +1,13 @@
 from lib.db.entity.user import UserModel, UsersManager, RolesManager
 from lib.db.component import WhereCondition
-from lib.utils.collections import CollectionsUtils
+from lib.utils.collections import ListUtils
 from lib.utils.logger import Logger
 from lib.file.file_manager import FileManger
 from typing import List, Callable, Optional
 from lib.utils.error import Errors
 from dataclasses import dataclass
 from lib.utils.utils import Utils
+from lib.db.query import QueryBuilder
 
 
 @dataclass
@@ -40,21 +41,28 @@ class AuthService:
 
     def refresh_me(self) -> None:
         """
-        Refresh logged user data using local vault data
+        Refresh logged user data using local vault data.
+        This method is used in login to check if there is a match with email and password
 
         :return:
         """
 
-        if self.__local_vault is not None:
-            users_matched: List = self.__users_manager.where_as_model(
-                WhereCondition("email", "=", self.__local_vault.email),
-                WhereCondition("password", "=", self.__local_vault.password),
-                with_relations=True
-            )
+        try:
+            if self.__local_vault is not None:
+                users_matched: List = self.__users_manager.where_as_model(
+                    WhereCondition("email", "=", self.__local_vault.email),
+                    WhereCondition("password", "=", self.__local_vault.password),
+                    with_relations=True
+                )
 
-            self.__me = CollectionsUtils.first(users_matched)
+                self.__me = ListUtils.first(users_matched)
+
+        except Exception as e:
+            self.__me = None
+            # Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
 
     def me(self) -> UserModel | None:
+
         return self.__me
 
     def try_autologin(self) -> None:
@@ -74,7 +82,7 @@ class AuthService:
                 email: str = vault_data.get(self.EMAIL)
                 password: str = vault_data.get(self.PASSWORD)
 
-                self.login(email, password)
+                self.login(email=email, password=password, disguise_psw=False)      # disguise_psw=False because psw is already disguised if it is in vault
             else:
                 raise AttributeError()
 
@@ -87,10 +95,11 @@ class AuthService:
     def is_logged(self) -> bool:
         return self.__me is not None
 
-    def login(self, email: str, password: str, keep: bool = False) -> UserModel:
+    def login(self, email: str, password: str, keep: bool = False, disguise_psw: bool = True) -> UserModel | None:
         """
         Login user by email and password
 
+        :param disguise_psw: flag which indicates if password must be disguised
         :param keep: keep data on login
         :type keep: bool
         :param email:
@@ -101,18 +110,19 @@ class AuthService:
         :rtype: UserModel
         """
 
-        # disguise password
-        password = Utils.disguise(password)
+        # disguise password if required
+        if disguise_psw:
+            password = Utils.disguise(password)
 
         self.__local_vault = VaultData(email=email, password=password)
-        self.refresh_me()
+        self.refresh_me()       # try to refresh me with local vault data
 
-        if self.__me is None:
-            msg: str = f"no match with {email} + {password}"
+        if self.__me is None:   # if me is None => login error (nobody users is found with email + password)
+            msg: str = f"no match with email ({email}) and password ({password})"
 
             Logger.log_error(msg=msg, is_verbose=self.verbose)
 
-            raise ValueError(msg)
+            return None
 
         Logger.log_success(msg="logged in correctly", is_verbose=self.verbose)
 
@@ -157,7 +167,7 @@ class AuthService:
             self.PASSWORD: password
         })
 
-        Logger.log_success(msg=f"email: ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
+        Logger.log_success(msg=f"email ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
                            is_verbose=self.verbose)
 
     def get_vault_data(self) -> dict | None:
@@ -173,7 +183,10 @@ class AuthService:
     def erase_vault_data(self) -> bool:
 
         try:
-            FileManger.write_json(self.vault_path, "")
+
+            Logger.log_info(msg="erase vault", is_verbose=self.verbose)
+
+            FileManger.write_json(self.vault_path, {})
 
             return True
         except Exception:
@@ -188,11 +201,19 @@ class AuthService:
         :return:
         """
 
-        logged_user = self.me()
+        if not self.is_logged():
+            return None
 
-        self.__users_manager.update_from_dict(logged_user.id, {
-            "last_visit_at": "DATE('now')"
-        })
+        logged_user = self.me()
+        table_name: str = self.__users_manager.table_name
+
+        update_last_visit_query: str = QueryBuilder.from_table(table_name).update_from_dict({
+            "last_visit_at": "DATETIME('now')"
+        }).apply_conditions(WhereCondition("id", "=", logged_user.id)).to_sql()
+
+        self.__users_manager.db_manager.execute(update_last_visit_query)
+
+        Logger.log_info(msg=f"last visit of user {logged_user.email} has been updated", is_verbose=self.verbose)
 
 
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:

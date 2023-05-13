@@ -491,7 +491,9 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         try:
             Logger.log_info(msg=f"delete from {self.table_name} where {conditions}", is_verbose=self.verbose)
 
-            return self.__delete(self.table_name, *conditions)
+            self.__delete(self.table_name, *conditions)
+
+            return True
 
         except Exception as exception:
 
@@ -545,6 +547,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         try:
+
             Logger.log_info(msg=f"updating {self.table_name} with data: {data}", is_verbose=self.verbose)
 
             if entity_id is None and create_if_not_exists:
@@ -554,10 +557,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
             else:
 
-                self.db_manager.update(self.table_name,
-                                       WhereCondition("id", "=", entity_id),
-                                       **data
-                                       )
+                self.db_manager.update(self.table_name, WhereCondition("id", "=", entity_id), **data)
 
                 Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
 

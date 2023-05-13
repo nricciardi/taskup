@@ -2,85 +2,493 @@
   <div class="col-auto">
     <app-page-heading [title]="'home'" #heading></app-page-heading>
   </div>
+
+  <!-- <div class="col-auto">
+    <button class="btn icon btn-light"
+          type="button"
+          (click)="utilsService.reload()">
+          <i class="bi bi-arrow-clockwise"></i>
+    </button>
+
+    <button class="btn icon btn-light"
+            data-bs-toggle="modal"
+            data-bs-target="#close-app-modal"
+            type="button">
+      <i class="bi bi-power"></i>
+    </button>
+
+    <app-dialog-modal [centered]="true"
+                      [target]="'close-app-modal'"
+                      [title]="'close-app-request'"
+                      [confirmBtn]="true"
+                      [confirmBtnTxt]="'confirm'"
+                      [borderless]="true"
+                      (onConfirm)="appService.close()">
+    </app-dialog-modal>
+  </div> -->
 </div>
 
-<section class="input-group-select">
+<section class="section">
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
-          <h4 class="card-title">
-            {{ "open-project" | translate }}
-          </h4>
-        </div>
-        <div class="card-content">
-          <div class="card-body">
-            <form [formGroup]="openProjectForm">
-              <div class="row">
+        <div class="card-body">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                id="info-tab"
+                data-bs-toggle="tab"
+                href="#info"
+                role="tab"
+                aria-controls="info"
+                aria-selected="true"
+                >
+                {{ "project-information" | translate }}
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="new-tab"
+                data-bs-toggle="tab"
+                href="#new"
+                role="tab"
+                aria-controls="new"
+                aria-selected="false"
+                >
+                {{ "init-project" | translate }}
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="open-tab"
+                data-bs-toggle="tab"
+                href="#open"
+                role="tab"
+                aria-controls="open"
+                aria-selected="false"
+                >
+                {{ "open-project" | translate }}
+                </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div
+              class="tab-pane fade show active"
+              id="info"
+              role="tabpanel"
+              aria-labelledby="info-tab"
+            >
 
-                <div class="col-md-6 mb-4">
-                  <h6>
-                    {{ "select-project" | translate }}
-                  </h6>
-                  <div class="input-group mb-3">
-                    <label
-                      class="input-group-text"
-                      for="inputGroupSelect01"
-                      >
-                      {{ "projects" | translate }}
-                      </label>
-                    <select class="form-select" id="inputGroupSelect01" (change)="!path.value ? updatePath(select.value) : ''" #select>
-                      <option value="" selected>
-                        {{ "select" | translate }}
-                      </option>
-                      <option [value]="path" *ngFor="let path of projectsPaths">
-                        {{ path }}
-                      </option>
-                    </select>
+            <p>
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">
+                    {{ "project-information" | translate }}
+                  </h4>
+                </div>
+                <div class="card-content" *ngIf="projectInformation !== undefined">
+                  <div class="card-body">
+                    <form class="form form-horizontal">
+                      <div class="form-body">
+
+                        <ng-container *ngIf="projectInformation !== null; else noProject">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label>
+                                {{ "path" | translate }}
+                              </label>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Path"
+                                    id="path"
+                                    [value]="projectInformation.path"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-folder-fill"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label>
+                                {{ "database-path" | translate }}
+                              </label>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Database"
+                                    id="database"
+                                    [value]="projectInformation.database_path"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-database-fill"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row justify-content-center mt-5" *ngIf="!!authService.loggedUser?.role?.permission_remove_work">
+                            <div class="col-auto">
+                              <span class="badge bg-light-danger cursor-pointer"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#remove-work-dir-modal">
+                                {{ "remove-work" | translate }}
+                              </span>
+                            </div>
+                          </div>
+
+                          <app-dialog-modal [centered]="true"
+                                            [target]="'remove-work-dir-modal'"
+                                            [title]="'delete-request'"
+                                            [confirmBtn]="true"
+                                            [confirmBtnTxt]="'confirm'"
+                                            [borderless]="true"
+                                            (onConfirm)="appService.removeWorkDir()">
+                          </app-dialog-modal>
+                        </ng-container>
+
+                        <ng-template #noProject>
+                          <app-warning-alert title="no-project" [dismissable]="false"></app-warning-alert>
+                        </ng-template>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div
+              class="tab-pane fade"
+              id="new"
+              role="tabpanel"
+              aria-labelledby="new-tab"
+            >
+              <p>
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">
+                      {{ "init-project" | translate }}
+                    </h4>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-body">
+                      <form [formGroup]="initProjectForm">
+                        <div class="row">
+
+                          <div class="col-md-9 mb-4">
+                            <h6>
+                              {{ "insert-path" | translate }}
+                            </h6>
+                            <input
+                              class="form-control"
+                              type="text"
+                              placeholder="{{ 'path' | translate }}"
+                              formControlName="path"
+
+                              #path
+                            />
+                          </div>
+
+                          <div class="col-md-3 align-self-center">
+                            <div class="form-check">
+                              <div class="checkbox">
+                                <input
+                                  type="checkbox"
+                                  id="force-init"
+                                  class="form-check-input"
+                                  formControlName="forceInit"
+                                />
+                                <label for="force-init">
+                                  {{ "force-init" | translate }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <!-- <div class="row justify-content-start">
+                          <div class="col-auto">
+                            <div class="form-check form-switch">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="useSelfSwitch"
+                                [value]="!differentUser"
+                                [checked]="!differentUser"
+                                (change)="differentUser = !differentUser"
+                              />
+                              <label
+                                class="form-check-label"
+                                for="useSelfSwitch"
+                                >
+                                {{ "use-self" | translate }}
+                              </label>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <h6 class="mt-2">
+                          {{ "insert-pm-data" | translate }}
+                        </h6>
+
+                        <section id="basic-horizontal-layouts">
+                          <div class="row match-height">
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-content">
+                                  <div class="card-body">
+                                    <form class="form form-horizontal">
+                                      <div class="form-body">
+                                        <div class="row">
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ "username" | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="username"
+                                              placeholder="{{ 'username' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['username'].dirty && initProjectForm.controls['username'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['username'].dirty && !initProjectForm.controls['username'].valid"
+
+                                              formControlName="username"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'email' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="email"
+                                              class="form-control"
+                                              placeholder="{{ 'email' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['email'].dirty && initProjectForm.controls['email'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['email'].dirty && !initProjectForm.controls['email'].valid"
+
+                                              formControlName="email"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'password' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              placeholder="{{ 'password' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['password'].dirty && initProjectForm.controls['password'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['password'].dirty && !initProjectForm.controls['password'].valid"
+
+                                              formControlName="password"
+                                            />
+                                          </div>
+                                          <div class="col-md-4">
+                                            <label>
+                                              {{ 'repassword' | translate }}
+                                            </label>
+                                          </div>
+                                          <div class="col-md-8 form-group">
+                                            <input
+                                              type="password"
+                                              class="form-control"
+                                              placeholder="{{ 'repassword' | translate }}"
+                                              [class.is-valid]="initProjectForm.controls['repassword'].dirty && initProjectForm.controls['repassword'].valid"
+                                              [class.is-invalid]="initProjectForm.controls['repassword'].dirty && !initProjectForm.controls['repassword'].valid"
+
+
+                                              formControlName="repassword"
+                                            />
+                                          </div>
+
+                                          <div class="col-sm-12 d-flex justify-content-between">
+
+                                            <button class="btn icon btn-light" (click)="fillInitForm()" type="button">
+                                              <i class="bi bi-box-arrow-down"></i>
+                                            </button>
+
+                                            <button
+                                              type="reset"
+                                              class="btn btn-light-secondary me-1 mb-1"
+                                            >
+                                              {{ "reset" | translate }}
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        <div class="row justify-content-between mt-2">
+
+                          <div class="col-auto">
+                            <div class="form-check">
+                              <div class="checkbox">
+                                <input
+                                  type="checkbox"
+                                  id="open-on-init"
+                                  class="form-check-input"
+                                  formControlName="openOnInit"
+                                />
+                                <label for="open-on-init">
+                                  {{ "open-at-end" | translate }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-auto">
+                            <button class="btn icon icon-right btn-primary" [disabled]="initProjectForm.invalid" (click)="init()">
+                              {{ "init" | translate }}
+                              <i class="bi bi-folder-plus"></i>
+                            </button>
+                          </div>
+
+                        </div>
+
+                        <div class="row justify-content-center mt-2" *ngIf="showInitResult !== undefined">
+                          <div class="col-auto">
+                            <app-error-alert [dismissable]="true"
+                                             [title]="'init-project-error'"
+                                             *ngIf="showInitResult === false">
+                            </app-error-alert>
+                          </div>
+
+                          <div class="col-auto">
+                            <app-success-alert  [dismissable]="true"
+                                                [title]="'init-project-success'"
+                                                *ngIf="showInitResult === true">
+                            </app-success-alert>
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
                   </div>
                 </div>
 
-                <div class="col-md-6 mb-4">
-                  <h6>
-                    {{ "insert-path" | translate }}
-                  </h6>
-                  <input
-                    class="form-control"
-                    type="text"
-                    placeholder="{{ 'path' | translate }}"
-                    formControlName="path"
 
-                    #path
-                  />
+            </div>
+            <div
+              class="tab-pane fade"
+              id="open"
+              role="tabpanel"
+              aria-labelledby="open-tab"
+            >
+
+              <p>
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">
+                      {{ "open-project" | translate }}
+                    </h4>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-body">
+                      <form [formGroup]="openProjectForm">
+                        <div class="row">
+
+                          <div class="col-md-6 mb-4">
+                            <h6>
+                              {{ "select-project" | translate }}
+                            </h6>
+                            <div class="input-group mb-3">
+                              <label
+                                class="input-group-text"
+                                for="inputGroupSelect01"
+                                >
+                                {{ "projects" | translate }}
+                                </label>
+                              <select class="form-select" id="inputGroupSelect01" (change)="select.value ? updatePath(select.value) : ''" #select>
+                                <option value="" selected>
+                                  {{ "select" | translate }}
+                                </option>
+                                <option [value]="path" *ngFor="let path of projectsPaths">
+                                  {{ path }}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6 mb-4">
+                            <h6>
+                              {{ "insert-path" | translate }}
+                            </h6>
+                            <input
+                              class="form-control"
+                              type="text"
+                              placeholder="{{ 'path' | translate }}"
+                              formControlName="path"
+
+                              #path
+                            />
+                          </div>
+
+                        </div>
+
+                        <div class="row justify-content-end">
+
+                          <div class="col-auto">
+                            <button class="btn icon btn-light" (click)="loadProjectsPaths()">
+                              <i class="bi bi-arrow-clockwise"></i>
+                          </button>
+                          </div>
+
+                          <div class="col-auto">
+                            <button class="btn icon icon-right btn-primary" [disabled]="openProjectForm.invalid" (click)="open()">
+                              {{ "open" | translate }}
+                              <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
+                          </div>
+
+                        </div>
+
+                        <div class="row justify-content-center mt-2" *ngIf="showOpenError">
+                          <div class="col-auto">
+                            <app-error-alert [dismissable]="true"
+                                             [title]="'opening-error'">
+                            </app-error-alert>
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
                 </div>
-
-              </div>
-
-              <div class="row justify-content-end">
-
-                <div class="col-auto">
-                  <button class="btn icon btn-light" (click)="loadProjectsPaths()">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </button>
-                </div>
-
-                <div class="col-auto">
-                  <button class="btn icon icon-right btn-primary" [disabled]="openProjectForm.invalid" (click)="open()">
-                    {{ "open" | translate }}
-                    <i class="bi bi-box-arrow-up-right"></i>
-                  </button>
-                </div>
-
-              </div>
-
-              <div class="row justify-content-center mt-2" *ngIf="showError">
-                <div class="col-auto">
-                  <app-error-alert [dismissable]="true"
-                                   [title]="'opening-error'"></app-error-alert>
-                </div>
-              </div>
-            </form>
-
+            </div>
           </div>
         </div>
       </div>

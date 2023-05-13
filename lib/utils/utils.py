@@ -2,15 +2,37 @@ import sys
 import os
 from random import randint
 from typing import Dict
+import shutil
 import hashlib
+import webbrowser
+from lib.utils.logger import Logger
 
 
 class Utils:
 
+    BACKUP_EXT = "backup"
+
     @staticmethod
-    def exit():
-        print("Forced Exit...")
+    def exit(verbose: bool = True):
+        """
+        Force exit
+
+        :return:
+        """
+        Logger.log_warning(msg="force exit...", is_verbose=verbose)
+
         sys.exit()
+
+    @staticmethod
+    def open_in_webbrowser(path: str) -> None:
+        """
+        Open path in web browser with webbrowser
+
+        :param path:
+        :return:
+        """
+
+        webbrowser.open(path)
 
     @staticmethod
     def exist_dir(dir_path: str) -> bool:
@@ -27,7 +49,95 @@ class Utils:
         return os.path.isdir(dir_path)
 
     @staticmethod
-    def random_hex() -> str:
+    def exist_file(file_path: str) -> bool:
+        """
+        Check if file passed exists or not
+
+        :param file_path: directory's path
+        :type file_path: str
+        :return:
+        :rtype: bool
+        """
+
+        # check if exist
+        return os.path.isfile(file_path)
+
+    @staticmethod
+    def exist(path: str) -> bool:
+        """
+        Check if path passed exists or not
+
+        :param path: directory's path
+        :type path: str
+        :return:
+        :rtype: bool
+        """
+
+        # check if exist
+        return Utils.exist_file(path) or Utils.exist_dir(path)
+
+    @staticmethod
+    def remove(path: str):
+        """
+        Check if path passed exists or not
+
+        :param path: directory's path
+        :type path: str
+        :return:
+        :rtype: bool
+        """
+
+        if Utils.exist_file(path):
+            os.remove(path)
+
+        elif Utils.exist_dir(path):
+            os.rmdir(path)
+
+    @staticmethod
+    def backup_dir_content(dir_path: str) -> bool:
+        """
+        Make a backup of all files in the directory
+
+        :param dir_path: path of dir
+        :return:
+        """
+
+        try:
+            for file_name in os.listdir(dir_path):
+
+                path = os.path.join(dir_path, file_name)
+
+                if not file_name.endswith("." + Utils.BACKUP_EXT):
+                    Utils.backup(path)
+
+            return True
+
+        except Exception as e:
+            return False
+
+    @staticmethod
+    def backup(path: str) -> None:
+        """
+        Make backup
+
+        :param path:
+        :return:
+        """
+
+        if not Utils.exist(path):       # check if it exists
+            return
+
+        backup_path = path + "." + Utils.BACKUP_EXT
+
+        shutil.copy2(path, backup_path)
+
+    @staticmethod
+    def random_hex_color() -> str:
+        """
+        Return random hex color
+
+        :return:
+        """
         r = randint(0, 255)
         g = randint(0, 255)
         b = randint(0, 255)
@@ -45,10 +155,13 @@ class Utils:
         :return:
         """
 
-        return hashlib.sha512(value.encode()).hexdigest()
+        first_disguised = hashlib.sha512(value.encode()).hexdigest()
+        second_disguised = hashlib.sha512(str(first_disguised).encode()).hexdigest()
+
+        return second_disguised
 
     @staticmethod
-    def disguise_value_of_dict( d: Dict, *keys: str) -> None:
+    def disguise_value_of_dict(d: Dict, *keys: str) -> None:
         """
         Disguise all dictionary value of keys
 

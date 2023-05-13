@@ -5,7 +5,7 @@ import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from 'src/app/service/api/auth/auth.service';
 import { UserService } from 'src/app/service/api/entity/user/user.service';
 import { LoggerService } from 'src/app/service/logger/logger.service';
-import { UtilsService } from 'src/app/service/utils/utils.service';
+import { UtilsService, matchValidator } from 'src/app/service/utils/utils.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -135,24 +135,3 @@ export class MyProfileComponent {
   }
 }
 
-
-export function matchValidator(
-  matchTo: string,
-  reverse?: boolean
-): ValidatorFn {
-
-  return (control: AbstractControl): ValidationErrors | null => {
-
-    if (control.parent && reverse) {
-      const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
-      if (c) {
-        c.updateValueAndValidity();
-      }
-      return null;
-    }
-
-    return !!control.parent &&
-      !!control.parent.value &&
-      control.value === (control.parent?.controls as any)[matchTo].value ? null : { matching: true };
-  };
-}

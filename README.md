@@ -1,8 +1,55 @@
-# Pi Project
+# Taskup
+
+**Taskup** helps to manage task of your projects.
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
 
-**TODO**
+
+- [Taskup](#taskup)
+  * [Get Started](#get-started)
+    + [Dependencies](#dependencies)
+    + [Run](#run)
+      - [Modality](#modality)
+    + [Settings](#settings)
+- [Documentation for Users](#documentation-for-users)
+  * [Roles Overview](#roles-overview)
+  * [Task Dashboard](#task-dashboard)
+    + [Order by](#order-by)
+    + [Priority](#priority)
+    + [More details](#more-details)
+    + [Labels](#labels)
+    + [Create a New Task](#create-a-new-task)
+  * [User Profile](#user-profile)
+  * [Manage Task Status, Task Label, Users and Roles](#manage-task-status--task-label--users-and-roles)
+  * [Home](#home)
+    + [Project Information](#project-information)
+    + [Initialize Project](#initialize-project)
+    + [Open Project](#open-project)
+- [Documentation for Developers](#documentation-for-developers)
+  * [How to generate Sphinx documentation?](#how-to-generate-sphinx-documentation-)
+  * [Keyword](#keyword)
+  * [App](#app)
+    + [AppManager and its Services](#appmanager-and-its-services)
+      - [ProjectManager](#projectmanager)
+      - [AuthService](#authservice)
+    + [Eel and WebSocket](#eel-and-websocket)
+      - [Exposer](#exposer)
+      - [Webserver](#webserver)
+  * [Database and Entities](#database-and-entities)
+    + [DBManager](#dbmanager)
+    + [BEM](#bem)
+    + [EntitiesManager](#entitiesmanager)
+    + [User, Task, TaskLabel and so on Managers](#user--task--tasklabel-and-so-on-managers)
+    + [QueryBuilder](#querybuilder)
+    + [Trigger](#trigger)
+  * [Frontend](#frontend)
+    + [Services](#services)
+    + [EntityApiService](#entityapiservice)
+    + [Task](#task)
+  * [Help the Open Source Community](#help-the-open-source-community)
+    + [How to run Angular and Eel together in develop mode?](#how-to-run-angular-and-eel-together-in-develop-mode-)
+    + [How to set alias in Eel?](#how-to-set-alias-in-eel-)
+  * [Credits, libraries and plug in used](#credits--libraries-and-plug-in-used)
 
 ## Get Started
 
@@ -26,8 +73,9 @@ After dependencies installation, open this app is possible using `main.py`.
 #### Modality
 
 - `run`, `r` or _nothing_: launch the application
-- `demo`, `d`: launch application with a demo database
+- `demo`, `d` `<path>`: launch application with a demo database in path specified, path has to the last parameter 
   - `-f`: force erase if there is already a database
+  - `-o`: open app at end
 - `init`, `i`: initialize this app in users projects
   - `-f`: force reinitialization
 - `help`, `h`: print help 
@@ -38,17 +86,12 @@ After dependencies installation, open this app is possible using `main.py`.
 It is possible to manage application settings using `settings.json`, this file have to create in _root directory_ (same level of `main.py`).
 Inserting custom settings in it, they override base default settings (managed by `SettingsManager`).
 
-There are a set of **required** settings. Without them is impossible launch app.
-They are:
-
+The settings available are:
 - `vault_path`, a string which contains the path of directory in which the file to store user credentials will be saved
-
-**TODO**
-
-Other possible settings are:
-
+- `current_project_path`, a string which contains the project path which will be loaded at startup
+- `projects_stored_paths`, a list of strings which contains the paths of already opened projects
 - `use_localtime`, boolean value which indicates if database must use *localtime*
-- `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i. e. use 4200 port for front-end)
+- `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i.e. use 4200 port for front-end)
 - `frontend`, a string which represents path of *front-end directory*
 - `frontend_start`, a string which represents the *entry point of front-end*
 - `frontend_debug_port`, an integer value which represents the port of frontend in debug mode
@@ -156,6 +199,40 @@ For example, the _Manage Task Label_ page is the followings:
 
 In addition, if there are a lot of resources, it is possible to use filters.
 
+## Home
+**Home page** provides a set of sections where is possible:
+- Watch _project information_
+- _Initialize_ new project
+- _Open_ projects
+
+### Project Information
+In this section is possible to see the project's path, its app's database and if the logged user
+has the specific permission this app can be removed from project.
+
+### Initialize Project
+
+![Home init](./doc/img/usr-doc/home-init.png)
+
+In this section is possible to initialize a project.
+
+To initialize a project is necessary to indicate the project's path and the basic information of
+the project's **project manager**, he is the figure who manages project.
+
+> **WARNING**: Avoid to lose project manager's password, because the nature of this application makes it impossible
+to recover password without previously login.
+
+If the indicated project is already initialized, checking _force initialize_ is possible to
+re-initialize project.
+
+### Open Project
+
+![Home open](./doc/img/usr-doc/home-open.png)
+
+Open project is possible in two-way:
+- Inserting path manually
+- Selecting path from a set of already opened projects
+
+
 # Documentation for Developers
 
 This is a base and simple documentation to illustrate this project for old and new developers.
@@ -179,6 +256,23 @@ To run Sphinx doc:
 ## App
 
 ![structure of the project](./doc/img/dev-doc/structure-diagram.jpg)
+
+### AppManager and its Services
+**AppManager** is the class which provides some methods to manage this app.
+In particular, AppManager has a set of _services_, this is a set of classes where each of them provides a specific
+functionality. For example `AuthService` provides _authentication system_.
+
+AppManager **has only one** service reference for each type, because it will be exposed by Eel library and
+the same function mustn't be exposed twice time.
+So each service has to be refreshed instead of re-instanced.
+
+#### ProjectManager
+**ProjectManager** manage the _projects_, usually only one project at time.
+Using ProjectManager is possible to init new project or open an existing project.
+
+#### AuthService
+**AuthService** provides _authentication system_.
+AuthService also manages _vault_ (`vault.json`), where are stored "remember me" user credentials.
 
 ### Eel and WebSocket
 

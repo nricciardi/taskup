@@ -11,6 +11,12 @@ Table role {    // all not null
   permission_change_assignment integer
   permission_delete_own integer
   permission_delete_all integer
+  permission_manage_roles integer
+  permission_manage_task_status integer
+  permission_manage_task_labels integer
+  permission_manage_users integer
+  permission_edit_task_deadline integer
+  permission_remove_work integer
 }
 
 Table user {

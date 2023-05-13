@@ -2,10 +2,16 @@ from lib.db.db import TableNamesMixin, DBManager
 from lib.db.entity.entity import EntitiesManager
 from dataclasses import dataclass, field
 from lib.db.entity.bem import BaseEntityModel
-from typing import Type, Optional, Dict
+from typing import Type, Optional, Dict, TypedDict
 from lib.db.entity.relation import Relation, OneRelation
 from datetime import datetime
 from lib.utils.utils import Utils
+
+
+class FuturePMData(TypedDict):
+    username: str
+    email: str
+    password: str
 
 
 @dataclass
@@ -28,6 +34,7 @@ class RoleModel(BaseEntityModel):
     permission_manage_task_status: bool
     permission_manage_task_labels: bool
     permission_manage_users: bool
+    permission_remove_work: bool
 
     # @property
     # def table_name(self) -> str:

@@ -19,18 +19,23 @@
       </div>
       <div class="modal-body">
         <p>
-          <span class="text-capitalize">{{ user.name ? user.name + " " : "" }}</span>
-          <span class="text-capitalize">{{ user.surname ? user.surname + " " : "" }}</span>
-          {{ user.name || user.surname ? " aka " : "" }}
-          <strong class="text-capitalize">
-            {{ user.username }}
-          </strong> ({{ user.email }})
-          <br>
+          <div>
+            <span class="text-capitalize">{{ user.name ? user.name + " " : "" }}</span>
+            <span class="text-capitalize">{{ user.surname ? user.surname + " " : "" }}</span>
+            {{ user.name || user.surname ? " aka " : "" }}
+            <strong class="text-capitalize">
+              {{ user.username }}
+            </strong> ({{ user.email }})
+          </div>
 
-          <span *ngIf="assignmentDate">
+          <div class="mt-1" *ngIf="role">
+            {{ "role" | translate }}: <strong>{{ role.name }}</strong>
+          </div>
+
+          <div *ngIf="assignmentDate" class="mt-5">
             {{ "assignment-date" | translate : { date: assignmentDate } }}
-          </span>
-        </p>
+          </div>
+
       </div>
       <div class="modal-footer">
         <div class="row justify-content-between">

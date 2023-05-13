@@ -52,9 +52,6 @@ export class ManageUsersComponent {
       placeholder: "Phone",
       blueprintFormControl: new FormControl('')
     },
-  ]
-
-  additionalFieldOnCreation: FormField[] = [
     {
       name: "password",
       type: "password",
