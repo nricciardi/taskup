@@ -6,7 +6,7 @@ from lib.db.entity.user import FuturePMData
 from lib.utils.logger import Logger
 from lib.app.service.project import ProjectManager
 from lib.app.service.exposer import ExposerService
-from lib.utils.demo import Demo
+from lib.app.service.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
 

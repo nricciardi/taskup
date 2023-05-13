@@ -3,9 +3,6 @@ import sys
 import colorama
 from lib.utils.logger import Logger
 from lib.utils.utils import Utils
-from colorama import Fore, Back, Style
-
-from lib.utils.demo import Demo
 
 # Initialising Colorama (Important)
 colorama.init(autoreset=True)
