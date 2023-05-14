@@ -99,7 +99,8 @@ class Field(ToSqlInterface):
 
         return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''} " + \
             f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''} " + \
-            f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'}"
+            f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'}" + \
+            f"CHECK({self.check})"
 
 
 @dataclass
