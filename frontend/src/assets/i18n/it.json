@@ -134,5 +134,6 @@
   "insert-pm-data": "Inserisci i dati del Project Manager",
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
-  "remove-work": "Rimuovi la cartella di lavoro dal progetto"
+  "remove-work": "Rimuovi la cartella di lavoro dal progetto",
+  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto"
 }
