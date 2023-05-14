@@ -4,10 +4,18 @@ from dataclasses import dataclass, field
 from lib.utils.logger import Logger
 from datetime import datetime
 from lib.db.entity.user import UserModel
-from typing import List, Union, Optional
+from typing import List, Set, Optional
 import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
+
+
+@dataclass
+class RepoCommit:
+    branch_name: str
+    commit: git.Commit
+
+
 
 
 @dataclass
@@ -44,7 +52,7 @@ class RepoNode(DCToDictMixin):
         self.children.append(node)
 
     @staticmethod
-    def add_node_to_parent(source_node: 'RepoNode', node_to_add: 'RepoNode') -> None:
+    def add_node_to_parent(source_node: 'RepoNode', node_to_add: 'RepoNode') -> bool:
         """
         Add node in the tree, it may not be the direct child
 
@@ -56,14 +64,20 @@ class RepoNode(DCToDictMixin):
         for parent in node_to_add.parents:
             nodes: List['RepoNode'] = RepoNode.search_node_by_hexsha(source_node, parent.hexsha)
 
+            if len(nodes) == 0:
+                return False
+
             for node in nodes:
                 node.add_child(node_to_add)
 
+        return True
+
     @classmethod
-    def from_commit(cls, commit: git.Commit, parents_depth: int = 1) -> 'RepoNode':
+    def from_commit(cls, commit: git.Commit, branch_name: Optional[str], parents_depth: int = 1) -> 'RepoNode':
         """
         Generate a node from a commit
 
+        :param branch_name:
         :param parents_depth: fathers research depth
         :param commit:
         :return:
@@ -75,7 +89,7 @@ class RepoNode(DCToDictMixin):
             parents = []
 
             for p in commit.parents:
-                parents.append(RepoNode.from_commit(p, parents_depth - 1))
+                parents.append(RepoNode.from_commit(p, None, parents_depth - 1))
 
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
@@ -84,7 +98,7 @@ class RepoNode(DCToDictMixin):
                    committed_at=commit.committed_datetime.isoformat(),
                    parents=parents,
                    children=[],
-                   of_branch=commit.name_rev.split()[1]
+                   of_branch=branch_name
                    )
 
         return node
@@ -101,10 +115,11 @@ class RepoNode(DCToDictMixin):
         return copy.deepcopy(node)
 
     @staticmethod
-    def search_node_by_hexsha(node: 'RepoNode', hexsha: str, _partial_result: Optional[List] = None) -> List:
+    def search_node_by_hexsha(node: 'RepoNode', hexsha: str, _partial_result: Optional[List] = None, _visited: Optional[Set] = None) -> List:
         """
         Search all occurrences of child node of a source node by its hexsha
 
+        :param _visited:
         :param _partial_result:
         :param node:
         :param hexsha:
@@ -114,11 +129,17 @@ class RepoNode(DCToDictMixin):
         if _partial_result is None:
             _partial_result = []       # init empty
 
+        if _visited is None:
+            _visited = set()     # init empty
+
         if node.hexsha == hexsha:       # found node
             _partial_result.append(node)
 
+        _visited.add(id(node))
+
         for child in node.children:
-            RepoNode.search_node_by_hexsha(node=child, hexsha=hexsha, _partial_result=_partial_result)
+            if id(child) not in _visited:
+                RepoNode.search_node_by_hexsha(node=child, hexsha=hexsha, _partial_result=_partial_result, _visited=_visited)
 
         return _partial_result
 
@@ -169,19 +190,51 @@ class RepoManager:
 
         Logger.log_info(msg=f"Generate repo tree...", is_verbose=self.verbose)
 
-        commits: List[git.Commit] = list(self.repo.iter_commits(reverse=True))
+        all_repo_commits = set()
+        for branch in self.repo.references:
+            commits: List[git.Commit] = list(self.repo.iter_commits(branch, reverse=True))
+
+            commits: List[RepoCommit] = list(map(lambda c: RepoCommit(branch_name=str(branch), commit=c), commits))
+
+            all_repo_commits.update(commits)
+
+        # set of visited commit
+        visited = set()
 
         # take root commit: always the first of the list
-        root_commit = commits.pop(0)
+        root_node: Optional[RepoNode] = None
+        for repo_commit in all_repo_commits:
+            if len(repo_commit.commit.parents) == 0:
+                root_commit = repo_commit.commit
 
-        root_node = RepoNode.from_commit(root_commit)
+                root_node = RepoNode.from_commit(root_commit, branch_name=repo_commit.branch_name)
+
+                visited.add(repo_commit.commit.hexsha)
+
+                break
+
+        if root_node is None:
+            Logger.log_warning(msg="repo root not found", is_verbose=self.verbose)
+            return
 
         # for each commit search its parents, at each parent append the commit
-        for commit in commits:
+        import time
+        start = time.time()
+        while len(visited) != len(all_repo_commits):
 
-            new_node = RepoNode.from_commit(commit)
+            # len(visited) : len(all_commits) = x : 100
+            perc: float = len(visited) * 100 / len(all_repo_commits)
+            Logger.log_info(msg=f"{len(visited)}/{len(all_repo_commits)}: {round(perc, 2)}% {round(time.time() - start, 4)}s", is_verbose=self.verbose)
 
-            RepoNode.add_node_to_parent(root_node, new_node)
+            for repo_commit in all_repo_commits:
+
+                if repo_commit.commit.hexsha in visited:
+                    continue
+
+                new_node = RepoNode.from_commit(repo_commit.commit, repo_commit.branch_name)
+
+                if RepoNode.add_node_to_parent(root_node, new_node):
+                    visited.add(repo_commit.commit.hexsha)
 
         Logger.log_success(msg=f"tree generated successfully", is_verbose=self.verbose)
 
@@ -189,6 +242,7 @@ class RepoManager:
 
 
 if __name__ == '__main__':
+    path = "/home/ncla/Desktop/project/project-pi/Eel"
     path = "/home/ncla/Desktop/project/project-pi/code/fakerepo"
     repo_manager = RepoManager(True)
 
@@ -198,4 +252,4 @@ if __name__ == '__main__':
 
     j = json.dumps(root_node.to_dict(), indent=4)
 
-    # print(j)
+    print(j)

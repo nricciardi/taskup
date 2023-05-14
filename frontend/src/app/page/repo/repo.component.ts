@@ -79,7 +79,7 @@ export class RepoComponent {
       branch.commit({
         subject: `${node.message}`,
         author: `${node.author.name} <${node.author.email}>`,
-        sha1: node.hexsha
+        hashAbbrev: node.hexsha
       });
 
     }
