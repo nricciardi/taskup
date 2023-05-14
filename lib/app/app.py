@@ -50,7 +50,7 @@ class AppManager:
         frontend_dir = f"{self.settings_manager.frontend_directory}"
         if self.settings_manager.debug_mode:
             frontend_dir += ".block"        # arbitrary string ".block" at the end of path prevents files scanning by eel.init
-            self.__ng_serve()
+            # self.__ng_serve()             # uncomment this to auto-serve frontend
 
         Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel

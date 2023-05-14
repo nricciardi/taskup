@@ -1,13 +1,13 @@
 {
     "backup": true,
-    "current_project_path": "/home/ncla/Desktop/project/project-pi/code/fakeproject",
-    "debug": false,
+    "current_project_path": "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/myproject",
+    "debug": true,
     "frontend": "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/pi-project/frontend/dist/frontend",
     "frontend_debug_port": 4200,
     "frontend_start": "index.html",
     "port": 8000,
     "projects_paths_stored": [
-        "/home/ncla/Desktop/project/project-pi/code/fakeproject"
+        "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/myproject"
     ],
     "use_localtime": true,
     "vault_path": "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/pi-project",

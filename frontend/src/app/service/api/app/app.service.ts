@@ -88,8 +88,3 @@ export class AppService extends EelService {
 
   }
 }
-
-window.addEventListener('beforeunload', function (event) {
-  new AppService().close().then(() => {});
-  event.preventDefault();
-});
