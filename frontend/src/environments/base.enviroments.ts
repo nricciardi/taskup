@@ -10,5 +10,5 @@ export const baseEnvironment = {
   authRequiredRedirectRoute: "/login",
   basePriorityValue: 10,
   appName: "Taskup",
-  timeBeforeClose: 750,      // milliseconds
+  timeBeforeClose: 1000,      // milliseconds
 };
