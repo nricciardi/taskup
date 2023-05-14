@@ -11,6 +11,7 @@ This is a university project for teaching object-oriented programming at UniMoRe
     + [Run](#run)
       - [Modality](#modality)
     + [Settings](#settings)
+  + [Contribute](#contribute)
 - [Documentation for Users](#documentation-for-users)
   * [Roles Overview](#roles-overview)
   * [Task Dashboard](#task-dashboard)
@@ -99,6 +100,12 @@ The settings available are:
 - `db_name`, a string which represents the app database name
 - `verbose`, a boolean value to make verbose running
 - `projects_paths_stored`, a list of strings that contains all project paths to fast-open them
+
+## Contribute
+Everyone is free to contribute to this project.
+
+Contributing is possible via pull request. You can develop something present in the [TODO](TODO.md) file or new features from scratch.
+The only constraints for the approval of a pull request are the presence of `docstrings` in each method and a clean syntax, so that the project remains maintainable over time.
 
 # Documentation for Users
 
