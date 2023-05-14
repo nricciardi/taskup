@@ -16,7 +16,8 @@ from lib.settings.settings import SettingsManager
 class AppManager:
 
     VERSION: str = "1.0.0"
-    SHUTDOWN_DELAY = 600
+    SHUTDOWN_DELAY = 5
+    SHUTDOWN_DELAY_IN_DEBUG_MODE = 600
 
     def __init__(self):
         Logger.log_info(msg="App init...", is_verbose=True)
@@ -54,6 +55,9 @@ class AppManager:
 
         Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel
+
+    def __del__(self):
+        self.close()
 
     @property
     def settings_manager(self) -> SettingsManager:
@@ -115,7 +119,13 @@ class AppManager:
         frontend_start = self.settings_manager.frontend_start
         port = self.settings_manager.port
 
-        eel.start(frontend_start, port=port, shutdown_delay=self.SHUTDOWN_DELAY)  # start eel: this generates a loop
+        # set shutdown delay based on debug mode
+        shutdown_delay = self.SHUTDOWN_DELAY
+
+        if self.settings_manager.debug_mode:
+            shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
+
+        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
 

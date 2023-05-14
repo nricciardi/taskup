@@ -61,6 +61,7 @@ export class AppService extends EelService {
     return new Promise<void>((resolve, reject) => {
       this.call(this.CLOSE).then((response) => {
 
+        if(false)
         response.subscribe({
           next: () => {
             // nothing
