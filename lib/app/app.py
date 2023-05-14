@@ -222,11 +222,15 @@ class AppManager:
         :return:
         """
 
-        Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
+        try:
+            Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
 
-        self.backup_work_dir()
+            self.backup_work_dir()
 
-        Utils.exit()
+            Utils.exit()
+
+        except Exception:
+            pass
 
     def get_projects_paths_stored(self) -> List[str]:
         """
