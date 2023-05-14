@@ -25,10 +25,6 @@
               style="padding-bottom: 20vh;">
 
           <div class="btn-group dropdown me-1 mb-1">
-            <button type="button" class="btn btn-outline-primary"
-                    (click)="onAddAssignment.emit(userSelected); userSelected = undefined">
-              {{ "add" | translate }}
-            </button>
             <button
               type="button"
               class="btn btn-primary dropdown-toggle dropdown-toggle-split"
@@ -55,6 +51,11 @@
                 {{ user.username }}
               </button>
             </div>
+
+            <button type="button" class="btn btn-outline-primary"
+                    (click)="onAddAssignment.emit(userSelected); userSelected = undefined">
+              {{ "add" | translate }}
+            </button>
           </div>
         </div>
 
