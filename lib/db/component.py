@@ -76,14 +76,12 @@ class Field(ToSqlInterface):
         return cls(name=name, type="DATETIME", default=SqlUtils.datetime_strf_now(use_localtime))
 
     @classmethod
-    def nullable_date_with_now_check_field(cls, name: str, default: str | None = 'NULL', use_localtime: bool = False) -> 'Field':
-        return cls(name=name, type="DATE", default=default, nullable=True,
-                   check=f"{name} IS NULL OR {SqlUtils.date_str_format(name, use_localtime=use_localtime)} > {SqlUtils.date_strf_now(use_localtime=use_localtime)}")
+    def nullable_date(cls, name: str, default: str | None = 'NULL') -> 'Field':
+        return cls(name=name, type="DATE", default=default, nullable=True)
 
     @classmethod
-    def nullable_datetime_with_now_check_field(cls, name: str, default: str | None = 'NULL', use_localtime: bool = False) -> 'Field':
-        return cls(name=name, type="DATETIME", default=default, nullable=True,
-                   check=f"{name} IS NULL OR {SqlUtils.datetime_str_format(name, use_localtime=use_localtime)} > {SqlUtils.datetime_strf_now(use_localtime=use_localtime)}")
+    def nullable_datetime(cls, name: str, default: str | None = 'NULL') -> 'Field':
+        return cls(name=name, type="DATETIME", default=default, nullable=True)
 
     @classmethod
     def hex_color(cls, name: str = "hex_color", nullable: bool = False, default: Optional[str] = None):
@@ -97,10 +95,14 @@ class Field(ToSqlInterface):
         :rtype str:
         """
 
-        return f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''} " + \
-            f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''} " + \
-            f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'}" + \
-            f"CHECK({self.check})"
+        query = f"{self.name} {self.type} {'DEFAULT (' + self.default + ')' if self.default is not None else ''} " + \
+                f"{'UNIQUE' if self.unique else ''} {'PRIMARY KEY' if self.pk else ''} {'AUTOINCREMENT' if self.autoincrement else ''} " + \
+                f"{'NULL' if self.nullable and not self.pk else 'NOT NULL'} "
+
+        if self.check is not None:
+            query += f"CHECK({self.check})"
+
+        return query
 
 
 @dataclass
