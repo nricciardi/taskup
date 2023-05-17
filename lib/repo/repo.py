@@ -8,14 +8,7 @@ from typing import List, Set, Optional
 import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
-
-
-@dataclass
-class RepoCommit:
-    branch_name: str
-    commit: git.Commit
-
-
+from pprint import pprint
 
 
 @dataclass
@@ -73,11 +66,10 @@ class RepoNode(DCToDictMixin):
         return True
 
     @classmethod
-    def from_commit(cls, commit: git.Commit, branch_name: Optional[str], parents_depth: int = 1) -> 'RepoNode':
+    def from_commit(cls, commit: git.Commit, parents_depth: int = 1) -> 'RepoNode':
         """
         Generate a node from a commit
 
-        :param branch_name:
         :param parents_depth: fathers research depth
         :param commit:
         :return:
@@ -89,7 +81,7 @@ class RepoNode(DCToDictMixin):
             parents = []
 
             for p in commit.parents:
-                parents.append(RepoNode.from_commit(p, None, parents_depth - 1))
+                parents.append(RepoNode.from_commit(p, parents_depth - 1))
 
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
@@ -98,7 +90,7 @@ class RepoNode(DCToDictMixin):
                    committed_at=commit.committed_datetime.isoformat(),
                    parents=parents,
                    children=[],
-                   of_branch=branch_name
+                   of_branch=commit.name_rev.split(" ")[1].split("~")[0]
                    )
 
         return node
@@ -190,26 +182,20 @@ class RepoManager:
 
         Logger.log_info(msg=f"Generate repo tree...", is_verbose=self.verbose)
 
-        all_repo_commits = set()
-        for branch in self.repo.references:
-            commits: List[git.Commit] = list(self.repo.iter_commits(branch, reverse=True))
-
-            commits: List[RepoCommit] = list(map(lambda c: RepoCommit(branch_name=str(branch), commit=c), commits))
-
-            all_repo_commits.update(commits)
+        all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
 
         # set of visited commit
         visited = set()
 
         # take root commit: always the first of the list
         root_node: Optional[RepoNode] = None
-        for repo_commit in all_repo_commits:
-            if len(repo_commit.commit.parents) == 0:
-                root_commit = repo_commit.commit
+        for commit in all_repo_commits:
+            if len(commit.parents) == 0:
+                root_commit = commit
 
-                root_node = RepoNode.from_commit(root_commit, branch_name=repo_commit.branch_name)
+                root_node = RepoNode.from_commit(root_commit)
 
-                visited.add(repo_commit.commit.hexsha)
+                visited.add(commit.hexsha)
 
                 break
 
@@ -218,28 +204,36 @@ class RepoManager:
             return
 
         # for each commit search its parents, at each parent append the commit
-        import time
-        start = time.time()
-        while len(visited) != len(all_repo_commits):
-
-            # len(visited) : len(all_commits) = x : 100
-            perc: float = len(visited) * 100 / len(all_repo_commits)
-            Logger.log_info(msg=f"{len(visited)}/{len(all_repo_commits)}: {round(perc, 2)}% {round(time.time() - start, 4)}s", is_verbose=self.verbose)
-
-            for repo_commit in all_repo_commits:
-
-                if repo_commit.commit.hexsha in visited:
-                    continue
-
-                new_node = RepoNode.from_commit(repo_commit.commit, repo_commit.branch_name)
-
-                if RepoNode.add_node_to_parent(root_node, new_node):
-                    visited.add(repo_commit.commit.hexsha)
+        # import time
+        # start = time.time()
+        # while len(visited) != len(all_repo_commits):
+        #
+        #     # len(visited) : len(all_commits) = x : 100
+        #     perc: float = len(visited) * 100 / len(all_repo_commits)
+        #     Logger.log_info(msg=f"{len(visited)}/{len(all_repo_commits)}: {round(perc, 2)}% {round(time.time() - start, 4)}s", is_verbose=self.verbose)
+        #
+        #     for repo_commit in all_repo_commits:
+        #
+        #         if repo_commit.commit.hexsha in visited:
+        #             continue
+        #
+        #         new_node = RepoNode.from_commit(repo_commit.commit, repo_commit.branch_name)
+        #
+        #         if RepoNode.add_node_to_parent(root_node, new_node):
+        #             visited.add(repo_commit.commit.hexsha)
 
         Logger.log_success(msg=f"tree generated successfully", is_verbose=self.verbose)
 
         return root_node
 
+    def get_commits(self) -> List[RepoNode]:
+        all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
+
+        commits = []
+        for commit in all_repo_commits:
+            commits.append(RepoNode.from_commit(commit))
+
+        return commits
 
 if __name__ == '__main__':
     path = "/home/ncla/Desktop/project/project-pi/Eel"
@@ -248,8 +242,4 @@ if __name__ == '__main__':
 
     repo_manager.open_repo(path)
 
-    root_node = repo_manager.generate_tree()
-
-    j = json.dumps(root_node.to_dict(), indent=4)
-
-    print(j)
+    pprint(repo_manager.get_commits())

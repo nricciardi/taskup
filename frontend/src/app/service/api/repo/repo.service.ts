@@ -9,8 +9,13 @@ import { RepoNode } from 'src/app/model/entity/repo.model';
 export class RepoService extends EelService {
 
   readonly TREE = "repo_tree";
+  readonly COMMITS = "repo_commits";
 
   public getTree(): Promise<Observable<RepoNode | null>> {
     return this.call(this.TREE);
+  }
+
+  public getCommits(): Promise<Observable<RepoNode[] | null>> {
+    return this.call(this.COMMITS);
   }
 }

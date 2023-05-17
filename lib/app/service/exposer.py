@@ -287,6 +287,7 @@ class ExposerService:
 
         try:
             self.expose(to_dict(self.__project_manager.repo_manager.generate_tree, self.debug_mode), "repo_tree")
+            self.expose(to_dict(self.__project_manager.repo_manager.get_commits, self.debug_mode), "repo_commits")
 
         except Exception as excepetion:
             Logger.log_error(msg="repo exposure error", is_verbose=self.verbose, full=True)

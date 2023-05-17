@@ -18,7 +18,9 @@ export class RepoComponent {
   constructor(private repoService: RepoService) {}
 
   ngOnInit() {
-    this.loadTree();
+    // this.loadTree();
+
+    this.test();
   }
 
   loadTree() {
@@ -29,14 +31,94 @@ export class RepoComponent {
         next: (value) => {
           this.root = value;
 
+
           if(!!this.root)
             setTimeout(() => this.createGraph(this.root!), 1000);
+
         }
       })
 
     })
 
   }
+
+  test() {
+
+    this.repoService.getCommits().then((response) => {
+
+      response.subscribe({
+        next: (commits) => {
+
+          console.log(commits);
+
+          if(commits?.length == 0)
+            return;
+
+          let graphContainer = document.getElementById("graph-container");
+
+          if(!graphContainer) {
+            LoggerService.logError("graph container not found");
+            return;
+          }
+
+
+          this.gitgraph = createGitgraph(graphContainer);
+          let branches: any = {};
+          commits?.forEach((commit: RepoNode) => {
+
+            let parentsToAdd = [];
+
+            for (let index = 0; commit.parents && index < commit.parents.length; index++) {
+              const parent = commit.parents[index]
+
+              for (let j = 0; j < this.gitgraph._graph.commits.length; j++) {
+                const c = this.gitgraph._graph.commits[j];
+
+                if(parent.hexsha == c.hash)
+                  parentsToAdd.push(c);
+
+              }
+
+            }
+
+
+
+            const nodeCommit = {
+              hash: commit.hexsha,
+              subject: commit.message,
+              author: `${commit.author.name} <${commit.author.email}>`,
+              parent: parentsToAdd[0]
+            };
+
+            let branch;
+            if(commit.of_branch in Object.keys(branches)) {
+
+              branch = branches[commit.of_branch];
+
+            } else {
+
+              branch = this.gitgraph.branch(commit.of_branch);
+              branches[commit.of_branch] = branch;
+
+            }
+
+            branch.commit(nodeCommit);
+
+          })
+
+          console.log(this.gitgraph);
+
+
+
+        }
+      })
+
+    })
+
+
+  }
+
+
 
   generateTree(node: RepoNode) {
 
@@ -107,6 +189,7 @@ export class RepoComponent {
     this.gitgraph = createGitgraph(graphContainer);
 
     this.generateTree(node);
+
 
   }
 }
