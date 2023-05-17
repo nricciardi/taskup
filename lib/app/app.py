@@ -1,5 +1,3 @@
-import os
-
 import eel
 from typing import List
 from lib.app.service.auth import AuthService
@@ -16,7 +14,7 @@ from lib.settings.settings import SettingsManager
 class AppManager:
 
     VERSION: str = "1.0.0"
-    SHUTDOWN_DELAY = 5
+    SHUTDOWN_DELAY = 500
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600
 
     def __init__(self):
