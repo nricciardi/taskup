@@ -13,7 +13,7 @@ from lib.settings.settings import SettingsManager
 
 class AppManager:
 
-    VERSION: str = "1.0.0"
+    VERSION: str = "1.0.4"
     SHUTDOWN_DELAY = 5
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600
 
