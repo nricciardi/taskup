@@ -4,10 +4,10 @@
 - [ ] Remove .vs and .idea directory from Git
 - [x] Create image diagram for doc
 - [x] Make _demo script_
-- [ ] Search and set app ICON
-- [ ] Table of contents
+- [x] Search and set app ICON
+- [x] Table of contents
 - [ ] Change name in front-end tab
-- [ ] Improve main help
+- [x] Improve main help
 - [ ] Add "add new project" in main modalities
 - [ ] Add "clear settings" in main modalities
 
@@ -21,14 +21,14 @@
 - [ ] Remove year from deadline if we are in the current year
 - [ ] Fix env file (now is used .dev instead of .prod)
 - [x] Add "done" button on deadline => based on task status
-- [ ] Create a new task
+- [x] Create a new task
 - [x] Modify task
 - [x] Graphic refactor
 - [x] Manage label section
 - [x] Manage task status section
 - [x] Profile page
 - [ ] Home page: 
-  - [ ] Select project
+  - [x] Select project
   - [ ] Count of updates
 - [x] "News" of a task
 - [ ] Manage Git
@@ -40,7 +40,8 @@
 - [ ] Forgot password
 - [x] "news" mistakes
 - [x] Bug in update task if there isn't description
-- [ ] Footer with app name and version
+- [x] Footer with app name 
+  - [ ] and version
 - [ ] Manage pages prevent unique error
 
 ### Python

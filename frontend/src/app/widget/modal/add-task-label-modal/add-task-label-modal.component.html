@@ -26,10 +26,6 @@
 
           <div class="btn-group dropdown me-1 mb-1">
 
-            <button type="button" class="btn btn-outline-primary"
-                    (click)="onAdd.emit(labelSelected); labelSelected = undefined">
-              {{ "add" | translate }}
-            </button>
             <button
               type="button"
               class="btn btn-primary dropdown-toggle dropdown-toggle-split"
@@ -56,6 +52,11 @@
                 {{ label.name }}
               </button>
             </div>
+
+            <button type="button" class="btn btn-outline-primary"
+                    (click)="onAdd.emit(labelSelected); labelSelected = undefined">
+              {{ "add" | translate }}
+            </button>
           </div>
         </div>
 

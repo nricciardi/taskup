@@ -149,7 +149,7 @@
 
                           <div class="row justify-content-center mt-5" *ngIf="!!authService.loggedUser?.role?.permission_remove_work">
                             <div class="col-auto">
-                              <span class="badge bg-light-danger cursor-pointer"
+                              <span class="red-underling cursor-pointer"
                                     data-bs-toggle="modal"
                                     data-bs-target="#remove-work-dir-modal">
                                 {{ "remove-work" | translate }}
@@ -327,6 +327,9 @@
 
                                               formControlName="repassword"
                                             />
+                                            <small style="color: #b8a244">
+                                              {{ "password-warning" | translate }}
+                                            </small>
                                           </div>
 
                                           <div class="col-sm-12 d-flex justify-content-between">

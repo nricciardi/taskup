@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { LoggerService } from '../../logger/logger.service';
 import { PM, UserModel } from 'src/app/model/entity/user.model';
 import { UtilsService } from '../../utils/utils.service';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +68,9 @@ export class AppService extends EelService {
           }
         })
 
-        resolve();
+        setTimeout(() => {
+          resolve();
+        }, environment.timeBeforeClose);
 
       });
     })
