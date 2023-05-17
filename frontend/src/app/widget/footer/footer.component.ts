@@ -16,11 +16,10 @@ export class FooterComponent {
   constructor(public appService: AppService, public utilsService: UtilsService) {}
 
   close() {
+
     this.appService.close().then(() => {
-      setTimeout(() => {
-        LoggerService.logInfo("Close app");
-        window.close();
-      }, environment.timeBeforeClose);
+
+      window.close();
     })
   }
 }
