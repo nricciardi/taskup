@@ -100,6 +100,10 @@ The settings available are:
 - `db_name`, a string which represents the app database name
 - `verbose`, a boolean value to make verbose running
 - `projects_paths_stored`, a list of strings that contains all project paths to fast-open them
+- `app_mode`, a string which represents the open modality
+  - `chrome` to open app in a stand-alone page
+  - `chrome-app` to open app in Chrome browser
+  - `edge` to open app in Edge browser 
 
 ## Contribute
 Everyone is free to contribute to this project.

@@ -46,6 +46,9 @@ class SettingsBase:
     KEY_BACKUP = "backup"
     VALUE_BASE_BACKUP = True
 
+    KEY_APP_MODE = "app_mode"
+    VALUE_BASE_APP_MODE = "chrome"
+
     BASE_SETTINGS = {
         KEY_VERBOSE: VALUE_BASE_VERBOSE,
         KEY_PROJECT_PATH: VALUE_BASE_PROJECT_PATH,
@@ -58,6 +61,7 @@ class SettingsBase:
         KEY_FRONTEND_DEBUG_PORT: VALUE_BASE_FRONTEND_DEBUG_PORT,
         KEY_PROJECT_PATHS_STORED: VALUE_BASE_PROJECT_PATHS_STORED,
         KEY_BACKUP: VALUE_BASE_BACKUP,
+        KEY_APP_MODE: VALUE_BASE_APP_MODE
     }
 
     @staticmethod

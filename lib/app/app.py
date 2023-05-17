@@ -54,7 +54,7 @@ class AppManager:
             # self.__ng_serve()             # uncomment this to auto-serve frontend
 
         Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
-        eel.init(frontend_dir, ['.tsx', '.ts', '.jsx', '.js', '.html'], js_result_timeout=9999999)  # init eel
+        eel.init(frontend_dir, ['.html'])  # init eel
 
     @property
     def settings_manager(self) -> SettingsManager:
@@ -111,8 +111,6 @@ class AppManager:
 
     def start(self) -> None:
 
-        Logger.log_info(msg="Start app...", is_verbose=True)
-
         frontend_start = self.settings_manager.frontend_start
         port = self.settings_manager.port
 
@@ -122,7 +120,11 @@ class AppManager:
         if self.settings_manager.debug_mode:
             shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
 
-        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay)  # start eel: this generates a loop
+        mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)
+
+        Logger.log_info(msg=f"Start app... (mode: {mode})", is_verbose=True)
+
+        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode)  # start eel: this generates a loop
 
         Logger.log_info(msg="Close app...", is_verbose=True)
 
