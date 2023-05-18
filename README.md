@@ -1,6 +1,6 @@
 # Taskup
 
-**Taskup** helps to manage task of your projects.
+**Taskup** helps to manage tasks of your projects.
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
 
@@ -54,7 +54,7 @@ This is a university project for teaching object-oriented programming at UniMoRe
 
 ## Get Started
 
-To get started this app is necessary install the required dependencies.
+To start this app all required dependencies have to be installed.
 
 ### Dependencies
 
@@ -67,14 +67,14 @@ To run this project are required the followings dependencies:
 
 ### Run
 
-After dependencies installation, open this app is possible using `main.py`.
+After dependencies installation, this app can be opened using `main.py`.
 
 `main.py` accepts some parameters based on execution modality.
 
 #### Modality
 
 - `run`, `r` or _nothing_: launch the application
-- `demo`, `d` `<path>`: launch application with a demo database in path specified, path has to the last parameter 
+- `demo`, `d` `<path>`: launch application with a demo database in path specified, path has to be the last parameter 
   - `-f`: force erase if there is already a database
   - `-o`: open app at end
 - `init`, `i`: initialize this app in users projects
@@ -84,106 +84,106 @@ After dependencies installation, open this app is possible using `main.py`.
 
 ### Settings
 
-It is possible to manage application settings using `settings.json`, this file have to create in _root directory_ (same level of `main.py`).
+It is possible to manage application settings using `settings.json`, this file has to be created in _root directory_ (same level of `main.py`).
 Inserting custom settings in it, they override base default settings (managed by `SettingsManager`).
 
 The settings available are:
-- `vault_path`, a string which contains the path of directory in which the file to store user credentials will be saved
-- `current_project_path`, a string which contains the project path which will be loaded at startup
+- `vault_path`, a string that contains the path of directory in which will be saved the file which stores user's credentials 
+- `current_project_path`, a string which contains the project path which will be loaded at the beginning
 - `projects_stored_paths`, a list of strings which contains the paths of already opened projects
 - `use_localtime`, boolean value which indicates if database must use *localtime*
-- `debug`,  boolean value (default False) which indicates if the app must run in *debug mode* (i.e. use 4200 port for front-end)
+- `debug`,  boolean value (default _false_) which indicates if the app must run in *debug mode* (i.e. use 4200 port for front-end)
 - `frontend`, a string which represents path of *front-end directory*
 - `frontend_start`, a string which represents the *entry point of front-end*
 - `frontend_debug_port`, an integer value which represents the port of frontend in debug mode
-- `port`, an integer value which represents the port of Eel webserver
-- `db_name`, a string which represents the app database name
-- `verbose`, a boolean value to make verbose running
-- `projects_paths_stored`, a list of strings that contains all project paths to fast-open them
+- `port`, an integer value which represents the port of Eel's webserver
+- `verbose`, a boolean value to make verbose the app
+- `projects_paths_stored`, a list of strings that contains all project paths already opened
 - `app_mode`, a string which represents the open modality
   - `chrome` to open app in a stand-alone page
   - `chrome-app` to open app in Chrome browser
   - `edge` to open app in Edge browser 
 
 ## Contribute
-Everyone is free to contribute to this project.
+Everyone can contribute to this project.
 
-Contributing is possible via pull request. You can develop something present in the [TODO](TODO.md) file or new features from scratch.
+Contributing is possible via pull request. You can develop something present in the [TODO](TODO.md) file or new feature from scratch.
 The only constraints for the approval of a pull request are the presence of `docstrings` in each method and a clean syntax, so that the project remains maintainable over time.
 
 # Documentation for Users
 
 This documentation is written for the app's users.
-This app is a task manager for small and big projects, in particular for software projects.
-From now on we will call the project to manage _MyProject_.
+This app is a tasks manager for small and big projects, in particular for software projects.
+From now, we will call the project to manage _MyProject_.
 
 ## Roles Overview
 
-By default, the users has one role between the following roles:
+By default, the users have one role between the following roles:
 
 - **Project Manager**, usually an only user who manages _MyProject_
-- **Supervisor**, users named by PM to manage _MyProject_
+- **Supervisor**, users named by the PM to manage _MyProject_
 - **Teammate**, simple teammates
 - **Base**, usually _guest users_ of same company, and they don't develop continuously _MyProject_
-- **External**, role for external of company users
+- **External**, role for external users of company
 
-Each role has a list of different permissions where PM has all permissions, while External doesn't have any permissions.
-Usually the PM is the user who has created _MyProject_, he is able to create other users and manages them, Task options and so on.
+Each role has a list of different permissions where PM has all permissions, while Externals doesn't have any permissions.
+The PM is the user who has created _MyProject_, he is able to create other users and manages them, Task options and so on.
 
-The roles can be modified in a second moment if the user has specific permission.
+Roles can be modified in a second moment if the user has specific permission.
 
 ## Task Dashboard
 
 ![Dashboard](./doc/img/usr-doc/dashboard-page.png)
 
 The _Dashboard_ is the application core. It is used to manage tasks.
-Based on user's permission, the logged user is able to see all tasks or only assigned task.
+Based on user's permission, the logged user is able to see all tasks or only assigned tasks.
 Dashboard is divided in a different section for each task status. For example _To-do_ state, _Doing_ state, _Done_ state and so on.
-Dashboard has a _sticky_ header used to keep in mind the current task status visualized, the number of task for current status and it also has two buttons to go in the default _next_ and _prev_ status. For example, _doing_ status may have _to-do_ as previously status and _done_ as next status.
-In addition, other functionality are present using the button in top-right side.
+Dashboard has a _sticky_ header used to keep in mind: the current task status visualized and the number of tasks for current status. It also has two buttons to go in the default _next_ and _prev_ status.
+For example, _doing_ status may have _to-do_ as previously status and _done_ as next status.
+In addition, other functionality are showed using the button in top-right side.
 
 ![Other funcs](./doc/img/usr-doc/dashboard-other-funcs.png)
 
 In the dashboard, each task has its own card which shows all task's information.
 
-> Task can be refreshing using the button on right side.
+> Task can be refreshing using the button on the right side.
 
 ![Dashboard refresh](./doc/img/usr-doc/dashboard-refresh.png)
 
 ### Order by
 
-Each section can be ordered by **priority** or **deadline** (ascending or descending) using the specif button.
+Each section can be ordered by **priority** or **deadline** (ascending or descending) using specific button.
 
 ![Dashboard order by](./doc/img/usr-doc/dashboard-order-by.png)
 
 ### Priority
 
-Each task has a priority value which indicates the _priority of task_, the priority increases with the corresponded number value.
+Each task has a priority value which indicates the _priority of task_. The priority increases with the corresponding numerical value.
 This value is shown in the badge on left of task name.
 
 ![Task priority](./doc/img/usr-doc/task-priority.png)
 
 ### More details
 
-The _More details_ section is a collapsible section which is used to show secondary information of the task as author, creation date, identitier task code and so on.
+The _More details_ section is a collapsible section which is used to show secondary information of the task as the author, creation date, identifier task code and so on.
 
 ### Labels
 
 ![Task labels](./doc/img/usr-doc/task-labels.png)
 
-Labels are a fast visible identities. Usually, they are used to group task of common work areas, for example the _Front-end labels_ is assigned to all task which describes _a task to do for front-end of MyProject_.
+Labels are a fast visible identifiers. Usually, they are used to group tasks of common work areas, for example the _Front-end labels_ is assigned to all tasks that describe _a task to do for front-end of MyProject_.
 The task's labels are shown in top of the task's card.
-Using "+" button at the end of labels list is possible to add a new label.
-Clicking on a label is possible remove that label.
+Using "+" button at the end of labels list it is possible to add a new label.
+Clicking on a label it is possible remove that label.
 
 ### Create a New Task
 
-Create a new task is simple, clicking on _FAB_ button on bottom-right a modal will be showing.
-It is used to insert name, description and priority of the new task. Checking the checkbox is possible self-assign to task. 
+Creating a new task is simple, clicking on _FAB_ button on bottom-right a modal will be showed.
+It is used to insert name, description and priority of the new task. Checking the checkbox it is possible to assign yourself to the task. 
 
 ## User Profile
 
-Each logged user is able to manage own profile using _My Profile_ page. It can be accessed through dropdown menu on header avatar:
+Each logged user is able to manage his own profile using _My Profile_ page. It can be accessed through dropdown menu on the header avatar:
 
 ![Dropdown avatar menu](./doc/img/usr-doc/dropdown-avatar-menu.png)
 
@@ -191,9 +191,9 @@ From _My Profile_ page is possible to edit user master data (name, surname, user
 
 ![My Profile page](./doc/img/usr-doc/my-profile-page.png)
 
-> WARNING: when a user edits email or password, he will have logged out.
+> WARNING: when a user edits email or password, he will be logged out.
 
-## Manage Task Status, Task Label, Users and Roles
+## Manage Task Status, Task Labels, Users and Roles
 
 Having the specific permissions, a user as PM is able to manage task status, task label,users and roles.
 
