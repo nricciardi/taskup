@@ -63,6 +63,41 @@ export class RepoComponent {
 
 
           this.gitgraph = createGitgraph(graphContainer);
+
+          const MASTER = this.gitgraph.branch("master");
+
+
+          MASTER.commit({
+            hash: "1",
+            subject: "C1"
+          })
+
+          MASTER.commit({
+            hash: "2",
+            subject: "C2"
+          });
+
+          const B2 = MASTER.branch("B2");
+
+          B2.commit({
+            hash: "3",
+            subject: "C3"
+          })
+
+          const B3 = MASTER.branch("B3");
+
+          B3.commit({
+            hash: "4",
+            subject: "C4",
+            parentCommit: "1"
+          })
+
+          /*B3.commit({
+            hash: "1",
+            subject: "C1"
+          })*/
+
+          return;
           let branches: any = {};
           commits?.forEach((commit: RepoNode) => {
 
