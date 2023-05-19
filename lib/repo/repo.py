@@ -1,4 +1,5 @@
 import git
+from git.objects.util import Traversable
 import json
 from dataclasses import dataclass, field
 from lib.utils.logger import Logger
@@ -9,6 +10,11 @@ import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
 from pprint import pprint
+
+
+@dataclass
+class RepoBranch:
+    name: str
 
 
 @dataclass
@@ -107,7 +113,7 @@ class RepoNode(DCToDictMixin):
         return copy.deepcopy(node)
 
     @staticmethod
-    def search_node_by_hexsha(node: 'RepoNode', hexsha: str, _partial_result: Optional[List] = None, _visited: Optional[Set] = None) -> List:
+    def search_node_by_hexsha(node: 'RepoNode', hexsha: str, _partial_result: Optional[List] = None, _visited: Optional[Set] = None) -> List['RepoNode']:
         """
         Search all occurrences of child node of a source node by its hexsha
 
@@ -170,7 +176,7 @@ class RepoManager:
 
         return self.repo is not None
 
-    def generate_tree(self) -> Optional[RepoNode]:
+    def get_tree(self) -> Optional[RepoNode]:
         """
         Generate repo tree
 
@@ -184,49 +190,37 @@ class RepoManager:
 
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
 
-        # set of visited commit
-        visited = set()
+
+        if len(all_repo_commits) == 0:
+            Logger.log_warning(msg="repo is empty", is_verbose=self.verbose)
+            return None
 
         # take root commit: always the first of the list
-        root_node: Optional[RepoNode] = None
+        root_node = RepoNode.from_commit(all_repo_commits.pop(0))       # root is removed
+
         for commit in all_repo_commits:
-            if len(commit.parents) == 0:
-                root_commit = commit
 
-                root_node = RepoNode.from_commit(root_commit)
+            commit_node = RepoNode.from_commit(commit)
 
-                visited.add(commit.hexsha)
+            # append a repo node in each parent
+            for parent in commit.parents:
+                parent_nodes = RepoNode.search_node_by_hexsha(root_node, parent.hexsha)
 
-                break
+                for pn in parent_nodes:
+                    pn.add_child(commit_node)
 
-        if root_node is None:
-            Logger.log_warning(msg="repo root not found", is_verbose=self.verbose)
-            return
-
-        # for each commit search its parents, at each parent append the commit
-        # import time
-        # start = time.time()
-        # while len(visited) != len(all_repo_commits):
-        #
-        #     # len(visited) : len(all_commits) = x : 100
-        #     perc: float = len(visited) * 100 / len(all_repo_commits)
-        #     Logger.log_info(msg=f"{len(visited)}/{len(all_repo_commits)}: {round(perc, 2)}% {round(time.time() - start, 4)}s", is_verbose=self.verbose)
-        #
-        #     for repo_commit in all_repo_commits:
-        #
-        #         if repo_commit.commit.hexsha in visited:
-        #             continue
-        #
-        #         new_node = RepoNode.from_commit(repo_commit.commit, repo_commit.branch_name)
-        #
-        #         if RepoNode.add_node_to_parent(root_node, new_node):
-        #             visited.add(repo_commit.commit.hexsha)
 
         Logger.log_success(msg=f"tree generated successfully", is_verbose=self.verbose)
 
         return root_node
 
     def get_commits(self) -> List[RepoNode]:
+        """
+        Return list of project's repository commits
+
+        :return:
+        """
+
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
 
         commits = []
@@ -235,11 +229,25 @@ class RepoManager:
 
         return commits
 
+    def get_branches(self) -> List[RepoBranch]:
+        """
+        Return list of branches
+
+        :return:
+        """
+
+        branches = [branch.name for branch in self.repo.branches]
+
+        return branches
+
+
+
+
+
 if __name__ == '__main__':
-    path = "/home/ncla/Desktop/project/project-pi/Eel"
-    path = "/home/ncla/Desktop/project/project-pi/code/fakerepo"
+    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/test/repo-test"
     repo_manager = RepoManager(True)
 
     repo_manager.open_repo(path)
 
-    pprint(repo_manager.get_commits())
+    pprint(repo_manager.get_tree())
