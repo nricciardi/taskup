@@ -12,6 +12,7 @@ import { ManageUsersComponent } from './page/manage-users/manage-users.component
 import { ManageRolesComponent } from './page/manage-roles/manage-roles.component';
 import { AuthGuardService } from './service/api/auth/auth-guard.service';
 import { RoleGuardService } from './service/api/auth/role-guard.service';
+import { SettingsComponent } from './page/settings/settings.component';
 
 const routes: Routes = [
 
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginComponent
+  },
+  {
+    path: "settings",
+    component: SettingsComponent
   },
   {
     path: "test",

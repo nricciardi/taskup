@@ -133,6 +133,15 @@
         </a>
       </li>
 
+      <li class="sidebar-item" [class.active]="urlIncludes('settings')">
+        <a [routerLink]="['/settings']" routerLinkActive="router-link-active" class="sidebar-link">
+          <i class="bi bi-gear-fill"></i>
+          <span>
+            {{ 'settings' | translate }}
+          </span>
+        </a>
+      </li>
+
       <!-- <li class="sidebar-item has-sub">
         <a href="#" class="sidebar-link">
           <i class="bi bi-stack"></i>
