@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from lib.utils.logger import Logger
 from datetime import datetime
 from lib.db.entity.user import UserModel
-from typing import List, Set, Optional
+from typing import List, Set, Optional, Dict
 import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
@@ -33,9 +33,6 @@ class RepoNode(DCToDictMixin):
     of_branch: str
     parents: Optional[List['RepoNode']] = field(default=None)     # if None => no information, but it is said that there are no fathers
     children: Optional[List['RepoNode']] = field(default=None)
-
-
-    # tag: str
 
     def add_child(self, node: 'RepoNode') -> None:
         """
@@ -87,7 +84,7 @@ class RepoNode(DCToDictMixin):
             parents = []
 
             for p in commit.parents:
-                parents.append(RepoNode.from_commit(p, parents_depth - 1))
+                parents.append(RepoNode.from_commit(p, parents_depth=parents_depth - 1))
 
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
@@ -95,8 +92,8 @@ class RepoNode(DCToDictMixin):
                    message=commit.message,
                    committed_at=commit.committed_datetime.isoformat(),
                    parents=parents,
-                   children=[],
-                   of_branch=commit.name_rev.split(" ")[1].split("~")[0]
+                   children=None,
+                   of_branch=commit.name_rev.split(" ")[1].split("~")[0],
                    )
 
         return node
@@ -190,7 +187,6 @@ class RepoManager:
 
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
 
-
         if len(all_repo_commits) == 0:
             Logger.log_warning(msg="repo is empty", is_verbose=self.verbose)
             return None
@@ -209,8 +205,9 @@ class RepoManager:
                 for pn in parent_nodes:
                     pn.add_child(commit_node)
 
-
         Logger.log_success(msg=f"tree generated successfully", is_verbose=self.verbose)
+
+        pprint(root_node)
 
         return root_node
 
@@ -224,22 +221,20 @@ class RepoManager:
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
 
         commits = []
-        for commit in all_repo_commits:
-            commits.append(RepoNode.from_commit(commit))
+        for i in range(len(all_repo_commits)):
+            commit = all_repo_commits[i]
+            repo_node: RepoNode = RepoNode.from_commit(commit)
+
+            # search children of commit
+            for j in range(i, len(all_repo_commits)):
+                candidate_child_node: RepoNode = RepoNode.from_commit(all_repo_commits[j])
+
+                if repo_node.hexsha in (parent.hexsha for parent in candidate_child_node.parents):
+                    repo_node.add_child(candidate_child_node)
+
+            commits.append(repo_node)
 
         return commits
-
-    def get_branches(self) -> List[RepoBranch]:
-        """
-        Return list of branches
-
-        :return:
-        """
-
-        branches = [branch.name for branch in self.repo.branches]
-
-        return branches
-
 
 
 
@@ -250,4 +245,4 @@ if __name__ == '__main__':
 
     repo_manager.open_repo(path)
 
-    pprint(repo_manager.get_tree())
+    pprint(repo_manager.get_commits())

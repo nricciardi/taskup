@@ -1,13 +1,9 @@
-<ng-container *ngIf="!!root; else noRepo">
+<ng-container *ngIf="validRepo === true">
   <!-- DOM element in which we'll mount our graph -->
   <div id="graph-container"></div>
 
 </ng-container>
 
-<ng-template #noRepo>
+<app-warning-alert [title]="'invalid-repo'" [dismissable]="false" *ngIf="validRepo === false"></app-warning-alert>
 
-  <app-warning-alert [title]="'invalid-repo'" [dismissable]="false"></app-warning-alert>
-
-</ng-template>
-
-<div id="graph-container"></div>
+<app-loader *ngIf="validRepo === undefined"></app-loader>

@@ -135,5 +135,6 @@
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
   "remove-work": "Rimuovi la cartella di lavoro dal progetto",
-  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto"
+  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto",
+  "repo": "Repo"
 }

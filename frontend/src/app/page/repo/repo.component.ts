@@ -11,207 +11,108 @@ import { LoggerService } from 'src/app/service/logger/logger.service';
 })
 export class RepoComponent {
 
-  root: RepoNode | null = null;
+  validRepo?: boolean;
   branches: any = {};     // object key-value: key is branch name, value is ref of branch
   gitgraph: any;
 
   constructor(private repoService: RepoService) {}
 
   ngOnInit() {
-    // this.loadTree();
 
-    this.test();
+    this.loadGraph();
   }
 
-  loadTree() {
-
-    this.repoService.getTree().then((response) => {
-
-      response.subscribe({
-        next: (value) => {
-          this.root = value;
-
-
-          if(!!this.root)
-            setTimeout(() => this.createGraph(this.root!), 1000);
-
-        }
-      })
-
-    })
-
-  }
-
-  test() {
+  loadGraph() {
 
     this.repoService.getCommits().then((response) => {
 
+      this.validRepo = undefined;
+
       response.subscribe({
-        next: (commits) => {
+        next: (nodes) => {
 
-          console.log(commits);
+          if(!!nodes) {
+            setTimeout(() => {
+              this.loadGitGraph();
+              this.generateGraphFromCommits(nodes);
+            }, 250);
 
-          if(commits?.length == 0)
-            return;
+            this.validRepo = true;
 
-          let graphContainer = document.getElementById("graph-container");
-
-          if(!graphContainer) {
-            LoggerService.logError("graph container not found");
-            return;
+          } else {
+            this.validRepo = false;
           }
-
-
-          this.gitgraph = createGitgraph(graphContainer);
-
-          const MASTER = this.gitgraph.branch("master");
-
-
-          MASTER.commit({
-            hash: "1",
-            subject: "C1"
-          })
-
-          MASTER.commit({
-            hash: "2",
-            subject: "C2"
-          });
-
-          const B2 = MASTER.branch("B2");
-
-          B2.commit({
-            hash: "3",
-            subject: "C3"
-          })
-
-          const B3 = MASTER.branch("B3");
-
-          B3.commit({
-            hash: "4",
-            subject: "C4",
-            parentCommit: "1"
-          })
-
-          /*B3.commit({
-            hash: "1",
-            subject: "C1"
-          })*/
-
-          return;
-          let branches: any = {};
-          commits?.forEach((commit: RepoNode) => {
-
-            let parentsToAdd = [];
-
-            for (let index = 0; commit.parents && index < commit.parents.length; index++) {
-              const parent = commit.parents[index]
-
-              for (let j = 0; j < this.gitgraph._graph.commits.length; j++) {
-                const c = this.gitgraph._graph.commits[j];
-
-                if(parent.hexsha == c.hash)
-                  parentsToAdd.push(c);
-
-              }
-
-            }
-
-
-
-            const nodeCommit = {
-              hash: commit.hexsha,
-              subject: commit.message,
-              author: `${commit.author.name} <${commit.author.email}>`,
-              parent: parentsToAdd[0]
-            };
-
-            let branch;
-            if(commit.of_branch in Object.keys(branches)) {
-
-              branch = branches[commit.of_branch];
-
-            } else {
-
-              branch = this.gitgraph.branch(commit.of_branch);
-              branches[commit.of_branch] = branch;
-
-            }
-
-            branch.commit(nodeCommit);
-
-          })
-
-          console.log(this.gitgraph);
-
-
+            
 
         }
       })
 
     })
 
-
   }
 
+  generateGraphFromCommits(nodes: RepoNode[]) {
 
+    for (let index = 0; index < nodes.length; index++) {
+      const node: RepoNode = nodes[index];
 
-  generateTree(node: RepoNode) {
+    
+      // if there is NOT branch => create it
+      if(!(node.of_branch in this.branches))  {
+        let branch_ref = this.gitgraph.branch(node.of_branch)
 
-    // if there is NOT branch => create it
-    if(!(node.of_branch in this.branches))  {
-      let branch_ref = this.gitgraph.branch(node.of_branch)
-
-      this.branches[node.of_branch] = branch_ref;
-    }
-
-
-    if(node.children && node.children.length == 2) {
+        this.branches[node.of_branch] = branch_ref;
+      }
 
       if(node.parents) {
 
-        let same_branch_parent: any;
-        let other_branch_parent: any;
+        // ============ MERGE ==================
+        if(node.parents.length > 1) {
 
-        for (let index = 0; index < node.parents.length; index++) {
-          const parent = node.parents[index];
+          const currentBranch = node.of_branch;
 
-          if(parent.of_branch == node.of_branch) {
-            same_branch_parent = parent
-          } else {
-            other_branch_parent = parent;
+          node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
+            if(parent.of_branch != currentBranch) {
+
+              this.branches[currentBranch].merge(parent.of_branch);
+            }
+          })
+
+        
+        // ============ NORMAL COMMIT ===========
+        } else {
+  
+          // add commit to branch
+          this.branches[node.of_branch].commit({
+            hash: node.hexsha,
+            subject: node.message,
+            author: `${node.author.name} <${node.author.email}>`,
+          });
+  
+        }
+      }
+      
+      if(node.children) {
+  
+        // branching
+        node.children.forEach((child: RepoNode) => {
+
+          if(child.of_branch != node.of_branch) {
+            const newBranch = this.branches[node.of_branch].branch(child.of_branch);
+
+            // add branch in branches
+            this.branches[child.of_branch] = newBranch;
           }
 
-        }
-
-        const same_branch = this.branches[same_branch_parent.of_branch];
-        const other_branch = this.branches[other_branch_parent.of_branch];
-
-
-        same_branch.merge(other_branch, node.message);
+        });
       }
+    
 
-    } else {
-      let branch = this.branches[node.of_branch];
-
-      branch.commit({
-        subject: `${node.message}`,
-        author: `${node.author.name} <${node.author.email}>`,
-        hashAbbrev: node.hexsha
-      });
-
-    }
-
-    let children = node.children ?? [];
-
-    for (let index = 0; index < children.length; index++) {
-      const child = children[index];
-
-      this.generateTree(child);
     }
 
   }
 
-  createGraph(node: RepoNode) {
+  loadGitGraph() {
 
     let graphContainer = document.getElementById("graph-container");
 
@@ -222,9 +123,6 @@ export class RepoComponent {
 
 
     this.gitgraph = createGitgraph(graphContainer);
-
-    this.generateTree(node);
-
 
   }
 }
