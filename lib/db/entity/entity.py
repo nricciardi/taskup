@@ -248,7 +248,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
             # find entity created to return its
             entity = self.find(self.db_manager.cursor.lastrowid)
 
-            Logger.log_info(msg=f"created a new resource in {self.table_name} with data: {data}\nresult: {entity}", is_verbose=self.verbose)
+            Logger.log_success(msg=f"created a new resource in {self.table_name} with data: {data}\nresult: {entity}", is_verbose=self.verbose)
 
             return entity
 
@@ -559,7 +559,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
                 self.db_manager.update(self.table_name, WhereCondition("id", "=", entity_id), **data)
 
-                Logger.log(msg=f"Updated {self.table_name} where id = {entity_id}")
+                Logger.log_success(msg=f"Updated {self.table_name} where id = {entity_id}")
 
             return self.find(entity_id)         # return entity
 
