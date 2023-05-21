@@ -1,1 +1,158 @@
-<p>settings works!</p>
+<section id="basic-horizontal-layouts">
+  <div class="row match-height">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row justify-content-between">
+            <div class="col-auto">
+              <h4 class="card-title">
+                {{ "settings" | translate }}
+              </h4>
+            </div>
+
+            <div class="col-auto">
+              <button class="btn icon btn-light" (click)="appService.openSettings()">
+                <i class="bi bi-box-arrow-up-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-body" *ngIf="settingsForm">
+            <form class="form form-horizontal" [formGroup]="settingsForm">
+              <div class="form-body">
+                <div class="row" *ngFor="let field of SETTINGS_FIELD">
+                  <div class="col-md-4">
+                    <div class="row justify-content-between">
+                      <div class="col-auto">
+                        <label>
+                          {{ (field.title ?? field.name) | translate }}
+                        </label>
+                      </div>
+                      <div class="col-auto">
+                          <i  class="bi bi-1-square-fill"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="{{ 'unique' | translate }}"
+                              *ngIf="field.unique === true">
+                          </i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 form-group">
+
+                    <ng-container *ngIf="field.type !== 'textarea' && field.type !== 'checkbox' && field.type !== 'selectbox'; else otherTypes">
+                      <input
+                        [type]="field.type"
+                        class="form-control"
+                        [name]="field.name"
+                        placeholder="{{ field.placeholder ?? '' | translate }}"
+                        [formControlName]="field.name"
+                        [class.is-valid]="settingsForm.controls[field.name].dirty && settingsForm.controls[field.name].valid"
+                        [class.is-invalid]="settingsForm.controls[field.name].dirty && !settingsForm.controls[field.name].valid"
+
+                        #input
+                      />
+
+                      <div class="form-check form-switch" *ngIf="field.type == 'password'">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          (change)="input.type == 'password' ? input.type = 'text' : input.type = 'password'"
+                        />
+                        <label
+                          class="form-check-label"
+                          >
+                          {{ "show-password" | translate }}
+                        </label>
+                      </div>
+
+                    </ng-container>
+
+                    <ng-template #otherTypes>
+                      <ng-container *ngIf="field.type == 'textarea'">
+                        <div class="form-group mb-3">
+                          <textarea
+                            class="form-control"
+                            rows="5"
+                            [formControlName]="field.name"
+                            [class.is-valid]="settingsForm.controls[field.name].dirty && settingsForm.controls[field.name].valid"
+                            [class.is-invalid]="settingsForm.controls[field.name].dirty && !settingsForm.controls[field.name].valid"
+                          ></textarea>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="field.type == 'checkbox'">
+                        <div class="form-check">
+                          <div class="checkbox">
+                            <input
+                              type="checkbox"
+                              class="form-check-input cursor-pointer"
+                              [name]="field.name"
+                              [placeholder]="field.placeholder"
+                              [formControlName]="field.name"
+                            />
+                          </div>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="field.type == 'selectbox'">
+
+                        <div class="input-group mb-3">
+                          <label
+                            class="input-group-text"
+                            >
+                            {{ (field.placeholder ?? field.name) | translate }}
+                          </label>
+                          <select class="form-select"
+                                  [formControlName]="field.name">
+                            <option selected value="">
+                              {{ "choose" | translate }}
+                            </option>
+
+                            <option [ngValue]="option.value" *ngFor="let option of field.selectOptions">
+                              {{ option.text | translate }}
+                            </option>
+                          </select>
+                        </div>
+                      </ng-container>
+
+                    </ng-template>
+
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="submitResult === undefined; else showSubmitResult">
+                  <div class="col-sm-12 d-flex justify-content-end">
+                    <button
+                      type="button"
+                      class="btn btn-primary me-1 mb-1"
+                      (click)="submit()"
+                    >
+                      {{ "submit" | translate }}
+                    </button>
+                    <button
+                      (click)="loadSettings()"
+                      type="button"
+                      class="btn btn-light-secondary me-1 mb-1"
+                    >
+                      {{ "reset" | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <ng-template #showSubmitResult>
+
+                  <app-success-alert [title]="'operation-successful'" [dismissable]="false" *ngIf="submitResult === true"></app-success-alert>
+
+                  <app-error-alert [title]="'operation-error'" [dismissable]="false" *ngIf="submitResult === false"></app-error-alert>
+                </ng-template>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
