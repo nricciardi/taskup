@@ -100,6 +100,7 @@ export class SettingsComponent {
 
             this.submitResult = !!result;
 
+            this.settingsForm?.markAsPristine();
 
             setTimeout(() => {
               this.submitResult = undefined;
