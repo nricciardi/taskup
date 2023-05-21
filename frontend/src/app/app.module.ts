@@ -51,6 +51,7 @@ import { FilterComponent } from './widget/filter/filter.component';
 import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
 import { WarningAlertComponent } from './widget/alert/warning-alert/warning-alert.component';
 import { SettingsComponent } from './page/settings/settings.component';
+import { ServerErrorComponent } from './page/server-error/server-error.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { SettingsComponent } from './page/settings/settings.component';
     StatsBoxComponent,
     WarningAlertComponent,
     SettingsComponent,
+    ServerErrorComponent,
   ],
   imports: [
     BrowserModule,

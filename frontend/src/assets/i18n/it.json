@@ -141,6 +141,7 @@
   "current_project_path": "Current project path",
   "use_localtime": "Use localtime",
   "vault_path": "Vault path",
-  "verbose": "Verbose"
+  "verbose": "Verbose",
+  "server-error": "Errore del Server"
 
 }

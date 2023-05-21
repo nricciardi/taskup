@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer, interval } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
+import { Router } from '@angular/router';
 
 declare var eel: any;
 
@@ -20,7 +21,7 @@ export class EelService {
   private interval: number = 10;
   private logger_except: string[] = ['auth_is_logged'];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   public async callWithOptions(options: CallOptions, name: string, ...args: any): Promise<any> {
     if(options.take === null) {
@@ -71,7 +72,15 @@ export class EelService {
           return eel && eel._websocket.readyState === WebSocket.OPEN      // call when eel's websocket is open
         }),
         take(1),    // stop interval on WebSocket OPEN (otherwise loop of request)
-      ).subscribe(this.get_observable_body(observer, name, ...args));
+      ).subscribe({
+        next: () => {
+          this.get_observable_body(observer, name, ...args);
+        },
+        error: (err) => {
+          this.router.navigate(["/server-error"]);
+
+        }
+      });
     });
 
     return observer;

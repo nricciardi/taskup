@@ -13,6 +13,7 @@ import { ManageRolesComponent } from './page/manage-roles/manage-roles.component
 import { AuthGuardService } from './service/api/auth/auth-guard.service';
 import { RoleGuardService } from './service/api/auth/role-guard.service';
 import { SettingsComponent } from './page/settings/settings.component';
+import { ServerErrorComponent } from './page/server-error/server-error.component';
 
 const routes: Routes = [
 
@@ -73,6 +74,10 @@ const routes: Routes = [
     data: { roleRequired: "permission_manage_roles" }
   },
 
+  {
+    path: "server-error",
+    component: ServerErrorComponent
+  },
   {
     path: "**",
     component: PageNotFoundComponent
