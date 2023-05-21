@@ -72,15 +72,7 @@ export class EelService {
           return eel && eel._websocket.readyState === WebSocket.OPEN      // call when eel's websocket is open
         }),
         take(1),    // stop interval on WebSocket OPEN (otherwise loop of request)
-      ).subscribe({
-        next: () => {
-          this.get_observable_body(observer, name, ...args);
-        },
-        error: (err) => {
-          this.router.navigate(["/server-error"]);
-
-        }
-      });
+      ).subscribe(this.get_observable_body(observer, name, ...args));
     });
 
     return observer;
@@ -128,6 +120,8 @@ export class EelService {
         LoggerService.logError(e);
 
         observer.error(e);
+
+        this.router.navigate(["/server-error"]);
       }
     }
 
