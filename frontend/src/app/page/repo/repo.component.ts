@@ -14,6 +14,7 @@ export class RepoComponent {
   validRepo?: boolean;
   branches: any = {};     // object key-value: key is branch name, value is ref of branch
   gitgraph: any;
+  generationError: boolean = false;
 
   constructor(private repoService: RepoService) {}
 
@@ -53,63 +54,70 @@ export class RepoComponent {
 
   generateGraphFromCommits(nodes: RepoNode[]) {
 
-    for (let index = 0; index < nodes.length; index++) {
-      const node: RepoNode = nodes[index];
+    this.generationError = false;
 
-    
-      // if there is NOT branch => create it
-      if(!(node.of_branch in this.branches))  {
-        let branch_ref = this.gitgraph.branch(node.of_branch)
-
-        this.branches[node.of_branch] = branch_ref;
-      }
-
-      if(node.parents) {
-
-        // ============ MERGE ==================
-        if(node.parents.length > 1) {
-
-          const currentBranch = node.of_branch;
-
-          node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
-            if(parent.of_branch != currentBranch) {
-
-              this.branches[currentBranch].merge(parent.of_branch);
-            }
-          })
-
-        
-        // ============ NORMAL COMMIT ===========
-        } else {
+    try {
+      for (let index = 0; index < nodes.length; index++) {
+        const node: RepoNode = nodes[index];
   
-          // add commit to branch
-          this.branches[node.of_branch].commit({
-            hash: node.hexsha,
-            subject: node.message,
-            author: `${node.author.name} <${node.author.email}>`,
-          });
-
-          // add tag to commit
-          this.branches[node.of_branch].tag(node.tag);
-  
-        }
-      }
       
-      if(node.children) {
+        // if there is NOT branch => create it
+        if(!(node.of_branch in this.branches))  {
+          let branch_ref = this.gitgraph.branch(node.of_branch)
   
-        // branching
-        node.children.forEach((child: RepoNode) => {
-
-          if(child.of_branch != node.of_branch) {
-            const newBranch = this.branches[node.of_branch].branch(child.of_branch);
-
-            // add branch in branches
-            this.branches[child.of_branch] = newBranch;
-          }
-
-        });
-      }
+          this.branches[node.of_branch] = branch_ref;
+        }
+  
+        if(node.parents) {
+  
+          // ============ MERGE ==================
+          if(node.parents.length > 1) {
+  
+            const currentBranch = node.of_branch;
+  
+            node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
+              if(parent.of_branch != currentBranch) {
+  
+                this.branches[currentBranch].merge(parent.of_branch);
+              }
+            })
+  
+          
+          // ============ NORMAL COMMIT ===========
+          } else {
     
+            // add commit to branch
+            this.branches[node.of_branch].commit({
+              hash: node.hexsha,
+              subject: node.message,
+              author: `${node.author.name} <${node.author.email}>`,
+            });
+  
+            // add tag to commit
+            this.branches[node.of_branch].tag(node.tag);
+    
+          }
+        }
+        
+        if(node.children) {
+    
+          // branching
+          node.children.forEach((child: RepoNode) => {
+  
+            if(child.of_branch != node.of_branch) {
+              const newBranch = this.branches[node.of_branch].branch(child.of_branch);
+  
+              // add branch in branches
+              this.branches[child.of_branch] = newBranch;
+            }
+  
+          });
+        }
+      
+  
+      }
+    } catch (error) {
+      this.generationError = true;
 
     }
 
