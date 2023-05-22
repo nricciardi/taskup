@@ -33,6 +33,7 @@ class RepoNode(DCToDictMixin):
     of_branch: str
     parents: Optional[List['RepoNode']] = field(default=None)     # if None => no information, but it is said that there are no fathers
     children: Optional[List['RepoNode']] = field(default=None)
+    tag: Optional[str] = field(default=None)
 
     def add_child(self, node: 'RepoNode') -> None:
         """
@@ -69,10 +70,12 @@ class RepoNode(DCToDictMixin):
         return True
 
     @classmethod
-    def from_commit(cls, commit: git.Commit, parents_depth: int = 1) -> 'RepoNode':
+    def from_commit(cls, commit: git.Commit, branch: Optional[str] = None, tag: Optional[str] = None, parents_depth: int = 1) -> 'RepoNode':
         """
         Generate a node from a commit
 
+        :param tag:
+        :param branch: force branch name
         :param parents_depth: fathers research depth
         :param commit:
         :return:
@@ -86,6 +89,9 @@ class RepoNode(DCToDictMixin):
             for p in commit.parents:
                 parents.append(RepoNode.from_commit(p, parents_depth=parents_depth - 1))
 
+        if branch is None:
+            branch = commit.name_rev.split(" ")[1].split("~")[0]
+
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
                                  name=commit.author.name),
@@ -93,7 +99,8 @@ class RepoNode(DCToDictMixin):
                    committed_at=commit.committed_datetime.isoformat(),
                    parents=parents,
                    children=None,
-                   of_branch=commit.name_rev.split(" ")[1].split("~")[0],
+                   of_branch=branch,
+                   tag=tag
                    )
 
         return node
@@ -218,23 +225,41 @@ class RepoManager:
         :return:
         """
 
-        all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
+        # take tags of repo
+        associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
+        for tag in list(self.repo.tags):
+            associations_commits_tags[tag.commit.hexsha] = tag.name
 
-        commits = []
+        # take association between commits hexsha and its branch
+        associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
+        for branch in list(self.repo.branches):
+            hexsha_of_commits = set(commit.hexsha for commit in list(self.repo.iter_commits(branch, reverse=True)))
+
+            for hexsha in hexsha_of_commits:
+                associations_commits_branches[hexsha] = str(branch)
+
+        # generate list of nodes
+        all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
+        nodes = []
         for i in range(len(all_repo_commits)):
             commit = all_repo_commits[i]
-            repo_node: RepoNode = RepoNode.from_commit(commit)
+            repo_node: RepoNode = RepoNode.from_commit(commit,
+                                                       branch=associations_commits_branches.get(commit.hexsha),
+                                                       tag=associations_commits_tags.get(commit.hexsha))
 
             # search children of commit
             for j in range(i, len(all_repo_commits)):
-                candidate_child_node: RepoNode = RepoNode.from_commit(all_repo_commits[j])
+                candidate_child_commit = all_repo_commits[j]
+                candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit,
+                                                                      branch=associations_commits_branches.get(candidate_child_commit.hexsha),
+                                                                      tag=associations_commits_tags.get(candidate_child_commit.hexsha))
 
                 if repo_node.hexsha in (parent.hexsha for parent in candidate_child_node.parents):
                     repo_node.add_child(candidate_child_node)
 
-            commits.append(repo_node)
+            nodes.append(repo_node)
 
-        return commits
+        return nodes
 
 
 
