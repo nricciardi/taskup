@@ -88,6 +88,9 @@ export class RepoComponent {
             subject: node.message,
             author: `${node.author.name} <${node.author.email}>`,
           });
+
+          // add tag to commit
+          this.branches[node.of_branch].tag(node.tag);
   
         }
       }

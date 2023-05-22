@@ -135,7 +135,7 @@
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
   "remove-work": "Rimuovi la cartella di lavoro dal progetto",
-  "repo": "Repo"
+  "repo": "Repo",
   "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto",
   "app_mode": "App mode",
   "backup": "Backup",

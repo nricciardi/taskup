@@ -6,6 +6,7 @@ export interface RepoNode {
   parents: RepoNode[] | null;
   children: RepoNode[] | null;
   of_branch: string;
+  tag: string;
 }
 
 export interface Author {

@@ -10,6 +10,7 @@ import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
 from pprint import pprint
+from time import time
 
 
 @dataclass
@@ -225,10 +226,14 @@ class RepoManager:
         :return:
         """
 
+        Logger.log_info(msg=f"start to fetch commits from project repo...", is_verbose=self.verbose)
+
         # take tags of repo
         associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
         for tag in list(self.repo.tags):
             associations_commits_tags[tag.commit.hexsha] = tag.name
+
+        Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
 
         # take association between commits hexsha and its branch
         associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
@@ -238,10 +243,15 @@ class RepoManager:
             for hexsha in hexsha_of_commits:
                 associations_commits_branches[hexsha] = str(branch)
 
+        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} branch(es)", is_verbose=self.verbose)
+
+
         # generate list of nodes
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
         nodes = []
-        for i in range(len(all_repo_commits)):
+        n_of_commits = len(all_repo_commits)
+        start = time()
+        for i in range(n_of_commits):
             commit = all_repo_commits[i]
             repo_node: RepoNode = RepoNode.from_commit(commit,
                                                        branch=associations_commits_branches.get(commit.hexsha),
@@ -259,6 +269,9 @@ class RepoManager:
 
             nodes.append(repo_node)
 
+            Logger.log_info(msg=f"elaborating commit {i} / {n_of_commits} ({round(i * 100 / n_of_commits, 2)}%)", is_verbose=self.verbose)
+
+        Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s", is_verbose=self.verbose)
         return nodes
 
 
