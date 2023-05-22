@@ -1,4 +1,6 @@
-<ng-container *ngIf="validRepo === true && !app-error-alert'">
+<app-error-alert [title]="'operation-error'" [dismissable]="false" *ngIf="!!generationError"></app-error-alert>
+
+<ng-container *ngIf="validRepo === true && !generationError">
   <!-- DOM element in which we'll mount our graph -->
   <div id="graph-container"></div>
 
@@ -8,4 +10,3 @@
 
 <app-loader *ngIf="validRepo === undefined"></app-loader>
 
-<app-error-alert [title]="'operation-error'" [dismissable]="false" *ngIf="!!generationError"></app-error-alert>
