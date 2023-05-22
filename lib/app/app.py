@@ -1,5 +1,5 @@
 import eel
-from typing import List
+from typing import List, Dict, Any
 from lib.app.service.auth import AuthService
 from lib.app.service.dashboard import DashboardService
 from lib.db.entity.user import FuturePMData
@@ -88,7 +88,9 @@ class AppManager:
                 self.close,
                 self.init_project,
                 self.get_projects_paths_stored,
-                self.remove_work_dir
+                self.remove_work_dir,
+                self.settings_manager.get_settings,
+                self.settings_manager.update_settings
             ], prefix="app_")
 
         except Exception as excepetion:

@@ -129,7 +129,7 @@
                 </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="appService.openSettings()">
+              <button class="dropdown-item" [routerLink]="['/settings']" routerLinkActive="router-link-active" >
                 <i class="icon-mid bi bi-gear me-2"></i>
                 {{ "settings" | translate }}
               </button>

@@ -135,6 +135,14 @@
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
   "remove-work": "Rimuovi la cartella di lavoro dal progetto",
-  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto",
   "repo": "Repo"
+  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto",
+  "app_mode": "App mode",
+  "backup": "Backup",
+  "current_project_path": "Current project path",
+  "use_localtime": "Use localtime",
+  "vault_path": "Vault path",
+  "verbose": "Verbose",
+  "server-error": "Errore del Server"
+
 }

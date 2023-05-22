@@ -18,6 +18,8 @@ export class AppService extends EelService {
   readonly INIT_PROJECT = "app_init_project";
   readonly PATHS_STORED = "app_get_projects_paths_stored";
   readonly REMOVE_WORK_DIR = "app_remove_work_dir";
+  readonly GET_SETTINGS = "app_get_settings";
+  readonly UPDATE_SETTINGS = "app_update_settings";
 
   public openSettings(): void {
 
@@ -89,5 +91,13 @@ export class AppService extends EelService {
 
     return this.call(this.PATHS_STORED);
 
+  }
+
+  public getSettings(): Promise<Observable<Record<string, any>>> {
+    return this.call(this.GET_SETTINGS);
+  }
+
+  public updateSettings(data: Record<string, any>): Promise<Observable<boolean>> {
+    return this.call(this.UPDATE_SETTINGS, data);
   }
 }

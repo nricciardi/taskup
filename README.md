@@ -195,16 +195,16 @@ From _My Profile_ page is possible to edit user master data (name, surname, user
 
 ## Manage Task Status, Task Labels, Users and Roles
 
-Having the specific permissions, a user as PM is able to manage task status, task label,users and roles.
+With the appropriate permissions, a user, as a project manager (PM), is able to manage task status, task labels, users, and roles.
 
-There are the corresponding pages to manage the single things. Each page is shown if only if the corresponding permission is satisfied. UI is the same for all.
-From these pages is possible:
+There are the corresponding pages to manage each of these items. Each page is shown only if the corresponding permission is satisfied. 
+The user interface (UI) is the same for all pages. From these pages, it is possible to:
 
 - Create a new resource
 - Edit resources
 - Delete resources
 
-For example, the _Manage Task Label_ page is the followings:
+For example, the _Manage Task Label_ page looks like this:
 
 ![Manage task labels](./doc/img/usr-doc/manage-task-labels.png)
 
@@ -217,8 +217,8 @@ In addition, if there are a lot of resources, it is possible to use filters.
 - _Open_ projects
 
 ### Project Information
-In this section is possible to see the project's path, its app's database and if the logged user
-has the specific permission this app can be removed from project.
+In this section, it is possible to see the project's path, its app's database, and if the logged-in user has the 
+specific permission, this app can be removed from the project.
 
 ### Initialize Project
 
@@ -226,8 +226,8 @@ has the specific permission this app can be removed from project.
 
 In this section is possible to initialize a project.
 
-To initialize a project is necessary to indicate the project's path and the basic information of
-the project's **project manager**, he is the figure who manages project.
+To initialize a project, it is necessary to indicate the project's path and provide basic information about the 
+project's **project manager** who oversees the project.
 
 > **WARNING**: Avoid to lose project manager's password, because the nature of this application makes it impossible
 to recover password without previously login.
@@ -240,57 +240,56 @@ re-initialize project.
 ![Home open](./doc/img/usr-doc/home-open.png)
 
 Open project is possible in two-way:
-- Inserting path manually
-- Selecting path from a set of already opened projects
+- Manually entering the path
+- Selecting the path from a set of already opened projects
 
 
 # Documentation for Developers
 
-This is a base and simple documentation to illustrate this project for old and new developers.
-To watch a full documentation see the _Sphinx documentation_.
+This is a basic and simple documentation to illustrate this project to both old and new developers. 
+For the complete documentation, please refer to the _Sphinx documentation_.
 
 ## How to generate Sphinx documentation?
 
 To run Sphinx doc:
 
-1. Go in /doc directory
+1. Navigate to the `/doc` directory
 2. Run `sphinx-apidoc -o source/ ..` or `sphinx-apidoc -o source/ ../lib` to refresh only lib packages
 3. Run `make html`
 4. Go in `doc/build/html`
 
 ## Keyword
 
-- **Base Directory:** _this_ project directory path
-- **Project Directory:** the managed project path
-- **Work Directory:** the work directory inside _project directory_
+- **Base Directory:** Refers to the project directory path
+- **Project Directory:** Refers to the path of the managed project
+- **Work Directory:** Refers to the work directory inside the _project directory_
 
 ## App
 
 ![structure of the project](./doc/img/dev-doc/structure-diagram.jpg)
 
 ### AppManager and its Services
-**AppManager** is the class which provides some methods to manage this app.
-In particular, AppManager has a set of _services_, this is a set of classes where each of them provides a specific
-functionality. For example `AuthService` provides _authentication system_.
+**AppManager** is the class which provides methods to manage this app.
+In particular, AppManager has a set of _services_, which are classes that provide specific functionality.
+For example `AuthService` provides _authentication system_.
 
-AppManager **has only one** service reference for each type, because it will be exposed by Eel library and
-the same function mustn't be exposed twice time.
-So each service has to be refreshed instead of re-instanced.
+AppManager **has only one** service reference for each type to avoid duplications when exposed by the Eel library.
+Therefore, the services need to be refreshed instead of re-instantiated.
 
 #### ProjectManager
 **ProjectManager** manage the _projects_, usually only one project at time.
-Using ProjectManager is possible to init new project or open an existing project.
+It allows initializing a new project or opening an existing project.
 
 #### AuthService
 **AuthService** provides _authentication system_.
-AuthService also manages _vault_ (`vault.json`), where are stored "remember me" user credentials.
+It also manages _vault_ (`vault.json`), where "remember me" user credentials are stored.
 
 ### Eel and WebSocket
 
-This project uses the [Eel library](https://github.com/python-eel/Eel) to send data between client (frontend) and server
+This project uses the [Eel library](https://github.com/python-eel/Eel) to send data between the client (frontend) and the server
 (Python). Eel is a little Python library for making simple Electron-like offline HTML/JS GUI apps, with full access to Python capabilities and libraries.
 
-Eel hosts a local webserver, then lets you annotate functions in Python so that they can be called from Javascript, and vice versa.
+Eel hosts a local web server and allows functions in Python to be called from JavaScript, and vice versa.
 
 ![websocket schema](./doc/img/dev-doc/websocket-schema1.png)
 

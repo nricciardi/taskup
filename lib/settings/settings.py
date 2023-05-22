@@ -2,7 +2,7 @@ from lib.utils.logger import Logger
 import json
 from lib.file.file_manager import FileManger
 import os
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Dict
 from lib.utils.base import Base
 from lib.utils.utils import Utils
 
@@ -386,3 +386,48 @@ class SettingsManager(SettingsBase):
         paths_checked = sorted(list(paths_checked))
 
         self.set(self.KEY_PROJECT_PATHS_STORED, paths_checked)
+
+    def get_settings(self) -> Dict:
+        """
+        Get settings as dict
+
+        :return: settings
+        :rtype Dict:
+        """
+
+        return self.settings
+
+    def update_settings(self, data: Dict[str, Any], safe: bool = True) -> bool:
+        """
+        Update settings from dict
+
+        :param safe:
+        :param data:
+        :return:
+        """
+
+        try:
+            if not isinstance(data, dict):
+
+                if not safe:
+                    raise ValueError("data is not a dict")
+
+                Logger.log_error(msg=f"{data} is not a dict", is_verbose=self.verbose)
+
+                return False
+
+            for k, v in data.items():
+                if k in self.settings:
+                    self.set(k, v)
+
+            Logger.log_success(msg="settings updated", is_verbose=self.verbose)
+            return True
+
+        except Exception as e:
+            if not safe:
+                raise e
+
+            Logger.log_error(msg="error during settings updating", is_verbose=self.verbose)
+
+            return False
+

@@ -50,6 +50,8 @@ import { DropdownModalComponent } from './widget/modal/dropdown-modal/dropdown-m
 import { FilterComponent } from './widget/filter/filter.component';
 import { StatsBoxComponent } from './widget/stats-box/stats-box.component';
 import { WarningAlertComponent } from './widget/alert/warning-alert/warning-alert.component';
+import { SettingsComponent } from './page/settings/settings.component';
+import { ServerErrorComponent } from './page/server-error/server-error.component';
 import { RepoComponent } from './page/repo/repo.component';
 
 
@@ -99,6 +101,8 @@ import { RepoComponent } from './page/repo/repo.component';
     FilterComponent,
     StatsBoxComponent,
     WarningAlertComponent,
+    SettingsComponent,
+    ServerErrorComponent,
     RepoComponent,
   ],
   imports: [

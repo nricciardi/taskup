@@ -13,6 +13,8 @@ import { ManageRolesComponent } from './page/manage-roles/manage-roles.component
 import { AuthGuardService } from './service/api/auth/auth-guard.service';
 import { RoleGuardService } from './service/api/auth/role-guard.service';
 import { RepoComponent } from './page/repo/repo.component';
+import { SettingsComponent } from './page/settings/settings.component';
+import { ServerErrorComponent } from './page/server-error/server-error.component';
 
 const routes: Routes = [
 
@@ -33,6 +35,10 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginComponent
+  },
+  {
+    path: "settings",
+    component: SettingsComponent
   },
   {
     path: "test",
@@ -73,6 +79,10 @@ const routes: Routes = [
     component: RepoComponent
   },
 
+  {
+    path: "server-error",
+    component: ServerErrorComponent
+  },
   {
     path: "**",
     component: PageNotFoundComponent
