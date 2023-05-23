@@ -28,6 +28,8 @@ export class RepoComponent {
     this.repoService.getCommits().then((response) => {
 
       this.validRepo = undefined;
+      this.gitgraph = undefined;
+      this.branches = {};
 
       response.subscribe({
         next: (nodes) => {
@@ -118,7 +120,8 @@ export class RepoComponent {
       }
     } catch (error) {
       this.generationError = true;
-
+      console.log(error);
+      
     }
 
   }

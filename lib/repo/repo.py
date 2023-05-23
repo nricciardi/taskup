@@ -12,10 +12,9 @@ from lib.utils.utils import Utils
 from pprint import pprint
 from time import time
 
-
-@dataclass
-class RepoBranch:
-    name: str
+# global variables to pass associations to RepoNode dataclass
+associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
+associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
 
 
 @dataclass
@@ -71,16 +70,17 @@ class RepoNode(DCToDictMixin):
         return True
 
     @classmethod
-    def from_commit(cls, commit: git.Commit, branch: Optional[str] = None, tag: Optional[str] = None, parents_depth: int = 1) -> 'RepoNode':
+    def from_commit(cls, commit: git.Commit, parents_depth: int = 1) -> 'RepoNode':
         """
         Generate a node from a commit
 
-        :param tag:
-        :param branch: force branch name
         :param parents_depth: fathers research depth
         :param commit:
         :return:
         """
+
+        global associations_commits_tags
+        global associations_commits_branches
 
         parents: Optional[List['RepoNode']] = None
 
@@ -90,7 +90,10 @@ class RepoNode(DCToDictMixin):
             for p in commit.parents:
                 parents.append(RepoNode.from_commit(p, parents_depth=parents_depth - 1))
 
-        if branch is None:
+        branch = associations_commits_branches.get(commit.hexsha)
+        if associations_commits_branches.get(commit.hexsha) is None:
+            print(f"il commit {commit} non ha nessun branch associato")
+
             branch = commit.name_rev.split(" ")[1].split("~")[0]
 
         node = cls(hexsha=commit.hexsha,
@@ -101,7 +104,7 @@ class RepoNode(DCToDictMixin):
                    parents=parents,
                    children=None,
                    of_branch=branch,
-                   tag=tag
+                   tag=associations_commits_tags.get(commit.hexsha)
                    )
 
         return node
@@ -228,59 +231,64 @@ class RepoManager:
 
         Logger.log_info(msg=f"start to fetch commits from project repo...", is_verbose=self.verbose)
 
+        self.repo.git.fetch()
+
         # take tags of repo
-        associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
+        global associations_commits_tags
+        associations_commits_tags = dict()  # hexsha - tag's name
         for tag in list(self.repo.tags):
             associations_commits_tags[tag.commit.hexsha] = tag.name
 
         Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
 
+        # get references of local and remote branches
+        branches = list(self.repo.branches)
+
+        if self.repo.remotes:
+            branches.extend(self.repo.remote().refs)
+
         # take association between commits hexsha and its branch
-        associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
-        for branch in list(self.repo.branches):
+        global associations_commits_branches
+        associations_commits_branches = dict()     # hexsha - branch
+        for branch in branches:
             hexsha_of_commits = set(commit.hexsha for commit in list(self.repo.iter_commits(branch, reverse=True)))
 
             for hexsha in hexsha_of_commits:
-                associations_commits_branches[hexsha] = str(branch)
+                if associations_commits_branches.get(hexsha) is None:
+                    associations_commits_branches[hexsha] = str(branch)
 
         Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} branch(es)", is_verbose=self.verbose)
 
-
         # generate list of nodes
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
-        nodes = []
+        nodes = list()      # use a managed list to share data between processes
         n_of_commits = len(all_repo_commits)
         start = time()
         for i in range(n_of_commits):
             commit = all_repo_commits[i]
-            repo_node: RepoNode = RepoNode.from_commit(commit,
-                                                       branch=associations_commits_branches.get(commit.hexsha),
-                                                       tag=associations_commits_tags.get(commit.hexsha))
+            repo_node: RepoNode = RepoNode.from_commit(commit)
 
             # search children of commit
-            for j in range(i, len(all_repo_commits)):
+            for j in range(i, n_of_commits):
                 candidate_child_commit = all_repo_commits[j]
-                candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit,
-                                                                      branch=associations_commits_branches.get(candidate_child_commit.hexsha),
-                                                                      tag=associations_commits_tags.get(candidate_child_commit.hexsha))
+                candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit)
 
                 if repo_node.hexsha in (parent.hexsha for parent in candidate_child_node.parents):
                     repo_node.add_child(candidate_child_node)
 
             nodes.append(repo_node)
 
-            Logger.log_info(msg=f"elaborating commit {i} / {n_of_commits} ({round(i * 100 / n_of_commits, 2)}%)", is_verbose=self.verbose)
+            Logger.log_info(msg=f"elaborating commit {i}/{n_of_commits} ({round(i * 100 / n_of_commits, 2)}%)", is_verbose=self.verbose)
 
         Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s", is_verbose=self.verbose)
-        return nodes
-
-
+        return list(nodes)
 
 
 if __name__ == '__main__':
     path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/test/repo-test"
+    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/Eel"
     repo_manager = RepoManager(True)
 
     repo_manager.open_repo(path)
 
-    pprint(repo_manager.get_commits())
+    pprint(len(repo_manager.get_commits()))

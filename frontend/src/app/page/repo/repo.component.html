@@ -1,5 +1,15 @@
 <app-error-alert [title]="'operation-error'" [dismissable]="false" *ngIf="!!generationError"></app-error-alert>
 
+<div class="row justify-content-end">
+  <div class="col-auto">
+    <button class="btn icon btn-light"
+          type="button"
+          (click)="loadGraph()">
+          <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+</div>
+
 <ng-container *ngIf="validRepo === true && !generationError">
   <!-- DOM element in which we'll mount our graph -->
   <div id="graph-container"></div>
