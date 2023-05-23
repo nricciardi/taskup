@@ -7,16 +7,33 @@ import json
 from lib.utils.utils import Utils
 from lib.app.service.project import ProjectManager
 from lib.app.service.dashboard import DashboardService
+import asyncio
 
 
-def jsonify(func: Callable):
+def make_async(func: Callable):
+    """
+    Make passed function async
+
+    :param func:
+    :type func: Callable
+    :return:
+    """
+
+    async def async_func(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return async_func
+
+
+
+def jsonify(func: Callable) -> Callable:
     """
     Decorator to dumps returned values of func
 
     :param func:
     :type func: Callable
     :return: values as json
-    :rtype str:
+    :rtype Callable:
     """
 
     def wrapped():
