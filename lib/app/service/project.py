@@ -63,7 +63,9 @@ class ProjectManager:
                                           verbose=self.verbose)
 
         # load repo manager
-        self.repo_manager = RepoManager(verbose=self.verbose)
+        self.repo_manager = RepoManager(verbose=self.verbose,
+                                        users_models=self.users_manager.all_as_model(with_relations=False, safe=True),
+                                        tasks_models=self.tasks_manager.all_as_model(with_relations=False, safe=True))
 
     @property
     def settings(self) -> SettingsManager:

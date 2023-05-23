@@ -7,10 +7,12 @@ export interface RepoNode {
   children: RepoNode[] | null;
   of_branch: string;
   tag: string;
+  associated_task_id: number | null;
 }
 
 export interface Author {
   email: string;
   name: string;
+  associated_user_id: number | null;
 }
 

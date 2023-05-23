@@ -307,6 +307,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
                 Field(name="priority", type="INTEGER", default="0"),
                 Field.created_at_field(use_localtime=self.use_localtime),
                 Field.updated_at_field(use_localtime=self.use_localtime),
+                Field(name="git_branch", type="VARCHAR(500)", nullable=True, default=None, unique=True),
                 Field.fk_field(name="author_id", nullable=True),
                 Field.fk_field(name="task_status_id"),
             ], fk_constraints=[

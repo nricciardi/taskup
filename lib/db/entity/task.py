@@ -70,6 +70,7 @@ class TaskModel(BaseEntityModel):
     task_status_id: int
     description: Optional[str] = field(default=None)
     deadline: Optional[datetime] = field(default=None)
+    git_branch: Optional[str] = field(default=None)
 
     author: Optional[UserModel] = field(default=None)
     task_status: Optional[TaskStatusModel] = field(default=None)
