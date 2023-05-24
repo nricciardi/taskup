@@ -13,8 +13,8 @@ from time import time
 # global variables to pass associations to RepoNode dataclass
 associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
 associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
-users: List[UserModel] = []
-tasks: List[TaskModel] = []
+associations_commits_users: Dict[str, int] = dict()         # email - user_id
+associations_commits_tasks: Dict[str, List[int]] = dict()         # branch - [task_id]
 
 
 @dataclass
@@ -34,7 +34,7 @@ class RepoNode(DCToDictMixin):
     parents: Optional[List['RepoNode']] = field(default=None)     # if None => no information, but it is said that there are no fathers
     children: Optional[List['RepoNode']] = field(default=None)
     tag: Optional[str] = field(default=None)
-    associated_task_id: Optional[int] = field(default=None)
+    associated_task_id: Optional[List[int]] = field(default=None)
 
     def add_child(self, node: 'RepoNode') -> None:
         """
@@ -82,8 +82,8 @@ class RepoNode(DCToDictMixin):
 
         global associations_commits_tags
         global associations_commits_branches
-        global users
-        global tasks
+        global associations_commits_users
+        global associations_commits_tasks
 
         parents: Optional[List['RepoNode']] = None
 
@@ -99,22 +99,10 @@ class RepoNode(DCToDictMixin):
 
             branch = commit.name_rev.split(" ")[1].split("~")[0]
 
-        # search associated user
-        associated_user_id = None
-        for user in users:
-            if user.email == commit.author.email:
-                associated_user_id = user.id
-
-        # search associated task
-        associated_task_id = None
-        for task in tasks:
-            if task.git_branch == branch:
-                associated_task_id = task.id
-
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
                                  name=commit.author.name,
-                                 associated_user_id=associated_user_id
+                                 associated_user_id=associations_commits_users.get(commit.author.email)
                                  ),
                    message=commit.message,
                    committed_at=commit.committed_datetime.isoformat(),
@@ -122,7 +110,7 @@ class RepoNode(DCToDictMixin):
                    children=None,
                    of_branch=branch,
                    tag=associations_commits_tags.get(commit.hexsha),
-                   associated_task_id=associated_task_id
+                   associated_task_id=associations_commits_tasks.get(branch)
                    )
 
         return node
@@ -170,12 +158,22 @@ class RepoNode(DCToDictMixin):
 
 class RepoManager:
     def __init__(self, verbose: bool = False, users_models: List[UserModel] = None, tasks_models: List[TaskModel] = None):
+        global associations_commits_tasks
+        global associations_commits_users
 
-        global users
-        users = [] if users_models is None else users_models
+        if isinstance(users_models, list):
+            associations_commits_users = dict()
+            for user in users_models:
+                associations_commits_users[user.email] = user.id
 
-        global tasks
-        users = [] if tasks_models is None else tasks_models
+        if isinstance(tasks_models, list):
+            associations_commits_tasks = dict()
+            for task in tasks_models:
+                if associations_commits_tasks.get(task.git_branch) is None:
+                    associations_commits_tasks[task.git_branch] = [task.id]
+
+                else:
+                    associations_commits_tasks[task.git_branch].append(task.id)
 
         self.verbose = verbose
 
@@ -247,12 +245,16 @@ class RepoManager:
 
         return root_node
 
-    def get_commits(self) -> List[RepoNode]:
+    def get_commits(self) -> List[RepoNode] | None:
         """
         Return list of project's repository commits
 
         :return:
         """
+
+        if not self.valid_opened_repo():
+            Logger.log_warning(msg="impossible to elaborate commits: repo not found", is_verbose=self.verbose)
+            return None
 
         Logger.log_info(msg=f"start to fetch commits from project repo...", is_verbose=self.verbose)
 

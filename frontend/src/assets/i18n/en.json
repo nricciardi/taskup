@@ -136,6 +136,7 @@
   "init-project-success": "Initialization completed successfully",
   "remove-work": "Remove work directory from project",
   "repo": "Repo",
+  "invalid-repo": "Invalid repo",
   "password-warning": "Do not lose this password, otherwise you will no longer be able to access the project",
   "app_mode": "App mode",
   "backup": "Backup",

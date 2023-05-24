@@ -7,7 +7,7 @@ export interface RepoNode {
   children: RepoNode[] | null;
   of_branch: string;
   tag: string;
-  associated_task_id: number | null;
+  associated_task_id: number[] | null;
 }
 
 export interface Author {
