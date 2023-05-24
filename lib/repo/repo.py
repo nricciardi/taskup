@@ -274,6 +274,8 @@ class RepoManager:
         if self.repo.remotes:
             branches.extend(self.repo.remote().refs)
 
+        Logger.log_info(msg=f"fetched {len(branches)} branch(es)", is_verbose=self.verbose)
+
         # take association between commits hexsha and its branch
         global associations_commits_branches
         associations_commits_branches = dict()     # hexsha - branch
@@ -284,14 +286,15 @@ class RepoManager:
                 if associations_commits_branches.get(hexsha) is None:
                     associations_commits_branches[hexsha] = str(branch)
 
-        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} branch(es)", is_verbose=self.verbose)
+        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)", is_verbose=self.verbose)
 
-        # pprint(associations_commits_tags)
+        # # pprint(associations_commits_tags)
         # print()
-        # pprint(associations_commits_branches)
+        # # pprint(associations_commits_branches)
         # print(len(associations_commits_branches))
         # print("\n\n\n")
         # print("41071ed81b2125e9a215ac9934b3e870bba50426" in associations_commits_branches)
+        # print(len(list(self.repo.iter_commits('--all', reverse=True))))
         # Utils.exit()
 
         # generate list of nodes
