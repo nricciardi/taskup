@@ -288,15 +288,6 @@ class RepoManager:
 
         Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)", is_verbose=self.verbose)
 
-        # # pprint(associations_commits_tags)
-        # print()
-        # # pprint(associations_commits_branches)
-        # print(len(associations_commits_branches))
-        # print("\n\n\n")
-        # print("41071ed81b2125e9a215ac9934b3e870bba50426" in associations_commits_branches)
-        # print(len(list(self.repo.iter_commits('--all', reverse=True))))
-        # Utils.exit()
-
         # generate list of nodes
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
         nodes = list()      # use a managed list to share data between processes
@@ -309,9 +300,9 @@ class RepoManager:
             # search children of commit
             for j in range(i, n_of_commits):
                 candidate_child_commit = all_repo_commits[j]
-                candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit)
 
-                if repo_node.hexsha in (parent.hexsha for parent in candidate_child_node.parents):
+                if repo_node.hexsha in (parent.hexsha for parent in candidate_child_commit.parents):
+                    candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit)
                     repo_node.add_child(candidate_child_node)
 
             nodes.append(repo_node)
@@ -320,14 +311,3 @@ class RepoManager:
 
         Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s", is_verbose=self.verbose)
         return list(nodes)
-
-
-if __name__ == '__main__':
-    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/test/repo-test"
-    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/Eel"
-    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/mypy"
-    repo_manager = RepoManager(True)
-
-    repo_manager.open_repo(path)
-
-    pprint(len(repo_manager.get_commits()))

@@ -93,6 +93,13 @@ export class RepoComponent {
               hash: node.hexsha,
               subject: node.message,
               author: `${node.author.name} <${node.author.email}>`,
+              onMessageClick(commit: any) {
+                this.showInfoOfCommit(commit);
+              },
+              onClick(commit: any) {
+                this.showInfoOfCommit(commit);
+                
+              }
             });
   
             // add tag to commit
@@ -137,6 +144,10 @@ export class RepoComponent {
 
 
     this.gitgraph = createGitgraph(graphContainer);
+
+  }
+
+  showInfoOfCommit(commit: any) {
 
   }
 }
