@@ -144,6 +144,12 @@
   "use_localtime": "Use localtime",
   "vault_path": "Vault path",
   "verbose": "Verbose",
-  "server-error": "Errore del Server"
+  "server-error": "Errore del Server",
+  "commit-info": "Informazioni del commit",
+  "no-commiter": "Non ci sono informazioni del commiter",
+  "no-tasks-associeted": "Non ci sono tasks associati",
+  "hash": "Hash",
+  "message": "Messaggio",
+  "tasks": "Tasks"
 
 }

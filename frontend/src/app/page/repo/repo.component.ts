@@ -3,6 +3,7 @@ import { RepoNode } from 'src/app/model/entity/repo.model';
 import { RepoService } from 'src/app/service/api/repo/repo.service';
 import { Branch, createGitgraph } from "@gitgraph/js";
 import { LoggerService } from 'src/app/service/logger/logger.service';
+import { AuthService } from 'src/app/service/api/auth/auth.service';
 
 @Component({
   selector: 'app-repo',
@@ -11,12 +12,23 @@ import { LoggerService } from 'src/app/service/logger/logger.service';
 })
 export class RepoComponent {
 
+  @ViewChild("showCommitInfoBtn") showCommitInfoBtn?: ElementRef;
+
   validRepo?: boolean;
   branches: any = {};     // object key-value: key is branch name, value is ref of branch
   gitgraph: any;
   generationError: boolean = false;
 
-  constructor(private repoService: RepoService) {}
+  // variable must be passed to modal "show info commit"
+  commiterEmailOfSelectedCommit?: string;
+  commiterNameOfSelectedCommit?: string;
+  branchesOfSelectedCommit?: string[];
+  hashOfSelectedCommit?: string;
+  messageOfSelectedCommit?: string;
+
+  constructor(private repoService: RepoService, private authService: AuthService) {
+    authService.refreshMe();
+  }
 
   ngOnInit() {
 
@@ -45,7 +57,7 @@ export class RepoComponent {
           } else {
             this.validRepo = false;
           }
-            
+
 
         }
       })
@@ -61,74 +73,101 @@ export class RepoComponent {
     try {
       for (let index = 0; index < nodes.length; index++) {
         const node: RepoNode = nodes[index];
-  
-      
+
+
         // if there is NOT branch => create it
         if(!(node.of_branch in this.branches))  {
           let branch_ref = this.gitgraph.branch(node.of_branch)
-  
+
           this.branches[node.of_branch] = branch_ref;
         }
-  
+
         if(node.parents) {
-  
+
           // ============ MERGE ==================
           if(node.parents.length > 1) {
-  
+
             const currentBranch = node.of_branch;
-  
+
             node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
               if(parent.of_branch != currentBranch) {
-  
+
                 this.branches[currentBranch].merge(parent.of_branch);
               }
             })
-  
-          
+
+
           // ============ NORMAL COMMIT ===========
           } else {
-    
+
+            const showInfoOfCommit = (commit: any) => {
+
+              console.log(commit);
+
+
+              if(this.showCommitInfoBtn && !!this.authService.loggedUser) {
+
+                // reset values
+                this.commiterEmailOfSelectedCommit = undefined;
+                this.commiterNameOfSelectedCommit = undefined;
+                this.branchesOfSelectedCommit = undefined;
+                this.hashOfSelectedCommit = undefined;
+                this.messageOfSelectedCommit = undefined;
+
+                // set values
+                this.commiterEmailOfSelectedCommit = commit.author.email;
+                this.commiterNameOfSelectedCommit = commit.author.name;
+                this.branchesOfSelectedCommit = commit.branches;
+                this.hashOfSelectedCommit = commit.hash;
+                this.messageOfSelectedCommit = commit.subject;
+
+                // show modal
+                this.showCommitInfoBtn.nativeElement.click();
+              }
+
+            }
+
             // add commit to branch
             this.branches[node.of_branch].commit({
               hash: node.hexsha,
               subject: node.message,
               author: `${node.author.name} <${node.author.email}>`,
               onMessageClick(commit: any) {
-                this.showInfoOfCommit(commit);
+                showInfoOfCommit(commit);
               },
               onClick(commit: any) {
-                this.showInfoOfCommit(commit);
-                
+                showInfoOfCommit(commit);
+
               }
             });
-  
+
             // add tag to commit
             this.branches[node.of_branch].tag(node.tag);
-    
+
           }
         }
-        
+
         if(node.children) {
-    
+
           // branching
           node.children.forEach((child: RepoNode) => {
-  
+
             if(child.of_branch != node.of_branch) {
               const newBranch = this.branches[node.of_branch].branch(child.of_branch);
-  
+
               // add branch in branches
               this.branches[child.of_branch] = newBranch;
             }
-  
+
           });
         }
-      
-  
+
+
       }
     } catch (error) {
       this.generationError = true;
       console.log(error);
-      
+
     }
 
   }
@@ -147,7 +186,4 @@ export class RepoComponent {
 
   }
 
-  showInfoOfCommit(commit: any) {
-
-  }
 }

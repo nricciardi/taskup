@@ -1,0 +1,72 @@
+<div
+  class="modal fade text-left"
+  [id]="target"
+  tabindex="-1"
+  role="dialog"
+  [attr.aria-labelledby]="target"
+  aria-hidden="true"
+  *ngIf="target"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" [id]="target">
+          {{ "commit-info" | translate }}
+        </h5>
+        <app-x-btn></app-x-btn>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12">
+            <ng-container *ngIf="hash">
+              <strong>{{ "hash" | translate }}</strong>: {{ hash }}
+            </ng-container>
+
+          </div>
+          <div class="col-12">
+            <ng-container *ngIf="message">
+              <strong>{{ "message" | translate }}</strong>: "{{ message }}"
+            </ng-container>
+          </div>
+
+          <div class="col-12">
+            <div class="divider">
+              <div class="divider-text">
+                {{ "author" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <ng-container *ngIf="!!commiterEmail || !!commiterName; else noCommiter">
+                {{ commiterName + " - " }} {{ commiterEmail }}
+              </ng-container>
+            </div>
+
+            <ng-template #noCommiter>
+              <app-warning-alert [title]="'no-commiter'" [dismissable]="false"></app-warning-alert>
+            </ng-template>
+          </div>
+
+          <div class="col-12">
+            <div class="divider">
+              <div class="divider-text">
+                {{ "tasks" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

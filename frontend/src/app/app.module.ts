@@ -53,6 +53,7 @@ import { WarningAlertComponent } from './widget/alert/warning-alert/warning-aler
 import { SettingsComponent } from './page/settings/settings.component';
 import { ServerErrorComponent } from './page/server-error/server-error.component';
 import { RepoComponent } from './page/repo/repo.component';
+import { ShowInfoOfCommitModalComponent } from './widget/modal/show-info-of-commit-modal/show-info-of-commit-modal.component';
 
 
 @NgModule({
@@ -104,6 +105,7 @@ import { RepoComponent } from './page/repo/repo.component';
     SettingsComponent,
     ServerErrorComponent,
     RepoComponent,
+    ShowInfoOfCommitModalComponent,
   ],
   imports: [
     BrowserModule,

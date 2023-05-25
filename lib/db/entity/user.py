@@ -5,7 +5,9 @@ from lib.db.entity.bem import BaseEntityModel
 from typing import Type, Optional, Dict, TypedDict
 from lib.db.entity.relation import Relation, OneRelation
 from datetime import datetime
-from lib.utils.utils import Utils
+from lib.utils.utils import Utils, Logger
+from lib.db.component import WhereCondition
+from lib.utils.collections import ListUtils
 
 
 class FuturePMData(TypedDict):
@@ -111,6 +113,23 @@ class UsersManager(EntitiesManager, TableNamesMixin):
 
         return super().update_from_dict(entity_id, data, safe, create_if_not_exists)
 
+    def find_by_email(self, email: str) -> UserModel | None:
+        """
+        Find user by email
+
+        :param email:
+        :return:
+        """
+
+        try:
+            user: Optional[UserModel] = ListUtils.first(self.where_as_model(WhereCondition("email", "=", email)))
+
+            return user
+
+        except Exception as e:
+            Logger.log_error(msg=f"error during find by email using '{email}' as email", is_verbose=self.verbose)
+
+            return None
 
 
 class RolesManager(EntitiesManager, TableNamesMixin):

@@ -13,15 +13,15 @@ from time import time
 # global variables to pass associations to RepoNode dataclass
 associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
 associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
-associations_commits_users: Dict[str, int] = dict()         # email - user_id
-associations_commits_tasks: Dict[str, List[int]] = dict()         # branch - [task_id]
+# DEPRECATED: associations_commits_users: Dict[str, int] = dict()         # email - user_id
+# DEPRECATED: associations_commits_tasks: Dict[str, List[int]] = dict()         # branch - [task_id]
 
 
 @dataclass
 class Author:
     email: str
     name: str
-    associated_user_id: Optional[int] = field(default=None)
+    # DEPRECATED: associated_user_id: Optional[int] = field(default=None)
 
 
 @dataclass
@@ -34,7 +34,7 @@ class RepoNode(DCToDictMixin):
     parents: Optional[List['RepoNode']] = field(default=None)     # if None => no information, but it is said that there are no fathers
     children: Optional[List['RepoNode']] = field(default=None)
     tag: Optional[str] = field(default=None)
-    associated_task_id: Optional[List[int]] = field(default=None)
+    # DEPRECATED: associated_task_id: Optional[List[int]] = field(default=None)
 
     def add_child(self, node: 'RepoNode') -> None:
         """
@@ -82,8 +82,8 @@ class RepoNode(DCToDictMixin):
 
         global associations_commits_tags
         global associations_commits_branches
-        global associations_commits_users
-        global associations_commits_tasks
+        # DEPRECATED: global associations_commits_users
+        # DEPRECATED: global associations_commits_tasks
 
         parents: Optional[List['RepoNode']] = None
 
@@ -102,7 +102,7 @@ class RepoNode(DCToDictMixin):
         node = cls(hexsha=commit.hexsha,
                    author=Author(email=commit.author.email,
                                  name=commit.author.name,
-                                 associated_user_id=associations_commits_users.get(commit.author.email)
+                                 # DEPRECATED: associated_user_id=associations_commits_users.get(commit.author.email)
                                  ),
                    message=commit.message,
                    committed_at=commit.committed_datetime.isoformat(),
@@ -110,7 +110,7 @@ class RepoNode(DCToDictMixin):
                    children=None,
                    of_branch=branch,
                    tag=associations_commits_tags.get(commit.hexsha),
-                   associated_task_id=associations_commits_tasks.get(branch)
+                   # DEPRECATED: associated_task_id=associations_commits_tasks.get(branch)
                    )
 
         return node
@@ -157,23 +157,24 @@ class RepoNode(DCToDictMixin):
 
 
 class RepoManager:
-    def __init__(self, verbose: bool = False, users_models: List[UserModel] = None, tasks_models: List[TaskModel] = None):
-        global associations_commits_tasks
-        global associations_commits_users
-
-        if isinstance(users_models, list):
-            associations_commits_users = dict()
-            for user in users_models:
-                associations_commits_users[user.email] = user.id
-
-        if isinstance(tasks_models, list):
-            associations_commits_tasks = dict()
-            for task in tasks_models:
-                if associations_commits_tasks.get(task.git_branch) is None:
-                    associations_commits_tasks[task.git_branch] = [task.id]
-
-                else:
-                    associations_commits_tasks[task.git_branch].append(task.id)
+    def __init__(self, verbose: bool = False):
+        # DEPRECATED:
+        # global associations_commits_tasks
+        # global associations_commits_users
+        #
+        # if isinstance(users_models, list):
+        #     associations_commits_users = dict()
+        #     for user in users_models:
+        #         associations_commits_users[user.email] = user.id
+        #
+        # if isinstance(tasks_models, list):
+        #     associations_commits_tasks = dict()
+        #     for task in tasks_models:
+        #         if associations_commits_tasks.get(task.git_branch) is None:
+        #             associations_commits_tasks[task.git_branch] = [task.id]
+        #
+        #         else:
+        #             associations_commits_tasks[task.git_branch].append(task.id)
 
         self.verbose = verbose
 

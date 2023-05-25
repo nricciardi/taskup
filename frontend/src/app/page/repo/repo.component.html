@@ -19,6 +19,18 @@
   <!-- DOM element in which we'll mount our graph -->
   <div id="graph-container"></div>
 
+  <button type="button" class="btn icon btn-light d-none" #showCommitInfoBtn
+                        data-bs-toggle="modal"
+                        [attr.data-bs-target]="'#show-commit-info'">
+                  <i class="bi bi-trash"></i>
+  </button>
+
+  <app-show-info-of-commit-modal [target]="'show-commit-info'" [commiterEmail]="commiterEmailOfSelectedCommit"
+                                                               [branchesOfCommit]="branchesOfSelectedCommit"
+                                                               [hash]="hashOfSelectedCommit"
+                                                               [message]="messageOfSelectedCommit"
+                                                               [commiterName]="commiterNameOfSelectedCommit">
+  </app-show-info-of-commit-modal>
 </ng-container>
 
 <app-warning-alert [title]="'invalid-repo'" [dismissable]="false" *ngIf="validRepo === false"></app-warning-alert>
