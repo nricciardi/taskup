@@ -13,5 +13,6 @@ export class TaskLabelService extends EntityApiService<TaskLabelModel> {
   override UPDATE: string = "task_label_update";
   override CREATE: string = "task_label_create";
   override CHECK_ALREADY_USED: string = "task_label_check_already_used";
+  override FILTER: string = "task_label_filter";
 
 }

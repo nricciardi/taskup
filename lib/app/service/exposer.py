@@ -136,6 +136,7 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__tasks_manager.find, self.debug_mode), self.__auth_service, self.debug_mode), "task_find")
             self.expose(login_required(to_dict(self.__tasks_manager.all_as_dict, self.debug_mode), self.__auth_service, self.debug_mode), "task_all")
             self.expose(login_required(to_dict(self.__tasks_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_update")
+            self.expose(login_required(to_dict(self.__tasks_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "task_filter")
 
         except Exception as excepetion:
             Logger.log_error(msg="task exposure error", is_verbose=self.verbose, full=True)
@@ -159,6 +160,8 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__todo_items_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "todo_all")
             self.expose(login_required(to_dict(self.__todo_items_manager.all_of, self.debug_mode), self.__auth_service, self.verbose), "todo_all_of")
             self.expose(login_required(to_dict(self.__todo_items_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "todo_update")
+            self.expose(login_required(to_dict(self.__todo_items_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "todo_filter")
+
 
         except Exception as excepetion:
             Logger.log_error(msg="todo items exposure error", is_verbose=self.verbose, full=True)
@@ -181,6 +184,7 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__task_labels_manager.find, self.debug_mode), self.__auth_service, self.verbose), "task_label_find")
             self.expose(login_required(to_dict(self.__task_labels_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_label_all")
             self.expose(login_required(to_dict(self.__task_labels_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_label_update")
+            self.expose(login_required(to_dict(self.__task_labels_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "task_label_filter")
 
         except Exception as excepetion:
             Logger.log_error(msg="task labels exposure error", is_verbose=self.verbose, full=True)
@@ -205,6 +209,8 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__task_status_manager.find, self.debug_mode), self.__auth_service, self.verbose), "task_status_find")
             self.expose(login_required(to_dict(self.__task_status_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_status_all")
             self.expose(login_required(to_dict(self.__task_status_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_status_update")
+            self.expose(login_required(to_dict(self.__task_status_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "task_status_filter")
+
 
         except Exception as excepetion:
             Logger.log_error(msg="task status exposure error", is_verbose=self.verbose, full=True)
@@ -229,6 +235,8 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__task_assignment_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_all")
             self.expose(login_required(to_dict(self.__task_assignment_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_update")
             self.expose(login_required(to_dict(self.__task_assignment_manager.update_by_task_user_id_from_dict, self.debug_mode), self.__auth_service, self.verbose), "task_assignment_update_by_task_user_id_from_dict")
+            self.expose(login_required(to_dict(self.__task_assignment_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "task_assignment_filter")
+
 
         except Exception as excepetion:
             Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)
@@ -252,6 +260,8 @@ class ExposerService:
             self.expose(login_required(to_dict(self.__roles_manager.find, self.debug_mode), self.__auth_service, self.verbose), "role_find")
             self.expose(login_required(to_dict(self.__roles_manager.all_as_dict, self.debug_mode), self.__auth_service, self.verbose), "role_all")
             self.expose(login_required(to_dict(self.__roles_manager.update_from_dict, self.debug_mode), self.__auth_service, self.verbose), "role_update")
+            self.expose(login_required(to_dict(self.__roles_manager.filter, self.debug_mode), self.__auth_service, self.debug_mode), "role_filter")
+
 
         except Exception as excepetion:
             Logger.log_error(msg="roles exposure error", is_verbose=self.verbose, full=True)

@@ -18,6 +18,7 @@ export class TaskService extends EntityApiService<TaskModel> {
   readonly REMOVE_LABEL = "task_remove_label";
   override CREATE: string = "task_create";
   override CHECK_ALREADY_USED: string = "task_check_already_used";
+  override FILTER: string = "task_filter";
 
   public async removeAssignment(taskId: number, userId: number): Promise<Observable<boolean>> {
 

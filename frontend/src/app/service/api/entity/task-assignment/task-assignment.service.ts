@@ -11,6 +11,7 @@ export class TaskAssignmentService extends EntityApiService<TaskAssignmentModel>
   override ALL: string = "task_assignment_all";
   override FIND: string = "task_assignment_find";
   override DELETE_BY_ID: string = "task_assignment_delete_by_id";
+  override FILTER: string = "task_assignment_filter";
   override UPDATE: string = "task_assignment_update";
   readonly REMOVE_ASSIGNMENT = "task_assignment_remove_assignment";
   readonly ADD_ASSIGNMENT = "task_assignment_add_assignment";

@@ -288,6 +288,29 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
+    def filter(self, filters: Dict[str, str], operator: str = "=", with_relations: bool = True, safe: bool = True) -> List[EntityModel]:
+        """
+        Return entities filter by key-value
+
+        :param operator:
+        :param filters:
+        :param with_relations:
+        :param safe:
+        :return:
+        """
+
+        operator = operator.lower()
+
+        conditions: List[WhereCondition] = []
+
+        for k, v in filters.items():
+            if operator == "like":
+                v = f"%{v}%"
+
+            conditions.append(WhereCondition(k, operator, v))
+
+        return self.where_as_model(*conditions, with_relations=with_relations, safe=safe)
+
     def check_already_used(self, field_name: str, value: Any) -> bool:
         """
         Check if the value passed is already used (where alias)

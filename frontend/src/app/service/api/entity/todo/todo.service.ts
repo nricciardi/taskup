@@ -14,6 +14,7 @@ export class TodoService extends EntityApiService<TodoItemModel> {
   readonly ALL_OF = "todo_all_of";
   override UPDATE: string = "todo_update";
   override CREATE: string = "todo_create";
+  override FILTER: string = "todo_filter";
   override CHECK_ALREADY_USED: string = "todo_already_used";
 
   public async allOf(taskId: number): Promise<Observable<TodoItemModel[]>> {

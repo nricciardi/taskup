@@ -157,7 +157,7 @@ class RepoNode(DCToDictMixin):
 
 
 class RepoManager:
-    def __init__(self, verbose: bool = False):
+    def __init__(self, project_path: Optional[str] = None, verbose: bool = False):
         # DEPRECATED:
         # global associations_commits_tasks
         # global associations_commits_users
@@ -177,10 +177,11 @@ class RepoManager:
         #             associations_commits_tasks[task.git_branch].append(task.id)
 
         self.verbose = verbose
+        self.project_path = project_path
 
         self.repo: Optional[git.Repo] = None
 
-    def open_repo(self, project_path: str) -> None:
+    def open_repo(self, project_path: Optional[str]) -> None:
         """
         Open repo
 
@@ -189,14 +190,22 @@ class RepoManager:
         """
 
         try:
-            self.repo = git.Repo(project_path)
+            self.project_path = project_path
+
+            if self.project_path is None:
+                Logger.log_warning(msg=f"invalid path project '{self.project_path}' to open repo", is_verbose=self.verbose)
+                return None
+
+            self.repo = git.Repo(self.project_path)
+
+            Logger.log_info(msg=f"open repo in project '{self.project_path}'", is_verbose=self.verbose)
 
         except git.exc.InvalidGitRepositoryError:
-            Logger.log_warning(msg=f"invalid repository in '{project_path}'", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"invalid repository in '{self.project_path}'", is_verbose=self.verbose)
             self.repo = None
 
         except Exception:
-            Logger.log_warning(msg=f"unable to open repository '{project_path}'", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"unable to open repository '{self.project_path}'", is_verbose=self.verbose)
             self.repo = None
 
     def valid_opened_repo(self) -> bool:
@@ -253,11 +262,15 @@ class RepoManager:
         :return:
         """
 
+        if not self.valid_opened_repo() and isinstance(self.project_path, str):
+            Logger.log_warning(msg="repo not found, try to re-open it", is_verbose=self.verbose)
+            self.open_repo(self.project_path)   # try to re-open
+
         if not self.valid_opened_repo():
-            Logger.log_warning(msg="impossible to elaborate commits: repo not found", is_verbose=self.verbose)
+            Logger.log_error(msg="impossible to elaborate commits: repo not found", is_verbose=self.verbose)
             return None
 
-        Logger.log_info(msg=f"start to fetch commits from project repo...", is_verbose=self.verbose)
+        Logger.log_info(msg=f"start to fetch commits from project repo '{self.project_path}'...", is_verbose=self.verbose)
 
         self.repo.git.fetch()
 

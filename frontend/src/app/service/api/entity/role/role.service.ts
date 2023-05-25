@@ -12,4 +12,5 @@ export class RoleService extends EntityApiService<RoleModel> {
   override UPDATE: string = "role_update";
   override CREATE: string = "role_create";
   override CHECK_ALREADY_USED: string = "role_check_already_used";
+  override FILTER: string = "role_filter";
 }

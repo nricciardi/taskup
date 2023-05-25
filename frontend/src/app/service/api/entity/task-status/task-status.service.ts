@@ -14,6 +14,7 @@ export class TaskStatusService extends EntityApiService<TaskStatusModel> {
   override UPDATE: string = "task_status_update";
   override CREATE: string = "task_status_create";
   override CHECK_ALREADY_USED: string = "task_status_check_already_used";
+  override FILTER: string = "task_status_filter";
 
   public async getTaskById(id: number): Promise<TaskStatusModel> {
 

@@ -64,6 +64,7 @@ class ProjectManager:
 
         # load repo manager
         self.repo_manager = RepoManager(verbose=self.verbose,
+                                        project_path=self.project_path
                                         # DEPRECATED: users_models=self.users_manager.all_as_model(with_relations=False, safe=True),
                                         # DEPRECATED: tasks_models=self.tasks_manager.all_as_model(with_relations=False, safe=True)
                                         )
