@@ -150,6 +150,7 @@
   "no-tasks-associeted": "Non ci sono tasks associati",
   "hash": "Hash",
   "message": "Messaggio",
-  "tasks": "Tasks"
+  "tasks": "Tasks",
+  "git_branch": "Git Branch"
 
 }

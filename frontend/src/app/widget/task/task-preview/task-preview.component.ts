@@ -109,6 +109,7 @@ export class TaskPreviewComponent {
       name: this.task.name,
       description: this.task.description,
       priority: this.task.priority,
+      git_branch: this.task.git_branch
     }
   }
 

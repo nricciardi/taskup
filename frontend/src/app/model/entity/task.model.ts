@@ -12,6 +12,7 @@ export interface TaskModel extends BaseEntity {
   priority: number;
   created_at: Date;
   updated_at: Date;
+  git_branch: string | null;
 
   author_id: number;
   task_status_id: number;
@@ -30,6 +31,7 @@ export interface BlueprintTaskModel {
   priority?: number;
   created_at?: Date;
   updated_at?: Date;
+  git_branch?: string | null;
 
   author_id?: number;
   task_status_id?: number;

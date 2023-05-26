@@ -391,6 +391,34 @@
                             </div>
                           </div>
 
+                          <!-- GIT BRANCH -->
+                          <div class="col-md-6">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "git_branch" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    [value]="task.git_branch"
+                                    [readonly]="!inModify"
+
+                                    #gitBranch
+                                    (input)="blueprintModificateTask!.git_branch = gitBranch.value"
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-git"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                         </div>
 
                       </div>
