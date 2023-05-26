@@ -12,14 +12,29 @@ import { environment } from 'src/environments/environment.development';
 export class FooterComponent {
 
   appName = environment.appName;
+  version?: string;
 
   constructor(public appService: AppService, public utilsService: UtilsService) {}
+
+  ngOnInit() {
+    this.loadVersion();
+  }
 
   close() {
 
     this.appService.close().then(() => {
 
       window.close();
+    })
+  }
+
+  loadVersion() {
+    this.appService.version().then((response) => {
+      response.subscribe({
+        next: (value) => {
+          this.version = value;
+        }
+      })
     })
   }
 }

@@ -1,7 +1,14 @@
 <footer style="margin: 0 10vw 5vh 10vw;">
   <div class="footer clearfix mb-0 text-muted">
     <div class="float-start">
-      <p>2023 &copy; <strong>{{ appName }}</strong> developed by Nicola Ricciardi</p>
+      <p>
+        2023 &copy; <strong>{{ appName }}</strong>
+        <span *ngIf="!!version">
+          (v{{ version }})
+        </span>
+        developed by Nicola Ricciardi
+
+      </p>
     </div>
     <div class="float-end">
       <button class="btn icon btn-light"

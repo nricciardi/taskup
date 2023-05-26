@@ -125,19 +125,7 @@ class AppManager:
 
         Logger.log_info(msg="Close app...", is_verbose=True)
 
-        self.backup_work_dir()
-
-    def backup_work_dir(self) -> None:
-        """
-        Make backup of work directory
-
-        :return:
-        """
-
-        # check for backup
-        if self.settings_manager.get_setting_by_key(SettingsManager.KEY_BACKUP):
-            if Utils.backup_dir_content(self.settings_manager.work_directory_path):
-                Logger.log_success(msg="backup done successfully", is_verbose=self.verbose)
+        self.project_manager.backup_work_dir()
 
     @classmethod
     def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
@@ -221,7 +209,7 @@ class AppManager:
         try:
             Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
 
-            self.backup_work_dir()
+            self.project_manager.backup_work_dir()
 
             Utils.exit()
 

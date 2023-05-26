@@ -276,3 +276,15 @@ class ProjectManager:
             Logger.log_error(msg=f"{e}", full=True, is_verbose=self.verbose)
 
             return False
+
+    def backup_work_dir(self) -> None:
+        """
+        Make backup of work directory
+
+        :return:
+        """
+
+        # check for backup
+        if self.settings.get_setting_by_key(SettingsManager.KEY_BACKUP):
+            if Utils.backup_dir_content(self.settings.work_directory_path):
+                Logger.log_success(msg="backup done successfully", is_verbose=self.verbose)
