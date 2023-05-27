@@ -4,7 +4,6 @@
 
 This is a university project for teaching object-oriented programming at UniMoRe university (a.y. 2022/2023).
 
-
 - [Taskup](#taskup)
   * [Get Started](#get-started)
     + [Dependencies](#dependencies)
@@ -72,6 +71,8 @@ After dependencies installation, this app can be opened using `main.py`.
 
 `main.py` accepts some parameters based on execution modality.
 
+If desired, you can create a working executable all-in-one by downloading PyInstaller and running the following command: `python3 -m eel main.py frontend/ --onefile`.
+
 #### Modality
 
 - `run`, `r` or _nothing_: launch the application
@@ -89,6 +90,7 @@ It is possible to manage application settings using `settings.json`, this file h
 Inserting custom settings in it, they override base default settings (managed by `SettingsManager`).
 
 The settings available are:
+
 - `vault_path`, a string that contains the path of directory in which will be saved the file which stores user's credentials 
 - `current_project_path`, a string which contains the project path which will be loaded at the beginning
 - `projects_stored_paths`, a list of strings which contains the paths of already opened projects
@@ -106,6 +108,7 @@ The settings available are:
   - `edge` to open app in Edge browser 
 
 ## Contribute
+
 Everyone can contribute to this project.
 
 Contributing is possible via pull request. You can develop something present in the [TODO](TODO.md) file or new feature from scratch.
@@ -212,12 +215,15 @@ For example, the _Manage Task Label_ page looks like this:
 In addition, if there are a lot of resources, it is possible to use filters.
 
 ## Home
+
 **Home page** provides a set of sections where is possible:
+
 - Watch _project information_
 - _Initialize_ new project
 - _Open_ projects
 
 ### Project Information
+
 In this section, it is possible to see the project's path, its app's database, and if the logged-in user has the 
 specific permission, this app can be removed from the project.
 
@@ -231,7 +237,7 @@ To initialize a project, it is necessary to indicate the project's path and prov
 project's **project manager** who oversees the project.
 
 > **WARNING**: Avoid to lose project manager's password, because the nature of this application makes it impossible
-to recover password without previously login.
+> to recover password without previously login.
 
 If the indicated project is already initialized, checking _force initialize_ is possible to
 re-initialize project.
@@ -241,9 +247,9 @@ re-initialize project.
 ![Home open](./doc/img/usr-doc/home-open.png)
 
 Open project is possible in two-way:
+
 - Manually entering the path
 - Selecting the path from a set of already opened projects
-
 
 # Documentation for Developers
 
@@ -270,6 +276,7 @@ To run Sphinx doc:
 ![structure of the project](./doc/img/dev-doc/structure-diagram.jpg)
 
 ### AppManager and its Services
+
 **AppManager** is the class which provides methods to manage this app.
 In particular, AppManager has a set of _services_, which are classes that provide specific functionality.
 For example `AuthService` provides _authentication system_.
@@ -278,10 +285,12 @@ AppManager **has only one** service reference for each type to avoid duplication
 Therefore, the services need to be refreshed instead of re-instantiated.
 
 #### ProjectManager
+
 **ProjectManager** manage the _projects_, usually only one project at time.
 It allows initializing a new project or opening an existing project.
 
 #### AuthService
+
 **AuthService** provides _authentication system_.
 It also manages _vault_ (`vault.json`), where "remember me" user credentials are stored.
 
