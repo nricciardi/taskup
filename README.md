@@ -295,25 +295,23 @@ Eel hosts a local web server and allows functions in Python to be called from Ja
 
 The App class in `app.py` implements `__init__` and `start` methods to load and start Eel. It takes the configuration files
 from `settings.json` using the Settings class.
-In `__init__` it uses the Exposer class to expose all methods for frontend.
+In the `__init__` method, it uses the Exposer class to expose all methods for frontend.
 
 #### Exposer
 
-Exposer is the class which provides to expose methods using the "expose" methods of Eel. In particular, 
+The Exposer class is responsible for exposing methods using the "expose" methods of Eel. Specifically, 
 Eel provides two methods to expose a function (other than `@expose` decorator):
 
-- `expose()` which exposes method (and function) as it is
-- `_expose()` which is a _protected_ method of Eel library and expose method (and function) with an _alias_, it is so important because the entities managers have
-  the same methods name to create, read, update and so on entities, so each manager has the own prefix (e.i. UsersManager has "user_")
-  see [here](#how-to-set-alias-in-eel).
+- `expose()`, which exposes a method (and function) as it is
+- `_expose()`, which is a _protected_ method of Eel library. It exposes a method or function with an _alias_. This is particularly important because the entity managers have methods with the same names for creating, reading, updating, and other operations on entities. Each manager has its own prefix. For example, the UsersManager has the prefix "user_". For more information on how to set an alias in Eel, refer to  [here](#how-to-set-alias-in-eel).
 
 #### Webserver
 
-The Eel's webserver implements a [**Web Socket**](https://en.wikipedia.org/wiki/WebSocket) to send data.
-It is hosted on 8000 port (see `app.py`), so in develop mode the frontend have to host on different port, for example, 4200 port.
-See [here](#how-to-run-angular-and-eel-together-in-develop-mode).
+The Eel's webserver implements a [**Web Socket**](https://en.wikipedia.org/wiki/WebSocket) for data transmission.
+It is hosted on port 8000 (as specified in `app.py`), so in development mode, the frontend needs to be hosted on a different port, such as port 4200.
+Refer to [here](#how-to-run-angular-and-eel-together-in-develop-mode) for more information.
 
-Since the webserver is implemented with web socket there can only be **one** data transfer at a time.
+Since the webserver is implemented with WebSocket, only **one** data transfer can occur at a time.
 
 ## Database and Entities
 
@@ -321,59 +319,55 @@ Since the webserver is implemented with web socket there can only be **one** dat
 
 ### DBManager
 
-**DBManager** is the class used to provide connect with the database.
-Moreover, it allows to create the base structure of the database: tables and relations between them.
+The **DBManager** class is used to establish a connection with the database. It also provides functionality to create the basic structure of the database, including tables and relationships between them.
 
 ### BEM
 
-**BEM** is the base class for the _entities models_, it implements some common and useful methods.
+The **BEM** class serves as the base class for _entity models_. It implements several common and useful methods.
 
 ### EntitiesManager
 
-**EntitiesManager** is the base class for the _entities managers_, that are classes that manage entities (find, create, delete, ...).
+The **EntitiesManager** class serves as the base class for _entity managers_. These managers are responsible for managing entities, such as finding, creating, and deleting them.
 
 ### User, Task, TaskLabel and so on Managers
 
-The entities (**User, Task, TaskLabel, ...**) are the classes used to manage the single entity of database.
-Each of them has the base shared methods and some specific methods. For example, _TaskManager_ and _TaskLabelManager_ have `add_label` method to add a label on specific task.
+The entities (**User**, **Task**, **TaskLabel**, etc.) are classes used to manage individual entities in the database. Each entity manager has shared base methods as well as specific methods. For example, the _TaskManager_ and _TaskLabelManager_ have an `add_label` method to add a label to a specific task.
 
 ### QueryBuilder
 
-**QueryBuilder** is a custom _query builder_ based on Python `sqlite3` that implements the common utilities to build a query with Python code instead of SQL.
-It supports binding with specific method as `enable_binding`.
+The **QueryBuilder** is a custom _query builder_ based on Python `sqlite3` module. It provides utilities for constructing queries using Python code instead of raw SQL. It also supports binding values using the `enable_binding` method.
 
 ### Trigger
 
-During the table creation (using db component named _Table_, which accepts a list of _Field_ and other parameters as _FKConstraint_ and _Trigger_) in base structure creation are configured a set of **triggers**.
-The triggers are used to update the **updated_at** field of task table each time that a component linked with task is modified.
+During the creation of tables (using the `Table` component from the _db_ module, which accepts a list of Field objects, as well as other parameters such as `FKConstraint` and `Trigger`), a set of triggers is configured. 
+These triggers are used to update the `updated_at` field of the task table whenever a component linked to a task is modified.
 
-There are 3 triggers (_on update, on create and on delete_) for the following tables: **todo_item**, **pivot assignment** and **pivot labels**. While for the task table there is only the trigger _on update_ (because if a task is deleted or created is pointless updating the field).
+There are _three_ triggers (on update, on create, and on delete) for the following tables: `todo_item`, `pivot_assignment`, and `pivot_labels`. However, for the task table, there is only an on update trigger, as it is unnecessary to update the field when a task is created or deleted.
 
 ## Frontend
 
-The frontend of this application uses the _Angular framework_.
-Angular is a TypeScript-based, free and open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations.
-The frontend is structured in:
+The frontend of this application is built using the _Angular framework_. 
+Angular is a TypeScript-based, free and open-source web application framework led by the Angular Team at Google and a community of developers and organizations. 
+The frontend is structured as follows:
 
-- **page** contains final pages as _login page_ or _home page_
-- **widget** contains simple widgets shared between pages as _user avatar_
-- **service** contains the _services_ that are used to implements shared methods and communication with backend
-- **model** contains a list of interface for objects that also represents entities data to show
-- **directive** contains custom Angular directives
+- **page**: This directory contains the final pages of the application, such as the _login_ page and _home_ page
+- **widget**: This directory contains simple widgets that are shared between pages, such as a _user avatar_
+- **service**: This directory contains _services_ that are used to implement shared methods and handle communication with the backend
+- **model**: This directory contains interfaces for objects that represent entity data to be displayed
+- **directive**: This directory contains _custom_ Angular directives
 
 ### Services
 
-The services in Angular are used to manage connections with backend and provide some other functionality to app.
-To communicate with Eel backend was implemented `EelService` which uses a global declared variable `eel` to provide the main class method `call` to call Python exposed methods.
+In Angular, services are used to manage connections with the backend and provide additional functionality to the application. 
+To communicate with the Eel backend, an `EelService` was implemented. It utilizes a globally declared variable `eel` to provide the `call` method, which is used to invoke Python-exposed methods.
 
 ### EntityApiService
 
-The `EntityApiService` is a service which is used to share common methods between entity services.
-It uses a _generic type_ which represents the specif _entity model_, so it can be used in some methods.
-Each method returns a _Promise of Observable_, the observable is connected with websocket of backend.
-To call the specific method of entity services, this class uses _readonly abstract variable_, each child service override them. 
+The `EntityApiService` is a service used to share common methods among entity services. 
+It utilizes a generic type that represents the specific _entity model_, allowing it to be used in various methods. Each method returns a **Promise of Observable**, 
+where the observable is connected to the backend's WebSocket. To invoke specific methods of entity services, this class utilizes **readonly abstract variables**, which are overridden by each child service.
 
-For example the `find` method, which returns data of an entity searched by its id:
+For example, the `find` method retrieves the data of an entity by its ID.
 
 ```typescript
 export abstract class EntityApiService<T> {
@@ -415,9 +409,9 @@ public async addAssignment(taskId: number, userId: number): Promise<Observable<b
 
 The task visualization is made using a set of widgets:
 
-- **TaskPreview** is the main component which is a card with all task information as title, description and so on
-- **TaskPreviewList** is a component which display a list of task passed in a set of _TaskPreview_
-- **TaskTodo** and **TaskTodoList** are the components used to show the list of todo-item for each task 
+- **TaskPreview**: This is the main component that represents a card displaying all the information about a task, such as the title, description, and more
+- **TaskPreviewList**: This component is used to display a list of tasks by rendering multiple instances of the _TaskPreview_ component
+- **TaskTodo** and **TaskTodoList**: These components are used to show the list of todo items associated with each task. The _TaskTodo_ component represents an individual todo item, while the _TaskTodoList_ component displays a list of todo items for a specific task.
 
 ## Help the Open Source Community
 
