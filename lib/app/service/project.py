@@ -268,7 +268,7 @@ class ProjectManager:
 
             self.refresh()      # refresh project managed by the current ProjectManager instance
 
-            Logger.log_info(msg=f"'{path}' project opened", is_verbose=self.verbose)
+            Logger.log_success(msg=f"'{path}' project opened", is_verbose=self.verbose)
             return True
 
         except Exception as e:

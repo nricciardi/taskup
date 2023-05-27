@@ -14,14 +14,14 @@ from lib.settings.settings import SettingsManager
 class AppManager:
 
     VERSION: str = "1.1.0"
-    SHUTDOWN_DELAY = 5
+    SHUTDOWN_DELAY = 3
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600
 
     def __init__(self):
-        Logger.log_info(msg="App init...", is_verbose=True)
+        Logger.log_info(msg="app init...", is_verbose=True)
 
         # instance settings manager to take project configuration settings
-        Logger.log_info(msg="Take settings...", is_verbose=True)
+        Logger.log_info(msg="take settings...", is_verbose=True)
         self.__settings_manager = SettingsManager()     # only one SettingsManager for each App
 
         self.verbose = self.settings_manager.verbose
@@ -46,7 +46,7 @@ class AppManager:
         self.__expose()     # expose py methods
 
         # init Eel
-        frontend_dir = f"{self.settings_manager.frontend_directory}"
+        frontend_dir = self.settings_manager.frontend_directory
 
         Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, allowed_extensions=['.html'])  # init eel
@@ -80,7 +80,7 @@ class AppManager:
         """
 
         try:
-
+            # expose all app's methods with "app_" prefix
             ExposerService.expose_all_from_list(to_expose=[
                 self.open_settings,
                 self.version,
@@ -103,11 +103,18 @@ class AppManager:
 
     @classmethod
     def starter(cls):
-        app = AppManager()
+        app = cls()
         app.start()
 
     def start(self) -> None:
+        """
+        Start GUI from eel.start()
 
+        :return:
+        :rtype None:
+        """
+
+        # pick frontend entry and port from settings
         frontend_start = self.settings_manager.frontend_start
         port = self.settings_manager.port
 
@@ -117,15 +124,22 @@ class AppManager:
         if self.settings_manager.debug_mode:
             shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
 
-        mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)
+        mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)     # pick mode from settings
 
-        Logger.log_info(msg=f"Start app... (mode: {mode})", is_verbose=True)
+        Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
 
-        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode)  # start eel: this generates a loop
+        def close_callback(*args, **kwargs) -> None:
+            """
+            Callback to back up work directory on close
+            """
 
-        Logger.log_info(msg="Close app...", is_verbose=True)
+            Logger.log_info(msg="close app...", is_verbose=self.verbose)
 
-        self.project_manager.backup_work_dir()
+            self.project_manager.backup_work_dir()      # back up files if required
+
+            Utils.exit(verbose=False)       # force exit
+
+        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=close_callback)  # start eel: this generates a loop
 
     @classmethod
     def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
