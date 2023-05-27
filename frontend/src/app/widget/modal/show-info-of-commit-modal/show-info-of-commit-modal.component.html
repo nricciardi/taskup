@@ -62,7 +62,7 @@
           </div>
 
           <div class="col-12">
-            <ul>
+            <ul *ngIf="!!tasksAssociated && tasksAssociated.length > 0; else noTasks">
               <li *ngFor="let task of tasksAssociated">
                 <a data-bs-dismiss="modal" (click)="navigateToTask(task.id)" href="javascript:void(0)">
                   <strong>
@@ -80,6 +80,9 @@
 
               </li>
             </ul>
+            <ng-template #noTasks>
+              <app-warning-alert [title]="'no-task'" [dismissable]="false"></app-warning-alert>
+            </ng-template>
           </div>
         </div>
 

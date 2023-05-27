@@ -71,6 +71,32 @@ export class RepoComponent {
     this.generationError = false;
 
     try {
+
+      const showInfoOfCommit = (commit: any) => {
+
+
+        if(this.showCommitInfoBtn && !!this.authService.loggedUser) {
+
+          // reset values
+          this.commiterEmailOfSelectedCommit = undefined;
+          this.commiterNameOfSelectedCommit = undefined;
+          this.branchesOfSelectedCommit = undefined;
+          this.hashOfSelectedCommit = undefined;
+          this.messageOfSelectedCommit = undefined;
+
+          // set values
+          this.commiterEmailOfSelectedCommit = commit.author.email;
+          this.commiterNameOfSelectedCommit = commit.author.name;
+          this.branchesOfSelectedCommit = commit.branches;
+          this.hashOfSelectedCommit = commit.hash;
+          this.messageOfSelectedCommit = commit.subject;
+
+          // show modal
+          this.showCommitInfoBtn.nativeElement.click();
+        }
+
+      }
+
       for (let index = 0; index < nodes.length; index++) {
         const node: RepoNode = nodes[index];
 
@@ -99,6 +125,13 @@ export class RepoComponent {
                     hash: node.hexsha,
                     subject: node.message,
                     author: `${node.author.name} <${node.author.email}>`,
+                    onMessageClick(commit: any) {
+                      showInfoOfCommit(commit);
+                    },
+                    onClick(commit: any) {
+                      showInfoOfCommit(commit);
+
+                    }
                   },
                   branch: parent_branch
                 });
@@ -110,30 +143,7 @@ export class RepoComponent {
           // ============ NORMAL COMMIT ===========
           } else {
 
-            const showInfoOfCommit = (commit: any) => {
 
-
-              if(this.showCommitInfoBtn && !!this.authService.loggedUser) {
-
-                // reset values
-                this.commiterEmailOfSelectedCommit = undefined;
-                this.commiterNameOfSelectedCommit = undefined;
-                this.branchesOfSelectedCommit = undefined;
-                this.hashOfSelectedCommit = undefined;
-                this.messageOfSelectedCommit = undefined;
-
-                // set values
-                this.commiterEmailOfSelectedCommit = commit.author.email;
-                this.commiterNameOfSelectedCommit = commit.author.name;
-                this.branchesOfSelectedCommit = commit.branches;
-                this.hashOfSelectedCommit = commit.hash;
-                this.messageOfSelectedCommit = commit.subject;
-
-                // show modal
-                this.showCommitInfoBtn.nativeElement.click();
-              }
-
-            }
 
             // add commit to branch
             this.branches[node.of_branch].commit({
