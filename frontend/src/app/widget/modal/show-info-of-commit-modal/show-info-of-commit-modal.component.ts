@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-show-info-of-commit-modal',
@@ -17,7 +19,7 @@ export class ShowInfoOfCommitModalComponent {
 
   tasksAssociated: TaskModel[] = [];
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private router: Router) {}
 
   loadTasksAssociated() {
 
@@ -46,5 +48,11 @@ export class ShowInfoOfCommitModalComponent {
 
   ngOnChanges() {
     this.loadTasksAssociated();
+  }
+
+  navigateToTask(id: number | string) {
+    setTimeout(() => {
+      this.router.navigate(['/task/' + new String(id)]);
+    }, 500);
   }
 }

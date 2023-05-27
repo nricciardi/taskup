@@ -391,6 +391,31 @@
                             </div>
                           </div>
 
+                          <!-- UPDATED AT -->
+                          <div class="col-md-6" *ngIf="task.task_status">
+                            <div class="col-md-auto">
+                              <label>
+                                {{ "task-status" | translate }}
+                              </label>
+                            </div>
+
+                            <div class="col-md-auto">
+                              <div class="form-group has-icon-left">
+                                <div class="position-relative">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    [value]="task.task_status.name"
+                                    readonly
+                                  />
+                                  <div class="form-control-icon">
+                                    <i class="bi bi-kanban-fill"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                           <!-- GIT BRANCH -->
                           <div class="col-md-6">
                             <div class="col-md-auto">

@@ -34,7 +34,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
-    path: "task/{id}",
+    path: "task/:id",
     component: TaskComponent,
     canActivate: [AuthGuardService]
   },

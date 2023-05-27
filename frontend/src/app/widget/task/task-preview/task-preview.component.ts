@@ -82,6 +82,7 @@ export class TaskPreviewComponent {
     }
 
     this.refreshHasNews();
+    this.loadTaskStatus();
   }
 
   private _inModify: boolean = false;
@@ -98,6 +99,26 @@ export class TaskPreviewComponent {
       this.initBlueprintTask();
 
     }
+  }
+
+  loadTaskStatus() {
+
+    if(!this.taskStatus) {
+      LoggerService.logWarning("force load task status");
+
+      this.taskStatusService.all().then((response) => {
+
+        response.subscribe({
+          next: (status) => {
+            if(!!status) {
+              this.taskStatus = status;
+            }
+          }
+        })
+
+      })
+    }
+
   }
 
   initBlueprintTask() {

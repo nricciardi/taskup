@@ -1,1 +1,14 @@
-<app-task-preview></app-task-preview>
+<ng-container *ngIf="!!task; else noTask">
+  <app-task-preview [task]="task" [todoCollapseStatus]="true"
+                  (onAddAssignment)="loadTaskById(task.id)"
+                  (onAddLabel)="loadTaskById(task.id)"
+                  (onDeletion)="loadTaskById(task.id)"
+                  (onModify)="loadTaskById(task.id)"
+                  (onRemoveAssignment)="loadTaskById(task.id)"
+                  (onRemoveLabel)="loadTaskById(task.id)">
+  </app-task-preview>
+</ng-container>
+
+<ng-template #noTask>
+  <app-warning-alert title="no-task" [dismissable]="false"></app-warning-alert>
+</ng-template>

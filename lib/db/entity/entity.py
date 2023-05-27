@@ -166,7 +166,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return models
 
-    def find(self, entity_id: int, with_relations: bool = True, safe: bool = True) -> EntityModel:
+    def find(self, entity_id: int, with_relations: bool = True, safe: bool = True) -> EntityModel | None:
         """
         Return the record requested
 
@@ -182,6 +182,10 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         """
 
         data: Dict = self.__find(entity_id, self.table_name)
+
+        if data is None:
+            return None
+
         em = self.EM.from_dict(data)    # create a new EntityModel from found data (dict)
 
         if with_relations:
@@ -189,7 +193,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         return em
 
-    def __find(self, entity_id: int, table_name: str) -> Dict:
+    def __find(self, entity_id: int, table_name: str) -> Dict | None:
         """
         Actual find method implementation.
         This method return a tuple because it can be used with different table, therefore it doesn't know any
@@ -209,7 +213,15 @@ class EntitiesManager(ABC, Generic[EntityModel]):
 
         res = self.db_manager.cursor.execute(query)
 
-        return dict(res.fetchone() if res is not None else {})
+        if res is None:
+            return None
+
+        data = res.fetchone()
+
+        if data is None:
+            return None
+
+        return dict(data)
 
     def __get_find_query(self, entity_id: int, table_name: str) -> str:
         """

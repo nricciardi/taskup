@@ -26,10 +26,7 @@
               style="padding-bottom: 20vh;">
 
           <div class="btn-group dropdown me-1 mb-1">
-            <button type="button" class="btn btn-outline-primary"
-                    (click)="onSelect.emit(selectedItem); selectedItem = undefined">
-              {{ confirmBtnText | translate }}
-            </button>
+
             <button
               type="button"
               class="btn btn-primary dropdown-toggle dropdown-toggle-split"
@@ -48,6 +45,11 @@
                 </span>
               </ng-template>
 
+            </button>
+
+            <button type="button" class="btn btn-outline-primary"
+                    (click)="onSelect.emit(selectedItem); selectedItem = undefined">
+              {{ confirmBtnText | translate }}
             </button>
 
             <div class="dropdown-menu">

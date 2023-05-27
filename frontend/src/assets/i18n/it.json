@@ -151,6 +151,7 @@
   "hash": "Hash",
   "message": "Messaggio",
   "tasks": "Tasks",
-  "git_branch": "Git Branch"
+  "git_branch": "Git Branch",
+  "no-task": "Nessun task trovato"
 
 }
