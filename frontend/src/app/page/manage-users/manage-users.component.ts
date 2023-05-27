@@ -56,7 +56,7 @@ export class ManageUsersComponent {
       name: "password",
       type: "password",
       placeholder: "Password",
-      blueprintFormControl: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)])
+      blueprintFormControl: new FormControl('', [this.utilsService.createPasswordStrengthValidator(8)])
     },
   ]
 
