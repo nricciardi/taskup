@@ -135,6 +135,23 @@
   "no-project": "No project is opened",
   "init-project-success": "Initialization completed successfully",
   "remove-work": "Remove work directory from project",
-  "password-warning": "Do not lose this password, otherwise you will no longer be able to access the project"
+  "repo": "Repo",
+  "invalid-repo": "Invalid repo",
+  "password-warning": "Do not lose this password, otherwise you will no longer be able to access the project",
+  "app_mode": "App mode",
+  "backup": "Backup",
+  "current_project_path": "Current project path",
+  "use_localtime": "Use localtime",
+  "vault_path": "Vault path",
+  "verbose": "Verbose",
+  "server-error": "Server Error",
+  "commit-info": "Commit Information",
+  "no-commiter": "No commiter",
+  "no-tasks-associeted": "No tasks",
+  "hash": "Hash",
+  "message": "Message",
+  "tasks": "Tasks",
+  "git_branch": "Git Branch",
+  "no-task": "No task found"
 
 }

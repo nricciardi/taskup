@@ -135,5 +135,23 @@
   "no-project": "Nessun progetto aperto",
   "init-project-success": "Inizializzazione completata con successo",
   "remove-work": "Rimuovi la cartella di lavoro dal progetto",
-  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto"
+  "repo": "Repo",
+  "invalid-repo": "Repo non valido",
+  "password-warning": "Non perdere questa password, altrimenti non sarà più possibile accedere al progetto",
+  "app_mode": "App mode",
+  "backup": "Backup",
+  "current_project_path": "Current project path",
+  "use_localtime": "Use localtime",
+  "vault_path": "Vault path",
+  "verbose": "Verbose",
+  "server-error": "Errore del Server",
+  "commit-info": "Informazioni del commit",
+  "no-commiter": "Non ci sono informazioni del commiter",
+  "no-tasks-associeted": "Non ci sono tasks associati",
+  "hash": "Hash",
+  "message": "Messaggio",
+  "tasks": "Tasks",
+  "git_branch": "Git Branch",
+  "no-task": "Nessun task trovato"
+
 }
