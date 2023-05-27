@@ -61,8 +61,9 @@ To start this app all required dependencies have to be installed.
 To run this project are required the followings dependencies:
 
 - [Python 3.10+](https://www.python.org/downloads/)
-- [Eel](https://pypi.org/project/Eel/) (Python module to create frontend)
+- [Eel v0.15.x](https://pypi.org/project/Eel/) (Python module to create GUI)
 - [Colorama](https://pypi.org/project/colorama/) (Python module for Logger)
+- [GitPython](https://pypi.org/project/GitPython/) (Python module to manage Git)
 - [Chromium](https://www.chromium.org/) based software (as Google Chrome or Firefox)
 
 ### Run
