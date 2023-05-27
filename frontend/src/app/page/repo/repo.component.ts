@@ -92,7 +92,17 @@ export class RepoComponent {
             node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
               if(parent.of_branch != currentBranch) {
 
-                this.branches[currentBranch].merge(parent.of_branch);
+                const parent_branch = this.branches[parent.of_branch];
+
+                this.branches[currentBranch].merge({
+                  commitOptions: {
+                    hash: node.hexsha,
+                    subject: node.message,
+                    author: `${node.author.name} <${node.author.email}>`,
+                  },
+                  branch: parent_branch
+                });
+
               }
             })
 
@@ -101,8 +111,6 @@ export class RepoComponent {
           } else {
 
             const showInfoOfCommit = (commit: any) => {
-
-              console.log(commit);
 
 
               if(this.showCommitInfoBtn && !!this.authService.loggedUser) {
