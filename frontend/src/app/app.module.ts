@@ -54,6 +54,7 @@ import { SettingsComponent } from './page/settings/settings.component';
 import { ServerErrorComponent } from './page/server-error/server-error.component';
 import { RepoComponent } from './page/repo/repo.component';
 import { ShowInfoOfCommitModalComponent } from './widget/modal/show-info-of-commit-modal/show-info-of-commit-modal.component';
+import { TaskComponent } from './page/task/task.component';
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import { ShowInfoOfCommitModalComponent } from './widget/modal/show-info-of-comm
     ServerErrorComponent,
     RepoComponent,
     ShowInfoOfCommitModalComponent,
+    TaskComponent,
   ],
   imports: [
     BrowserModule,

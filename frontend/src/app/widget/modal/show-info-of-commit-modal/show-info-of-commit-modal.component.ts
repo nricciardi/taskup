@@ -34,9 +34,9 @@ export class ShowInfoOfCommitModalComponent {
       }, "like").then((response) => {
         response.subscribe({
           next: (tasks) => {
-            console.log(tasks);
 
-            this.tasksAssociated.concat(tasks);
+            this.tasksAssociated = this.tasksAssociated.concat(tasks);
+
           }
         })
       })

@@ -62,7 +62,22 @@
           </div>
 
           <div class="col-12">
-            
+            <ul>
+              <li *ngFor="let task of tasksAssociated">
+                <strong>
+                  {{ task.name }}
+                </strong>
+
+                <span *ngIf="!!task.task_status">
+                  ({{ task.task_status.name }})
+                </span>
+
+                <span class="badge bg-light-secondary" *ngIf="!!task.git_branch">
+                  {{ task.git_branch }}
+                </span>
+
+              </li>
+            </ul>
           </div>
         </div>
 

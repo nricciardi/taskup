@@ -15,6 +15,7 @@ import { RoleGuardService } from './service/api/auth/role-guard.service';
 import { RepoComponent } from './page/repo/repo.component';
 import { SettingsComponent } from './page/settings/settings.component';
 import { ServerErrorComponent } from './page/server-error/server-error.component';
+import { TaskComponent } from './page/task/task.component';
 
 const routes: Routes = [
 
@@ -33,17 +34,17 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
+    path: "task/{id}",
+    component: TaskComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
     path: "login",
     component: LoginComponent
   },
   {
     path: "settings",
     component: SettingsComponent
-  },
-  {
-    path: "test",
-    component: TestComponent,
-    canActivate: [AuthGuardService]
   },
   {
     path: "my-profile",
@@ -78,6 +79,14 @@ const routes: Routes = [
     path: "repo",
     component: RepoComponent
   },
+
+
+  // for DEBUG:
+  /*{
+    path: "test",
+    component: TestComponent,
+    canActivate: [AuthGuardService]
+  },*/
 
   {
     path: "server-error",
