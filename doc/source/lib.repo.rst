@@ -1,13 +1,13 @@
-dbmanager package
-=================
+lib.repo package
+================
 
 Submodules
 ----------
 
-dbmanager.db\_manager module
-----------------------------
+lib.repo.repo module
+--------------------
 
-.. automodule:: dbmanager.db_manager
+.. automodule:: lib.repo.repo
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ dbmanager.db\_manager module
 Module contents
 ---------------
 
-.. automodule:: dbmanager
+.. automodule:: lib.repo
    :members:
    :undoc-members:
    :show-inheritance:
