@@ -177,6 +177,46 @@ class Utils:
             if value is not None:
                 d[key] = Utils.disguise(value)
 
+    @staticmethod
+    def generate_psw(length: int = 8, with_upper: bool = True, with_numbers: bool = True, with_symbols: bool = False) -> str:
+        """
+        Generate random password
+
+        :param length:
+        :param with_upper:
+        :param with_numbers:
+        :param with_symbols:
+        :return:
+        """
+
+        LETTERS: str = "abcdefghijklmnopqrstuvwxyz"
+        NUMBERS: str = "0123456789"
+        SYMBOLS: str = "@#$&_-()=%*:/!?+."
+
+        password: str = ""
+
+        i: int = 0
+        while i < length:
+            choice = randint(0, 3)
+
+            if choice == 0:
+                password += LETTERS[randint(0, len(LETTERS) - 1)]
+                i += 1
+
+            elif choice == 1 and with_upper:
+                password += LETTERS[randint(0, len(LETTERS) - 1)].upper()
+                i += 1
+
+            elif choice == 2 and with_numbers:
+                password += NUMBERS[randint(0, len(NUMBERS) - 1)]
+                i += 1
+
+            elif choice == 3 and with_symbols:
+                password += SYMBOLS[randint(0, len(SYMBOLS) - 1)]
+                i += 1
+
+        return password
+
 
 class SqlUtils:
 

@@ -12,7 +12,7 @@ from lib.settings.settings import SettingsManager
 class Demo:
     PM_EMAIL = "pm@email.com"
     PM_USERNAME = "project.manager"
-    PM_PASSWORD = "asd123"
+    PM_PASSWORD = Utils.generate_psw()
 
     N_USERS = 10
     N_TASKS = 50
@@ -98,7 +98,7 @@ class Demo:
             self.add_tasks(n_tasks, n_users)
 
             # print credentials
-            Logger.log_custom(msg=f"""project manager credentials:\nemail: {Demo.PM_EMAIL}\nusername: {Demo.PM_USERNAME}\npassword: {Demo.PM_PASSWORD}""", is_verbose=True)
+            Logger.log_custom(msg=f"""Project manager credentials:\nemail: {Demo.PM_EMAIL}\nusername: {Demo.PM_USERNAME}\npassword: {Demo.PM_PASSWORD}""", is_verbose=True, capitalize=False)
 
         except Exception as e:
             Logger.log_error(msg=f"error is occurred during the demo launch", is_verbose=self.verbose, full=True)
