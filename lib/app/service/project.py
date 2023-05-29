@@ -237,7 +237,7 @@ class ProjectManager:
             users_manager = UsersManager(db_manager=db_manager)
             users_manager.create_from_dict(dict(**future_pm_data, role_id=db_manager.project_manager_role_id))
 
-            Logger.log_info(msg=f"'{project_path}' project have been initialized", is_verbose=self.verbose)
+            Logger.log_success(msg=f"'{project_path}' project have been initialized", is_verbose=self.verbose)
             return True
 
         except Exception as e:

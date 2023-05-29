@@ -139,7 +139,8 @@ class AppManager:
 
             Utils.exit(verbose=False)       # force exit
 
-        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=close_callback)  # start eel: this generates a loop
+        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=close_callback,
+                  cmdline_args=["--disable-translate"])  # start eel: this generates a loop
 
     @classmethod
     def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
