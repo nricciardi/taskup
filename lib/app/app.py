@@ -48,7 +48,7 @@ class AppManager:
         # init Eel
         frontend_dir = self.settings_manager.frontend_directory
 
-        Logger.log_info(msg=f"Init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
+        Logger.log_info(msg=f"init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, allowed_extensions=['.html'])  # init eel
 
     @property
@@ -128,18 +128,16 @@ class AppManager:
 
         Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
 
-        def close_callback(*args, **kwargs) -> None:
+        def on_websocket_change(*args, **kwargs) -> None:
             """
-            Callback to back up work directory on close
+            Callback for Eel start method
             """
 
-            Logger.log_info(msg="close app...", is_verbose=self.verbose)
+            Logger.log_info(msg="eel web socket change status...", is_verbose=self.verbose)
 
             self.project_manager.backup_work_dir()      # back up files if required
 
-            Utils.exit(verbose=False)       # force exit
-
-        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=close_callback,
+        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=on_websocket_change,
                   cmdline_args=["--disable-translate"])  # start eel: this generates a loop
 
     @classmethod
@@ -225,8 +223,6 @@ class AppManager:
             Logger.log_info(msg="request to close app...", is_verbose=self.verbose)
 
             self.project_manager.backup_work_dir()
-
-            Utils.exit()
 
         except Exception:
             pass
