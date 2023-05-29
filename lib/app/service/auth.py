@@ -57,6 +57,10 @@ class AuthService:
 
                 self.__me = ListUtils.first(users_matched)
 
+                print(self.__me)
+
+                return self.me()
+
         except Exception as e:
             self.__me = None
             # Logger.log_error(msg=f"{e}", is_verbose=self.verbose)

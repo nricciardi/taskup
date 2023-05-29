@@ -1,3 +1,5 @@
+import time
+
 import eel
 from typing import List, Dict, Any
 from lib.app.service.auth import AuthService
@@ -9,6 +11,7 @@ from lib.app.service.exposer import ExposerService
 from lib.app.service.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
+import threading
 
 
 class AppManager:
@@ -48,7 +51,7 @@ class AppManager:
         # init Eel
         frontend_dir = self.settings_manager.frontend_directory
 
-        Logger.log_info(msg=f"init frontend '{frontend_dir}' @ {self.settings_manager.frontend_start}", is_verbose=self.verbose)
+        Logger.log_info(msg=f"init frontend '{frontend_dir}'@{self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, allowed_extensions=['.html'])  # init eel
 
     @property
@@ -126,19 +129,27 @@ class AppManager:
 
         mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)     # pick mode from settings
 
-        Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
+        try:
+            Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
 
-        def on_websocket_change(*args, **kwargs) -> None:
-            """
-            Callback for Eel start method
-            """
+            def start_gui():
+                eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode,
+                          cmdline_args=["--disable-translate"])  # start eel: this generates a loop
 
-            Logger.log_info(msg="eel web socket change status...", is_verbose=self.verbose)
+            # insert gui in other thread to control the flow at the end
+            gui_thread = threading.Thread(target=start_gui)
+            gui_thread.start()      # start gui thread
 
-            self.project_manager.backup_work_dir()      # back up files if required
+            Logger.log_success(msg="app started", is_verbose=self.verbose)
 
-        eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode, close_callback=on_websocket_change,
-                  cmdline_args=["--disable-translate"])  # start eel: this generates a loop
+            gui_thread.join()       # await gui close
+
+        except KeyboardInterrupt:
+            Logger.log_custom(msg="KeyboardInterrupt is handled", is_verbose=self.verbose)
+
+        # insert here all instructions to run before end
+        finally:
+            self.close()        # close app manually
 
     @classmethod
     def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
