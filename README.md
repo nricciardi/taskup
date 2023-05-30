@@ -65,6 +65,17 @@ To run this project are required the followings dependencies:
 - [GitPython](https://pypi.org/project/GitPython/) (Python module to manage Git)
 - [Chromium](https://www.chromium.org/) based software (as Google Chrome or Firefox)
 
+Below are the commands to install the required dependencies:
+```shell
+# before you must install Python
+pip install eel
+pip install colorama
+pip install GitPython
+
+# then...
+python main.py run
+```
+
 ### Run
 
 After dependencies installation, this app can be opened using `main.py`.
