@@ -106,6 +106,7 @@ class AppManager:
 
     @classmethod
     def starter(cls):
+
         app = cls()
         app.start()
 
@@ -125,6 +126,7 @@ class AppManager:
         shutdown_delay = self.SHUTDOWN_DELAY
 
         if self.settings_manager.debug_mode:
+            Logger.log_warning(msg="app will be launched in debug-mode", is_verbose=self.verbose)
             shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
 
         mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)     # pick mode from settings
@@ -132,17 +134,8 @@ class AppManager:
         try:
             Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
 
-            def start_gui():
-                eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode,
-                          cmdline_args=["--disable-translate"])  # start eel: this generates a loop
-
-            # insert gui in other thread to control the flow at the end
-            gui_thread = threading.Thread(target=start_gui)
-            gui_thread.start()      # start gui thread
-
-            Logger.log_success(msg="app started", is_verbose=self.verbose)
-
-            gui_thread.join()       # await gui close
+            eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode,
+                      cmdline_args=["--disable-translate"])  # start eel: this generates a loop
 
         except KeyboardInterrupt:
             Logger.log_custom(msg="KeyboardInterrupt is handled", is_verbose=self.verbose)
