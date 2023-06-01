@@ -57,6 +57,7 @@ def print_help() -> None:
 {Fore.GREEN}demo{Fore.RESET}, {Fore.GREEN}d{Fore.RESET} [FLAGs] <path>: launch application with a demo database in path specified, path has to the last parameter
   {Fore.MAGENTA}-f{Fore.RESET}: force erase if there is already a database
   {Fore.MAGENTA}-o{Fore.RESET}: open app at end
+  {Fore.MAGENTA}-o{Fore.RESET}: verbose
 {Fore.GREEN}init, {Fore.GREEN}i{Fore.RESET}: initialize this app in users projects
   {Fore.MAGENTA}-f{Fore.RESET}: force reinitialization
 {Fore.GREEN}help{Fore.RESET}, {Fore.GREEN}h{Fore.RESET}: print help 

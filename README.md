@@ -90,6 +90,7 @@ If desired, you can create a working executable all-in-one by downloading PyInst
 - `demo`, `d` `<path>`: launch application with a demo database in path specified, path has to be the last parameter 
   - `-f`: force erase if there is already a database
   - `-o`: open app at end
+  - `-v`: verbose
 - `init`, `i`: initialize this app in users projects
   - `-f`: force reinitialization
 - `help`, `h`: print help 
