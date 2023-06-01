@@ -37,7 +37,7 @@ export class ManageTaskStatusComponent {
       name: "final",
       type: "checkbox",
       placeholder: "final",
-      blueprintFormControl: new FormControl('', [Validators.required])
+      blueprintFormControl: new FormControl('')
     },
   ]
 

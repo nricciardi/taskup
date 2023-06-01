@@ -169,7 +169,7 @@ class AuthService:
             self.PASSWORD: password
         })
 
-        Logger.log_success(msg=f"email ({email}) and password ({'*' * len(password)}) are stored successful in vault ('{self.vault_path}')",
+        Logger.log_success(msg=f"email ({email}) and password ({'*' * int(len(password) / 4) + '...' + '*' * int(len(password) / 4)}) are stored successful in vault ('{self.vault_path}')",
                            is_verbose=self.verbose)
 
     def get_vault_data(self) -> dict | None:

@@ -11,17 +11,20 @@ from lib.repo.repo import RepoManager
 
 class ProjectManager:
 
-    def __init__(self, settings_manager: SettingsManager):
+    def __init__(self, settings_manager: SettingsManager, verbose: Optional[bool] = None):
         """
         Init project manager, a ProjectManager manages the initialized projects that can be opened
         """
 
-        Logger.log_info(msg="project manager init...", is_verbose=True)
+        Logger.log_info(msg="project manager init...", is_verbose=True if verbose is None else verbose)
 
         # AppManager conceded settings manager to ProjectManager, so it can be used to each entity
         self.settings = settings_manager
 
-        self.verbose = self.settings.verbose  # set verbose
+        if verbose is None:
+            self.verbose = self.settings.verbose  # set verbose
+        else:
+            self.verbose = verbose
 
         # instance (only one) DBManager
         try:

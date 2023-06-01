@@ -39,6 +39,11 @@ export class ShowInfoOfCommitModalComponent {
 
             this.tasksAssociated = this.tasksAssociated.concat(tasks);
 
+            // filter based on priority
+            this.tasksAssociated.sort((a, b) => {
+              return a.priority - b.priority;
+            })
+
           }
         })
       })

@@ -82,26 +82,32 @@ def main(args: list) -> None:
 
         Utils.exit(verbose=False)
 
-    if "version" in args or "v" in args:
+    elif "version" in args or "v" in args:
         print_version()
 
         Utils.exit(verbose=False)
 
-    if "demo" in args or "d" in args:
+    elif "demo" in args or "d" in args:
         flags: Dict = {
                 "forced": "-f" in args,
                 "open_app_at_end": "-o" in args,
+                "verbose": "-v" in args,
             }
 
         flags_management(min_params=3, flags=flags, args=args)
 
         project_path: str = args[-1]
 
-        AppManager.demo(project_path=project_path, force_demo=flags["forced"], open_app_at_end=flags["open_app_at_end"])
+        AppManager.demo(project_path=project_path, force_demo=flags["forced"], open_app_at_end=flags["open_app_at_end"],
+                        verbose=flags["verbose"])
 
         Utils.exit(verbose=False)
 
-    AppManager.starter()
+    elif "run" in args or "r" in args:
+        AppManager.starter()
+
+    else:
+        Logger.log_warning(msg="command not found, use 'help' to see the commands list", is_verbose=True)
 
 
 if __name__ == '__main__':

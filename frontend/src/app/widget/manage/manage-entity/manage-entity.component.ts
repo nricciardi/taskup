@@ -11,6 +11,9 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./manage-entity.component.scss']
 })
 export class ManageEntityComponent<M extends EntityApiService<E>, E extends BaseEntity> {
+
+  readonly DEFAULT_COLOR: string = "#000000";
+
   @Input("manager") manager?: M;
   @Input("entity") entity?: E;
   @Input("title") title?: string;
@@ -39,6 +42,9 @@ export class ManageEntityComponent<M extends EntityApiService<E>, E extends Base
 
       // create form controls as copy of blueprint form control
       const blueprint = element.blueprintFormControl;
+
+      if(element.type == 'color')
+        blueprint.setValue(this.DEFAULT_COLOR);   // set a default color
 
       let control = new FormControl<number | string | null>(blueprint.value, blueprint.validator, blueprint.asyncValidator);
 

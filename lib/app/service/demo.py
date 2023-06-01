@@ -55,7 +55,7 @@ class Demo:
 
             Logger.log_info(msg="Demo init...", is_verbose=self.verbose)
 
-            self.__pm = ProjectManager(settings_manager=settings_manager)  # load Project Manager
+            self.__pm = ProjectManager(settings_manager=settings_manager, verbose=self.verbose)  # load Project Manager
 
             self.verbose = self.verbose
             self.project_path = project_path
@@ -80,6 +80,13 @@ class Demo:
 
                     return None
 
+            if not Utils.exist_dir(self.project_path) and not force_demo:
+                Logger.log_error(msg=f"impossible initialize project because '{self.project_path}' directory not "
+                                     f"found, try to force init", is_verbose=self.verbose)
+
+                return None
+
+
             # init project
             self.__pm.init_new(self.project_path, future_pm_data={
                 "email": Demo.PM_EMAIL,
@@ -98,10 +105,10 @@ class Demo:
             self.add_tasks(n_tasks, n_users)
 
             # print credentials
-            Logger.log_custom(msg=f"""Project manager credentials:\nemail: {Demo.PM_EMAIL}\nusername: {Demo.PM_USERNAME}\npassword: {Demo.PM_PASSWORD}""", is_verbose=True, capitalize=False)
+            Logger.log_custom(msg=f"""Project manager credentials:\nemail: {Demo.PM_EMAIL}\nusername: {Demo.PM_USERNAME}\npassword: {Demo.PM_PASSWORD}""", is_verbose=self.verbose, capitalize=False)
 
         except Exception as e:
-            Logger.log_error(msg=f"error is occurred during the demo launch", is_verbose=self.verbose, full=True)
+            Logger.log_error(msg=f"error is occurred during the demo launch", is_verbose=self.verbose, full=False)
 
     def add_users(self, n_users: int) -> None:
 
