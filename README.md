@@ -204,6 +204,8 @@ Each logged user is able to manage his own profile using _My Profile_ page. It c
 
 From _My Profile_ page is possible to edit user master data (name, surname, username, email and so on), avatar color and the password.
 
+> Passwords must contain at least 8 characters, an uppercase letter, a lowercase letter and a number.
+
 ![My Profile page](./doc/img/usr-doc/my-profile-page.png)
 
 > WARNING: when a user edits email or password, he will be logged out.

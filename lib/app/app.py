@@ -16,9 +16,9 @@ import threading
 
 class AppManager:
 
-    VERSION: str = "1.1.2"
-    SHUTDOWN_DELAY = 3
-    SHUTDOWN_DELAY_IN_DEBUG_MODE = 600
+    VERSION: str = "1.1.3"
+    SHUTDOWN_DELAY = 3                  # seconds
+    SHUTDOWN_DELAY_IN_DEBUG_MODE = 600  # seconds
 
     def __init__(self):
         Logger.log_info(msg="app init...", is_verbose=True)
