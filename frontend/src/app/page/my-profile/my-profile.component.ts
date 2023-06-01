@@ -31,6 +31,8 @@ export class MyProfileComponent {
     repassword: new FormControl<string>('', [Validators.required, matchValidator('password')]),
   });
 
+  showPassword: boolean = false;
+
   constructor(private authService: AuthService, public utilsService: UtilsService, private userService: UserService) {
     this.loadLoggedUser();
   }

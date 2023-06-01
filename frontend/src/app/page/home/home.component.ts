@@ -33,13 +33,15 @@ export class HomeComponent {
 
   initProjectForm: FormGroup = new FormGroup({
     path: new FormControl('', [Validators.required]),
-    openOnInit: new FormControl(false, [Validators.required]),
+    openOnInit: new FormControl(true, [Validators.required]),
     forceInit: new FormControl(false, [Validators.required]),
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, this.utilsService.createPasswordStrengthValidator(8)]),
     repassword: new FormControl('', [Validators.required, matchValidator('password')]),
-  })
+  });
+
+  showPMPassword: boolean = false;
 
   openProjectForm: FormGroup = new FormGroup({
     path: new FormControl('', [Validators.required])

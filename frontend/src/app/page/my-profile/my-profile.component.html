@@ -276,7 +276,7 @@
                                 </div>
                                 <div class="col-md-8 form-group">
                                   <input
-                                    type="password"
+                                    [type]="showPassword ? 'text' : 'password'"
                                     id="password"
                                     class="form-control"
                                     name="password"
@@ -284,6 +284,8 @@
                                     formControlName="password"
                                     [class.is-valid]="blueprintPasswordUserForm.controls['password'].dirty && !blueprintPasswordUserForm.controls['password'].errors"
                                     [class.is-invalid]="blueprintPasswordUserForm.controls['password'].dirty && blueprintPasswordUserForm.controls['password'].errors"
+
+                                    (input)="blueprintPasswordUserForm.controls['repassword'].markAsTouched(); blueprintPasswordUserForm.controls['repassword'].updateValueAndValidity()"
                                   />
                                 </div>
 
@@ -294,7 +296,7 @@
                                 </div>
                                 <div class="col-md-8 form-group">
                                   <input
-                                    type="password"
+                                    [type]="showPassword ? 'text' : 'password'"
                                     id="repassword"
                                     class="form-control"
                                     name="repassword"
@@ -303,6 +305,26 @@
                                     [class.is-valid]="blueprintPasswordUserForm.controls['repassword'].dirty && !blueprintPasswordUserForm.controls['repassword'].errors"
                                     [class.is-invalid]="blueprintPasswordUserForm.controls['repassword'].dirty && blueprintPasswordUserForm.controls['repassword'].errors"
                                   />
+                                </div>
+
+                                <div class="col-12">
+                                  <div class="form-check form-switch">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      id="showPsw"
+                                      [checked]="showPassword"
+
+                                      #showPswCheckbox
+                                      (change)="showPassword = showPswCheckbox.checked"
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for="showPsw"
+                                    >
+                                      {{ "show-password" | translate }}
+                                    </label>
+                                  </div>
                                 </div>
 
                                 <div class="col-sm-12 d-flex justify-content-end">

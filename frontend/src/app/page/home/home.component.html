@@ -302,11 +302,12 @@
                                           </div>
                                           <div class="col-md-8 form-group">
                                             <input
-                                              type="password"
+                                              [type]="showPMPassword ? 'text' : 'password'"
                                               class="form-control"
                                               placeholder="{{ 'password' | translate }}"
                                               [class.is-valid]="initProjectForm.controls['password'].dirty && initProjectForm.controls['password'].valid"
                                               [class.is-invalid]="initProjectForm.controls['password'].dirty && !initProjectForm.controls['password'].valid"
+                                              (input)="initProjectForm.controls['repassword'].markAsTouched(); initProjectForm.controls['repassword'].updateValueAndValidity()"
 
                                               formControlName="password"
                                             />
@@ -318,7 +319,7 @@
                                           </div>
                                           <div class="col-md-8 form-group">
                                             <input
-                                              type="password"
+                                              [type]="showPMPassword ? 'text' : 'password'"
                                               class="form-control"
                                               placeholder="{{ 'repassword' | translate }}"
                                               [class.is-valid]="initProjectForm.controls['repassword'].dirty && initProjectForm.controls['repassword'].valid"
@@ -330,7 +331,27 @@
                                             <small style="color: #b8a244">
                                               {{ "password-warning" | translate }}
                                             </small>
+
+                                            <div class="form-check form-switch">
+                                              <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                id="showPsw"
+                                                [checked]="showPMPassword"
+
+                                                #showPswCheckbox
+                                                (change)="showPMPassword = showPswCheckbox.checked"
+                                              />
+                                              <label
+                                                class="form-check-label"
+                                                for="showPsw"
+                                              >
+                                                {{ "show-password" | translate }}
+                                              </label>
+                                            </div>
                                           </div>
+
+
 
                                           <div class="col-sm-12 d-flex justify-content-between">
 
