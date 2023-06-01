@@ -16,6 +16,8 @@ associations_commits_branches: Dict[str, str] = dict()     # hexsha - branch
 # DEPRECATED: associations_commits_users: Dict[str, int] = dict()         # email - user_id
 # DEPRECATED: associations_commits_tasks: Dict[str, List[int]] = dict()         # branch - [task_id]
 
+DEBUG_MODE: bool = False        # it will be changed by Repo init
+
 
 @dataclass
 class Author:
@@ -80,6 +82,7 @@ class RepoNode(DCToDictMixin):
         :return:
         """
 
+        global DEBUG_MODE
         global associations_commits_tags
         global associations_commits_branches
         # DEPRECATED: global associations_commits_users
@@ -95,7 +98,7 @@ class RepoNode(DCToDictMixin):
 
         branch = associations_commits_branches.get(commit.hexsha)
         if associations_commits_branches.get(commit.hexsha) is None:
-            Logger.log_warning(msg=f"{commit} has not an explicit associated branch", is_verbose=True)
+            Logger.log_warning(msg=f"{commit} has not an explicit associated branch", is_verbose=DEBUG_MODE)
 
             branch = commit.name_rev.split(" ")[1].split("~")[0]
 
@@ -157,7 +160,9 @@ class RepoNode(DCToDictMixin):
 
 
 class RepoManager:
-    def __init__(self, project_path: Optional[str] = None, verbose: bool = False):
+    RATE_OF_LOG: int = 50
+
+    def __init__(self, project_path: Optional[str] = None, verbose: bool = False, debug_mode: bool = False):
         # DEPRECATED:
         # global associations_commits_tasks
         # global associations_commits_users
@@ -175,6 +180,11 @@ class RepoManager:
         #
         #         else:
         #             associations_commits_tasks[task.git_branch].append(task.id)
+
+        global DEBUG_MODE
+
+        DEBUG_MODE = debug_mode
+        self.debug_mode = debug_mode
 
         self.verbose = verbose
         self.project_path = project_path
@@ -272,7 +282,10 @@ class RepoManager:
 
         Logger.log_info(msg=f"start to fetch commits from project repo '{self.project_path}'...", is_verbose=self.verbose)
 
-        self.repo.git.fetch()
+        try:
+            self.repo.git.fetch()
+        except Exception as e:
+            Logger.log_warning(msg=f"unable to fetch commits from remote branches", is_verbose=self.verbose)
 
         # take tags of repo
         global associations_commits_tags
@@ -282,11 +295,19 @@ class RepoManager:
 
         Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
 
+        branches: List = []
+
         # get references of local and remote branches
-        branches = list(self.repo.branches)
+        try:
+            branches = list(self.repo.branches)
+        except Exception as e:
+            pass
 
         if self.repo.remotes:
-            branches.extend(self.repo.remote().refs)
+            try:
+                branches.extend(self.repo.remote().refs)
+            except Exception as e:
+                pass
 
         Logger.log_info(msg=f"fetched {len(branches)} branch(es)", is_verbose=self.verbose)
 
@@ -300,7 +321,8 @@ class RepoManager:
                 if associations_commits_branches.get(hexsha) is None:
                     associations_commits_branches[hexsha] = str(branch)
 
-        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)", is_verbose=self.verbose)
+        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)",
+                        is_verbose=self.verbose)
 
         # generate list of nodes
         all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
@@ -321,7 +343,9 @@ class RepoManager:
 
             nodes.append(repo_node)
 
-            Logger.log_info(msg=f"elaborating commit {i+1}/{n_of_commits} ({round((i + 1) * 100 / n_of_commits, 2)}%)", is_verbose=self.verbose)
+            if self.debug_mode or (not self.debug_mode and (i + 1) % self.RATE_OF_LOG == 0) or (i + 1) == n_of_commits:
+                Logger.log_info(msg=f"elaborating commit {i+1}/{n_of_commits} ({round((i + 1) * 100 / n_of_commits, 2)}%)",
+                                is_verbose=self.verbose)
 
         Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s", is_verbose=self.verbose)
         return list(nodes)
