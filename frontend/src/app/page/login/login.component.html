@@ -15,11 +15,18 @@
             class="form-control form-control-xl"
             placeholder="Email"
             formControlName="email"
+            [class.is-valid]="loginForm.controls['email'].dirty && loginForm.controls['email'].valid"
+            [class.is-invalid]="loginForm.controls['email'].dirty && !loginForm.controls['email'].valid"
           />
           <div class="form-control-icon">
-            <i class="bi bi-person"></i>
+            <i class="bi bi-envelope"></i>
           </div>
+
+          <small *ngIf="loginForm.controls['email'].dirty && !loginForm.controls['email'].valid" style="color: #eb4b4b;">
+            {{ "invalid-email" | translate }}
+          </small>
         </div>
+
         <div class="form-group position-relative has-icon-left mb-4">
           <input
             [type]="showPsw ? 'text' : 'password'"

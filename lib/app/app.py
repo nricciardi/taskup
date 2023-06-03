@@ -1,5 +1,3 @@
-import time
-
 import eel
 from typing import List, Dict, Any
 from lib.app.service.auth import AuthService
@@ -11,12 +9,12 @@ from lib.app.service.exposer import ExposerService
 from lib.app.service.demo import Demo
 from lib.utils.utils import Utils
 from lib.settings.settings import SettingsManager
-import threading
+from lib.utils.constants import PM_EMAIL, PM_USERNAME
 
 
 class AppManager:
 
-    VERSION: str = "1.1.3"
+    VERSION: str = "1.1.4"
     SHUTDOWN_DELAY = 3                  # seconds
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600  # seconds
 
@@ -53,6 +51,73 @@ class AppManager:
 
         Logger.log_info(msg=f"init frontend '{frontend_dir}'@{self.settings_manager.frontend_start}", is_verbose=self.verbose)
         eel.init(frontend_dir, allowed_extensions=['.html'])  # init eel
+
+    @classmethod
+    def starter(cls) -> 'AppManager':
+        """
+        Start application using default parameters
+
+        :return: application instance
+        :rtype AppManager:
+        """
+
+        app = cls()
+        app.start()
+
+        return app
+
+    def start(self) -> None:
+        """
+        Start GUI using eel.start()
+
+        :return:
+        :rtype None:
+        """
+
+        # pick frontend entry and port from settings
+        frontend_start = self.settings_manager.frontend_start
+        port = self.settings_manager.port
+
+        # set shutdown delay based on debug mode
+        shutdown_delay = self.SHUTDOWN_DELAY
+
+        if self.settings_manager.debug_mode:
+            Logger.log_warning(msg="app will be launched in debug-mode", is_verbose=self.verbose)
+            shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
+
+        mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)     # pick mode from settings
+
+        try:
+            Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
+
+            eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode,
+                      cmdline_args=["--disable-translate"])  # start eel: this generates a loop
+
+        except KeyboardInterrupt:
+            Logger.log_custom(msg="KeyboardInterrupt is handled", is_verbose=self.verbose)
+
+        # insert here all instructions to run before end
+        finally:
+            self.close()        # close app manually
+
+    @classmethod
+    def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
+        """
+        Launch demo of app
+
+        :param open_app_at_end:
+        :param project_path:
+        :param force_demo:
+        :param verbose:
+        :return:
+        """
+
+        demo = Demo(project_path=project_path, settings_manager=SettingsManager(), verbose=verbose)
+
+        demo.launch(force_demo=force_demo)
+
+        if open_app_at_end:
+            AppManager.starter()    # launch app
 
     @property
     def settings_manager(self) -> SettingsManager:
@@ -104,65 +169,6 @@ class AppManager:
                                  verbose=self.verbose, debug_mode=self.settings_manager.debug_mode)
         exposer.expose_methods()
 
-    @classmethod
-    def starter(cls):
-
-        app = cls()
-        app.start()
-
-    def start(self) -> None:
-        """
-        Start GUI from eel.start()
-
-        :return:
-        :rtype None:
-        """
-
-        # pick frontend entry and port from settings
-        frontend_start = self.settings_manager.frontend_start
-        port = self.settings_manager.port
-
-        # set shutdown delay based on debug mode
-        shutdown_delay = self.SHUTDOWN_DELAY
-
-        if self.settings_manager.debug_mode:
-            Logger.log_warning(msg="app will be launched in debug-mode", is_verbose=self.verbose)
-            shutdown_delay = self.SHUTDOWN_DELAY_IN_DEBUG_MODE
-
-        mode = self.settings_manager.get_setting_by_key(self.settings_manager.KEY_APP_MODE)     # pick mode from settings
-
-        try:
-            Logger.log_info(msg=f"start app... (mode: {mode})", is_verbose=self.verbose)
-
-            eel.start(frontend_start, port=port, shutdown_delay=shutdown_delay, mode=mode,
-                      cmdline_args=["--disable-translate"])  # start eel: this generates a loop
-
-        except KeyboardInterrupt:
-            Logger.log_custom(msg="KeyboardInterrupt is handled", is_verbose=self.verbose)
-
-        # insert here all instructions to run before end
-        finally:
-            self.close()        # close app manually
-
-    @classmethod
-    def demo(cls, project_path: str, force_demo: bool = False, open_app_at_end: bool = True, verbose: bool = False) -> None:
-        """
-        Launch demo of app
-
-        :param open_app_at_end:
-        :param project_path:
-        :param force_demo:
-        :param verbose:
-        :return:
-        """
-
-        demo = Demo(project_path=project_path, settings_manager=SettingsManager(), verbose=verbose)
-
-        demo.launch(force_demo=force_demo)
-
-        if open_app_at_end:
-            AppManager.starter()    # launch app
-
     def open_settings(self) -> None:
         """
         Open settings file
@@ -189,6 +195,28 @@ class AppManager:
         """
 
         return self.project_manager.open(path)
+
+    @classmethod
+    def initializer(cls, project_path: str, open_on_init: bool = False, force_init: bool = False) -> 'AppManager':
+        """
+        Initializer method
+
+        :param project_path:
+        :param open_on_init:
+        :param force_init:
+        :return: instance of app
+        :rtype AppManager:
+        """
+
+        pm_data = FuturePMData(username=PM_USERNAME, email=PM_EMAIL, password=Utils.generate_psw())
+
+        app = cls()
+        app.init_project(path=project_path, future_pm_data=pm_data, open_on_init=open_on_init, force_init=force_init)
+
+        Logger.log_custom(msg=f"Project manager credentials:\nemail: {Demo.pm_email}\npassword: {Demo.pm_password}",
+                          is_verbose=True, capitalize=False)
+
+        return app
 
     def init_project(self, path: str, future_pm_data: FuturePMData, open_on_init: bool = False, force_init: bool = False) -> bool:
         """

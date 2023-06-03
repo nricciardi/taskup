@@ -1,18 +1,17 @@
-import os
 import datetime
 from lib.app.service.project import ProjectManager
-from lib.db.db import DBManager
 from lib.utils.logger import Logger
 from lib.utils.utils import Utils
 from random import randint
 from typing import Tuple
 from lib.settings.settings import SettingsManager
+from lib.utils.constants import PM_EMAIL, PM_USERNAME
 
 
 class Demo:
-    PM_EMAIL = "pm@email.com"
-    PM_USERNAME = "project.manager"
-    PM_PASSWORD = Utils.generate_psw()
+    pm_email = PM_EMAIL
+    pm_username = PM_USERNAME
+    pm_password = Utils.generate_psw()
 
     N_USERS = 10
     N_TASKS = 50
@@ -53,7 +52,7 @@ class Demo:
         try:
             self.verbose = verbose
 
-            Logger.log_info(msg="Demo init...", is_verbose=self.verbose)
+            Logger.log_info(msg="Demo init...", is_verbose=True)
 
             self.__pm = ProjectManager(settings_manager=settings_manager, verbose=self.verbose)  # load Project Manager
 
@@ -65,33 +64,35 @@ class Demo:
 
     def launch(self, n_users: int = N_USERS, n_tasks: int = N_TASKS, force_demo: bool = False) -> None:
         try:
-            Logger.log_info(msg="launch demo...", is_verbose=self.verbose)
+            Logger.log_info(msg="launch demo...", is_verbose=True)
 
             # prevent pre-existed db overwrite
             db_path = self.__pm.settings.assemble_db_path(project_path=self.project_path)
             if ProjectManager.already_initialized(self.project_path):
 
                 if force_demo:
-                    Logger.log_warning(msg=f"project already initialized in path '{self.project_path}', a new demo will be created...")
+                    Logger.log_warning(msg=f"project already initialized in path '{self.project_path}', a new demo will be created...",
+                                       is_verbose=True)
 
                 else:
                     Logger.log_warning(
-                        msg=f"project already initialized in path '{self.project_path}', to avoid damage the demo has been blocked!")
+                        msg=f"project already initialized in path '{self.project_path}', to avoid damage the demo has been blocked!",
+                        is_verbose=True)
 
                     return None
 
             if not Utils.exist_dir(self.project_path) and not force_demo:
                 Logger.log_error(msg=f"impossible initialize project because '{self.project_path}' directory not "
-                                     f"found, try to force init", is_verbose=self.verbose)
+                                     f"found, try to force init", is_verbose=True)
 
                 return None
 
 
             # init project
             self.__pm.init_new(self.project_path, future_pm_data={
-                "email": Demo.PM_EMAIL,
-                "username": Demo.PM_USERNAME,
-                "password": Demo.PM_PASSWORD
+                "email": Demo.pm_email,
+                "username": Demo.pm_username,
+                "password": Demo.pm_password
             }, force_init=force_demo)
 
             use_localtime: bool = self.__pm.settings.get_setting_by_key(self.__pm.settings.KEY_DB_LOCALTIME)
@@ -105,7 +106,8 @@ class Demo:
             self.add_tasks(n_tasks, n_users)
 
             # print credentials
-            Logger.log_custom(msg=f"""Project manager credentials:\nemail: {Demo.PM_EMAIL}\nusername: {Demo.PM_USERNAME}\npassword: {Demo.PM_PASSWORD}""", is_verbose=self.verbose, capitalize=False)
+            Logger.log_custom(msg=f"Project manager credentials:\nemail: {Demo.pm_email}\npassword: {Demo.pm_password}",
+                              is_verbose=True, capitalize=False)
 
         except Exception as e:
             Logger.log_error(msg=f"error is occurred during the demo launch", is_verbose=self.verbose, full=False)

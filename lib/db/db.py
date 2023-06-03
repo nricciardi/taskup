@@ -113,6 +113,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         :param verbose: verbose
         :param use_localtime: if db must use local in date
         """
+
         super().__init__()
 
         # get and set locally variables
@@ -127,6 +128,12 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
         self.open_connection()
 
     def __del__(self):
+        """
+        Close database connection on del
+
+        :return:
+        """
+
         self.close_connection()
 
     def set_connection_params(self, db_path: Optional[str] = None, use_localtime: Optional[bool] = None):
@@ -422,7 +429,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.role_table_name: Seeder(table=self.role_table_name,
                                          values=[
-                                           (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,   1),
+                (self.project_manager_role_id, "Project Manager",  1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,     1, 1, 1, 1,  1),
                                            (2, "Supervisor",       1, 1, 1, 1,     1, 1, 0, 1,     1, 1, 1, 0,     1, 1, 0, 1,  0),
                                            (3, "Teammate",         1, 0, 1, 1,     1, 0, 0, 0,     1, 0, 1, 0,     0, 0, 0, 0,  0),
                                            (4, "Base",             1, 0, 0, 0,     1, 0, 0, 0,     1, 0, 0, 0,     0, 0, 0, 0,  0),
@@ -451,7 +458,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.cursor.execute(self.seeders[name].to_sql())
 
-            # Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)         # too verbose
+            # too verbose:
+            # Logger.log_info(f"inserted base data in {self.seeders[name].table}", is_verbose=self.verbose)
 
         except Exception as exception:
 
@@ -471,7 +479,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
     def create_table(self, table_name: str, if_not_exists: bool = True) -> None:
         """
-        Create table
+        Create table from table component
 
         :param if_not_exists:
         :type if_not_exists: bool
@@ -587,6 +595,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             Logger.log_info("start to generate base database", is_verbose=self.verbose)
 
+            # ::::::::::: create all db's table ::::::::::
+
             self.create_table(self.role_table_name)
 
             self.run_seeder(self.role_table_name)
@@ -609,7 +619,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.create_table(self.task_task_label_pivot_table_name)
 
-            self.connection.commit()
+            self.connection.commit()            # commit changes
 
             Logger.log_success("base db structure generated", is_verbose=self.verbose)
 

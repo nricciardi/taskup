@@ -113,7 +113,7 @@ class TodoItemModel(BaseEntityModel):
     #     return "todo_item"
 
 
-# ================================== MANAGER ========================
+# =========================== MANAGER ========================
 class TaskStatusManager(EntitiesManager, TableNamesMixin, BaseTaskStatusIdMixin):
 
     def __init__(self, db_manager: DBManager, verbose: bool = False):

@@ -14,7 +14,7 @@ class EntitiesManager(ABC, Generic[EntityModel]):
     Abstract class to manage DB's entities
     """
 
-    db_use_localtime: bool = False
+    db_use_localtime: bool = True
 
     def __init__(self, db_manager: DBManager, verbose: bool = False):
         self.__verbose = verbose
@@ -290,15 +290,22 @@ class EntitiesManager(ABC, Generic[EntityModel]):
         :rtype List[EntityModel]:
         """
 
-        result: List[Dict] = self.db_manager.where(self.table_name, *conditions, columns=columns)
+        try:
+            result: List[Dict] = self.db_manager.where(self.table_name, *conditions, columns=columns)
 
-        models = self.EM.all_from_dicts(result)
+            models = self.EM.all_from_dicts(result)
 
-        if with_relations:
-            for em in models:
-                self.append_relations_data_on(em, safe)
+            if with_relations:
+                for em in models:
+                    self.append_relations_data_on(em, safe)
 
-        return models
+            return models
+
+        except Exception as e:
+            Logger.log_error(msg=f"error during 'where_as_model' using {conditions}", is_verbose=self.verbose)
+
+            if not safe:
+                raise e
 
     def filter(self, filters: Dict[str, str], operator: str = "=", with_relations: bool = True, safe: bool = True) -> List[EntityModel]:
         """

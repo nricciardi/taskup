@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { RepoNode } from 'src/app/model/entity/repo.model';
 import { TaskModel } from 'src/app/model/entity/task.model';
 import { TaskService } from 'src/app/service/api/entity/task/task.service';
 import { environment } from 'src/environments/environment.development';
@@ -10,12 +11,11 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./show-info-of-commit-modal.component.scss']
 })
 export class ShowInfoOfCommitModalComponent {
+
+  dateFormat: string = environment.fullDateFormat;
+
   @Input("target") target?: string;
-  @Input("commiterEmail") commiterEmail?: string;
-  @Input("branchesOfCommit") branchesOfCommit?: string[];
-  @Input("message") message?: string;
-  @Input("hash") hash?: string;
-  @Input("commiterName") commiterName?: string;
+  @Input("node") node?: RepoNode;
 
   tasksAssociated: TaskModel[] = [];
 
@@ -23,32 +23,30 @@ export class ShowInfoOfCommitModalComponent {
 
   loadTasksAssociated() {
 
-    if(!this.branchesOfCommit)
+    if(!this.node?.of_branch)
       return;
 
     this.tasksAssociated = [];
 
-    for (let index = 0; index < this.branchesOfCommit.length; index++) {
-      const branch = this.branchesOfCommit[index];
+    this.taskService.filter({
+      "git_branch": this.node.of_branch
+    }, "like").then((response) => {
+      response.subscribe({
+        next: (tasks) => {
 
-      this.taskService.filter({
-        "git_branch": branch
-      }, "like").then((response) => {
-        response.subscribe({
-          next: (tasks) => {
+          if(!tasks)
+            return;
 
-            this.tasksAssociated = this.tasksAssociated.concat(tasks);
+          this.tasksAssociated = this.tasksAssociated.concat(tasks);
 
-            // filter based on priority
-            this.tasksAssociated.sort((a, b) => {
-              return a.priority - b.priority;
-            })
+          // filter based on priority
+          this.tasksAssociated.sort((a, b) => {
+            return a.priority - b.priority;
+          })
 
-          }
-        })
+        }
       })
-    }
-
+    })
   }
 
   ngOnChanges() {

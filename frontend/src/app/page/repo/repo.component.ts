@@ -19,12 +19,7 @@ export class RepoComponent {
   gitgraph: any;
   generationError: boolean = false;
 
-  // variable must be passed to modal "show info commit"
-  commiterEmailOfSelectedCommit?: string;
-  commiterNameOfSelectedCommit?: string;
-  branchesOfSelectedCommit?: string[];
-  hashOfSelectedCommit?: string;
-  messageOfSelectedCommit?: string;
+  nodeSelected?: RepoNode;
 
   constructor(private repoService: RepoService, private authService: AuthService) {
     authService.refreshMe();
@@ -77,29 +72,22 @@ export class RepoComponent {
 
         if(this.showCommitInfoBtn && !!this.authService.loggedUser) {
 
-          // reset values
-          this.commiterEmailOfSelectedCommit = undefined;
-          this.commiterNameOfSelectedCommit = undefined;
-          this.branchesOfSelectedCommit = undefined;
-          this.hashOfSelectedCommit = undefined;
-          this.messageOfSelectedCommit = undefined;
+          try {
+            this.nodeSelected = nodes.find((node) => {
+              return node.hexsha == commit.hash;
+            });
 
-          // set values
-          this.commiterEmailOfSelectedCommit = commit.author.email;
-          this.commiterNameOfSelectedCommit = commit.author.name;
-          this.branchesOfSelectedCommit = commit.branches;
-          this.hashOfSelectedCommit = commit.hash;
-          this.messageOfSelectedCommit = commit.subject;
-
-          // show modal
-          this.showCommitInfoBtn.nativeElement.click();
+            // show modal
+            this.showCommitInfoBtn.nativeElement.click();
+          } catch (error) {
+            LoggerService.logError("error during showCommitInfo");
+          }
         }
 
       }
 
       for (let index = 0; index < nodes.length; index++) {
         const node: RepoNode = nodes[index];
-
 
         // if there is NOT branch => create it
         if(!(node.of_branch in this.branches))  {
@@ -116,9 +104,10 @@ export class RepoComponent {
             const currentBranch = node.of_branch;
 
             node.parents.forEach((parent: RepoNode) => {    // for each parent with different branch, using it to merge
+
               if(parent.of_branch != currentBranch) {
 
-                const parent_branch = this.branches[parent.of_branch];
+                const parentBranch = this.branches[parent.of_branch];
 
                 this.branches[currentBranch].merge({
                   commitOptions: {
@@ -133,7 +122,7 @@ export class RepoComponent {
 
                     }
                   },
-                  branch: parent_branch
+                  branch: parentBranch
                 });
 
               }
@@ -142,8 +131,6 @@ export class RepoComponent {
 
           // ============ NORMAL COMMIT ===========
           } else {
-
-
 
             // add commit to branch
             this.branches[node.of_branch].commit({
@@ -160,7 +147,8 @@ export class RepoComponent {
             });
 
             // add tag to commit
-            this.branches[node.of_branch].tag(node.tag);
+            if(!!node.tag)
+              this.branches[node.of_branch].tag(node.tag);
 
           }
         }

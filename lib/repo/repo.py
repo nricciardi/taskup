@@ -272,80 +272,187 @@ class RepoManager:
         :return:
         """
 
-        if not self.valid_opened_repo() and isinstance(self.project_path, str):
-            Logger.log_warning(msg="repo not found, try to re-open it", is_verbose=self.verbose)
-            self.open_repo(self.project_path)   # try to re-open
-
-        if not self.valid_opened_repo():
-            Logger.log_error(msg="impossible to elaborate commits: repo not found", is_verbose=self.verbose)
-            return None
-
-        Logger.log_info(msg=f"start to fetch commits from project repo '{self.project_path}'...", is_verbose=self.verbose)
-
         try:
-            self.repo.git.fetch()
-        except Exception as e:
-            Logger.log_warning(msg=f"unable to fetch commits from remote branches", is_verbose=self.verbose)
+            if not self.valid_opened_repo() and isinstance(self.project_path, str):
+                Logger.log_warning(msg="repo not found, try to re-open it", is_verbose=self.verbose)
+                self.open_repo(self.project_path)  # try to re-open
 
-        # take tags of repo
-        global associations_commits_tags
-        associations_commits_tags = dict()  # hexsha - tag's name
-        for tag in list(self.repo.tags):
-            associations_commits_tags[tag.commit.hexsha] = tag.name
+            if not self.valid_opened_repo():
+                Logger.log_error(msg="impossible to elaborate commits: repo not found", is_verbose=self.verbose)
+                return None
 
-        Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
+            Logger.log_info(msg=f"start to fetch commits from project repo '{self.project_path}'...",
+                            is_verbose=self.verbose)
 
-        branches: List = []
-
-        # get references of local and remote branches
-        try:
-            branches = list(self.repo.branches)
-        except Exception as e:
-            pass
-
-        if self.repo.remotes:
             try:
-                branches.extend(self.repo.remote().refs)
+                self.repo.git.fetch()       # try to sync local repo with remote branches
+            except Exception as e:
+                Logger.log_warning(msg=f"unable to fetch commits from remote branches", is_verbose=self.verbose)
+
+            # take tags of repo
+            global associations_commits_tags
+            associations_commits_tags = dict()  # hexsha - tag's name
+            for tag in list(self.repo.tags):
+                associations_commits_tags[tag.commit.hexsha] = tag.name
+
+            Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
+
+            branches: List = []
+
+            # get references of local and remote branches
+            try:
+                branches = list(self.repo.branches)     # local
             except Exception as e:
                 pass
 
-        Logger.log_info(msg=f"fetched {len(branches)} branch(es)", is_verbose=self.verbose)
+            if self.repo.remotes:
+                try:
+                    branches.extend(self.repo.remote().refs)        # remote
+                except Exception as e:
+                    pass
 
-        # take association between commits hexsha and its branch
-        global associations_commits_branches
-        associations_commits_branches = dict()     # hexsha - branch
-        for branch in branches:
-            hexsha_of_commits = set(commit.hexsha for commit in list(self.repo.iter_commits(branch, reverse=True)))
+            Logger.log_info(msg=f"fetched {len(branches)} branch(es)", is_verbose=self.verbose)
 
-            for hexsha in hexsha_of_commits:
-                if associations_commits_branches.get(hexsha) is None:
+            # take association between commits hexsha and its branch
+            global associations_commits_branches
+            associations_commits_branches = dict()  # hexsha - branch
+            for branch in branches:
+                hexsha_of_commits = set(commit.hexsha for commit in list(self.repo.iter_commits(branch, reverse=True)))
+
+                for hexsha in hexsha_of_commits:
                     associations_commits_branches[hexsha] = str(branch)
 
-        Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)",
+            Logger.log_info(msg=f"fetched data of {len(associations_commits_branches.keys())} commit(s)",
+                            is_verbose=self.verbose)
+
+            # generate list of nodes
+            all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
+            all_repo_commits = sorted(all_repo_commits, key=lambda commit: commit.committed_datetime)
+
+            nodes = list()  # use a managed list to share data between processes
+            n_of_commits = len(all_repo_commits)
+            start = time()
+            for i in range(n_of_commits):
+                commit = all_repo_commits[i]
+                repo_node: RepoNode = RepoNode.from_commit(commit)
+
+                # search children of commit
+                for j in range(i, n_of_commits):
+                    candidate_child_commit = all_repo_commits[j]
+
+                    if repo_node.hexsha in (parent.hexsha for parent in candidate_child_commit.parents):
+                        candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit)
+                        repo_node.add_child(candidate_child_node)
+
+                nodes.append(repo_node)
+
+                if self.debug_mode or (not self.debug_mode and (i + 1) % self.RATE_OF_LOG == 0) or (i + 1) == n_of_commits:
+                    Logger.log_info(
+                        msg=f"elaborating commit {i + 1}/{n_of_commits} ({round((i + 1) * 100 / n_of_commits, 2)}%)",
                         is_verbose=self.verbose)
 
-        # generate list of nodes
-        all_repo_commits = list(self.repo.iter_commits('--all', reverse=True))
-        nodes = list()      # use a managed list to share data between processes
-        n_of_commits = len(all_repo_commits)
-        start = time()
-        for i in range(n_of_commits):
-            commit = all_repo_commits[i]
-            repo_node: RepoNode = RepoNode.from_commit(commit)
+            Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s",
+                               is_verbose=self.verbose)
+            return list(nodes)
 
-            # search children of commit
-            for j in range(i, n_of_commits):
-                candidate_child_commit = all_repo_commits[j]
+        except Exception as e:
+            Logger.log_error(msg=f"an error occurs during commits elaborating", is_verbose=self.verbose)
 
-                if repo_node.hexsha in (parent.hexsha for parent in candidate_child_commit.parents):
-                    candidate_child_node: RepoNode = RepoNode.from_commit(candidate_child_commit)
-                    repo_node.add_child(candidate_child_node)
 
-            nodes.append(repo_node)
+if __name__ == '__main__':
+    import git
+    from datetime import datetime
 
-            if self.debug_mode or (not self.debug_mode and (i + 1) % self.RATE_OF_LOG == 0) or (i + 1) == n_of_commits:
-                Logger.log_info(msg=f"elaborating commit {i+1}/{n_of_commits} ({round((i + 1) * 100 / n_of_commits, 2)}%)",
-                                is_verbose=self.verbose)
+    def get_branch_birth_order(repo, branch1_name, branch2_name):
+        branch1 = repo.branches[branch1_name]
+        branch2 = repo.branches[branch2_name]
 
-        Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s", is_verbose=self.verbose)
-        return list(nodes)
+        print("merge base:")
+        pprint(repo.merge_base(branch1.commit, branch2.commit)[0].message)
+
+        merge_base_commit = repo.merge_base(branch1.commit, branch2.commit)[0]
+        merge_base_date = merge_base_commit.authored_datetime
+
+        print(branch1.commit.message)
+        print(branch2.commit.message)
+
+        branch1_first_commit_date = branch1.commit.authored_datetime
+        branch2_first_commit_date = branch2.commit.authored_datetime
+
+        if merge_base_date < branch1_first_commit_date and merge_base_date < branch2_first_commit_date:
+            print(
+                f"Il ramo {branch1_name} e il ramo {branch2_name} derivano da una biforcazione. Non è possibile determinare quale sia nato prima.")
+        elif merge_base_date < branch1_first_commit_date:
+            print(f"Il ramo {branch2_name} è nato prima del ramo {branch1_name}")
+        else:
+            print(f"Il ramo {branch1_name} è nato prima del ramo {branch2_name}")
+
+    def get_branch_of_commit(repo, commit_hash):
+        # Itera su tutti i branch
+        for branch in repo.branches:
+            # Ottieni il commit più recente del branch
+            branch_commit = branch.commit
+
+            # Verifica se il commit è raggiungibile dal branch
+            if repo.is_ancestor(commit_hash, branch_commit.hexsha):
+                return branch.name
+
+        return None
+
+    def print_commits(commits):
+        for commit in commits:
+            pprint(RepoNode.from_commit(commit))
+
+
+    DEBUG_MODE = True
+
+    path = '/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/taskup'
+    path = "/home/ncla/Desktop/data/uni/programmazione-ad-oggetti/project/test/repo-test"
+
+    commits = rm = RepoManager(path).get_commits()
+
+    pprint(commits)
+
+    Utils.exit()
+
+    repo = git.Repo(path)
+
+    master = "master"
+    branch2 = "branch2"
+
+    # merge_base_commit = repo.merge_base("master", "branch2")[0]
+    # print(merge_base_commit.message)
+    #
+    # branch1 = repo.branches[master]
+    # branch2 = repo.branches[branch2]
+    #
+    # print(branch1.commit.message)
+    # print(branch2.commit.message)
+
+    commits = list(repo.iter_commits(branch2))
+
+    for commit in commits:
+        print(commit.message)
+        print(commit.authored_datetime)
+        print("----")
+
+
+
+    Utils.exit()
+
+    commits_of_branch2 = repo
+
+    commits = list(repo.iter_commits("--all"))
+
+    for commit in commits:
+        print(commit.message)
+        print(repo.rev_parse(commit.name_rev))
+        print(commit.authored_datetime)
+        print("----")
+
+    get_branch_birth_order(repo, "master", "branch2")
+
+    # print_commits(commits)
+
+
+

@@ -38,7 +38,7 @@ class ProjectManager:
         except Exception as exception:
             Logger.log_error(msg="error while instance dbmanager", is_verbose=self.verbose)
 
-        # load entities
+        # ::::::::: load entities managers ::::::::::::
         self.task_status_manager = TaskStatusManager(db_manager=self.__db_manager,
                                                      verbose=self.verbose)
 
@@ -67,10 +67,7 @@ class ProjectManager:
 
         # load repo manager
         self.repo_manager = RepoManager(verbose=self.verbose,
-                                        project_path=self.project_path
-                                        # DEPRECATED: users_models=self.users_manager.all_as_model(with_relations=False, safe=True),
-                                        # DEPRECATED: tasks_models=self.tasks_manager.all_as_model(with_relations=False, safe=True)
-                                        )
+                                        project_path=self.project_path)
 
     @property
     def settings(self) -> SettingsManager:

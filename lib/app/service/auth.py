@@ -39,7 +39,7 @@ class AuthService:
     def vault_path(self) -> str:
         return self.__vault_path
 
-    def refresh_me(self) -> None:
+    def refresh_me(self) -> UserModel | None:
         """
         Refresh logged user data using local vault data.
         This method is used in login to check if there is a match with email and password
@@ -48,6 +48,10 @@ class AuthService:
         """
 
         try:
+            if not self.__users_manager.db_manager.is_open():
+                Logger.log_warning(msg=f"impossible to refresh me, because db connection is closed", is_verbose=self.verbose)
+                return None
+
             if self.__local_vault is not None:
                 users_matched: List = self.__users_manager.where_as_model(
                     WhereCondition("email", "=", self.__local_vault.email),
@@ -62,6 +66,8 @@ class AuthService:
         except Exception as e:
             self.__me = None
             Logger.log_error(msg=f"{e}", is_verbose=self.verbose)
+
+            return None
 
     def me(self) -> UserModel | None:
 
@@ -84,7 +90,8 @@ class AuthService:
                 email: str = vault_data.get(self.EMAIL)
                 password: str = vault_data.get(self.PASSWORD)
 
-                self.login(email=email, password=password, disguise_psw=False)      # disguise_psw=False because psw is already disguised if it is in vault
+                # disguise_psw=False because psw is already disguised if it is in vault
+                self.login(email=email, password=password, disguise_psw=False)
             else:
                 raise AttributeError()
 
@@ -169,7 +176,7 @@ class AuthService:
             self.PASSWORD: password
         })
 
-        Logger.log_success(msg=f"email ({email}) and password ({'*' * int(len(password) / 4) + '...' + '*' * int(len(password) / 4)}) are stored successful in vault ('{self.vault_path}')",
+        Logger.log_success(msg=f"email ({email}) and password are stored successful in vault ('{self.vault_path}')",
                            is_verbose=self.verbose)
 
     def get_vault_data(self) -> dict | None:
@@ -217,6 +224,8 @@ class AuthService:
 
         Logger.log_info(msg=f"last visit of user {logged_user.email} has been updated", is_verbose=self.verbose)
 
+
+# ======= Auth Decorator =======
 
 def login_required(func: Callable, auth: AuthService, verbose: bool = False) -> Callable:
     """

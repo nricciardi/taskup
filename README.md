@@ -86,7 +86,7 @@ If desired, you can create a working executable all-in-one by downloading PyInst
 
 #### Modality
 
-- `run`, `r` or _nothing_: launch the application
+- `run`, `r`: launch the application
 - `demo`, `d` `<path>`: launch application with a demo database in path specified, path has to be the last parameter 
   - `-f`: force erase if there is already a database
   - `-o`: open app at end

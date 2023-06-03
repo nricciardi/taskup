@@ -1,6 +1,6 @@
 export const baseEnvironment = {
   eelCallRefreshInterval: 1000,   // milliseconds
-  fullDateFormat: 'dd/MM/yyyy H:mm',
+  fullDateFormat: 'H:mm dd/MM/yyyy ',
   dateFormat: 'dd/MM/yyyy',
   timeFormat: 'H:mm',
   warningDateDayBefore: 7,    // day

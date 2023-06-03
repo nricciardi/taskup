@@ -87,14 +87,16 @@ class SettingsManager(SettingsBase):
             self.override_settings()
 
         except IOError as io_error:
-            Logger.log_warning(msg=f"configuration file '{self.SETTINGS_FILE_NAME}' not found, it will be created", is_verbose=self.verbose)
+            Logger.log_warning(msg=f"configuration file '{self.SETTINGS_FILE_NAME}' not found, it will be created",
+                               is_verbose=self.verbose)
 
             if SettingsManager.CREATE_SETTINGS_FILE_IF_NOT_EXIST:
                 self.create_settings_file()
                 self.override_settings()
 
         except json.JSONDecodeError as json_decode_error:
-            Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} JSON syntax error", is_verbose=self.verbose)
+            Logger.log_error(msg=f"configuration file {self.SETTINGS_FILE_NAME} JSON syntax error",
+                             is_verbose=self.verbose)
 
             Utils.exit()
 

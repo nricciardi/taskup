@@ -152,6 +152,8 @@
   "message": "Message",
   "tasks": "Tasks",
   "git_branch": "Git Branch",
-  "no-task": "No task found"
+  "no-task": "No task found",
+  "invalid-email": "Invalid email",
+  "committed-at": "Committed at"
 
 }

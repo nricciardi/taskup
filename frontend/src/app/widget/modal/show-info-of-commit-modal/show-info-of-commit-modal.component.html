@@ -22,14 +22,21 @@
 
         <div class="row">
           <div class="col-12">
-            <ng-container *ngIf="hash">
-              <strong>{{ "hash" | translate }}</strong>: {{ hash }}
+            <ng-container *ngIf="!!node && !!node.hexsha">
+              <strong>{{ "hash" | translate }}</strong>: {{ node.hexsha }}
             </ng-container>
 
           </div>
+
           <div class="col-12">
-            <ng-container *ngIf="message">
-              <strong>{{ "message" | translate }}</strong>: "{{ message }}"
+            <ng-container *ngIf="!!node && !!node.message">
+              <strong>{{ "message" | translate }}</strong>: "{{ node.message }}"
+            </ng-container>
+          </div>
+
+          <div class="col-12">
+            <ng-container *ngIf="!!node && !!node.committed_at">
+              <strong>{{ "committed-at" | translate }}</strong>: {{ node.committed_at | date:dateFormat }}
             </ng-container>
           </div>
 
@@ -43,12 +50,12 @@
 
           <div class="col-12">
             <div class="d-flex justify-content-center">
-              <ng-container *ngIf="!!commiterEmail || !!commiterName; else noCommiter">
-                {{ commiterName + " - " }} {{ commiterEmail }}
+              <ng-container *ngIf="!!node && (!!node.author.email || !!node.author.name); else noCommitter">
+                {{ node.author.name + " - " }} {{ node.author.email }}
               </ng-container>
             </div>
 
-            <ng-template #noCommiter>
+            <ng-template #noCommitter>
               <app-warning-alert [title]="'no-commiter'" [dismissable]="false"></app-warning-alert>
             </ng-template>
           </div>

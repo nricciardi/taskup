@@ -25,11 +25,7 @@
                   <i class="bi bi-trash"></i>
   </button>
 
-  <app-show-info-of-commit-modal [target]="'show-commit-info'" [commiterEmail]="commiterEmailOfSelectedCommit"
-                                                               [branchesOfCommit]="branchesOfSelectedCommit"
-                                                               [hash]="hashOfSelectedCommit"
-                                                               [message]="messageOfSelectedCommit"
-                                                               [commiterName]="commiterNameOfSelectedCommit">
+  <app-show-info-of-commit-modal [target]="'show-commit-info'" [node]="nodeSelected">
   </app-show-info-of-commit-modal>
 </ng-container>
 
