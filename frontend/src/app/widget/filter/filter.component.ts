@@ -60,6 +60,7 @@ export class FilterComponent<E> {
   }
 
   filter(): void {
+
     if(!this.entitiesBackup || !this.filterFields)
       return;
 
@@ -73,9 +74,6 @@ export class FilterComponent<E> {
 
         const filteredValue = String((this.filterForm?.controls as any)[filterField].value).toLowerCase();
         const associatedEntityValue = String((entity as any)[filterField]).toLowerCase();
-
-        console.log(filterField, associatedEntityValue, filteredValue, filteredValue !== "" && associatedEntityValue.includes(filteredValue));
-
 
         if(filteredValue !== "" && associatedEntityValue.includes(filteredValue))
           return true;

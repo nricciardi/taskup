@@ -1,5 +1,6 @@
 <ng-container *ngIf="!!title && !!entities">
-  <app-filter [filterFields]="filterFields" [(entities)]="entities">
+  <app-filter [filterFields]="filterFields" [entities]="entities"
+              (entitiesChange)="entitiesFiltered = $event">
   </app-filter>
 
 
@@ -15,7 +16,7 @@
 
 
   <!-- MANAGE ENTITIES -->
-  <ng-container *ngFor="let entity of entities">
+  <ng-container *ngFor="let entity of entitiesFiltered">
 
     <app-manage-entity
                       [entity]="entity"

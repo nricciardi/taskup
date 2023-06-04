@@ -24,7 +24,8 @@
   <!-- FILTER -->
   <app-filter *ngIf="dashboard && dashboard?.tasks"
               [filterFields]="['name', 'description']"
-              [(entities)]="dashboard.tasks">
+              [entities]="dashboard.tasks"
+              (entitiesChange)="tasks = $event">
   </app-filter>
 
 
@@ -224,7 +225,7 @@
           data-bs-dismiss="modal"
           aria-label="Close"
         >
-          <i data-feather="x"></i>
+        <i class="bi bi-x"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -257,7 +258,13 @@
                           </div>
                         </div>
 
-                        <div class="row align-items-center">
+                        <div class="row align-items-center justify-content-center">
+                          <div class="col-auto">
+                            <label>
+                              {{ "priority" | translate }}:
+                            </label>
+                          </div>
+
                           <div class="col-md-9">
                             <input
                               class="form-control"
@@ -266,23 +273,6 @@
 
                               formControlName="priority"
                             />
-                          </div>
-
-                          <div class="col-md-3">
-                            <div class="form-check">
-                              <div class="checkbox">
-                                <input
-                                  type="checkbox"
-                                  id="self-assigned"
-                                  class="form-check-input"
-                                  [checked]="creationForm.controls['selfAssigned'].value"
-                                  formControlName="selfAssigned"
-                                />
-                                <label for="self-assigned">
-                                  {{ "assign-yourself" | translate }}
-                                </label>
-                              </div>
-                            </div>
                           </div>
                         </div>
 
@@ -299,6 +289,25 @@
                                 ></textarea>
                                 <label for="floatingTextarea">
                                   {{ "description" | translate }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                          <div class="col-auto">
+                            <div class="form-check">
+                              <div class="checkbox">
+                                <input
+                                  type="checkbox"
+                                  id="self-assigned"
+                                  class="form-check-input"
+                                  [checked]="creationForm.controls['selfAssigned'].value"
+                                  formControlName="selfAssigned"
+                                />
+                                <label for="self-assigned">
+                                  {{ "assign-yourself" | translate }}
                                 </label>
                               </div>
                             </div>

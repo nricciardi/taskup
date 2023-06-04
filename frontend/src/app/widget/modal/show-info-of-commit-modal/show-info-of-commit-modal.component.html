@@ -29,6 +29,17 @@
           </div>
 
           <div class="col-12">
+            <ng-container *ngIf="!!node && !!node.of_branch">
+              <strong>{{ "branch" | translate }}</strong>:
+
+              <span class="badge bg-light-secondary">
+                {{ node.of_branch }}
+              </span>
+            </ng-container>
+
+          </div>
+
+          <div class="col-12">
             <ng-container *ngIf="!!node && !!node.message">
               <strong>{{ "message" | translate }}</strong>: "{{ node.message }}"
             </ng-container>
@@ -81,9 +92,9 @@
                   ({{ task.task_status.name }})
                 </span>
 
-                <span class="badge bg-light-secondary" *ngIf="!!task.git_branch">
+                <!--<span class="badge bg-light-secondary" *ngIf="task.git_branch">
                   {{ task.git_branch }}
-                </span>
+                </span>-->
 
               </li>
             </ul>

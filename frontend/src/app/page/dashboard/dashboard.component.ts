@@ -44,13 +44,15 @@ export class DashboardComponent {
 
   dashboard: DashboardModel | null = null;
 
+  tasks: TaskModel[] = [];   // different by dashboard.task because they may be filtered
+
   onTopTaskIdList: number[] = [];
 
   creationForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     priority: new FormControl('', [Validators.required]),
-    selfAssigned: new FormControl(false, [Validators.required])
+    selfAssigned: new FormControl(false)
   });
 
   constructor(private dashboardService: DashboardService, public authService: AuthService, private taskService: TaskService) {
@@ -113,8 +115,11 @@ export class DashboardComponent {
     this.dashboardService.getData().then((response) => {
       response.subscribe({
         next: (value: DashboardModel | null) => {
-          if(value) {
+          if(!!value) {
             this.dashboard = value;
+
+            // set effective task
+            this.tasks = [...this.dashboard.tasks];
 
             // set default id index if it is not setted
             if(!this.taskStatusIdIndex)
@@ -175,10 +180,10 @@ export class DashboardComponent {
 
   getAllTaskBasedOnStatusId(taskStatusId: number | undefined): TaskModel[] | null {
 
-    if(!this.dashboard || !taskStatusId)
+    if(!this.tasks || !taskStatusId)
       return null;
 
-    let tasksBasedOnStatusId = this.dashboard!.tasks.filter(task => task !== undefined && task.task_status_id === taskStatusId);
+    let tasksBasedOnStatusId = this.tasks.filter(task => task !== undefined && task.task_status_id === taskStatusId);
 
     if(!tasksBasedOnStatusId)
       return null;
@@ -246,25 +251,23 @@ export class DashboardComponent {
   }
 
   removeTask(taskId: number) {
-    if(!this.dashboard?.tasks)
+    if(!this.tasks)
       return;
 
-    this.dashboard.tasks = this.dashboard.tasks.filter(t => t.id != taskId);
+    this.tasks = this.tasks.filter(t => t.id != taskId);
   }
 
   updateTask(managedTask: UpdateTaskModel) {
-    if(!this.dashboard?.tasks)
+    if(!this.tasks)
       return;
 
-    for (let index = 0; index < this.dashboard.tasks.length; index++) {
-      const element = this.dashboard.tasks[index];
+    for (let index = 0; index < this.tasks.length; index++) {
+      const element = this.tasks[index];
 
       if(element.id == managedTask.target)
-        this.dashboard.tasks[index] = managedTask.new;
+        this.tasks[index] = managedTask.new;
 
     }
-
-    console.log(this.dashboard.tasks);
 
   }
 
@@ -296,7 +299,10 @@ export class DashboardComponent {
       response.subscribe({
         next: (task) => {
 
-          this.creationForm.reset();
+          if(!!task) {
+            this.creationForm.reset();
+
+          }
 
           // self assign
           if(selfAssigned) {
@@ -309,7 +315,7 @@ export class DashboardComponent {
                   this.taskService.find(task.id).then((respose) => {
                     respose.subscribe({
                       next: (t) => {
-                        this.dashboard?.tasks.push(t);
+                        this.tasks.push(t);
 
                       }
                     })
@@ -323,7 +329,7 @@ export class DashboardComponent {
 
           } else {    // append immediatly task
 
-            this.dashboard?.tasks.push(task);
+            this.tasks.push(task);
           }
         }
       })

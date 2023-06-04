@@ -424,7 +424,8 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
                                                values=[
                                                    ("Front-end", "Front-end tasks", "#32a852"),
                                                    ("Back-end", "Back-end tasks", "#f56342"),
-                                                   ("Documentation", "Documentation tasks", "#f242f5")
+                                                   ("Documentation", "Documentation tasks", "#f242f5"),
+                                                   ("Database", "Database manipulation tasks", "#f5a142"),
                                                ], cols=("name", "description", "hex_color")),
 
             self.role_table_name: Seeder(table=self.role_table_name,

@@ -14,7 +14,7 @@ from lib.utils.constants import PM_EMAIL, PM_USERNAME
 
 class AppManager:
 
-    VERSION: str = "1.1.4"
+    VERSION: str = "1.1.14"
     SHUTDOWN_DELAY = 3                  # seconds
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600  # seconds
 
