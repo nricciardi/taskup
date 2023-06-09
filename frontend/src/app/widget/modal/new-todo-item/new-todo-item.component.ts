@@ -17,12 +17,14 @@ export class NewTodoItemComponent {
   newItemForm = new FormGroup({
     description: new FormControl<string | null>(null, [Validators.required]),
     deadline: new FormControl<Date | null>(null),
+    priority: new FormControl<number>(0),
   });
 
   ngAfterContentInit() {
     this.newItemForm.setValue({
       description: this.baseData?.description ?? null,
-      deadline: this.baseData?.deadline ?? null
+      deadline: this.baseData?.deadline ?? null,
+      priority: this.baseData?.priority ?? 0,
     });
 
 
@@ -35,7 +37,8 @@ export class NewTodoItemComponent {
 
       this.onSubmit.emit({
         description: this.newItemForm.controls["description"].value!,
-        deadline: this.newItemForm.controls["deadline"].value
+        deadline: this.newItemForm.controls["deadline"].value,
+        priority: this.newItemForm.controls["priority"].value ?? 0,
       });
 
       // erase old data to prevent autofill

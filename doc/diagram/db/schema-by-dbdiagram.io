@@ -95,6 +95,7 @@ Table todo_item {
   created_at datetime
   updated_at datetime
   done integer
+  priority integer
 
   author_id integer
   task_id integer

@@ -9,6 +9,7 @@ export interface TodoItemModel extends BaseEntity {
   created_at: Date;
   updated_at: Date;
   done: boolean;
+  priority: number;
 
   author_id: number;
   task_id: number;
@@ -19,4 +20,5 @@ export interface TodoItemModel extends BaseEntity {
 export interface NewTodoItemModel {
   description: string;
   deadline: Date | null;
+  priority: number;
 }

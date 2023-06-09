@@ -359,6 +359,7 @@ class DBManager(TableNamesMixin, BaseTaskStatusIdMixin, BaseRoleIdMixin):
 
             self.todo_item_table_name: Table(self.todo_item_table_name, [
                 Field.id_field(),
+                Field(name="priority", type="INTEGER", default="0"),
                 Field.description_field(nullable=False),
                 Field.nullable_datetime(name="deadline"),
                 Field.created_at_field(use_localtime=self.use_localtime),

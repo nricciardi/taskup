@@ -21,28 +21,60 @@
       <div class="modal-body">
         <form [formGroup]="newItemForm">
 
-          <label
-                for="description"
-                class="form-label">
-                {{ "description" | translate }}
-          </label>
-          <textarea
-            class="form-control"
-            placeholder="Description"
-            aria-label="Description"
-            aria-describedby="description-icon"
-            formControlName="description"
-            id="description"
-            rows="6"
-            >
-          </textarea>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label
+                  for="description"
+                  class="form-label">
+                  {{ "description" | translate }}
+                </label>
+                <textarea
+                  class="form-control"
+                  placeholder="Description"
+                  aria-label="Description"
+                  aria-describedby="description-icon"
+                  formControlName="description"
+                  id="description"
+                  rows="6"
+                  >
+                </textarea>
+              </div>
+            </div>
 
-          <input
-            type="datetime-local"
-            class="form-control flatpickr-time-picker-24h mt-2"
-            placeholder="Deadline"
-            formControlName="deadline"
-          />
+            <div class="col-12">
+              <div class="form-group">
+                <label>
+                  {{ "deadline" | translate }}
+                </label>
+                <input
+                  type="datetime-local"
+                  class="form-control flatpickr-time-picker-24h mt-2"
+                  placeholder="Deadline"
+                  formControlName="deadline"
+                />
+              </div>
+
+            </div>
+
+            <div class="col-12">
+              <div class="form-group">
+                <label>
+                  {{ "priority" | translate }}
+                </label>
+                <input
+                  type="number"
+                  id="priority"
+                  class="form-control"
+                  placeholder="Priority"
+                  formControlName="priority"
+                />
+              </div>
+            </div>
+
+          </div>
+
+
         </form>
 
       </div>

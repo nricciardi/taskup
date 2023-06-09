@@ -43,8 +43,11 @@ export class TaskTodoListComponent {
     this.todoService.allOf(this.taskId).then((response) => {
       response.subscribe({
         next: (value: TodoItemModel[]) => {
-          if(value)
+          if(value) {
             this.todoItems = value;
+
+            this.todoItems = this.todoItems.sort((a, b) =>  b.priority - a.priority);
+          }
         }
       })
     })
@@ -58,6 +61,7 @@ export class TaskTodoListComponent {
     this.todoService.create({
       description: todo.description,
       deadline: todo.deadline,
+      priority: todo.priority,
       task_id: this.taskId,
       author_id: this.authService.loggedUser.id
 

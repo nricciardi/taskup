@@ -11,14 +11,20 @@
           [id]="'checkbox-todo-' + item.id"
           [checked]="!!item.done"
           (click)="done()"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          [title]="'Priority: ' + item.priority"
         />
       </div>
     </div>
 
     <!-- DESCRIPTION -->
     <div class="col-8">
-      <span class="widget-todo-title ml-50"
-            [class.done]="!!item.done">
+      <span class="widget-todo-title ml-50 cursor-arrow"
+            [class.done]="!!item.done"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            [title]="'Priority: ' + item.priority">
         {{ item.description }}
       </span>
     </div>
@@ -58,7 +64,8 @@
           <app-new-todo-item-modal  [target]="'modify-todo-item-' + item.id"
                                     [baseData]="{
                                       description: item.description,
-                                      deadline: item.deadline
+                                      deadline: item.deadline,
+                                      priority: item.priority
                                     }"
                                     (onSubmit)="modify($event)">
           </app-new-todo-item-modal>

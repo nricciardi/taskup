@@ -98,6 +98,7 @@ class TaskAssignmentModel(BaseEntityModel):
 @dataclass
 class TodoItemModel(BaseEntityModel):
     id: int
+    priority: int
     description: str
     created_at: datetime
     updated_at: datetime
