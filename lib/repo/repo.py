@@ -8,7 +8,8 @@ import copy
 from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
 from pprint import pprint
-from time import time
+from time import perf_counter
+from lib.app.app import AppManager
 
 # global variables to pass associations to RepoNode dataclass
 associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
@@ -263,6 +264,34 @@ class RepoManager:
 
         return root_node
 
+    def get_branches(self) -> List:
+        """
+        Return list of branches
+
+        :return:
+        """
+
+        try:
+            self.repo.git.fetch()  # try to sync local repo with remote branches
+        except Exception as e:
+            Logger.log_warning(msg=f"unable to fetch commits from remote branches", is_verbose=self.verbose)
+
+        branches: List = []
+
+        # get references of local and remote branches
+        try:
+            branches = list(self.repo.branches)  # local
+        except Exception as e:
+            pass
+
+        if self.repo.remotes:
+            try:
+                branches.extend(self.repo.remote().refs)  # remote
+            except Exception as e:
+                pass
+
+        return branches
+
     def get_commits(self) -> List[RepoNode] | None:
         """
         Return list of project's repository commits
@@ -282,11 +311,6 @@ class RepoManager:
             Logger.log_info(msg=f"start to fetch commits from project repo '{self.project_path}'...",
                             is_verbose=self.verbose)
 
-            try:
-                self.repo.git.fetch()       # try to sync local repo with remote branches
-            except Exception as e:
-                Logger.log_warning(msg=f"unable to fetch commits from remote branches", is_verbose=self.verbose)
-
             # take tags of repo
             global associations_commits_tags
             associations_commits_tags = dict()  # hexsha - tag's name
@@ -295,19 +319,7 @@ class RepoManager:
 
             Logger.log_info(msg=f"fetched {len(associations_commits_tags.keys())} tags", is_verbose=self.verbose)
 
-            branches: List = []
-
-            # get references of local and remote branches
-            try:
-                branches = list(self.repo.branches)     # local
-            except Exception as e:
-                pass
-
-            if self.repo.remotes:
-                try:
-                    branches.extend(self.repo.remote().refs)        # remote
-                except Exception as e:
-                    pass
+            branches: List = self.get_branches()
 
             Logger.log_info(msg=f"fetched {len(branches)} branch(es)", is_verbose=self.verbose)
 
@@ -329,7 +341,7 @@ class RepoManager:
 
             nodes = list()  # use a managed list to share data between processes
             n_of_commits = len(all_repo_commits)
-            start = time()
+            start = perf_counter()
             for i in range(n_of_commits):
                 commit = all_repo_commits[i]
                 repo_node: RepoNode = RepoNode.from_commit(commit)
@@ -349,9 +361,25 @@ class RepoManager:
                         msg=f"elaborating commit {i + 1}/{n_of_commits} ({round((i + 1) * 100 / n_of_commits, 2)}%)",
                         is_verbose=self.verbose)
 
-            Logger.log_success(msg=f"commits fetched successfully in {round(time() - start, 4)}s",
+            Logger.log_success(msg=f"commits fetched successfully in {round(perf_counter() - start, 4)}s",
                                is_verbose=self.verbose)
             return list(nodes)
 
         except Exception as e:
             Logger.log_error(msg=f"an error occurs during commits elaborating", is_verbose=self.verbose)
+
+    def create_app_branch(self) -> bool:
+        """
+        Create app branch in the project
+
+        :return:
+        """
+
+        return NotImplementedError
+
+        # if not self.valid_opened_repo():
+        #     Logger.log_error(msg="impossible to create branch: repo not found", is_verbose=self.verbose)
+        #     return False
+        #
+        # APP_BRANCH_NAME = AppManager.APP_NAME
+

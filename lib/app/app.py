@@ -14,12 +14,13 @@ from lib.utils.constants import PM_EMAIL, PM_USERNAME
 
 class AppManager:
 
+    APP_NAME: str = "Taskup"
     VERSION: str = "1.1.14"
     SHUTDOWN_DELAY = 3                  # seconds
     SHUTDOWN_DELAY_IN_DEBUG_MODE = 600  # seconds
 
     def __init__(self):
-        Logger.log_info(msg="app init...", is_verbose=True)
+        Logger.log_info(msg=f"{self.APP_NAME} init...", is_verbose=True)
 
         # instance settings manager to take project configuration settings
         Logger.log_info(msg="take settings...", is_verbose=True)
