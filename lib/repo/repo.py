@@ -9,7 +9,6 @@ from lib.utils.mixin.dcparser import DCToDictMixin
 from lib.utils.utils import Utils
 from pprint import pprint
 from time import perf_counter
-from lib.app.app import AppManager
 
 # global variables to pass associations to RepoNode dataclass
 associations_commits_tags: Dict[str, str] = dict()  # hexsha - tag's name
@@ -380,6 +379,4 @@ class RepoManager:
         # if not self.valid_opened_repo():
         #     Logger.log_error(msg="impossible to create branch: repo not found", is_verbose=self.verbose)
         #     return False
-        #
-        # APP_BRANCH_NAME = AppManager.APP_NAME
 
