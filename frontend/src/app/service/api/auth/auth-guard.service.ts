@@ -8,7 +8,9 @@ import { environment } from 'src/environments/environment.development';
 })
 export class AuthGuardService {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+    this.authService.refreshMe();
+  }
 
   async canActivate(){
 

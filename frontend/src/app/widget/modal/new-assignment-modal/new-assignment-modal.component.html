@@ -53,7 +53,8 @@
             </div>
 
             <button type="button" class="btn btn-outline-primary"
-                    (click)="onAddAssignment.emit(userSelected); userSelected = undefined">
+                    (click)="onAddAssignment.emit(userSelected); userSelected = undefined"
+                    (keydown.enter)="onAddAssignment.emit(userSelected); userSelected = undefined">
               {{ "add" | translate }}
             </button>
           </div>

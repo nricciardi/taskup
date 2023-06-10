@@ -6,6 +6,7 @@
   [attr.aria-labelledby]="target"
   aria-hidden="true"
   *ngIf="target"
+  (keydown.enter)="submitBtn.click()"
 >
   <div
     class="modal-dialog modal-dialog-scrollable"
@@ -88,6 +89,8 @@
           data-bs-dismiss="modal"
           (click)="_onSubmit()"
           [disabled]="newItemForm.invalid"
+
+          #submitBtn
         >
           <i class="bx bx-check d-block d-sm-none"></i>
           <span class="d-none d-sm-block">

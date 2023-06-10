@@ -206,6 +206,7 @@
   role="dialog"
   aria-labelledby="create-new-task-title"
   aria-hidden="true"
+  (keydown.enter)="newTaskBtn.click()"
 >
   <div
     class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable"
@@ -358,6 +359,8 @@
           data-bs-dismiss="modal"
           [disabled]="creationForm.invalid"
           (click)="newTask(); orderBy = OrderBy.CREATION; orderReverse = true"
+
+          #newTaskBtn
         >
           <i class="bx bx-check d-block d-sm-none"></i>
           <span class="d-none d-sm-block">

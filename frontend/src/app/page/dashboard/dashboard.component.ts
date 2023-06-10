@@ -86,8 +86,6 @@ export class DashboardComponent {
   set taskStatusIdIndex(newIndex) {
     this._taskStatusIdIndex = newIndex;
 
-    console.log("_taskStatusIdIndex: ", this._taskStatusIdIndex);
-
   }
 
   get orderBy() {
@@ -285,7 +283,9 @@ export class DashboardComponent {
     if(this.creationForm.invalid)
       return;
 
-    console.log(this.creationForm.value);
+    let taskStatusId = +this.taskStatusIdIndex!;
+    if(!!this.creationForm.controls['taskStatusId'].value)
+      taskStatusId = +(this.creationForm.controls['taskStatusId'].value)
 
 
     const baseNewTask: NewTaskModel = {
@@ -293,7 +293,7 @@ export class DashboardComponent {
       description: this.creationForm.controls['description'].value ?? "",
       priority: +(this.creationForm.controls['priority'].value ?? environment.basePriorityValue),
       author_id: this.authService.loggedUser!.id,
-      task_status_id: +(this.creationForm.controls['taskStatusId'].value ?? this.taskStatusIdIndex!),
+      task_status_id: taskStatusId,
     }
 
     const selfAssigned = !!this.creationForm.controls['selfAssigned'].value;
@@ -306,35 +306,35 @@ export class DashboardComponent {
           if(!!task) {
             this.creationForm.reset();
 
-          }
+            // self assign
+            if(selfAssigned) {
+              this.taskService.addAssignment(task.id, this.authService.loggedUser!.id).then((response) => {
 
-          // self assign
-          if(selfAssigned) {
-            this.taskService.addAssignment(task.id, this.authService.loggedUser!.id).then((response) => {
+                response.subscribe({
+                  next: (value) => {
 
-              response.subscribe({
-                next: (value) => {
+                    // refresh task
+                    this.taskService.find(task.id).then((respose) => {
+                      respose.subscribe({
+                        next: (t) => {
+                          this.tasks.push(t);
 
-                  // refresh task
-                  this.taskService.find(task.id).then((respose) => {
-                    respose.subscribe({
-                      next: (t) => {
-                        this.tasks.push(t);
-
-                      }
+                        }
+                      })
                     })
-                  })
 
-                }
+                  }
+                })
+
               })
 
-            })
 
+            } else {    // append immediatly task
 
-          } else {    // append immediatly task
-
-            this.tasks.push(task);
+              this.tasks.push(task);
+            }
           }
+
         }
       })
 
