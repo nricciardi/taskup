@@ -107,5 +107,5 @@
 
 
   <!-- MODALs -->
-  <app-new-todo-item-modal [target]="'new-todo-' + taskId" (onSubmit)="newTodo($event)"></app-new-todo-item-modal>
+  <app-new-todo-item-modal [target]="'new-todo-' + taskId" (onSubmit)="newTodo($event); !todoCollapseStatus ? showTodoBtn.click() : null"></app-new-todo-item-modal>
 </div>
