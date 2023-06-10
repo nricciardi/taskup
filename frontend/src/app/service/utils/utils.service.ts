@@ -3,13 +3,15 @@ import { UserModel } from 'src/app/model/entity/user.model';
 import { AuthService } from '../api/auth/auth.service';
 import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { LoggerService } from '../logger/logger.service';
+import { MarkdownService } from 'ngx-markdown';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private markdownService: MarkdownService, private domSanitizer: DomSanitizer) {}
 
   getAvatarText(user: UserModel): string {
     if(user?.name && user?.surname) {
@@ -107,6 +109,12 @@ export class UtilsService {
 
   reload() {
     window.location.reload();
+  }
+
+  markdownToHTML(markdown: string) {
+    let html: string = this.markdownService.parse(markdown);
+
+    return this.domSanitizer.bypassSecurityTrustHtml(html);
   }
 }
 

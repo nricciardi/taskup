@@ -211,14 +211,17 @@
       </div>
 
       <!-- DESCRIPTION -->
-      <p class="card-text mt-2">
-        <ng-container *ngIf="!inModify; else descriptionModification">
+      <p class="card-text mt-2" *ngIf="!inModify; else descriptionModification" [innerHTML]="utilsService.markdownToHTML(task.description ?? '')">
+      </p>
+      <!--
 
-          {{ task.description }}
+        <ng-container>
+
+          {{ utilsService.markdownToHTML(task.description ?? "") }}
 
         </ng-container>
 
-      </p>
+      -->
 
       <ng-template #descriptionModification>
         <div class="form-group">

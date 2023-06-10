@@ -55,6 +55,7 @@ import { ServerErrorComponent } from './page/server-error/server-error.component
 import { RepoComponent } from './page/repo/repo.component';
 import { ShowInfoOfCommitModalComponent } from './widget/modal/show-info-of-commit-modal/show-info-of-commit-modal.component';
 import { TaskComponent } from './page/task/task.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 @NgModule({
@@ -114,6 +115,7 @@ import { TaskComponent } from './page/task/task.component';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    MarkdownModule.forRoot({ loader: HttpClient }),
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       useDefaultLang: true,
