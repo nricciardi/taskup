@@ -46,7 +46,7 @@
           <div
             class="dropdown-menu"
             aria-labelledby="dropdownMenuButton">
-            <button class="dropdown-item" *ngFor="let status of dashboard?.task_status" (click)="taskStatusIdIndex = status.id">
+            <button class="dropdown-item" *ngFor="let status of dashboard?.task_status" (click)="taskStatusIdIndex = +status.id">
               {{ status.name }}
             </button>
           </div>
@@ -282,7 +282,7 @@
                               <div class="form-floating">
                                 <textarea
                                   class="form-control"
-                                  placeholder="Leave a description here"
+                                  placeholder="{{ 'description' | translate }}"
                                   style="height: 30vh;"
 
                                   formControlName="description"
@@ -295,7 +295,23 @@
                           </div>
                         </div>
 
-                        <div class="row justify-content-center">
+                        <div class="row align-items-center justify-content-center mt-2" *ngIf="!!dashboard && !!dashboard.task_status">
+                          <div class="col-auto">
+                            <label>
+                              {{ "task-status" | translate }}:
+                            </label>
+                          </div>
+
+                          <div class="col-md-9">
+                            <select class="form-select" formControlName="taskStatusId">
+                              <option *ngFor="let item of dashboard.task_status" [value]="item.id" [selected]="item.id == getCurrentTaskStatus()?.id">
+                                {{item.name}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row justify-content-center mt-5">
                           <div class="col-auto">
                             <div class="form-check">
                               <div class="checkbox">

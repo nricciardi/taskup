@@ -52,7 +52,8 @@ export class DashboardComponent {
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     priority: new FormControl('', [Validators.required]),
-    selfAssigned: new FormControl(false)
+    selfAssigned: new FormControl(false),
+    taskStatusId: new FormControl(''),
   });
 
   constructor(private dashboardService: DashboardService, public authService: AuthService, private taskService: TaskService) {
@@ -84,6 +85,9 @@ export class DashboardComponent {
 
   set taskStatusIdIndex(newIndex) {
     this._taskStatusIdIndex = newIndex;
+
+    console.log("_taskStatusIdIndex: ", this._taskStatusIdIndex);
+
   }
 
   get orderBy() {
@@ -183,7 +187,7 @@ export class DashboardComponent {
     if(!this.tasks || !taskStatusId)
       return null;
 
-    let tasksBasedOnStatusId = this.tasks.filter(task => task !== undefined && task.task_status_id === taskStatusId);
+    let tasksBasedOnStatusId = this.tasks.filter(task => !!task && task.task_status_id === taskStatusId);
 
     if(!tasksBasedOnStatusId)
       return null;
@@ -273,8 +277,6 @@ export class DashboardComponent {
 
   newTask() {
 
-
-
     window.scroll(0, 0);
 
     if(!this.authService.loggedUser || !this.taskStatusIdIndex)
@@ -283,13 +285,15 @@ export class DashboardComponent {
     if(this.creationForm.invalid)
       return;
 
+    console.log(this.creationForm.value);
+
 
     const baseNewTask: NewTaskModel = {
       name: this.creationForm.controls['name'].value ?? "",
       description: this.creationForm.controls['description'].value ?? "",
       priority: +(this.creationForm.controls['priority'].value ?? environment.basePriorityValue),
       author_id: this.authService.loggedUser!.id,
-      task_status_id: +this.taskStatusIdIndex!
+      task_status_id: +(this.creationForm.controls['taskStatusId'].value ?? this.taskStatusIdIndex!),
     }
 
     const selfAssigned = !!this.creationForm.controls['selfAssigned'].value;
