@@ -1,12 +1,16 @@
 ## TO-DO
 
+### Backlogs
+- [ ] Multimedia files
+- [ ] Import/export
+
 ### Generals
 - [ ] Remove .vs and .idea directory from Git
 - [x] Create image diagram for doc
 - [x] Make _demo script_
 - [x] Search and set app ICON
 - [x] Table of contents
-- [ ] Change name in front-end tab
+- [x] Change name in front-end tab
 - [x] Improve main help
 - [ ] Add "add new project" in main modalities
 - [ ] Add "clear settings" in main modalities
@@ -16,7 +20,7 @@
 - [x] Internalization
 - [ ] Set link in Documentation and Contribute in menu
 - [x] 404 page
-- [ ] 500 page
+- [x] 500 page
 - [ ] Fix dark mode color
 - [ ] Remove year from deadline if we are in the current year
 - [ ] Fix env file (now is used .dev instead of .prod)
@@ -31,17 +35,17 @@
   - [x] Select project
   - [ ] Count of updates
 - [x] "News" of a task
-- [ ] Manage Git
+- [x] Manage Git
 - [ ] Task pagination
 - [ ] Dark color if avatar color is light
-- [ ] Switch badge to "light badge"
+- [ ] <u>Switch badge to "light badge"</u>
 - [ ] Prevent todo-list refresh on task updates
 - [ ] Add custom menu on right click on page
-- [ ] Forgot password
+- [ ] <u>Forgot password</u>
 - [x] "news" mistakes
 - [x] Bug in update task if there isn't description
 - [x] Footer with app name 
-  - [ ] and version
+  - [x] and version
 - [ ] Manage pages prevent unique error
 
 ### Python
@@ -58,7 +62,7 @@
 - [ ] Add permission control
 - [x] Add "done" for deadline => based on task status
 - [ ] Deploy
-- [ ] Manage Git
+- [x] Manage Git
 - [ ] Insert multi-credentials in vault
 
 ### DB
