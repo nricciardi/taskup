@@ -76,6 +76,8 @@ pip install GitPython
 python main.py run
 ```
 
+In addiction, you can re-build frontend installing `Nodejs` and `Angular CLI`. This is helpful if you pull updates using `Git` instead of releases.
+
 ### Run
 
 After dependencies installation, this app can be opened using `main.py`.
