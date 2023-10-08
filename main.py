@@ -1,3 +1,5 @@
+#!/bin/python3
+
 from lib.app.app import AppManager
 import sys
 import colorama
@@ -6,7 +8,7 @@ from lib.utils.logger import Logger
 from lib.utils.utils import Utils
 from typing import Dict, List
 
-# Initialising Colorama (Important)
+# Initializing Colorama (Important)
 colorama.init(autoreset=True)
 
 
